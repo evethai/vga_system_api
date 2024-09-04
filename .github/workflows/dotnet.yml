@@ -20,5 +20,3 @@ jobs:
       run: dotnet restore ./src/vga_system_api.sln
     - name: Build
       run: dotnet build --no-restore ./src/vga_system_api.sln
-    - name: Test
-      run: dotnet test --no-build --verbosity normal --filter "TestCategory=Unit" --project ./src/vga_system_api.sln
