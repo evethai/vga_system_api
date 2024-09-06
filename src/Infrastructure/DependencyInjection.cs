@@ -26,7 +26,8 @@ namespace Infrastructure
             });
 
             //Declare Middleware
-            services.AddScoped<TokenValidationMiddleware>();
+            //services.AddScoped<TokenValidationMiddleware>();
+
             //Declare UnitOfWork
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -35,6 +36,7 @@ namespace Infrastructure
 
             //Declare Repository
             services.AddScoped<ITestRepository, TestRepository>();
+            services.AddScoped<IResultMBTITestRepository, ResultMBTITestRepository>();
 
 
             //Declare Service
