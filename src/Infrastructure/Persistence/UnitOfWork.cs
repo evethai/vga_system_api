@@ -16,7 +16,8 @@ namespace Infrastructure.Persistence
         private readonly VgaDbContext _context;
         private readonly IMapper _mapper;
         private TestRepository _testRepository;
-        
+        private ResultMBTITestRepository _resultMBTITestRepository;
+
 
         public UnitOfWork(VgaDbContext context, IMapper mapper)
         {
@@ -36,7 +37,17 @@ namespace Infrastructure.Persistence
             }
         }
 
-        
+        public IResultMBTITestRepository ResultMBTITestRepository
+        {
+            get
+            {
+                if (_resultMBTITestRepository == null)
+                {
+                    _resultMBTITestRepository = new ResultMBTITestRepository(_context);
+                }
+                return _resultMBTITestRepository;
+            }
+        }
 
         public int Save()
         {

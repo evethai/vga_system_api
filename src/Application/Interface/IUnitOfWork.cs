@@ -10,6 +10,7 @@ namespace Application.Interface
     public interface IUnitOfWork : IDisposable
     {
         ITestRepository TestRepository { get; }
+        IResultMBTITestRepository ResultMBTITestRepository { get; }
         int Save();
     }
 }
