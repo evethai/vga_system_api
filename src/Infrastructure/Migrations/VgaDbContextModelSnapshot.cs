@@ -48,6 +48,37 @@ namespace Infrastructure.Migrations
                     b.ToTable("answer");
                 });
 
+            modelBuilder.Entity("Domain.Entity.HighSchool", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ContactInfor")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("GoldBalance")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LocationDetails")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RegionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RegionId");
+
+                    b.ToTable("highschols");
+                });
+
             modelBuilder.Entity("Domain.Entity.Question", b =>
                 {
                     b.Property<int>("Id")
@@ -75,6 +106,27 @@ namespace Infrastructure.Migrations
                     b.HasIndex("TestId");
 
                     b.ToTable("question");
+                });
+
+            modelBuilder.Entity("Domain.Entity.Region", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Desciption")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("regions");
                 });
 
             modelBuilder.Entity("Domain.Entity.Result", b =>
@@ -130,6 +182,9 @@ namespace Infrastructure.Migrations
                     b.Property<int>("Gender")
                         .HasColumnType("int");
 
+                    b.Property<Guid>("HighSchoolId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -142,6 +197,8 @@ namespace Infrastructure.Migrations
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("HighSchoolId");
 
                     b.ToTable("students");
                 });
@@ -210,6 +267,15 @@ namespace Infrastructure.Migrations
                     b.Navigation("Question");
                 });
 
+            modelBuilder.Entity("Domain.Entity.HighSchool", b =>
+                {
+                    b.HasOne("Domain.Entity.Region", null)
+                        .WithMany("HighSchools")
+                        .HasForeignKey("RegionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Domain.Entity.Question", b =>
                 {
                     b.HasOne("Domain.Entity.Test", "Test")
@@ -240,6 +306,15 @@ namespace Infrastructure.Migrations
                     b.Navigation("Test");
                 });
 
+            modelBuilder.Entity("Domain.Entity.Student", b =>
+                {
+                    b.HasOne("Domain.Entity.HighSchool", null)
+                        .WithMany("Students")
+                        .HasForeignKey("HighSchoolId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Domain.Entity.StudentSelected", b =>
                 {
                     b.HasOne("Domain.Entity.Answer", "Answer")
@@ -264,9 +339,19 @@ namespace Infrastructure.Migrations
                     b.Navigation("StudentSelects");
                 });
 
+            modelBuilder.Entity("Domain.Entity.HighSchool", b =>
+                {
+                    b.Navigation("Students");
+                });
+
             modelBuilder.Entity("Domain.Entity.Question", b =>
                 {
                     b.Navigation("Answers");
+                });
+
+            modelBuilder.Entity("Domain.Entity.Region", b =>
+                {
+                    b.Navigation("HighSchools");
                 });
 
             modelBuilder.Entity("Domain.Entity.Student", b =>

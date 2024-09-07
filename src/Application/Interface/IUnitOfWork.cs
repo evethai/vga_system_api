@@ -10,6 +10,9 @@ namespace Application.Interface
     public interface IUnitOfWork : IDisposable
     {
         ITestRepository TestRepository { get; }
+        IRegionRepository RegionRepository { get; }
+        IHighschoolRepository HighschoolRepository { get; }
+        IStudentRepository StudentRepository { get; }
         int Save();
     }
 }

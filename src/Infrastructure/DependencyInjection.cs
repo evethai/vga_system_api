@@ -5,9 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Application.Interface;
 using Application.Interface.Repository;
+using Application.Interface.Service;
 using Infrastructure.Data;
 using Infrastructure.Persistence;
 using Infrastructure.Persistence.Repository;
+using Infrastructure.Persistence.Service;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,13 +37,18 @@ namespace Infrastructure
 
             //Declare Repository
             services.AddScoped<ITestRepository, TestRepository>();
+            services.AddScoped<IRegionRepository, RegionRepository>();
+            services.AddScoped<IHighschoolRepository, HighschoolRepository>();
+            services.AddScoped<IStudentRepository, StudentRepository>();
+
+
 
 
             //Declare Service
             //services.AddScoped<ITestService, TestService>();
-
-
-
+            services.AddScoped<IRegionService, RegionService>();
+            services.AddScoped<IHighschoolService, HighschoolService>();
+            services.AddScoped<IStudentService, StudentService>();
 
 
             //Declare Email Service
