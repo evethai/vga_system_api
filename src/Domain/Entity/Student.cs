@@ -21,5 +21,7 @@ namespace Domain.Entity
         public DateTime CreateAt { get; set; }
         public virtual ICollection<Result> Results { get; set; } = null!;
         public virtual ICollection<StudentSelected> StudentSelects { get; set; } = null!;
+        public Guid HighSchoolId { get; set; }
+        public int GoldBalance { get; set; }
     }
 }
