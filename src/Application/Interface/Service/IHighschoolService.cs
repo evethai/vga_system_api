@@ -10,8 +10,8 @@ namespace Application.Interface.Service;
 public interface IHighschoolService
 {
     Task<ResponseHighSchoolModel> GetListHighSchoolAsync(HighschoolSearchModel searchModel);
-    Task<HighschoolModel> GetHighschoolByIdAsync(Guid HighschoolId);
+    Task<HighschoolModel> GetHighschoolByIdAsync(int HighschoolId);
     Task<ResponseModel> CreateHighschoolAsync(HighschoolPostModel postModel);
     Task<ResponseModel> UpdateHighschoolAsync(HighschoolPutModel putModel);
-    Task<ResponseModel> DeleteHighschool(Guid HighschoolId);
+    Task<ResponseModel> DeleteHighschool(int HighschoolId);
 }

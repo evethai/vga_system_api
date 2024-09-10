@@ -9,7 +9,7 @@ public class RegionModel
 {
     public int Id { get; set; }
     public string Name { get; set; }
-    public string Desciption { get; set; }
+    public string Description { get; set; }
 }
 public class ResponseRegionModel
 {

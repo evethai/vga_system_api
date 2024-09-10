@@ -49,9 +49,11 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entity.HighSchool", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ContactInfor")
                         .IsRequired()
@@ -138,7 +140,7 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Desciption")
+                    b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -207,8 +209,8 @@ namespace Infrastructure.Migrations
                     b.Property<int>("GoldBalance")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("HighSchoolId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("HighSchoolId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
