@@ -22,6 +22,7 @@ namespace Domain.Entity
         public virtual ICollection<Result> Results { get; set; } = null!;
         public virtual ICollection<StudentSelected> StudentSelects { get; set; } = null!;
         public Guid HighSchoolId { get; set; }
+        public HighSchool HighSchool { get; set; } = null!;
         public int GoldBalance { get; set; }
     }
 }

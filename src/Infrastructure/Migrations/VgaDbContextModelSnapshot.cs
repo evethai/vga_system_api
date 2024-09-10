@@ -75,7 +75,28 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("RegionId");
 
-                    b.ToTable("highschols");
+                    b.ToTable("highschool");
+                });
+
+            modelBuilder.Entity("Domain.Entity.MBTIPersonality", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PersonalityDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("mbti_personality");
                 });
 
             modelBuilder.Entity("Domain.Entity.Question", b =>
@@ -141,11 +162,10 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("CreateAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Personality_Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("MBTIPersonalityId")
+                        .HasColumnType("int");
 
-                    b.Property<int>("Personality_Type")
+                    b.Property<int>("PersonalityId")
                         .HasColumnType("int");
 
                     b.Property<Guid>("StudentId")
@@ -155,6 +175,8 @@ namespace Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MBTIPersonalityId");
 
                     b.HasIndex("StudentId");
 
@@ -272,11 +294,13 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entity.HighSchool", b =>
                 {
-                    b.HasOne("Domain.Entity.Region", null)
+                    b.HasOne("Domain.Entity.Region", "Region")
                         .WithMany("HighSchools")
                         .HasForeignKey("RegionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Region");
                 });
 
             modelBuilder.Entity("Domain.Entity.Question", b =>
@@ -292,6 +316,12 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entity.Result", b =>
                 {
+                    b.HasOne("Domain.Entity.MBTIPersonality", "MBTIPersonality")
+                        .WithMany("Result")
+                        .HasForeignKey("MBTIPersonalityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Domain.Entity.Student", "Student")
                         .WithMany("Results")
                         .HasForeignKey("StudentId")
@@ -304,6 +334,8 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("MBTIPersonality");
+
                     b.Navigation("Student");
 
                     b.Navigation("Test");
@@ -311,11 +343,13 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entity.Student", b =>
                 {
-                    b.HasOne("Domain.Entity.HighSchool", null)
+                    b.HasOne("Domain.Entity.HighSchool", "HighSchool")
                         .WithMany("Students")
                         .HasForeignKey("HighSchoolId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("HighSchool");
                 });
 
             modelBuilder.Entity("Domain.Entity.StudentSelected", b =>
@@ -345,6 +379,11 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entity.HighSchool", b =>
                 {
                     b.Navigation("Students");
+                });
+
+            modelBuilder.Entity("Domain.Entity.MBTIPersonality", b =>
+                {
+                    b.Navigation("Result");
                 });
 
             modelBuilder.Entity("Domain.Entity.Question", b =>

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
-[Route("api/[controller]")]
+[Route("api/students")]
 [ApiController]
 public class StudentController : ControllerBase
 {

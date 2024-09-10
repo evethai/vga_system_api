@@ -20,9 +20,8 @@ namespace Domain.Entity
 
         public int TestId { get; set; }
         public Test Test { get; set; } = null!;
-
-        public ResultPersonalityTypeMBIT Personality_Type { get; set; } 
-        public string Personality_Description { get; set; } = null!;
+        public int PersonalityId { get; set; } 
+        public MBTIPersonality MBTIPersonality { get; set; } = null!;
         public DateTime CreateAt { get; set; }
     }
 }

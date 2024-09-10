@@ -20,12 +20,12 @@ namespace Infrastructure.Data
         public DbSet<Question> question { get; set; }
         public DbSet<Answer> answer { get; set; }
         public DbSet<StudentSelected> student_selected { get; set; }
-        public DbSet<HighSchool> highschols { get; set; }
+        public DbSet<HighSchool> highschool { get; set; }
         public DbSet<Region> regions { get; set; }
+        public DbSet<MBTIPersonality> mbti_personality { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
             base.OnModelCreating(modelBuilder);
         }
     }

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
-[Route("api/region")]
+[Route("api/regions")]
 [ApiController]
 public class RegionController : ControllerBase
 {

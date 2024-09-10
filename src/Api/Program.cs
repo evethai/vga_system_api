@@ -1,4 +1,5 @@
 ﻿using Api;
+using Api.Installers;
 using Infrastructure;
 using Microsoft.OpenApi.Models;
 
@@ -54,8 +55,7 @@ builder.Services.AddCors(options =>
                });
 });
 
-builder.Services.AddInfrastructureServices(builder.Configuration);
-//builder.Services.AddJWT(builder.Configuration);
+builder.Services.InstallServicesInAssembly(builder.Configuration);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var app = builder.Build();

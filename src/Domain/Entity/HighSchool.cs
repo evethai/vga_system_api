@@ -18,4 +18,5 @@ public class HighSchool
     public string ContactInfor { get; set; }
     public virtual ICollection <Student> Students { get; set; } = null!;
     public int RegionId { get; set; }
+    public Region Region { get; set; } = null!;
 }
