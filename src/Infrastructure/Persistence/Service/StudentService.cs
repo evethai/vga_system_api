@@ -10,6 +10,7 @@ using Domain.Entity;
 using Domain.Model.Highschool;
 using Domain.Model.Response;
 using Domain.Model.Student;
+using Newtonsoft.Json;
 
 namespace Infrastructure.Persistence.Service;
 public class StudentService : IStudentService
@@ -80,4 +81,46 @@ public class StudentService : IStudentService
             IsSuccess = true,
         };
     }
+
+    #region Import Students From Json Async
+    public async Task<ResponseModel> ImportStudentsFromJsonAsync(string stringJson)
+    {
+        try
+        {
+            var students = JsonConvert.DeserializeObject<List<Student>>(stringJson);
+
+            if (students == null || students.Count == 0)
+            {
+                return new ResponseModel
+                {
+                    IsSuccess = false,
+                    Message = "No students to import."
+                };
+            }
+
+            foreach (var student in students)
+            {
+                student.Id = Guid.NewGuid();
+
+                await _unitOfWork.StudentRepository.AddAsync(student);
+            }
+
+            _unitOfWork.Save();
+
+            return new ResponseModel
+            {
+                IsSuccess = true,
+                Message = $"{students.Count} students imported successfully."
+            };
+        }
+        catch (Exception ex)
+        {
+            return new ResponseModel
+            {
+                IsSuccess = false,
+                Message = $"An error occurred while importing students: {ex.Message}"
+            };
+        }
+    }
+    #endregion
 }
