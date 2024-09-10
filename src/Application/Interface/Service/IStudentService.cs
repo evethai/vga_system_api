@@ -15,5 +15,5 @@ public interface IStudentService
     Task<ResponseModel> CreateStudentAsyns(StudentPostModel postModel);
     Task<ResponseModel> UpdateStudentAsynsl(StudentPutModel putModel);
     Task<ResponseModel> DeleteStudent(Guid StudentId);
-    Task<ResponseModel> ImportStudentsFromJsonAsync(string stringJson);
+    Task<ResponseModel> ImportStudentsFromJsonAsync(string stringJson, Guid highschoolId);
 }

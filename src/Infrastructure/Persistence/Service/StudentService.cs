@@ -83,7 +83,7 @@ public class StudentService : IStudentService
     }
 
     #region Import Students From Json Async
-    public async Task<ResponseModel> ImportStudentsFromJsonAsync(string stringJson)
+    public async Task<ResponseModel> ImportStudentsFromJsonAsync(string stringJson, Guid highschoolId)
     {
         try
         {
@@ -101,6 +101,7 @@ public class StudentService : IStudentService
             foreach (var student in students)
             {
                 student.Id = Guid.NewGuid();
+                student.HighSchoolId = highschoolId;
 
                 await _unitOfWork.StudentRepository.AddAsync(student);
             }

@@ -66,4 +66,23 @@ public class StudentController : ControllerBase
         var result = await _studentService.DeleteStudent(id);
         return Ok(result);
     }
+
+    [HttpPost("import")]
+    public async Task<IActionResult> ImportFromJsonAsync(string stringJson, Guid highschoolId)
+    {
+
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        try
+        {
+            var result = await _studentService.ImportStudentsFromJsonAsync(stringJson, highschoolId);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 }
