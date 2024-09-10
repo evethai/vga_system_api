@@ -182,6 +182,9 @@ namespace Infrastructure.Migrations
                     b.Property<int>("Gender")
                         .HasColumnType("int");
 
+                    b.Property<int>("GoldBalance")
+                        .HasColumnType("int");
+
                     b.Property<Guid>("HighSchoolId")
                         .HasColumnType("uniqueidentifier");
 

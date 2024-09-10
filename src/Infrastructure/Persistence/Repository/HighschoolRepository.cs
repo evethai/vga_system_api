@@ -26,6 +26,11 @@ public class HighschoolRepository : GenericRepository<HighSchool>, IHighschoolRe
             filter = filter.And(p => p.Name.Contains(searchModel.name));
         }
 
+        if (searchModel.regionId.HasValue)
+        {
+            filter = filter.And(p => p.RegionId == searchModel.regionId.Value);
+        }
+
         if (searchModel.sortByGold == true)
         {
             orderBy = p => searchModel.descending == true ?

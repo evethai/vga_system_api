@@ -10,5 +10,5 @@ namespace Application.Interface.Service;
 public interface IRegionService
 {
     Task<ResponseRegionModel> GetAllRegion();
-    Task<RegionModel> GetRegion(int id);
+    Task<RegionModel> GetRegionById(int id);
 }

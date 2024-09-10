@@ -76,6 +76,11 @@ namespace Infrastructure.Persistence
             return await _dbSet.FindAsync(id);
         }
 
+        public async Task<T> GetByIdGuidAsync(Guid id)
+        {
+            return await _dbSet.FindAsync(id);
+        }
+
         public async Task<T> UpdateAsync(T entity)
         {
             _dbSet.Attach(entity);

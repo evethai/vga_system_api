@@ -22,9 +22,18 @@ public class StudentService : IStudentService
         _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
-    public Task<ResponseStudentModel> GetListStudentAsync(StudentSearchModel searchModel)
+    public async Task<ResponseStudentModel> GetListStudentAsync(StudentSearchModel searchModel)
     {
-        throw new NotImplementedException();
+        var (filter, orderBy) = _unitOfWork.StudentRepository.BuildFilterAndOrderBy(searchModel);
+        var student = await _unitOfWork.StudentRepository.GetByConditionAsync(filter, orderBy, pageIndex: searchModel.currentPage, pageSize: searchModel.pageSize);
+        var total = await _unitOfWork.StudentRepository.CountAsync(filter);
+        var listStudent = _mapper.Map<List<StudentModel>>(student);
+        return new ResponseStudentModel
+        {
+            total = total,
+            currentPage = searchModel.currentPage,
+            students =listStudent,
+        };
     }
 
     public async Task<StudentModel> GetStudentByIdAsync(Guid StudentId)
@@ -33,14 +42,30 @@ public class StudentService : IStudentService
         return _mapper.Map<StudentModel>(student);
     }
 
-    public Task<ResponseModel> UpdateStudentAsynsl(StudentPutModel putModel)
+    public async Task<ResponseModel> UpdateStudentAsynsl(StudentPutModel putModel)
     {
-        throw new NotImplementedException();
+        var student = _mapper.Map<Student>(putModel);
+        var result = await _unitOfWork.StudentRepository.UpdateAsync(student);
+        _unitOfWork.Save();
+        return new ResponseModel
+        {
+            Message = "Student Updated Successfully",
+            IsSuccess = true,
+            Data = student,
+        };
 
     }
-    public Task<ResponseModel> CreateStudentAsyns(StudentPostModel postModel)
+    public async Task<ResponseModel> CreateStudentAsyns(StudentPostModel postModel)
     {
-        throw new NotImplementedException();
+        var student = _mapper.Map<Student>(postModel);
+        var result = await _unitOfWork.StudentRepository.AddAsync(student);
+        _unitOfWork.Save();
+        return new ResponseModel
+        {
+            Message = " Student Created Successfully",
+            IsSuccess = true,
+            Data = student,
+        };
     }
 
     public async Task<ResponseModel> DeleteStudent(Guid StudentId)

@@ -40,7 +40,7 @@ public class HighschoolService : IHighschoolService
             highschools = listHighschool,
         };
     }
-    public async Task<ResponseModel> CreateHighschoolAsyns(HighschoolPostModel postModel)
+    public async Task<ResponseModel> CreateHighschoolAsync(HighschoolPostModel postModel)
     {
         var highschool = _mapper.Map<HighSchool>(postModel);
         var result = await _unitOfWork.HighschoolRepository.AddAsync(highschool);
@@ -65,14 +65,14 @@ public class HighschoolService : IHighschoolService
         };
     }
 
-    public async Task<ResponseModel> UpdateHighschoolAsynsl(HighschoolPutModel putModel)
+    public async Task<ResponseModel> UpdateHighschoolAsync(HighschoolPutModel putModel)
     {
         var highschool = _mapper.Map<HighSchool>(putModel);
         var result = await _unitOfWork.HighschoolRepository.UpdateAsync(highschool);
         _unitOfWork.Save();
         return new ResponseModel
         {
-            Message = " Highschool Created Successfully",
+            Message = " Highschool Updated Successfully",
             IsSuccess = true,
             Data = highschool,
         };
