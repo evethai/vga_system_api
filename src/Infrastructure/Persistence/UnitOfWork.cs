@@ -15,6 +15,10 @@ namespace Infrastructure.Persistence
     {
         private readonly VgaDbContext _context;
         private readonly IMapper _mapper;
+        private RegionRepository _regionRepository;
+        private HighschoolRepository _highschoolRepository;
+        private StudentRepository _studentRepository;
+
         private ResultMBTITestRepository _resultMBTITestRepository;
 
 
@@ -25,6 +29,40 @@ namespace Infrastructure.Persistence
         }
 
 
+        public IRegionRepository RegionRepository
+        {
+            get
+            {
+                if (_regionRepository == null)
+                {
+                    _regionRepository = new RegionRepository(_context);
+                }
+                return _regionRepository;
+            }
+        }
+
+        public IHighschoolRepository HighschoolRepository
+        {
+            get
+            {
+                if (_highschoolRepository == null)
+                {
+                    _highschoolRepository = new HighschoolRepository(_context);
+                }
+                return _highschoolRepository;
+            }
+        }
+        public IStudentRepository StudentRepository
+        {
+            get
+            {
+                if (_studentRepository == null)
+                {
+                    _studentRepository = new StudentRepository(_context);
+                }
+                return _studentRepository;
+            }
+        }
         public IResultMBTITestRepository ResultMBTITestRepository
         {
             get

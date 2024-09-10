@@ -9,6 +9,9 @@ namespace Application.Interface
 {
     public interface IUnitOfWork : IDisposable
     {
+        IRegionRepository RegionRepository { get; }
+        IHighschoolRepository HighschoolRepository { get; }
+        IStudentRepository StudentRepository { get; }
         IResultMBTITestRepository ResultMBTITestRepository { get; }
         int Save();
     }

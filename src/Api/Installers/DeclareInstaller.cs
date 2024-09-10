@@ -23,10 +23,16 @@ namespace Api.Installers
 
             //Declare Repository
             services.AddScoped<IResultMBTITestRepository, ResultMBTITestRepository>();
+            services.AddScoped<IRegionRepository, RegionRepository>();
+            services.AddScoped<IHighschoolRepository, HighschoolRepository>();
+            services.AddScoped<IStudentRepository, StudentRepository>();
 
 
             //Declare Service
             services.AddScoped<IResultBMTITestService, ResultBMTITestService>();
+            services.AddScoped<IRegionService, RegionService>();
+            services.AddScoped<IHighschoolService, HighschoolService>();
+            services.AddScoped<IStudentService, StudentService>();
 
 
 
