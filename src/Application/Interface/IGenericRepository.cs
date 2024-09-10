@@ -23,6 +23,7 @@ namespace Application.Interface
     public interface IGenericQueryRepository<T> where T : class
     {
         Task<T> GetByIdAsync(int id);
+        Task<T> GetByIdGuidAsync(Guid id);
         Task<IEnumerable<T>> GetByConditionAsync(
             Expression<Func<T, bool>> filter = null,
             Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
