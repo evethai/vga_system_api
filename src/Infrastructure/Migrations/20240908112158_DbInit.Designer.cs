@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(VgaDbContext))]
-    [Migration("20240905071420_update_MBTI_type")]
-    partial class update_MBTI_type
+    [Migration("20240908112158_DbInit")]
+    partial class DbInit
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -48,6 +48,27 @@ namespace Infrastructure.Migrations
                     b.HasIndex("QuestionId");
 
                     b.ToTable("answer");
+                });
+
+            modelBuilder.Entity("Domain.Entity.MBTIPersonality", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PersonalityDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("mbti_personality");
                 });
 
             modelBuilder.Entity("Domain.Entity.Question", b =>
@@ -92,11 +113,10 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("CreateAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Personality_Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("MBTIPersonalityId")
+                        .HasColumnType("int");
 
-                    b.Property<int>("Personality_Type")
+                    b.Property<int>("PersonalityId")
                         .HasColumnType("int");
 
                     b.Property<Guid>("StudentId")
@@ -106,6 +126,8 @@ namespace Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MBTIPersonalityId");
 
                     b.HasIndex("StudentId");
 
@@ -226,6 +248,12 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entity.Result", b =>
                 {
+                    b.HasOne("Domain.Entity.MBTIPersonality", "MBTIPersonality")
+                        .WithMany("Result")
+                        .HasForeignKey("MBTIPersonalityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Domain.Entity.Student", "Student")
                         .WithMany("Results")
                         .HasForeignKey("StudentId")
@@ -237,6 +265,8 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("TestId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("MBTIPersonality");
 
                     b.Navigation("Student");
 
@@ -265,6 +295,11 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entity.Answer", b =>
                 {
                     b.Navigation("StudentSelects");
+                });
+
+            modelBuilder.Entity("Domain.Entity.MBTIPersonality", b =>
+                {
+                    b.Navigation("Result");
                 });
 
             modelBuilder.Entity("Domain.Entity.Question", b =>

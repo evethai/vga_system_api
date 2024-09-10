@@ -12,6 +12,20 @@ namespace Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "mbti_personality",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PersonalityDescription = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_mbti_personality", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "students",
                 columns: table => new
                 {
@@ -52,8 +66,9 @@ namespace Infrastructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false),
                     TestId = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<bool>(type: "bit", nullable: false),
                     CreateAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -75,13 +90,19 @@ namespace Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     StudentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TestId = table.Column<int>(type: "int", nullable: false),
-                    Personality_Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Personality_Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PersonalityId = table.Column<int>(type: "int", nullable: false),
+                    MBTIPersonalityId = table.Column<int>(type: "int", nullable: false),
                     CreateAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_result", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_result_mbti_personality_MBTIPersonalityId",
+                        column: x => x.MBTIPersonalityId,
+                        principalTable: "mbti_personality",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_result_students_StudentId",
                         column: x => x.StudentId,
@@ -103,7 +124,7 @@ namespace Infrastructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PersonalityType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PersonalityType = table.Column<int>(type: "int", nullable: false),
                     QuestionId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -155,6 +176,11 @@ namespace Infrastructure.Migrations
                 column: "TestId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_result_MBTIPersonalityId",
+                table: "result",
+                column: "MBTIPersonalityId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_result_StudentId",
                 table: "result",
                 column: "StudentId");
@@ -183,6 +209,9 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "student_selected");
+
+            migrationBuilder.DropTable(
+                name: "mbti_personality");
 
             migrationBuilder.DropTable(
                 name: "answer");

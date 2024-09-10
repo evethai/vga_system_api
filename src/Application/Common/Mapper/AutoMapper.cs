@@ -5,6 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using Domain.Entity;
+using Domain.Model.Answer;
+using Domain.Model.MBTI;
 
 namespace Application.Common.Mapper
 {
@@ -12,7 +15,11 @@ namespace Application.Common.Mapper
     {
         public AutoMapper()
         {
+            //MBTI Test
+            CreateMap<Result,ResultModel>().ReverseMap();
 
+            //Answer
+            CreateMap<Answer, AnswerModel>().ReverseMap();
         }
     }
 }

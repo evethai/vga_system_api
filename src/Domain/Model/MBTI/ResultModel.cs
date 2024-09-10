@@ -12,8 +12,8 @@ namespace Domain.Model.MBTI
     {
         public Guid StudentId { get; set; }
         public int TestId { get; set; }
-        public ResultPersonalityTypeMBIT Personality_Type { get; set; }
-        public string Personality_Description { get; set; } = null!;
+        public int PersonalityId { get; set; }
         public DateTime CreateAt { get; set; }
+        public string description { get; set; } = string.Empty;
     }
 }
