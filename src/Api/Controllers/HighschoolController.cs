@@ -20,7 +20,7 @@ public class HighschoolController : ControllerBase
         return Ok(result);
     }
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetHighschoolById(Guid id)
+    public async Task<IActionResult> GetHighschoolById(int id)
     {
         var result = await _highschoolService.GetHighschoolByIdAsync(id);
         return Ok(result);
@@ -60,7 +60,7 @@ public class HighschoolController : ControllerBase
         }
     }
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteHighschoolAsync(Guid id)
+    public async Task<IActionResult> DeleteHighschoolAsync(int id)
     {
         var result = await _highschoolService.DeleteHighschool(id);
         return Ok(result);

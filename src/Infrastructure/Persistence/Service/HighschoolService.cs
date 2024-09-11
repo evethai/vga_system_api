@@ -21,9 +21,9 @@ public class HighschoolService : IHighschoolService
         _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
-    public async Task<HighschoolModel> GetHighschoolByIdAsync(Guid HighschoolId)
+    public async Task<HighschoolModel> GetHighschoolByIdAsync(int HighschoolId)
     {
-        var highschool = await _unitOfWork.HighschoolRepository.GetByIdGuidAsync(HighschoolId);
+        var highschool = await _unitOfWork.HighschoolRepository.GetByIdAsync(HighschoolId);
         return _mapper.Map<HighschoolModel>(highschool);
     }
 
@@ -53,9 +53,9 @@ public class HighschoolService : IHighschoolService
         };
     }
 
-    public async Task<ResponseModel> DeleteHighschool(Guid HighschoolId)
+    public async Task<ResponseModel> DeleteHighschool(int HighschoolId)
     {
-        var highschool = await _unitOfWork.HighschoolRepository.GetByIdGuidAsync(HighschoolId);
+        var highschool = await _unitOfWork.HighschoolRepository.GetByIdAsync(HighschoolId);
         var result = await _unitOfWork.HighschoolRepository.DeleteAsync(highschool);
         _unitOfWork.Save();
         return new ResponseModel

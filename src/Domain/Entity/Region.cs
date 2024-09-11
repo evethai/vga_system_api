@@ -9,6 +9,6 @@ public class Region
 {
     public int Id { get; set; }
     public string Name { get; set; }
-    public string Desciption { get; set; }
+    public string Description { get; set; }
     public virtual ICollection<HighSchool> HighSchools { get; set; } = null!;
 }

@@ -83,7 +83,7 @@ public class StudentService : IStudentService
     }
 
     #region Import Students From Json Async
-    public async Task<ResponseModel> ImportStudentsFromJsonAsync(string stringJson, Guid highschoolId)
+    public async Task<ResponseModel> ImportStudentsFromJsonAsync(string stringJson, int highschoolId)
     {
         try
         {
