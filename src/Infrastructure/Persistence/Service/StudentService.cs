@@ -83,11 +83,11 @@ public class StudentService : IStudentService
     }
 
     #region Import Students From Json Async
-    public async Task<ResponseModel> ImportStudentsFromJsonAsync(string stringJson, int highschoolId)
+    public async Task<ResponseModel> ImportStudentsFromJsonAsync(StudentImportModel studentImportModel)
     {
         try
         {
-            var students = JsonConvert.DeserializeObject<List<Student>>(stringJson);
+            var students = JsonConvert.DeserializeObject<List<StudentJsonModel>>(studentImportModel.stringJson);
 
             if (students == null || students.Count == 0)
             {
@@ -98,11 +98,12 @@ public class StudentService : IStudentService
                 };
             }
 
-            foreach (var student in students)
+            
+            foreach (var studentImport in students)
             {
-                student.Id = Guid.NewGuid();
-                student.HighSchoolId = highschoolId;
-
+                var student = _mapper.Map<Student>(studentImport);
+                student.CreateAt = DateTime.Now;
+                student.HighSchoolId = studentImportModel.highschoolId;
                 await _unitOfWork.StudentRepository.AddAsync(student);
             }
 

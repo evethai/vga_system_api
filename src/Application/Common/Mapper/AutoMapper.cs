@@ -22,7 +22,7 @@ namespace Application.Common.Mapper
             //Region
             CreateMap<Region, RegionModel>().ReverseMap();
             //MBTI Test
-            CreateMap<Result,ResultModel>().ReverseMap();
+            CreateMap<Result, ResultModel>().ReverseMap();
 
             //Highschool
             CreateMap<HighSchool, HighschoolModel>().ReverseMap();
@@ -33,6 +33,7 @@ namespace Application.Common.Mapper
             CreateMap<Student, StudentModel>().ReverseMap();
             CreateMap<Student, StudentPostModel>().ReverseMap();
             CreateMap<Student, StudentPutModel>().ReverseMap();
+            CreateMap<Student, StudentJsonModel>().ReverseMap();
             //Answer
             CreateMap<Answer, AnswerModel>().ReverseMap();
         }
