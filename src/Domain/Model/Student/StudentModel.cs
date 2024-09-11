@@ -17,7 +17,7 @@ public class StudentModel
     public DateTime DateOfBirth { get; set; }
     public bool Status { get; set; }
     public DateTime CreateAt { get; set; }
-    public Guid HighSchoolId { get; set; }
+    public int HighSchoolId { get; set; }
     public int GoldBalance { get; set; }
 }
 public class ResponseStudentModel
