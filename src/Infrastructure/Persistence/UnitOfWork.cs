@@ -14,18 +14,16 @@ namespace Infrastructure.Persistence
     public class UnitOfWork : IUnitOfWork
     {
         private readonly VgaDbContext _context;
-        private readonly IMapper _mapper;
         private RegionRepository _regionRepository;
-        private HighschoolRepository _highschoolRepository;
+        private HighschoolRepository _highSchoolRepository;
         private StudentRepository _studentRepository;
+        private StudentTestRepository _studentTestRepository;
+        private PersonalTestRepository _personalTestRepository;
 
-        private ResultMBTITestRepository _resultMBTITestRepository;
 
-
-        public UnitOfWork(VgaDbContext context, IMapper mapper)
+        public UnitOfWork(VgaDbContext context)
         {
             _context = context;
-            _mapper = mapper;
         }
 
 
@@ -45,11 +43,11 @@ namespace Infrastructure.Persistence
         {
             get
             {
-                if (_highschoolRepository == null)
+                if (_highSchoolRepository == null)
                 {
-                    _highschoolRepository = new HighschoolRepository(_context);
+                    _highSchoolRepository = new HighschoolRepository(_context);
                 }
-                return _highschoolRepository;
+                return _highSchoolRepository;
             }
         }
         public IStudentRepository StudentRepository
@@ -63,15 +61,29 @@ namespace Infrastructure.Persistence
                 return _studentRepository;
             }
         }
-        public IResultMBTITestRepository ResultMBTITestRepository
+       
+
+        public IStudentTestRepository StudentTestRepository
         {
             get
             {
-                if (_resultMBTITestRepository == null)
+                if (_studentTestRepository == null)
                 {
-                    _resultMBTITestRepository = new ResultMBTITestRepository(_context);
+                    _studentTestRepository = new StudentTestRepository(_context);
                 }
-                return _resultMBTITestRepository;
+                return _studentTestRepository;
+            }
+        }
+
+        public IPersonalTestRepository PersonalTestRepository
+        {
+            get
+            {
+                if (_personalTestRepository == null)
+                {
+                    _personalTestRepository = new PersonalTestRepository(_context);
+                }
+                return _personalTestRepository;
             }
         }
 

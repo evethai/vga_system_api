@@ -15,11 +15,21 @@ namespace Api.Installers
                 options.UseSqlServer(sqlConfig.ConnectionString, sqlOptions =>
                 {
                     sqlOptions.EnableRetryOnFailure(
-                        maxRetryCount: 5, 
-                        maxRetryDelay: TimeSpan.FromSeconds(10), 
-                        errorNumbersToAdd: null 
+                        maxRetryCount: 5,
+                        maxRetryDelay: TimeSpan.FromSeconds(10),
+                        errorNumbersToAdd: null
                     );
                 }));
+
+            //services.AddDbContext<VgaDbContext>(options =>
+            //    options.UseNpgsql(sqlConfig.ConnectionString, npgsqlOptions =>
+            //    {
+            //        npgsqlOptions.EnableRetryOnFailure(
+            //            maxRetryCount: 5,
+            //            maxRetryDelay: TimeSpan.FromSeconds(10),
+            //            errorCodesToAdd: null
+            //        );
+            //    }));
         }
     }
 }

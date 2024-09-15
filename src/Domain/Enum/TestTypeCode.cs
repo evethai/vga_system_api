@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace Domain.Enum
 {
-    public enum Gender
+    public enum TestTypeCode
     {
-        Boy = 1,
-        Girl = 2
+        MBTI = 1,
+        Holland = 2,
+        Other = 3
     }
 }

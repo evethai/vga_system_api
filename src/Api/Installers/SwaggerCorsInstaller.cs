@@ -1,4 +1,5 @@
-﻿using Microsoft.OpenApi.Models;
+﻿using System.Text.Json.Serialization;
+using Microsoft.OpenApi.Models;
 
 namespace Api.Installers
 {
@@ -37,6 +38,14 @@ namespace Api.Installers
                     },
                 };
                 c.AddSecurityRequirement(securityRequirement);
+            });
+
+            services.AddControllers().AddJsonOptions(x =>
+            x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles)
+            .AddJsonOptions(option =>
+            {
+                option.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.KebabCaseLower;
+                option.JsonSerializerOptions.WriteIndented = true;
             });
 
             // CORS Configuration

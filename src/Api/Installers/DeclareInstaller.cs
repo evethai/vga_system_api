@@ -22,14 +22,14 @@ namespace Api.Installers
             //services.AddSingleton<ILockService, LockService>();
 
             //Declare Repository
-            services.AddScoped<IResultMBTITestRepository, ResultMBTITestRepository>();
+            services.AddScoped<IStudentTestRepository, StudentTestRepository>();
             services.AddScoped<IRegionRepository, RegionRepository>();
             services.AddScoped<IHighschoolRepository, HighschoolRepository>();
             services.AddScoped<IStudentRepository, StudentRepository>();
 
 
             //Declare Service
-            services.AddScoped<IResultBMTITestService, ResultBMTITestService>();
+            services.AddScoped<IStudentTestService, StudentTestService>();
             services.AddScoped<IRegionService, RegionService>();
             services.AddScoped<IHighschoolService, HighschoolService>();
             services.AddScoped<IStudentService, StudentService>();
