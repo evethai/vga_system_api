@@ -13,7 +13,7 @@ public class StudentModel
     public string Name { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public string Phone { get; set; } = string.Empty;
-    public Gender Gender { get; set; }
+    public bool Gender { get; set; }
     public DateTime DateOfBirth { get; set; }
     public bool Status { get; set; }
     public DateTime CreateAt { get; set; }

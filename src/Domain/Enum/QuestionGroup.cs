@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace Domain.Enum
 {
-    public enum PersonalityTypeMBTI
+    public enum QuestionGroup
     {
-        E = 1,
+        None = 0,
+        R = 1,
         I = 2,
-        S = 3,
-        N = 4,
-        T = 5,
-        F = 6,
-        J = 7,
-        P = 8
+        A = 3,
+        S = 4,
+        E = 5,
+        C = 6,
+
     }
 }

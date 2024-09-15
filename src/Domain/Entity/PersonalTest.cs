@@ -1,33 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Domain.Enum;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Domain.Entity
 {
-    public class Student
+    public class PersonalTest
     {
         [Key]
-        public Guid Id { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        public int TestTypeId { get; set; }
+        public TestType TestType { get; set; } = null!;
 
         public string Name { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
-        public string Phone { get; set; } = string.Empty;
-        public bool Gender { get; set; }
-        public DateTime DateOfBirth { get; set; }
+        public string Description { get; set; } = string.Empty;
         public bool Status { get; set; }
         public DateTime CreateAt { get; set; }
 
-        public int HighSchoolId { get; set; }
-        public HighSchool HighSchool { get; set; } = null!;
-
-        public int GoldBalance { get; set; }
-
         public virtual ICollection<StudentTest> StudentTests { get; set; } = new List<StudentTest>();
+        public virtual ICollection<TestQuestion> TestQuestions { get; set; } = new List<TestQuestion>();
     }
 
 }
