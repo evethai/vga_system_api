@@ -68,7 +68,7 @@ public class StudentController : ControllerBase
     }
 
     [HttpPost("import")]
-    public async Task<IActionResult> ImportFromJsonAsync(string stringJson, Guid highschoolId)
+    public async Task<IActionResult> ImportFromJsonAsync(string stringJson, int highschoolId)
     {
 
         if (!ModelState.IsValid)
