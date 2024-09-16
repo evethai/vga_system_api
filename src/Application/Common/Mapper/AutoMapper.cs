@@ -27,10 +27,6 @@ namespace Application.Common.Mapper
             CreateMap<PersonalTest, PersonalTestModel>().ReverseMap();
             CreateMap<StudentTest, StudentTestModel>().ReverseMap();
 
-            //StudentTest
-            CreateMap<StudentTest, StudentTestModel>().ReverseMap();
-
-
             //Highschool
             CreateMap<HighSchool, HighschoolModel>().ReverseMap();
             CreateMap<HighSchool, HighschoolPostModel>().ReverseMap();
@@ -40,10 +36,12 @@ namespace Application.Common.Mapper
             CreateMap<Student, StudentModel>().ReverseMap();
             CreateMap<Student, StudentPostModel>().ReverseMap();
             CreateMap<Student, StudentPutModel>().ReverseMap();
+            CreateMap<Student, StudentJsonModel>().ReverseMap();
 
             //Question
             CreateMap<Question, QuestionModel>().ReverseMap();
 
+            CreateMap<Student, StudentJsonModel>().ReverseMap();
             //Answer
             CreateMap<Answer, AnswerModel>().ReverseMap();
 
