@@ -87,9 +87,9 @@ public class StudentService : IStudentService
     {
         try
         {
-            var students = JsonConvert.DeserializeObject<List<StudentJsonModel>>(studentImportModel.stringJson);
+            var students = JsonConvert.DeserializeObject<StudentJsonFileDataModel>(studentImportModel.stringJson);
 
-            if (students == null || students.Count == 0)
+            if (students == null || students.Data.Count == 0)
             {
                 return new ResponseModel
                 {
@@ -98,12 +98,12 @@ public class StudentService : IStudentService
                 };
             }
 
-            
-            foreach (var studentImport in students)
+            foreach (var studentImport in students.Data)
             {
                 var student = _mapper.Map<Student>(studentImport);
                 student.CreateAt = DateTime.Now;
                 student.HighSchoolId = studentImportModel.highschoolId;
+                student.Status = true;
                 await _unitOfWork.StudentRepository.AddAsync(student);
             }
 
@@ -112,7 +112,7 @@ public class StudentService : IStudentService
             return new ResponseModel
             {
                 IsSuccess = true,
-                Message = $"{students.Count} students imported successfully."
+                Message = $"{students.Data.Count} students imported successfully."
             };
         }
         catch (Exception ex)
