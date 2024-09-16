@@ -12,7 +12,24 @@ namespace Api.Installers
             configuration.GetSection(nameof(SqlServerConfiguration)).Bind(sqlConfig);
             services.AddSingleton(sqlConfig);
             services.AddDbContext<VgaDbContext>(options =>
-                options.UseSqlServer(sqlConfig.ConnectionString));
+                options.UseSqlServer(sqlConfig.ConnectionString, sqlOptions =>
+                {
+                    sqlOptions.EnableRetryOnFailure(
+                        maxRetryCount: 5,
+                        maxRetryDelay: TimeSpan.FromSeconds(10),
+                        errorNumbersToAdd: null
+                    );
+                }));
+
+            //services.AddDbContext<VgaDbContext>(options =>
+            //    options.UseNpgsql(sqlConfig.ConnectionString, npgsqlOptions =>
+            //    {
+            //        npgsqlOptions.EnableRetryOnFailure(
+            //            maxRetryCount: 5,
+            //            maxRetryDelay: TimeSpan.FromSeconds(10),
+            //            errorCodesToAdd: null
+            //        );
+            //    }));
         }
     }
 }

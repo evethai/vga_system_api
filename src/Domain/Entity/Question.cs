@@ -14,14 +14,18 @@ namespace Domain.Entity
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
+
         public string Content { get; set; } = string.Empty;
-        public OppositePairMBTI Type { get; set; } 
-        public int TestId { get; set; }
-        public Test Test { get; set; } = null!;
+
+        public int TestTypeId { get; set; }
+        public TestType TestType { get; set; } = null!;
+
+        public QuestionGroup Group { get; set; }
         public bool Status { get; set; }
         public DateTime CreateAt { get; set; }
-        public virtual ICollection<Answer> Answers { get; set; } = null!;
 
-
+        public virtual ICollection<Answer> Answers { get; set; } = new List<Answer>();
+        public virtual ICollection<TestQuestion> TestQuestions { get; set; } = new List<TestQuestion>();
     }
+
 }
