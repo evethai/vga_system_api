@@ -100,7 +100,7 @@ public class StudentService : IStudentService
 
             foreach (var student in students)
             {
-                student.Id = Guid.NewGuid();
+                //student.Id = Guid.NewGuid();
                 student.HighSchoolId = highschoolId;
 
                 await _unitOfWork.StudentRepository.AddAsync(student);

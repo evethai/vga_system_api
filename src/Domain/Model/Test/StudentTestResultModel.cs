@@ -9,7 +9,7 @@ namespace Domain.Model.Test
 {
     public class StudentTestResultModel
     {
-        public int StudentId { get; set; }
+        public Guid StudentId { get; set; }
         public int PersonalTestId { get; set; }
         public List<int> listQuestionId { get; set; } = new List<int>();
         public List<int>? listAnswerId { get; set; }

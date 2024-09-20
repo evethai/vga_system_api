@@ -8,15 +8,13 @@ using System.Threading.Tasks;
 
 namespace Domain.Entity
 {
-    public class MajorType
+    public class MajorType : BaseEntity
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+
         public int PersonalGroupId { get; set; }
         public PersonalGroup PersonalGroup { get; set; } = null!;
         public int MajorId { get; set; }
         public Major Major { get; set; } = null!;
-        public bool status { get; set; }
+        public bool Status { get; set; }
     }
 }

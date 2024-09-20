@@ -5,20 +5,19 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Domain.Enum;
 
 namespace Domain.Entity
 {
-    public class TestType : BaseEntity
+    public class CareerExpert: BaseEntity
     {
-        public TestTypeCode TypeCode { get; set; }
+        public Guid AccountId { get; set; }
+        public virtual Account Account { get; set; } = null!;
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
+        public DateTime DoB { get; set; }
         public bool Status { get; set; }
-        public DateTime CreateAt { get; set; }
-        public virtual ICollection<PersonalTest> PersonalTests { get; set; } = null!;
-        public virtual ICollection<PersonalGroup> PersonalGroups { get; set; } = null!;
-        public virtual ICollection<Question> Questions { get; set; } = null!;
+        public virtual ICollection<Certification> Certifications { get; set; } = null!;
+        public virtual ICollection<ConsultationDay> ConsultationDays { get; set; } = null!;
 
     }
 }

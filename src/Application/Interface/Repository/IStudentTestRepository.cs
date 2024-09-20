@@ -15,5 +15,6 @@ namespace Application.Interface.Repository
         Task<IEnumerable<Question>> GetAllQuestionByTestId(int personalTestId);
         Task<IEnumerable<Answer>> GetAnswerByQuestionId(int questionId);
         Task<TestTypeCode> CheckTestType(int personalTestId);
+        Task<IEnumerable<StudentTest?>> GetHistoryTestByStudentId(int studentId);
     }
 }

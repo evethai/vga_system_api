@@ -29,6 +29,7 @@ namespace Application.Common.Mapper
 
             //StudentTest
             CreateMap<StudentTest, StudentTestModel>().ReverseMap();
+            CreateMap<StudentTest, HistoryTestModel>().ReverseMap();
 
 
             //Highschool

@@ -17,7 +17,7 @@ namespace Api.Controllers
             //_cacheService = cacheService;
         }
 
-        [HttpPost]
+        [HttpPost("result-personal-test")]
         public async Task<IActionResult> CreateResultMBTITest(StudentTestResultModel result)
         {
             //var cacheKey = RedisConstants.AnswerMBTIKey+ result.TestId;
@@ -41,7 +41,7 @@ namespace Api.Controllers
 
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("test-by{id}")]
         public async Task<IActionResult> GetPersonalTestById(int id)
         {
             //var cacheKey = RedisConstants.AnswerMBTIKey + id;
@@ -53,6 +53,65 @@ namespace Api.Controllers
                 var response = await _studentTestService.GetTestById(id);
                 return Ok(response);
             }catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+
+
+        [HttpGet("all-test")]
+        public async Task<IActionResult> GetAllTest()
+        {
+            try
+            {
+                var response = await _studentTestService.GetAllTest();
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+        [HttpGet("all-question-by-test-id{id}")]
+        public async Task<IActionResult> GetQuestionByTestId(int id)
+        {
+            try
+            {
+                var response = await _studentTestService.GetQuestionByTestId(id);
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+        [HttpGet("answer-by-question-id{id}")]
+        public async Task<IActionResult> GetAnswerByQuestionId(int id)
+        {
+            try
+            {
+                var response = await _studentTestService.GetAnswerByQuestionId(id);
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+        [HttpGet("history-test-by-student-id{studentId}")]
+        public async Task<IActionResult> GetHistoryTestByStudentId(int studentId)
+        {
+            try
+            {
+                var response = await _studentTestService.GetHistoryTestByStudentId(studentId);
+                if(response == null)
+                {
+                    return Ok("User does not take the test!");
+                }
+                return Ok(response);
+            }
+            catch (Exception e)
             {
                 return BadRequest(e.Message);
             }

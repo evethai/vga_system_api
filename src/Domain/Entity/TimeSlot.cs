@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace Domain.Entity
 {
-    public class TestQuestion : BaseEntity
+    public class TimeSlot : BaseEntity
     {
-        public int PersonalTestId { get; set; }
-        public PersonalTest PersonalTest { get; set; } = null!;
-        public int QuestionId { get; set; }
-        public Question Question { get; set; } = null!;
+        public string Name { get; set; } = string.Empty;
+        public TimeOnly StartTime { get; set; }
+        public TimeOnly EndTime { get; set; }
         public bool Status { get; set; }
-    }
+        public virtual ICollection<ConsultationTime> ConsultationTimes { get; set; } = null!;
 
+    }
 }
