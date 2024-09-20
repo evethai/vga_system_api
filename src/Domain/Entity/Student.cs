@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,25 +10,19 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Domain.Entity
 {
-    public class Student
+    public class Student : BaseEntity
     {
-        [Key]
-        public Guid Id { get; set; }
-
+        public Guid AccountId { get; set; }
+        public virtual Account Account { get; set; } = null!;
+        public int HighSchoolId { get; set; }
+        public HighSchool HighSchool { get; set; } = null!;
         public string Name { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
-        public string Phone { get; set; } = string.Empty;
         public bool Gender { get; set; }
         public DateTime DateOfBirth { get; set; }
         public bool Status { get; set; }
         public DateTime CreateAt { get; set; }
-
-        public int HighSchoolId { get; set; }
-        public HighSchool HighSchool { get; set; } = null!;
-
-        public int GoldBalance { get; set; }
-
-        public virtual ICollection<StudentTest> StudentTests { get; set; } = new List<StudentTest>();
+        public virtual ICollection<StudentTest> StudentTests { get; set; } = null!;
+        public virtual ICollection<Booking> Bookings { get; set; } = null!;
     }
 
 }

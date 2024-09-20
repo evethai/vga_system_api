@@ -8,17 +8,14 @@ using System.Threading.Tasks;
 
 namespace Domain.Entity
 {
-    public class PersonalGroup
+    public class PersonalGroup : BaseEntity
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public int TestTypeId { get; set; }
+        public TestType TestType { get; set; } = null!;
         public string Code { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
-        public int TestTypeId { get; set; }
-        public TestType TestType { get; set; } = null!;
-        public bool status { get; set; }
+        public bool Status { get; set; }
         public virtual ICollection<MajorType> MajorTypes { get; set; } = null!;
         public virtual ICollection<StudentTest> StudentTests { get; set; } = null!;
 

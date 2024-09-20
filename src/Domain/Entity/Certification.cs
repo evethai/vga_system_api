@@ -8,13 +8,12 @@ using System.Threading.Tasks;
 
 namespace Domain.Entity
 {
-    public class TestQuestion : BaseEntity
+    public class Certification : BaseEntity
     {
-        public int PersonalTestId { get; set; }
-        public PersonalTest PersonalTest { get; set; } = null!;
-        public int QuestionId { get; set; }
-        public Question Question { get; set; } = null!;
+        public int ExpertId { get; set; }
+        public virtual CareerExpert Expert { get; set; } = null!;
+        public string Description { get; set; } = string.Empty;
+        public string ImageUrl { get; set; } = string.Empty;
         public bool Status { get; set; }
     }
-
 }

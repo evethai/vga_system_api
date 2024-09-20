@@ -13,7 +13,9 @@ using Domain.Model.PersonalGroup;
 using Domain.Model.Question;
 using Domain.Model.Test;
 using Infrastructure.Data;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Infrastructure.Persistence.Repository;
 
@@ -39,7 +41,7 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
             { AnswerValue.P, 0 }
         };
 
-        var answers =  await _context.answer
+        var answers = await _context.answer
             .Where(a => listAnswerId.Contains(a.Id))
             .ToListAsync();
 
@@ -145,7 +147,7 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
         };
 
 
-        var questions =  await _context.question
+        var questions = await _context.question
             .Where(a => listQuestionId.Contains(a.Id))
             .ToListAsync();
 
@@ -228,5 +230,26 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
         return testType;
     }
 
+    public async Task<IEnumerable<StudentTest?>> GetHistoryTestByStudentId(int studentId)
+    {
+        var tests = await _context.student_test
+            .Where(s => s.StudentId == studentId)
+            .GroupBy(s => s.PersonalTest)
+            .Select(g => g.OrderByDescending(s => s.Date)
+                          .Select(s => new StudentTest
+                          {
+                              PersonalTestId = s.PersonalTestId,
+                              PersonalTest = s.PersonalTest,
+                              PersonalGroupId = s.PersonalGroupId,
+                              PersonalGroup = s.PersonalGroup,
+                              Date = s.Date
+                          })
+                          .FirstOrDefault())
+            .ToListAsync();
+
+        return tests;
+    }
+
 }
+
 

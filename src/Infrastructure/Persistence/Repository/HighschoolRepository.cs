@@ -33,9 +33,9 @@ public class HighschoolRepository : GenericRepository<HighSchool>, IHighschoolRe
 
         if (searchModel.sortByGold == true)
         {
-            orderBy = p => searchModel.descending == true ?
-                           p.OrderByDescending(x => x.GoldBalance) :
-                           p.OrderBy(x => x.GoldBalance);
+            //orderBy = p => searchModel.descending == true ?
+            //               p.OrderByDescending(x => x.GoldBalance) :
+            //               p.OrderBy(x => x.GoldBalance);
         }
         return (filter, orderBy);
     }

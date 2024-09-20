@@ -100,11 +100,10 @@ public class StudentService : IStudentService
 
             foreach (var studentImport in students.Data)
             {
-                var student = _mapper.Map<Student>(studentImport);
-                student.CreateAt = DateTime.Now;
-                student.HighSchoolId = studentImportModel.highschoolId;
-                student.Status = true;
-                await _unitOfWork.StudentRepository.AddAsync(student);
+                //student.Id = Guid.NewGuid();
+                //student.HighSchoolId = highschoolId;
+
+                //await _unitOfWork.StudentRepository.AddAsync(student);
             }
 
             _unitOfWork.Save();

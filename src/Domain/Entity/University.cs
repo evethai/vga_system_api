@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Domain.Entity
 {
-    public class Major : BaseEntity
+    public class University : BaseEntity
     {
-        public string Code { get; set; } = string.Empty;
+        public Guid AccountId { get; set; }
+        public virtual Account Account { get; set; } = null!;
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
-        public bool Status { get; set; }
-        public virtual ICollection<MajorType> MajorTypes { get; set; } = null!;
+        public string Address { get; set; } = string.Empty;
+        public virtual ICollection<News> News { get; set; } = null!;
         public virtual ICollection<AdmissionInformation> AdmissionInformation { get; set; } = null!;
 
     }

@@ -52,9 +52,16 @@ namespace Infrastructure.Persistence.Service
                 JsonResult = jsonResult,
                 PersonalGroupId = personalGroupModel.Id
             };
-            //var resultTest = _mapper.Map<StudentTest>(model);
-            //await _unitOfWork.StudentTestRepository.AddAsync(resultTest);
-            //_unitOfWork.Save();
+            try
+            {
+                var resultTest = _mapper.Map<StudentTest>(model);
+                await _unitOfWork.StudentTestRepository.AddAsync(resultTest);
+                _unitOfWork.Save();
+            }
+            catch(Exception e)
+            {
+                throw new KeyNotFoundException("Create result test failed" + e);
+            }
 
             return new ResponseModel
             {
@@ -98,6 +105,17 @@ namespace Infrastructure.Persistence.Service
         {
             var answers = await _unitOfWork.StudentTestRepository.GetAnswerByQuestionId(id);
             var result = _mapper.Map<IEnumerable<AnswerModel>>(answers);
+            return result;
+        }
+
+        public async Task<IEnumerable<HistoryTestModel?>> GetHistoryTestByStudentId(int studentId)
+        {
+            var tests = await _unitOfWork.StudentTestRepository.GetHistoryTestByStudentId(studentId);
+            if(tests.Count() <= 0)
+            {
+                return null;
+            }
+            var result = _mapper.Map<IEnumerable<HistoryTestModel>>(tests);
             return result;
         }
     }

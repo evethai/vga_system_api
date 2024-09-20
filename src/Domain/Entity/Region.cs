@@ -5,10 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Domain.Entity;
-public class Region
+public class Region : BaseEntity
 {
-    public int Id { get; set; }
-    public string Name { get; set; }
-    public string Description { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string Description { get; set; } = null!;
     public virtual ICollection<HighSchool> HighSchools { get; set; } = null!;
 }
