@@ -68,7 +68,7 @@ public class StudentController : ControllerBase
     }
 
     [HttpPost("import")]
-    public async Task<IActionResult> ImportFromJsonAsync(string stringJson, int highschoolId)
+    public async Task<IActionResult> ImportFromJsonAsync([FromForm] StudentImportModel studentImportModel)
     {
 
         if (!ModelState.IsValid)
@@ -77,7 +77,7 @@ public class StudentController : ControllerBase
         }
         try
         {
-            var result = await _studentService.ImportStudentsFromJsonAsync(stringJson, highschoolId);
+            var result = await _studentService.ImportStudentsFromJsonAsync(studentImportModel);
             return Ok(result);
         }
         catch (Exception ex)
