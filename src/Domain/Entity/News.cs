@@ -8,7 +8,7 @@ namespace Domain.Entity
 {
     public class News : BaseEntity
     {
-        public int UniversityId { get; set; }
+        public Guid UniversityId { get; set; }
         public University University { get; set; } = null!;
         public string Title { get; set; } = string.Empty;
         public string Content { get; set; } = string.Empty;

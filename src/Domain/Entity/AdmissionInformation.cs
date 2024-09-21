@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace Domain.Entity
 {
-    public class AdmissionInformation : BaseEntity
+    public class AdmissionInformation : BasicEntity
     {
-        public int UniversityId { get; set; }
+        public Guid UniversityId { get; set; }
         public University University { get; set; } = null!;
-        public int MajorId { get; set; }
+        public Guid MajorId { get; set; }
         public Major Major { get; set; } = null!;
-        public int AdmissionMethodId { get; set; }
+        public Guid AdmissionMethodId { get; set; }
         public AdmissionMethod AdmissionMethod { get; set; } = null!;
         public double MinimumFees { get; set; }
         public bool Status { get; set; }

@@ -42,7 +42,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("test-by{id}")]
-        public async Task<IActionResult> GetPersonalTestById(int id)
+        public async Task<IActionResult> GetPersonalTestById(Guid id)
         {
             //var cacheKey = RedisConstants.AnswerMBTIKey + id;
             //var listAnswer = await _resultBMTITestService.GetListAnswerToRedis(id);
@@ -74,7 +74,7 @@ namespace Api.Controllers
             }
         }
         [HttpGet("all-question-by-test-id{id}")]
-        public async Task<IActionResult> GetQuestionByTestId(int id)
+        public async Task<IActionResult> GetQuestionByTestId(Guid id)
         {
             try
             {
@@ -100,7 +100,7 @@ namespace Api.Controllers
             }
         }
         [HttpGet("history-test-by-student-id{studentId}")]
-        public async Task<IActionResult> GetHistoryTestByStudentId(int studentId)
+        public async Task<IActionResult> GetHistoryTestByStudentId(Guid studentId)
         {
             try
             {

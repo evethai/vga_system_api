@@ -9,9 +9,9 @@ namespace Domain.Entity
 {
     public class Booking: BaseEntity
     {
-        public int ConsultationTimeId { get; set; }
+        public Guid ConsultationTimeId { get; set; }
         public ConsultationTime ConsultationTime { get; set; } = null!;
-        public int StudentId { get; set; }
+        public Guid StudentId { get; set; }
         public Student Student { get; set; } = null!;
         public bool Status { get; set; }
     }

@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Domain.Entity
 {
-    public class TestQuestion : BaseEntity
+    public class TestQuestion : BasicEntity
     {
-        public int PersonalTestId { get; set; }
+        public Guid PersonalTestId { get; set; }
         public PersonalTest PersonalTest { get; set; } = null!;
         public int QuestionId { get; set; }
         public Question Question { get; set; } = null!;

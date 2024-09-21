@@ -10,8 +10,8 @@ namespace Domain.Model.Test
 {
     public class PersonalTestModel
     {
-        public int Id { get; set; }
-        public int TestTypeId { get; set; }
+        public Guid Id { get; set; }
+        public Guid TestTypeId { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public List<QuestionModel> QuestionModels { get; set; } = new List<QuestionModel>();

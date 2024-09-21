@@ -9,7 +9,7 @@ using Domain.Enum;
 
 namespace Domain.Entity
 {
-    public class Answer : BaseEntity
+    public class Answer : BasicEntity
     {
 
         public int QuestionId { get; set; }

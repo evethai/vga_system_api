@@ -79,7 +79,7 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
 
 
 
-    public async Task<PersonalTestModel> GetTestById(int personalTestId)
+    public async Task<PersonalTestModel> GetTestById(Guid personalTestId)
     {
 
         var test = await _context.personal_test
@@ -208,7 +208,7 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
 
     }
 
-    public async Task<IEnumerable<Question>> GetAllQuestionByTestId(int personalTestId)
+    public async Task<IEnumerable<Question>> GetAllQuestionByTestId(Guid personalTestId)
     {
         var result = await _context.test_question.Where(q => q.PersonalTestId == personalTestId).Select(p => p.Question).ToListAsync();
         return result;
@@ -220,7 +220,7 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
         return result;
     }
 
-    public async Task<TestTypeCode> CheckTestType(int personalTestId)
+    public async Task<TestTypeCode> CheckTestType(Guid personalTestId)
     {
         var testType = await _context.personal_test
             .Where(p => p.Id == personalTestId)
@@ -230,7 +230,7 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
         return testType;
     }
 
-    public async Task<IEnumerable<StudentTest?>> GetHistoryTestByStudentId(int studentId)
+    public async Task<IEnumerable<StudentTest?>> GetHistoryTestByStudentId(Guid studentId)
     {
         var tests = await _context.student_test
             .Where(s => s.StudentId == studentId)

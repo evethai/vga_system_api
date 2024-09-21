@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entity
 {
-    public class TimeSlot : BaseEntity
+    public class TimeSlot : BasicEntity
     {
         public string Name { get; set; } = string.Empty;
         public TimeOnly StartTime { get; set; }

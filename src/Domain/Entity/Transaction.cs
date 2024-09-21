@@ -8,7 +8,7 @@ namespace Domain.Entity
 {
     public class Transaction : BaseEntity
     {
-        public int WalletId { get; set; }
+        public Guid WalletId { get; set; }
         public Wallet Wallet { get; set; } = null!;
         public int GoldAmount { get; set; }
         public string Description { get; set; } = null!;

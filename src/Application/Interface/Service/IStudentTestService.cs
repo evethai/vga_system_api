@@ -11,11 +11,11 @@ namespace Application.Interface.Service
     {
 
         Task<ResponseModel> CreateResultForTest(StudentTestResultModel result);
-        Task<PersonalTestModel> GetTestById(int id);
+        Task<PersonalTestModel> GetTestById(Guid id);
         Task<IEnumerable<PersonalTestModel>> GetAllTest();
-        Task<IEnumerable<QuestionModel>> GetQuestionByTestId(int id);
+        Task<IEnumerable<QuestionModel>> GetQuestionByTestId(Guid id);
         Task<IEnumerable<AnswerModel>> GetAnswerByQuestionId(int id);
-        Task<IEnumerable<HistoryTestModel?>> GetHistoryTestByStudentId(int studentId);
+        Task<IEnumerable<HistoryTestModel?>> GetHistoryTestByStudentId(Guid studentId);
 
     }
 }

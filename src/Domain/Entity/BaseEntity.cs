@@ -11,7 +11,14 @@ namespace Domain.Entity
     public abstract class BaseEntity
     {
         [Key]
+        public Guid Id { get; set; }
+    }
+    public abstract class BasicEntity
+    {
+        [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
     }
+
+
 }
