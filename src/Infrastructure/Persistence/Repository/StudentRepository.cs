@@ -28,7 +28,7 @@ public class StudentRepository : GenericRepository<Student>, IStudentRepository
 
         if (searchModel.highschoolId.HasValue)
         {
-            filter = filter.And(p => p.HighSchoolId == searchModel.highschoolId.Value);
+            //filter = filter.And(p => p.HighSchoolId == searchModel.highschoolId.Value);
         }
 
         if (searchModel.sortByGold == true)

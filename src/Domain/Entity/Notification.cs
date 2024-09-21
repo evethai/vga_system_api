@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entity
 {
-    public class Notification : BaseEntity
+    public class Notification : BasicEntity
     {
         public Guid AccountId { get; set; }
         public Account Account { get; set; } = null!;

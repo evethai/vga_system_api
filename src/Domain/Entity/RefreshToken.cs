@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace Domain.Entity
 {
-    public class RefreshToken
+    public class RefreshToken : BasicEntity
     {
-        [Key]
-        public Guid Id { get; set; }
         public Guid AccountId { get; set; }
         public virtual Account Account { get; set; } = null!;
         public string Token { get; set; } = null!;

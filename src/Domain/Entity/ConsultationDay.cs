@@ -10,7 +10,7 @@ namespace Domain.Entity
 {
     public class ConsultationDay : BaseEntity
     {
-        public int ExpertId { get; set; }
+        public Guid ExpertId { get; set; }
         public CareerExpert Expert { get; set; } = null!;
         public DateOnly Day { get; set; }
         public int Status { get; set; }

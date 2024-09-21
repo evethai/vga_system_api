@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Domain.Entity
 {
-    public class Certification : BaseEntity
+    public class Certification : BasicEntity
     {
-        public int ExpertId { get; set; }
+        public Guid ExpertId { get; set; }
         public virtual CareerExpert Expert { get; set; } = null!;
         public string Description { get; set; } = string.Empty;
         public string ImageUrl { get; set; } = string.Empty;

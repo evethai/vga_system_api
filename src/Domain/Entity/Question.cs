@@ -9,9 +9,9 @@ using Domain.Enum;
 
 namespace Domain.Entity
 {
-    public class Question : BaseEntity
+    public class Question : BasicEntity
     {
-        public int TestTypeId { get; set; }
+        public Guid TestTypeId { get; set; }
         public TestType TestType { get; set; } = null!;
         public string Content { get; set; } = string.Empty;
         public QuestionGroup Group { get; set; }

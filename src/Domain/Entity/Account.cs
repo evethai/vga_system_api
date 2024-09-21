@@ -9,10 +9,9 @@ using Microsoft.AspNetCore.Authorization.Infrastructure;
 
 namespace Domain.Entity
 {
-    public class Account
+    public class Account : BaseEntity
     {
-        [Key]
-        public Guid Id { get; set; }
+
         public string Email { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty!;
         public string Phone { get; set; } = string.Empty;

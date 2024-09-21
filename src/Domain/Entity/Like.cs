@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Domain.Entity
 {
-    public class Like : BaseEntity
+    public class Like : BasicEntity
     {
-        public int NewsId { get; set; }
+        public Guid NewsId { get; set; }
         public News News { get; set; } = null!;
         public Guid AccountId { get; set; }
         public Account Account { get; set; } = null!;

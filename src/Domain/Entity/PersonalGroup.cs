@@ -10,7 +10,7 @@ namespace Domain.Entity
 {
     public class PersonalGroup : BaseEntity
     {
-        public int TestTypeId { get; set; }
+        public Guid TestTypeId { get; set; }
         public TestType TestType { get; set; } = null!;
         public string Code { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;

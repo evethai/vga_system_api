@@ -77,7 +77,7 @@ namespace Infrastructure.Persistence.Service
 
         }
 
-        public async Task<PersonalTestModel> GetTestById(int id)
+        public async Task<PersonalTestModel> GetTestById(Guid id)
         {
             var result = await _unitOfWork.StudentTestRepository.GetTestById(id);
             return result;
@@ -94,7 +94,7 @@ namespace Infrastructure.Persistence.Service
             return testModels;
         }
 
-        public async Task<IEnumerable<QuestionModel>> GetQuestionByTestId(int id)
+        public async Task<IEnumerable<QuestionModel>> GetQuestionByTestId(Guid id)
         {
             var questions = await _unitOfWork.StudentTestRepository.GetAllQuestionByTestId(id);
             var result = _mapper.Map<IEnumerable<QuestionModel>>(questions);
@@ -108,7 +108,7 @@ namespace Infrastructure.Persistence.Service
             return result;
         }
 
-        public async Task<IEnumerable<HistoryTestModel?>> GetHistoryTestByStudentId(int studentId)
+        public async Task<IEnumerable<HistoryTestModel?>> GetHistoryTestByStudentId(Guid studentId)
         {
             var tests = await _unitOfWork.StudentTestRepository.GetHistoryTestByStudentId(studentId);
             if(tests.Count() <= 0)

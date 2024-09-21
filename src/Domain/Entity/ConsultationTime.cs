@@ -10,7 +10,7 @@ namespace Domain.Entity
     {
         public int TimeSlotId { get; set; }
         public TimeSlot SlotTime { get; set; } = null!;
-        public int ConsultationDayId { get; set; }
+        public Guid ConsultationDayId { get; set; }
         public ConsultationDay Day { get; set; } = null!;
         public int Status { get; set; }
         public string Note { get; set; } = string.Empty;

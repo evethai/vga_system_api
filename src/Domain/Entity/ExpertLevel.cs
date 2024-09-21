@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entity
 {
-    public class ExpertLevel : BaseEntity
+    public class ExpertLevel : BasicEntity
     {
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;

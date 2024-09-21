@@ -10,7 +10,7 @@ namespace Domain.Entity
 {
     public class PersonalTest : BaseEntity
     {
-        public int TestTypeId { get; set; }
+        public Guid TestTypeId { get; set; }
         public TestType TestType { get; set; } = null!;
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
