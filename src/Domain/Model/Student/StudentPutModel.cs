@@ -7,10 +7,7 @@ using System.Threading.Tasks;
 namespace Domain.Model.Student;
 public class StudentPutModel
 {
-    public Guid Id { get; set; }
     public string Email { get; set; } = string.Empty;
     public string Phone { get; set; } = string.Empty;
-    public bool Status { get; set; }
-    public DateTime CreateAt { get; set; }
-    public int GoldBalance { get; set; }
+    public bool Status { get; set; }   
 }
