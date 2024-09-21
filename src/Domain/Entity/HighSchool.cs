@@ -7,16 +7,14 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Domain.Entity;
-public class HighSchool
+public class HighSchool : BaseEntity
 {
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }
-    public string Name { get; set; }
-    public int GoldBalance { get; set; }
-    public string LocationDetails { get; set; }
-    public string ContactInfor { get; set; }
-    public virtual ICollection <Student> Students { get; set; } = null!;
-    public int RegionId { get; set; }
+    public Guid RegionId { get; set; }
     public Region Region { get; set; } = null!;
+    public Guid AccountId { get; set; }
+    public virtual Account Account { get; set; } = null!;
+    public string Name { get; set; } = string.Empty;
+    public string LocationDetail { get; set; } = string.Empty;
+    public virtual ICollection<Student> Students { get; set; } = null!;
+
 }

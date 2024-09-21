@@ -12,7 +12,8 @@ namespace Application.Interface
         IRegionRepository RegionRepository { get; }
         IHighschoolRepository HighschoolRepository { get; }
         IStudentRepository StudentRepository { get; }
-        IResultMBTITestRepository ResultMBTITestRepository { get; }
+        IStudentTestRepository StudentTestRepository { get; }
+        IPersonalTestRepository PersonalTestRepository { get; }
         int Save();
     }
 }

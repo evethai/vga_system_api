@@ -90,13 +90,13 @@ public class StudentService : IStudentService
     }
 
     #region Import Students From Json Async
-    public async Task<ResponseModel> ImportStudentsFromJsonAsync(string stringJson, int highschoolId)
+    public async Task<ResponseModel> ImportStudentsFromJsonAsync(StudentImportModel studentImportModel)
     {
         try
         {
-            var students = JsonConvert.DeserializeObject<List<Student>>(stringJson);
+            var students = JsonConvert.DeserializeObject<StudentJsonFileDataModel>(studentImportModel.stringJson);
 
-            if (students == null || students.Count == 0)
+            if (students == null || students.Data.Count == 0)
             {
                 return new ResponseModel
                 {
@@ -105,12 +105,12 @@ public class StudentService : IStudentService
                 };
             }
 
-            foreach (var student in students)
+            foreach (var studentImport in students.Data)
             {
-                student.Id = Guid.NewGuid();
-                student.HighSchoolId = highschoolId;
+                //student.Id = Guid.NewGuid();
+                //student.HighSchoolId = highschoolId;
 
-                await _unitOfWork.StudentRepository.AddAsync(student);
+                //await _unitOfWork.StudentRepository.AddAsync(student);
             }
 
             _unitOfWork.Save();
@@ -118,7 +118,7 @@ public class StudentService : IStudentService
             return new ResponseModel
             {
                 IsSuccess = true,
-                Message = $"{students.Count} students imported successfully."
+                Message = $"{students.Data.Count} students imported successfully."
             };
         }
         catch (Exception ex)

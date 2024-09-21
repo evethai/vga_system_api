@@ -9,19 +9,16 @@ using Domain.Enum;
 
 namespace Domain.Entity
 {
-    public class Question
+    public class Question : BasicEntity
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public Guid TestTypeId { get; set; }
+        public TestType TestType { get; set; } = null!;
         public string Content { get; set; } = string.Empty;
-        public OppositePairMBTI Type { get; set; } 
-        public int TestId { get; set; }
-        public Test Test { get; set; } = null!;
+        public QuestionGroup Group { get; set; }
         public bool Status { get; set; }
         public DateTime CreateAt { get; set; }
         public virtual ICollection<Answer> Answers { get; set; } = null!;
-
-
+        public virtual ICollection<TestQuestion> TestQuestions { get; set; } = null!;
     }
+
 }
