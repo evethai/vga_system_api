@@ -7,6 +7,7 @@ using Application.Interface;
 using Application.Interface.Service;
 using AutoMapper;
 using Domain.Entity;
+using Domain.Enum;
 using Domain.Model.Highschool;
 using Domain.Model.Response;
 using Domain.Model.Student;
@@ -33,7 +34,7 @@ public class StudentService : IStudentService
         {
             total = total,
             currentPage = searchModel.currentPage,
-            students =listStudent,
+            students = listStudent,
         };
     }
 
@@ -100,10 +101,26 @@ public class StudentService : IStudentService
 
             foreach (var studentImport in students.Data)
             {
-                //student.Id = Guid.NewGuid();
-                //student.HighSchoolId = highschoolId;
+                var student = _mapper.Map<Student>(studentImport);
 
-                //await _unitOfWork.StudentRepository.AddAsync(student);
+                student.Id = Guid.NewGuid();
+
+                student.Account = new Account
+                {
+                    Id = Guid.NewGuid(), // Create new GUID for Account
+                    Email = studentImport.Email,
+                    Phone = studentImport.Phone,
+                    Password = studentImport.Phone,
+                    RoleId = Role.Student,
+                    Status = true,
+                    CreateAt = DateTime.Now
+                };
+
+                student.CreateAt = DateTime.Now;
+                student.HighSchoolId = studentImportModel.highschoolId;
+                student.Status = true;
+
+                await _unitOfWork.StudentRepository.AddAsync(student);
             }
 
             _unitOfWork.Save();
