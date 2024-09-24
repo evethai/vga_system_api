@@ -69,9 +69,11 @@ namespace Infrastructure.Persistence.Service
                 IsSuccess = true,
                 Data = new
                 {
+                    Code = personalGroupModel.Code,
                     Name = personalGroupModel.Name,
                     Des = personalGroupModel.Description,
-                    Majors = personalGroupModel.Majors
+                    Majors = personalGroupModel.Majors,
+                    Percent = personalGroupModel.Percent
                 }
             };
 
