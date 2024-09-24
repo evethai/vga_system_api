@@ -44,22 +44,28 @@ public class StudentService : IStudentService
         return _mapper.Map<StudentModel>(student);
     }
 
-    public async Task<ResponseModel> UpdateStudentAsynsl(StudentPutModel putModel)
+    public async Task<ResponseModel> UpdateStudentAsync(StudentPutModel putModel, Guid StudentId)
     {
-        var student = _mapper.Map<Student>(putModel);
-        var result = await _unitOfWork.StudentRepository.UpdateAsync(student);
+        var exitStudent = await _unitOfWork.StudentRepository.GetByIdGuidAsync(StudentId);
+        if (exitStudent == null)
+        {
+            throw new Exception("Student Id not found");
+        }
+        exitStudent.Status = putModel.Status;
+        var result = await _unitOfWork.StudentRepository.UpdateAsync(exitStudent);
         _unitOfWork.Save();
         return new ResponseModel
         {
             Message = "Student Updated Successfully",
             IsSuccess = true,
-            Data = student,
+            Data = result,
         };
 
     }
     public async Task<ResponseModel> CreateStudentAsyns(StudentPostModel postModel)
     {
         var student = _mapper.Map<Student>(postModel);
+        postModel.Status = true;
         var result = await _unitOfWork.StudentRepository.AddAsync(student);
         _unitOfWork.Save();
         return new ResponseModel

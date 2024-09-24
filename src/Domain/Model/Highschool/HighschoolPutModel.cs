@@ -9,7 +9,5 @@ public class HighschoolPutModel
 {
     public int Id { get; set; }
     public string Name { get; set; }
-    public int GoldBalance { get; set; }
     public string LocationDetails { get; set; }
-    public string ContactInfor { get; set; }
 }
