@@ -50,8 +50,6 @@ public class StudentService : IStudentService
         {
             throw new Exception("Student Id not found");
         }
-        exitStudent.Email = putModel.Email;
-        exitStudent.Phone = putModel.Phone;
         exitStudent.Status = putModel.Status;
         var result = await _unitOfWork.StudentRepository.UpdateAsync(exitStudent);
         _unitOfWork.Save();
@@ -66,6 +64,7 @@ public class StudentService : IStudentService
     public async Task<ResponseModel> CreateStudentAsyns(StudentPostModel postModel)
     {
         var student = _mapper.Map<Student>(postModel);
+        postModel.Status = true;
         var result = await _unitOfWork.StudentRepository.AddAsync(student);
         _unitOfWork.Save();
         return new ResponseModel
