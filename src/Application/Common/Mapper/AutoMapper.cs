@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Domain.Entity;
+using Domain.Enum;
 using Domain.Model.Highschool;
 using Domain.Model.Major;
 using Domain.Model.PersonalGroup;
@@ -41,12 +42,16 @@ namespace Application.Common.Mapper
             CreateMap<Student, StudentModel>().ReverseMap();
             CreateMap<Student, StudentPostModel>().ReverseMap();
             CreateMap<Student, StudentPutModel>().ReverseMap();
-            CreateMap<Student, StudentJsonModel>().ReverseMap();
+            CreateMap<Student, StudentJsonModel>()
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+            .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender))
+            .ForMember(dest => dest.DateOfBirth, opt => opt.MapFrom(src => src.DateOfBirth))
+            .ReverseMap();
+
 
             //Question
             CreateMap<Question, QuestionModel>().ReverseMap();
 
-            CreateMap<Student, StudentJsonModel>().ReverseMap();
             //Answer
             CreateMap<Answer, AnswerModel>().ReverseMap();
 
