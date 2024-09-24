@@ -42,8 +42,8 @@ public class StudentController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
-    [HttpPut]
-    public async Task<IActionResult> UpdateHighschoolAsync([FromForm] StudentPutModel putModel)
+    [HttpPut("{StudentId}")]
+    public async Task<IActionResult> UpdateStudentAsync([FromForm] StudentPutModel putModel, Guid StudentId)
     {
         if (!ModelState.IsValid)
         {
@@ -52,7 +52,7 @@ public class StudentController : ControllerBase
         try
         {
 
-            var result = await _studentService.UpdateStudentAsynsl(putModel);
+            var result = await _studentService.UpdateStudentAsync(putModel, StudentId);
             return Ok(result);
         }
         catch (Exception ex)

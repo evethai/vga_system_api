@@ -7,6 +7,7 @@ using Application.Interface;
 using Application.Interface.Service;
 using AutoMapper;
 using Domain.Entity;
+using Domain.Enum;
 using Domain.Model.Highschool;
 using Domain.Model.Response;
 using Domain.Model.Student;
@@ -33,7 +34,7 @@ public class StudentService : IStudentService
         {
             total = total,
             currentPage = searchModel.currentPage,
-            students =listStudent,
+            students = listStudent,
         };
     }
 
@@ -43,22 +44,28 @@ public class StudentService : IStudentService
         return _mapper.Map<StudentModel>(student);
     }
 
-    public async Task<ResponseModel> UpdateStudentAsynsl(StudentPutModel putModel)
+    public async Task<ResponseModel> UpdateStudentAsync(StudentPutModel putModel, Guid StudentId)
     {
-        var student = _mapper.Map<Student>(putModel);
-        var result = await _unitOfWork.StudentRepository.UpdateAsync(student);
+        var exitStudent = await _unitOfWork.StudentRepository.GetByIdGuidAsync(StudentId);
+        if (exitStudent == null)
+        {
+            throw new Exception("Student Id not found");
+        }
+        exitStudent.Status = putModel.Status;
+        var result = await _unitOfWork.StudentRepository.UpdateAsync(exitStudent);
         _unitOfWork.Save();
         return new ResponseModel
         {
             Message = "Student Updated Successfully",
             IsSuccess = true,
-            Data = student,
+            Data = result,
         };
 
     }
     public async Task<ResponseModel> CreateStudentAsyns(StudentPostModel postModel)
     {
         var student = _mapper.Map<Student>(postModel);
+        postModel.Status = true;
         var result = await _unitOfWork.StudentRepository.AddAsync(student);
         _unitOfWork.Save();
         return new ResponseModel
@@ -100,10 +107,26 @@ public class StudentService : IStudentService
 
             foreach (var studentImport in students.Data)
             {
-                //student.Id = Guid.NewGuid();
-                //student.HighSchoolId = highschoolId;
+                var student = _mapper.Map<Student>(studentImport);
 
-                //await _unitOfWork.StudentRepository.AddAsync(student);
+                student.Id = Guid.NewGuid();
+
+                student.Account = new Account
+                {
+                    Id = Guid.NewGuid(), // Create new GUID for Account
+                    Email = studentImport.Email,
+                    Phone = studentImport.Phone,
+                    Password = studentImport.Phone,
+                    RoleId = Role.Student,
+                    Status = true,
+                    CreateAt = DateTime.Now
+                };
+
+                student.CreateAt = DateTime.Now;
+                student.HighSchoolId = studentImportModel.highschoolId;
+                student.Status = true;
+
+                await _unitOfWork.StudentRepository.AddAsync(student);
             }
 
             _unitOfWork.Save();

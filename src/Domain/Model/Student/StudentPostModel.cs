@@ -16,5 +16,4 @@ public class StudentPostModel
     public bool Status { get; set; }
     public DateTime CreateAt { get; set; }
     public int HighSchoolId { get; set; }
-    public int GoldBalance { get; set; }
 }
