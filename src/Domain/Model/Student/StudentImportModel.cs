@@ -11,5 +11,5 @@ public class StudentImportModel
 {
     public string stringJson { get; set; } = string.Empty;
 
-    public int highschoolId { get; set; }
+    public Guid highschoolId { get; set; }
 }

@@ -15,9 +15,7 @@ public class HighschoolSearchModel
     [FromQuery(Name = "name")]
     public string? name { get; set; }
     [FromQuery(Name = "region-id")]
-    public int? regionId  { get; set; }
-    [FromQuery(Name = "sort-by-gold")]
-    public bool? sortByGold { get; set; } = false;
+    public Guid? regionId  { get; set; }
     [FromQuery(Name = "descending")]
     public bool? descending { get; set; } = false;
 }
