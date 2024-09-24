@@ -9,6 +9,6 @@ public class HighschoolPostModel
 {
     public string Name { get; set; }
     public string LocationDetails { get; set; }
-    public int RegionId { get; set; }
-    public int AccountId { get; set; }
+    public Guid RegionId { get; set; }
+    public Guid AccountId { get; set; }
 }
