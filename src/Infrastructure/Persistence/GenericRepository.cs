@@ -27,7 +27,7 @@ namespace Infrastructure.Persistence
             return entity;
         }
 
-        public Task<int> CountAsync(Expression<Func<T, bool>> filter = null)
+        public Task<int> CountAsync(Expression<Func<T, bool>>? filter = null)
         {
             return filter == null ? _dbSet.CountAsync() : _dbSet.CountAsync(filter);
         }
@@ -43,7 +43,7 @@ namespace Infrastructure.Persistence
             return await _dbSet.ToListAsync();
         }
 
-        public async Task<IEnumerable<T>> GetByConditionAsync(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, string includeProperties = "", int? pageIndex = null, int? pageSize = null)
+        public async Task<IEnumerable<T>> GetByConditionAsync(Expression<Func<T, bool>>? filter = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, string includeProperties = "", int? pageIndex = null, int? pageSize = null)
         {
             IQueryable<T> query = _dbSet;
 

@@ -14,83 +14,31 @@ namespace Infrastructure.Persistence
     public class UnitOfWork : IUnitOfWork
     {
         private readonly VgaDbContext _context;
-        private RegionRepository _regionRepository;
-        private HighschoolRepository _highSchoolRepository;
-        private StudentRepository _studentRepository;
-        private StudentTestRepository _studentTestRepository;
-        private PersonalTestRepository _personalTestRepository;
 
+        private IRegionRepository _regionRepository;
+        private IHighschoolRepository _highschoolRepository;
+        private IStudentRepository _studentRepository;
+        private IStudentTestRepository _studentTestRepository;
+        private IPersonalTestRepository _personalTestRepository;
+        private IAccountRepository _accountRepository;
 
         public UnitOfWork(VgaDbContext context)
         {
             _context = context;
         }
 
+        public IRegionRepository RegionRepository => _regionRepository ??= new RegionRepository(_context);
+        public IHighschoolRepository HighschoolRepository => _highschoolRepository ??= new HighschoolRepository(_context);
+        public IStudentRepository StudentRepository => _studentRepository ??= new StudentRepository(_context);
+        public IStudentTestRepository StudentTestRepository => _studentTestRepository ??= new StudentTestRepository(_context);
+        public IPersonalTestRepository PersonalTestRepository => _personalTestRepository ??= new PersonalTestRepository(_context);
+        public IAccountRepository AccountRepository => _accountRepository ??= new AccountRepository(_context);
 
-        public IRegionRepository RegionRepository
+        public async Task SaveChangesAsync()
         {
-            get
-            {
-                if (_regionRepository == null)
-                {
-                    _regionRepository = new RegionRepository(_context);
-                }
-                return _regionRepository;
-            }
-        }
-
-        public IHighschoolRepository HighschoolRepository
-        {
-            get
-            {
-                if (_highSchoolRepository == null)
-                {
-                    _highSchoolRepository = new HighschoolRepository(_context);
-                }
-                return _highSchoolRepository;
-            }
-        }
-        public IStudentRepository StudentRepository
-        {
-            get
-            {
-                if (_studentRepository == null)
-                {
-                    _studentRepository = new StudentRepository(_context);
-                }
-                return _studentRepository;
-            }
-        }
-       
-
-        public IStudentTestRepository StudentTestRepository
-        {
-            get
-            {
-                if (_studentTestRepository == null)
-                {
-                    _studentTestRepository = new StudentTestRepository(_context);
-                }
-                return _studentTestRepository;
-            }
+            await _context.SaveChangesAsync();
         }
 
-        public IPersonalTestRepository PersonalTestRepository
-        {
-            get
-            {
-                if (_personalTestRepository == null)
-                {
-                    _personalTestRepository = new PersonalTestRepository(_context);
-                }
-                return _personalTestRepository;
-            }
-        }
-
-        public int Save()
-        {
-            return _context.SaveChanges();
-        }
         private bool disposed = false;
 
         protected virtual void Dispose(bool disposing)

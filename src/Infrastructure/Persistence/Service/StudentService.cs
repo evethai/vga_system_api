@@ -53,7 +53,7 @@ public class StudentService : IStudentService
         }
         exitStudent.Status = putModel.Status;
         var result = await _unitOfWork.StudentRepository.UpdateAsync(exitStudent);
-        _unitOfWork.Save();
+        await _unitOfWork.SaveChangesAsync();
         return new ResponseModel
         {
             Message = "Student Updated Successfully",
@@ -67,7 +67,7 @@ public class StudentService : IStudentService
         var student = _mapper.Map<Student>(postModel);
         postModel.Status = true;
         var result = await _unitOfWork.StudentRepository.AddAsync(student);
-        _unitOfWork.Save();
+        await _unitOfWork.SaveChangesAsync();
         return new ResponseModel
         {
             Message = " Student Created Successfully",
@@ -80,7 +80,7 @@ public class StudentService : IStudentService
     {
         var student = await _unitOfWork.StudentRepository.GetByIdGuidAsync(StudentId);
         var result = await _unitOfWork.StudentRepository.DeleteAsync(student);
-        _unitOfWork.Save();
+        await _unitOfWork.SaveChangesAsync();
 
         return new ResponseModel
         {
@@ -129,7 +129,7 @@ public class StudentService : IStudentService
                 await _unitOfWork.StudentRepository.AddAsync(student);
             }
 
-            _unitOfWork.Save();
+             await _unitOfWork.SaveChangesAsync();
 
             return new ResponseModel
             {

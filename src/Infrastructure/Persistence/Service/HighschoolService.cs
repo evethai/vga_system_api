@@ -44,7 +44,7 @@ public class HighschoolService : IHighschoolService
     {
         var highschool = _mapper.Map<HighSchool>(postModel);
         var result = await _unitOfWork.HighschoolRepository.AddAsync(highschool);
-        _unitOfWork.Save();
+        await _unitOfWork.SaveChangesAsync();
         return new ResponseModel
         {
             Message = " Highschool Created Successfully",
@@ -57,7 +57,7 @@ public class HighschoolService : IHighschoolService
     {
         var highschool = await _unitOfWork.HighschoolRepository.GetByIdAsync(HighschoolId);
         var result = await _unitOfWork.HighschoolRepository.DeleteAsync(highschool);
-        _unitOfWork.Save();
+        await _unitOfWork.SaveChangesAsync();
         return new ResponseModel
         {
             Message = "Highschools Deleted Successfully",
@@ -69,7 +69,7 @@ public class HighschoolService : IHighschoolService
     {
         var highschool = _mapper.Map<HighSchool>(putModel);
         var result = await _unitOfWork.HighschoolRepository.UpdateAsync(highschool);
-        _unitOfWork.Save();
+        await _unitOfWork.SaveChangesAsync();
         return new ResponseModel
         {
             Message = " Highschool Updated Successfully",

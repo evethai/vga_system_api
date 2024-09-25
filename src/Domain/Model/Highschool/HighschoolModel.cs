@@ -12,7 +12,7 @@ public class HighschoolModel
     public string Name { get; set; }   
     public string LocationDetails { get; set; }
     public Guid RegionId { get; set; }
-    public Guid AcountId { get; set; }
+    public Guid AccountId { get; set; }
 }
 public class ResponseHighSchoolModel
 {
