@@ -8,11 +8,11 @@ using Domain.Entity;
 namespace Domain.Model.Highschool;
 public class HighschoolModel
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     public string Name { get; set; }   
     public string LocationDetails { get; set; }
-    public int RegionId { get; set; }
-    public int AcountId { get; set; }
+    public Guid RegionId { get; set; }
+    public Guid AccountId { get; set; }
 }
 public class ResponseHighSchoolModel
 {

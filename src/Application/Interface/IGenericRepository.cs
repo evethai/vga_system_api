@@ -25,14 +25,14 @@ namespace Application.Interface
         Task<T> GetByIdAsync(int id);
         Task<T> GetByIdGuidAsync(Guid id);
         Task<IEnumerable<T>> GetByConditionAsync(
-            Expression<Func<T, bool>> filter = null,
-            Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
+            Expression<Func<T, bool>>? filter = null,
+            Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
             string includeProperties = "",
             int? pageIndex = null,
             int? pageSize = null
         );
         Task<IEnumerable<T>> GetAllAsync();
-        Task<int> CountAsync(Expression<Func<T, bool>> filter = null);
+        Task<int> CountAsync(Expression<Func<T, bool>>? filter = null);
     }
 }
     
