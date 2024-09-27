@@ -65,6 +65,16 @@ public class StudentService : IStudentService
     public async Task<ResponseModel> CreateStudentAsyns(StudentPostModel postModel)
     {
         var student = _mapper.Map<Student>(postModel);
+        student.Account = new Account
+        {
+            Id = Guid.NewGuid(), // Create new GUID for Account
+            Email = postModel.Email,
+            Phone = postModel.Phone,
+            Password = postModel.Password,
+            RoleId = Role.Student,
+            Status = true,
+            CreateAt = DateTime.Now
+        };
         postModel.Status = true;
         var result = await _unitOfWork.StudentRepository.AddAsync(student);
         await _unitOfWork.SaveChangesAsync();
@@ -73,19 +83,6 @@ public class StudentService : IStudentService
             Message = " Student Created Successfully",
             IsSuccess = true,
             Data = student,
-        };
-    }
-
-    public async Task<ResponseModel> DeleteStudent(Guid StudentId)
-    {
-        var student = await _unitOfWork.StudentRepository.GetByIdGuidAsync(StudentId);
-        var result = await _unitOfWork.StudentRepository.DeleteAsync(student);
-        await _unitOfWork.SaveChangesAsync();
-
-        return new ResponseModel
-        {
-            Message = "Student Deleted Successfully",
-            IsSuccess = true,
         };
     }
 

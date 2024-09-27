@@ -10,7 +10,7 @@ namespace Domain.Model.Student;
 public class StudentModel
 {
     public Guid Id { get; set; }
-    public Guid AcountId { get; set; }
+    public Guid AccountId { get; set; }
     public string Name { get; set; } = string.Empty;
     public bool Gender { get; set; }
     public DateTime DateOfBirth { get; set; }

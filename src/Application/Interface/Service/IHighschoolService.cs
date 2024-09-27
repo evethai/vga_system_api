@@ -12,6 +12,5 @@ public interface IHighschoolService
     Task<ResponseHighSchoolModel> GetListHighSchoolAsync(HighschoolSearchModel searchModel);
     Task<HighschoolModel> GetHighschoolByIdAsync(int HighschoolId);
     Task<ResponseModel> CreateHighschoolAsync(HighschoolPostModel postModel);
-    Task<ResponseModel> UpdateHighschoolAsync(HighschoolPutModel putModel);
-    Task<ResponseModel> DeleteHighschool(int HighschoolId);
+    Task<ResponseModel> UpdateHighschoolAsync(HighschoolPutModel putModel);   
 }
