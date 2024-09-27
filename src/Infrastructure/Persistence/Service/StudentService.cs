@@ -53,7 +53,7 @@ public class StudentService : IStudentService
         }
         exitStudent.Status = putModel.Status;
         var result = await _unitOfWork.StudentRepository.UpdateAsync(exitStudent);
-        _unitOfWork.Save();
+        await _unitOfWork.SaveChangesAsync();
         return new ResponseModel
         {
             Message = "Student Updated Successfully",
@@ -77,7 +77,7 @@ public class StudentService : IStudentService
         };
         postModel.Status = true;
         var result = await _unitOfWork.StudentRepository.AddAsync(student);
-        _unitOfWork.Save();
+        await _unitOfWork.SaveChangesAsync();
         return new ResponseModel
         {
             Message = " Student Created Successfully",
@@ -85,6 +85,7 @@ public class StudentService : IStudentService
             Data = student,
         };
     }
+
     #region Import Students From Json Async
     public async Task<ResponseModel> ImportStudentsFromJsonAsync(StudentImportModel studentImportModel)
     {
@@ -125,7 +126,7 @@ public class StudentService : IStudentService
                 await _unitOfWork.StudentRepository.AddAsync(student);
             }
 
-            _unitOfWork.Save();
+             await _unitOfWork.SaveChangesAsync();
 
             return new ResponseModel
             {

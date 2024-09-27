@@ -123,9 +123,8 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
                 Id = q.Id,
                 Content = q.Content,
                 Group = q.Group,
-                TestTypeId = q.TestTypeId,
                 _answerModels = q.Answers
-            }).ToList()
+            }).OrderBy(q => q.Group).ToList()
         };
 
         return model;
@@ -200,12 +199,11 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
             Code = h_type.Code,
             Description = h_type.Description,
             Name = h_type.Name,
-            Majors = majors
+            Majors = majors,
+            Percent = top3Groups.Select(g => new { g.Group, g.Percentage }).ToList()
         };
 
         return result;
-
-
     }
 
     public async Task<IEnumerable<Question>> GetAllQuestionByTestId(Guid personalTestId)

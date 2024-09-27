@@ -55,7 +55,7 @@ public class HighschoolService : IHighschoolService
             CreateAt = DateTime.Now
         };      
         var result = await _unitOfWork.HighschoolRepository.AddAsync(highschool);
-        _unitOfWork.Save();
+        await _unitOfWork.SaveChangesAsync();
         return new ResponseModel
         {
             Message = " Highschool Created Successfully",
@@ -64,11 +64,15 @@ public class HighschoolService : IHighschoolService
         };
     }
 
+
+        };
+    }
+
     public async Task<ResponseModel> UpdateHighschoolAsync(HighschoolPutModel putModel)
     {
         var highschool = _mapper.Map<HighSchool>(putModel);
         var result = await _unitOfWork.HighschoolRepository.UpdateAsync(highschool);
-        _unitOfWork.Save();
+        await _unitOfWork.SaveChangesAsync();
         return new ResponseModel
         {
             Message = " Highschool Updated Successfully",

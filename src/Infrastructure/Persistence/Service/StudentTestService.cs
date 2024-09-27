@@ -24,7 +24,7 @@ namespace Infrastructure.Persistence.Service
         public async Task<ResponseModel> CreateResultForTest(StudentTestResultModel result)
         {
             TestTypeCode type = await _unitOfWork.StudentTestRepository.CheckTestType(result.PersonalTestId);
-            PersonalGroupModel personalGroupModel = null;
+            PersonalGroupModel? personalGroupModel = null;
             if (type == TestTypeCode.MBTI)
             {
                 personalGroupModel = await _unitOfWork.StudentTestRepository.CalculateResultMBTITest(result.listAnswerId);
@@ -56,7 +56,7 @@ namespace Infrastructure.Persistence.Service
             {
                 var resultTest = _mapper.Map<StudentTest>(model);
                 await _unitOfWork.StudentTestRepository.AddAsync(resultTest);
-                _unitOfWork.Save();
+                await _unitOfWork.SaveChangesAsync();
             }
             catch(Exception e)
             {
@@ -69,9 +69,11 @@ namespace Infrastructure.Persistence.Service
                 IsSuccess = true,
                 Data = new
                 {
+                    Code = personalGroupModel.Code,
                     Name = personalGroupModel.Name,
                     Des = personalGroupModel.Description,
-                    Majors = personalGroupModel.Majors
+                    Majors = personalGroupModel.Majors,
+                    Percent = personalGroupModel.Percent
                 }
             };
 

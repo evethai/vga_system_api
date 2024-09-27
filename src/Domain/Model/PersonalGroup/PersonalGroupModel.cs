@@ -14,5 +14,6 @@ namespace Domain.Model.PersonalGroup
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public List<MajorModel>? Majors { get; set; }
+        public Object? Percent { get; set; }
     }
 }
