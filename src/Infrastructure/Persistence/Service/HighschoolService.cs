@@ -7,6 +7,7 @@ using Application.Interface;
 using Application.Interface.Service;
 using AutoMapper;
 using Domain.Entity;
+using Domain.Enum;
 using Domain.Model.Highschool;
 using Domain.Model.Response;
 
@@ -43,25 +44,23 @@ public class HighschoolService : IHighschoolService
     public async Task<ResponseModel> CreateHighschoolAsync(HighschoolPostModel postModel)
     {
         var highschool = _mapper.Map<HighSchool>(postModel);
+        highschool.Account = new Account
+        {
+            Id = Guid.NewGuid(), // Create new GUID for Account
+            Email = postModel.Email,
+            Phone = postModel.Phone,
+            Password = postModel.Password,
+            RoleId = Role.HighSchool,
+            Status = true,
+            CreateAt = DateTime.Now
+        };      
         var result = await _unitOfWork.HighschoolRepository.AddAsync(highschool);
         _unitOfWork.Save();
         return new ResponseModel
         {
             Message = " Highschool Created Successfully",
             IsSuccess = true,
-            Data = highschool,
-        };
-    }
-
-    public async Task<ResponseModel> DeleteHighschool(int HighschoolId)
-    {
-        var highschool = await _unitOfWork.HighschoolRepository.GetByIdAsync(HighschoolId);
-        var result = await _unitOfWork.HighschoolRepository.DeleteAsync(highschool);
-        _unitOfWork.Save();
-        return new ResponseModel
-        {
-            Message = "Highschools Deleted Successfully",
-            IsSuccess = true,
+            Data = postModel,
         };
     }
 
