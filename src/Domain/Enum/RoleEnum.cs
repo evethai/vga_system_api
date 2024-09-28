@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Domain.Enum
 {
-    public enum Role
+    public enum RoleEnum
     {
-        Admin = 1,
-        University = 2,
-        HighSchool = 3,
-        Expert = 4,
-        Student = 5
+        Admin ,
+        University,
+        HighSchool,
+        Expert,
+        Student
     }
 }

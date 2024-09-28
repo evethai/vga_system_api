@@ -4,12 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Domain.Entity;
-using Domain.Model.Account;
 
 namespace Application.Interface.Repository
 {
-    public interface IAccountRepository : IGenericRepository<Account>
+    public interface IRoleRepository : IGenericRepository<Role>
     {
-
     }
 }

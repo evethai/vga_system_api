@@ -21,9 +21,9 @@ public class HighschoolService : IHighschoolService
         _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
-    public async Task<HighschoolModel> GetHighschoolByIdAsync(int HighschoolId)
+    public async Task<HighschoolModel> GetHighschoolByIdAsync(Guid HighschoolId)
     {
-        var highschool = await _unitOfWork.HighschoolRepository.GetByIdAsync(HighschoolId);
+        var highschool = await _unitOfWork.HighschoolRepository.GetByIdGuidAsync(HighschoolId);
         return _mapper.Map<HighschoolModel>(highschool);
     }
 
