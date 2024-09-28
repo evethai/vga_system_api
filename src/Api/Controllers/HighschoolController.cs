@@ -20,7 +20,7 @@ public class HighschoolController : ControllerBase
         return Ok(result);
     }
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetHighschoolById(int id)
+    public async Task<IActionResult> GetHighschoolById(Guid id)
     {
         var result = await _highschoolService.GetHighschoolByIdAsync(id);
         return Ok(result);
