@@ -60,13 +60,6 @@ public class StudentController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteStudentAsync(Guid id)
-    {
-        var result = await _studentService.DeleteStudent(id);
-        return Ok(result);
-    }
-
     [HttpPost("import")]
     public async Task<IActionResult> ImportFromJsonAsync([FromForm] StudentImportModel studentImportModel)
     {
