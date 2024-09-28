@@ -9,5 +9,5 @@ public class HighschoolPutModel
 {
     public Guid Id { get; set; }
     public string Name { get; set; }
-    public string LocationDetails { get; set; }
+    public string LocationDetail { get; set; }
 }

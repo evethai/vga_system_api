@@ -7,6 +7,7 @@ using Application.Interface;
 using Application.Interface.Service;
 using AutoMapper;
 using Domain.Entity;
+using Domain.Enum;
 using Domain.Model.Highschool;
 using Domain.Model.Response;
 
@@ -43,25 +44,24 @@ public class HighschoolService : IHighschoolService
     public async Task<ResponseModel> CreateHighschoolAsync(HighschoolPostModel postModel)
     {
         var highschool = _mapper.Map<HighSchool>(postModel);
+        var roleId = await _unitOfWork.RoleRepository.SingleOrDefaultAsync(selector: x=> x.Id,predicate: x=> x.Name.Equals(RoleEnum.HighSchool));
+        highschool.Account = new Account
+        {
+            Id = Guid.NewGuid(), // Create new GUID for Account
+            Email = postModel.Email,
+            Phone = postModel.Phone,
+            Password = postModel.Password,
+            RoleId = roleId,
+            Status = true,
+            CreateAt = DateTime.Now
+        };      
         var result = await _unitOfWork.HighschoolRepository.AddAsync(highschool);
-        await _unitOfWork.SaveChangesAsync();
+        _unitOfWork.SaveChangesAsync();
         return new ResponseModel
         {
             Message = " Highschool Created Successfully",
             IsSuccess = true,
-            Data = highschool,
-        };
-    }
-
-    public async Task<ResponseModel> DeleteHighschool(int HighschoolId)
-    {
-        var highschool = await _unitOfWork.HighschoolRepository.GetByIdAsync(HighschoolId);
-        var result = await _unitOfWork.HighschoolRepository.DeleteAsync(highschool);
-        await _unitOfWork.SaveChangesAsync();
-        return new ResponseModel
-        {
-            Message = "Highschools Deleted Successfully",
-            IsSuccess = true,
+            Data = postModel,
         };
     }
 
@@ -69,7 +69,7 @@ public class HighschoolService : IHighschoolService
     {
         var highschool = _mapper.Map<HighSchool>(putModel);
         var result = await _unitOfWork.HighschoolRepository.UpdateAsync(highschool);
-        await _unitOfWork.SaveChangesAsync();
+        _unitOfWork.SaveChangesAsync();
         return new ResponseModel
         {
             Message = " Highschool Updated Successfully",

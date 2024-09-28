@@ -35,7 +35,7 @@ public class StudentController : ControllerBase
         }
         try
         {
-            var result = await _studentService.CreateStudentAsyns(postModel);
+            var result = await _studentService.CreateStudentAsync(postModel);
             return Ok(result);
         }
         catch (Exception ex)
@@ -61,12 +61,6 @@ public class StudentController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
-    //[HttpDelete("{id}")]
-    //public async Task<IActionResult> DeleteStudentAsync(Guid id)
-    //{
-    //    var result = await _studentService.DeleteStudent(id);
-    //    return Ok(result);
-    //}
 
     [HttpPost(ApiEndPointConstant.Student.ImportStudentEndpoint)]
     public async Task<IActionResult> ImportFromJsonAsync([FromForm] StudentImportModel studentImportModel)

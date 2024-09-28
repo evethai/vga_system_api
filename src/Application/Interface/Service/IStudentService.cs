@@ -12,8 +12,7 @@ public interface IStudentService
 {
     Task<ResponseStudentModel> GetListStudentAsync(StudentSearchModel searchModel);
     Task<StudentModel> GetStudentByIdAsync(Guid StudentId);
-    Task<ResponseModel> CreateStudentAsyns(StudentPostModel postModel);
+    Task<ResponseModel> CreateStudentAsync(StudentPostModel postModel);
     Task<ResponseModel> UpdateStudentAsync(StudentPutModel putModel, Guid StudentId);
-    Task<ResponseModel> DeleteStudent(Guid StudentId);
     Task<ResponseModel> ImportStudentsFromJsonAsync(StudentImportModel studentImportModel);
 }

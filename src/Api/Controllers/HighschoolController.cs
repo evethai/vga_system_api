@@ -60,11 +60,4 @@ public class HighschoolController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
-
-    //[HttpDelete("{id}")]
-    //public async Task<IActionResult> DeleteHighschoolAsync(int id)
-    //{
-    //    var result = await _highschoolService.DeleteHighschool(id);
-    //    return Ok(result);
-    //}
 }

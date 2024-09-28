@@ -16,5 +16,5 @@ public class HighSchool : BaseEntity
     public string Name { get; set; } = string.Empty;
     public string LocationDetail { get; set; } = string.Empty;
     public virtual ICollection<Student> Students { get; set; } = null!;
-
 }
+  
