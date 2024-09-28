@@ -22,9 +22,9 @@ public class HighschoolService : IHighschoolService
         _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
-    public async Task<HighschoolModel> GetHighschoolByIdAsync(int HighschoolId)
+    public async Task<HighschoolModel> GetHighschoolByIdAsync(Guid HighschoolId)
     {
-        var highschool = await _unitOfWork.HighschoolRepository.GetByIdAsync(HighschoolId);
+        var highschool = await _unitOfWork.HighschoolRepository.GetByIdGuidAsync(HighschoolId);
         return _mapper.Map<HighschoolModel>(highschool);
     }
 
@@ -44,13 +44,14 @@ public class HighschoolService : IHighschoolService
     public async Task<ResponseModel> CreateHighschoolAsync(HighschoolPostModel postModel)
     {
         var highschool = _mapper.Map<HighSchool>(postModel);
+        var roleId = await _unitOfWork.RoleRepository.SingleOrDefaultAsync(selector: x=> x.Id,predicate: x=> x.Name.Equals(RoleEnum.HighSchool));
         highschool.Account = new Account
         {
             Id = Guid.NewGuid(), // Create new GUID for Account
             Email = postModel.Email,
             Phone = postModel.Phone,
             Password = postModel.Password,
-            RoleId = Role.HighSchool,
+            RoleId = roleId,
             Status = true,
             CreateAt = DateTime.Now
         };      

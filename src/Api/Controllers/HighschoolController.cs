@@ -1,10 +1,11 @@
-﻿using Application.Interface.Service;
+﻿using Api.Constants;
+using Application.Interface.Service;
 using Domain.Model.Highschool;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
-[Route("api/highschools")]
+[Route("high-schools")]
 [ApiController]
 public class HighschoolController : ControllerBase
 {
@@ -13,19 +14,19 @@ public class HighschoolController : ControllerBase
     {
         _highschoolService = highschoolService;
     }
-    [HttpGet]
+    [HttpGet(ApiEndPointConstant.HighSchool.HighSchoolsEndpoint)]
     public async Task<IActionResult> GetListHighschoolAsync([FromQuery] HighschoolSearchModel searchModel)
     {
         var result = await _highschoolService.GetListHighSchoolAsync(searchModel);
         return Ok(result);
     }
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetHighschoolById(int id)
+    [HttpGet(ApiEndPointConstant.HighSchool.HighSchoolEndpoint)]
+    public async Task<IActionResult> GetHighschoolById(Guid id)
     {
         var result = await _highschoolService.GetHighschoolByIdAsync(id);
         return Ok(result);
     }
-    [HttpPost]
+    [HttpPost(ApiEndPointConstant.HighSchool.HighSchoolsEndpoint)]
     public async Task<IActionResult> CreateHighschoolAsync([FromForm] HighschoolPostModel postModel)
     {
         if (!ModelState.IsValid)
@@ -41,7 +42,7 @@ public class HighschoolController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
-    [HttpPut]
+    [HttpPut(ApiEndPointConstant.HighSchool.HighSchoolEndpoint)]
     public async Task<IActionResult> UpdateHighschoolAsync([FromForm] HighschoolPutModel putModel)
     {
         if (!ModelState.IsValid)

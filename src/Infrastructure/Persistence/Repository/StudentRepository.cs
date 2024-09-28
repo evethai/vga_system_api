@@ -13,6 +13,7 @@ using Infrastructure.Data;
 namespace Infrastructure.Persistence.Repository;
 public class StudentRepository : GenericRepository<Student>, IStudentRepository
 {
+
     public StudentRepository(VgaDbContext context) : base(context)
     {
     }

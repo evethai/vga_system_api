@@ -4,9 +4,12 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Common.Extensions;
 using Application.Interface;
+using Domain.Paginate;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace Infrastructure.Persistence
 {
@@ -81,12 +84,84 @@ namespace Infrastructure.Persistence
             return await _dbSet.FindAsync(id);
         }
 
+        public virtual async Task<T> SingleOrDefaultAsync(Expression<Func<T, bool>> predicate = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null)
+        {
+            IQueryable<T> query = _dbSet;
+            if (include != null) query = include(query);
+
+            if (predicate != null) query = query.Where(predicate);
+
+            if (orderBy != null) return await orderBy(query).AsNoTracking().FirstOrDefaultAsync();
+
+            return await query.AsNoTracking().FirstOrDefaultAsync();
+        }
+
+        public virtual async Task<TResult> SingleOrDefaultAsync<TResult>(Expression<Func<T, TResult>> selector, Expression<Func<T, bool>> predicate = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
+            Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null)
+        {
+            IQueryable<T> query = _dbSet;
+            if (include != null) query = include(query);
+
+            if (predicate != null) query = query.Where(predicate);
+
+            if (orderBy != null) return await orderBy(query).AsNoTracking().Select(selector).FirstOrDefaultAsync();
+
+            return await query.AsNoTracking().Select(selector).FirstOrDefaultAsync();
+        }
+
+        public virtual async Task<ICollection<T>> GetListAsync(Expression<Func<T, bool>> predicate = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null)
+        {
+            IQueryable<T> query = _dbSet;
+
+            if (include != null) query = include(query);
+
+            if (predicate != null) query = query.Where(predicate);
+
+            if (orderBy != null) return await orderBy(query).AsNoTracking().ToListAsync();
+
+            return await query.AsNoTracking().ToListAsync();
+        }
+
+        public virtual async Task<ICollection<TResult>> GetListAsync<TResult>(Expression<Func<T, TResult>> selector, Expression<Func<T, bool>> predicate = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null)
+        {
+            IQueryable<T> query = _dbSet;
+
+            if (include != null) query = include(query);
+
+            if (predicate != null) query = query.Where(predicate);
+
+            if (orderBy != null) return await orderBy(query).AsNoTracking().Select(selector).ToListAsync();
+
+            return await query.Select(selector).ToListAsync();
+        }
+
+        public Task<IPaginate<T>> GetPagingListAsync(Expression<Func<T, bool>> predicate = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null, int page = 1,
+            int size = 10)
+        {
+            IQueryable<T> query = _dbSet;
+            if (include != null) query = include(query);
+            if (predicate != null) query = query.Where(predicate);
+            if (orderBy != null) return orderBy(query).ToPaginateAsync(page, size, 1);
+            return query.AsNoTracking().ToPaginateAsync(page, size, 1);
+        }
+
+        public Task<IPaginate<TResult>> GetPagingListAsync<TResult>(Expression<Func<T, TResult>> selector, Expression<Func<T, bool>> predicate = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
+            Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null, int page = 1, int size = 10)
+        {
+            IQueryable<T> query = _dbSet;
+            if (include != null) query = include(query);
+            if (predicate != null) query = query.Where(predicate);
+            if (orderBy != null) return orderBy(query).Select(selector).ToPaginateAsync(page, size, 1);
+            return query.AsNoTracking().Select(selector).ToPaginateAsync(page, size, 1);
+        }
+
         public async Task<T> UpdateAsync(T entity)
         {
             _dbSet.Attach(entity);
             _context.Entry(entity).State = EntityState.Modified;
             return entity;
         }
+
     }
 }
 

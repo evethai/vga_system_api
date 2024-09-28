@@ -52,8 +52,8 @@ namespace Infrastructure.Migrations
                     b.Property<string>("ResetPasswordToken")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
@@ -65,6 +65,8 @@ namespace Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
 
                     b.ToTable("account");
                 });
@@ -664,6 +666,21 @@ namespace Infrastructure.Migrations
                     b.ToTable("region");
                 });
 
+            modelBuilder.Entity("Domain.Entity.Role", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("role");
+                });
+
             modelBuilder.Entity("Domain.Entity.Student", b =>
                 {
                     b.Property<Guid>("Id")
@@ -891,6 +908,17 @@ namespace Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("wallet");
+                });
+
+            modelBuilder.Entity("Domain.Entity.Account", b =>
+                {
+                    b.HasOne("Domain.Entity.Role", "role")
+                        .WithMany("Accounts")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("role");
                 });
 
             modelBuilder.Entity("Domain.Entity.AdmissionInformation", b =>
@@ -1328,6 +1356,11 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entity.Region", b =>
                 {
                     b.Navigation("HighSchools");
+                });
+
+            modelBuilder.Entity("Domain.Entity.Role", b =>
+                {
+                    b.Navigation("Accounts");
                 });
 
             modelBuilder.Entity("Domain.Entity.Student", b =>

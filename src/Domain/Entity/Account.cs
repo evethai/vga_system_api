@@ -16,7 +16,8 @@ namespace Domain.Entity
         public string Password { get; set; } = string.Empty!;
         public string Phone { get; set; } = string.Empty;
         public string? Image_Url { get; set; }
-        public Role RoleId { get; set; }
+        public Guid RoleId { get; set; }
+        public Role role { get; set; } = null!;
         public bool Status { get; set; }
         public string? VerifyToken { get; set; } 
         public string? ResetPasswordToken { get; set; } 
