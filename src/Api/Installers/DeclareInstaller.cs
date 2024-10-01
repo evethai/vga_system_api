@@ -26,17 +26,18 @@ namespace Api.Installers
             services.AddScoped<IRegionRepository, RegionRepository>();
             services.AddScoped<IHighschoolRepository, HighschoolRepository>();
             services.AddScoped<IStudentRepository, StudentRepository>();
-
+            services.AddScoped<IExpertLevelRepository, ExpertLevelRepository>();
+            services.AddScoped<ITimeSlotRepository, TimeSlotRepository>();
+            services.AddScoped<ICareerExpertRepository, CareerExpertRepository>();
 
             //Declare Service
             services.AddScoped<IStudentTestService, StudentTestService>();
             services.AddScoped<IRegionService, RegionService>();
             services.AddScoped<IHighschoolService, HighschoolService>();
             services.AddScoped<IStudentService, StudentService>();
-
-
-
-
+            services.AddScoped<IExpertLevelService, ExpertLevelService>();
+            services.AddScoped<ITimeSlotService, TimeSlotService>();
+            services.AddScoped<ICareerExpertService, CareerExpertService>();
 
             //Declare Email Service
             //services.AddTransient<IEmailService, EmailService>();

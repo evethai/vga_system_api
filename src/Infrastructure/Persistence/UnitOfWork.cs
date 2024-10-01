@@ -21,6 +21,9 @@ namespace Infrastructure.Persistence
         private IStudentTestRepository _studentTestRepository;
         private IPersonalTestRepository _personalTestRepository;
         private IAccountRepository _accountRepository;
+        private IExpertLevelRepository _expertLevelRepository;
+        private ITimeSlotRepository _timeSlotRepository;
+        private ICareerExpertRepository _careerExpertRepository;
 
         public UnitOfWork(VgaDbContext context)
         {
@@ -33,6 +36,9 @@ namespace Infrastructure.Persistence
         public IStudentTestRepository StudentTestRepository => _studentTestRepository ??= new StudentTestRepository(_context);
         public IPersonalTestRepository PersonalTestRepository => _personalTestRepository ??= new PersonalTestRepository(_context);
         public IAccountRepository AccountRepository => _accountRepository ??= new AccountRepository(_context);
+        public IExpertLevelRepository ExpertLevelRepository => _expertLevelRepository ??= new ExpertLevelRepository(_context);
+        public ITimeSlotRepository TimeSlotRepository => _timeSlotRepository ??= new TimeSlotRepository(_context);
+        public ICareerExpertRepository CareerExpertRepository => _careerExpertRepository ??= new CareerExpertRepository(_context);
 
         public async Task SaveChangesAsync()
         {

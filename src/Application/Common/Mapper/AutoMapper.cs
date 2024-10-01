@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Domain.Entity;
 using Domain.Enum;
+using Domain.Model.ExpertLevel;
 using Domain.Model.Highschool;
 using Domain.Model.Major;
 using Domain.Model.PersonalGroup;
@@ -14,6 +15,7 @@ using Domain.Model.Question;
 using Domain.Model.Region;
 using Domain.Model.Student;
 using Domain.Model.Test;
+using Domain.Model.TimeSlot;
 
 namespace Application.Common.Mapper
 {
@@ -60,6 +62,16 @@ namespace Application.Common.Mapper
 
             //PersonalGroup
             CreateMap<PersonalGroup, PersonalGroupModel>().ReverseMap();
+
+            //Expert level
+            CreateMap<ExpertLevel, ExpertLevelViewModel>().ReverseMap();
+            CreateMap<ExpertLevel, ExpertLevelPostModel>().ReverseMap();
+            CreateMap<ExpertLevel, ExpertLevelPutModel>().ReverseMap();
+
+            //Time slot
+            CreateMap<TimeSlot, TimeSlotViewModel>().ReverseMap();
+            CreateMap<TimeSlot, TimeSlotPostModel>().ReverseMap();
+            CreateMap<TimeSlot, TimeSlotPutModel>().ReverseMap();
 
         }
     }
