@@ -30,6 +30,7 @@ namespace Api.Installers
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<ITestTypeRepository, TestTypeRepository>();
+            services.AddScoped<IQuestionRepository, QuestionRepository>();
             services.AddScoped<IExpertLevelRepository, ExpertLevelRepository>();
             services.AddScoped<ITimeSlotRepository, TimeSlotRepository>();
             services.AddScoped<ICareerExpertRepository, CareerExpertRepository>();
@@ -41,7 +42,8 @@ namespace Api.Installers
             services.AddScoped<IStudentService, StudentService>();
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<ITestTypeService, TestTypeService>();
-
+            services.AddScoped<IQuestionService, QuestionService>();
+            services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IExpertLevelService, ExpertLevelService>();
             services.AddScoped<ITimeSlotService, TimeSlotService>();
             services.AddScoped<ICareerExpertService, CareerExpertService>();

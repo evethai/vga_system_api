@@ -21,11 +21,11 @@ namespace Infrastructure.Data
         public DbSet<AdmissionMethod> admission_method { get; set; }
         public DbSet<Answer> answer { get; set; }
         public DbSet<Booking> booking { get; set; }
-        public DbSet<CareerExpert> career_expert { get; set; }
+        public DbSet<Consultant> consultant { get; set; }
         public DbSet<Certification> certification { get; set; }
         public DbSet<ConsultationDay> consultation_day { get; set; }
         public DbSet<ConsultationTime> consultation_time { get; set; }
-        public DbSet<ExpertLevel> expert_level { get; set; }
+        public DbSet<ConsultantLevel> consultant_level { get; set; }
         public DbSet<HighSchool> high_school { get; set; }
         public DbSet<ImageNews> image_news { get; set; }
         public DbSet<Like> like { get; set; }
@@ -57,10 +57,10 @@ namespace Infrastructure.Data
             });
 
             // expert
-            modelBuilder.Entity<CareerExpert>(entity =>
+            modelBuilder.Entity<Consultant>(entity =>
             {
                 entity.HasKey(c => c.Id);
-                entity.HasOne(c => c.Account).WithOne(a => a.CareerExpert).HasForeignKey<CareerExpert>(c => c.AccountId);
+                entity.HasOne(c => c.Account).WithOne(a => a.CareerExpert).HasForeignKey<Consultant>(c => c.AccountId);
                 entity.HasMany(c => c.Certifications).WithOne(c => c.Expert).HasForeignKey(c => c.ExpertId).OnDelete(DeleteBehavior.Restrict);
                 entity.HasMany(c => c.ConsultationDays).WithOne(c => c.Expert).HasForeignKey(c => c.ExpertId).OnDelete(DeleteBehavior.Restrict);
             });
@@ -135,7 +135,7 @@ namespace Infrastructure.Data
             modelBuilder.Entity<Certification>(entity => entity.HasKey(c => c.Id));
             modelBuilder.Entity<ConsultationDay>(entity => entity.HasKey(cd => cd.Id));
             modelBuilder.Entity<ConsultationTime>(entity => entity.HasKey(ct => ct.Id));
-            modelBuilder.Entity<ExpertLevel>(entity => entity.HasKey(el => el.Id));
+            modelBuilder.Entity<ConsultantLevel>(entity => entity.HasKey(el => el.Id));
             modelBuilder.Entity<ImageNews>(entity => entity.HasKey(im => im.Id));
             modelBuilder.Entity<Like>(entity => entity.HasKey(l => l.Id));
             modelBuilder.Entity<Major>(entity => entity.HasKey(m => m.Id));

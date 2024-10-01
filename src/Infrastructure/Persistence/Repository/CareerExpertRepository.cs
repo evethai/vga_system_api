@@ -9,7 +9,7 @@ using Infrastructure.Data;
 
 namespace Infrastructure.Persistence.Repository
 {
-    public class CareerExpertRepository : GenericRepository<CareerExpert> , ICareerExpertRepository
+    public class CareerExpertRepository : GenericRepository<Consultant>, ICareerExpertRepository
     {
         public CareerExpertRepository(VgaDbContext context) : base(context)
         {

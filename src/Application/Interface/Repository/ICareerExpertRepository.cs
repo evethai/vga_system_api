@@ -7,7 +7,7 @@ using Domain.Entity;
 
 namespace Application.Interface.Repository
 {
-    public interface ICareerExpertRepository : IGenericRepository<CareerExpert>
+    public interface ICareerExpertRepository : IGenericRepository<Consultant>
     {
     }
 }

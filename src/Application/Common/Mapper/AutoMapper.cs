@@ -54,6 +54,7 @@ namespace Application.Common.Mapper
 
             //Question
             CreateMap<Question, QuestionModel>().ReverseMap();
+            CreateMap<Question, QuestionPostModel>().ReverseMap();
 
             //Answer
             CreateMap<Answer, AnswerModel>().ReverseMap();

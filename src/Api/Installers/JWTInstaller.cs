@@ -1,4 +1,5 @@
 ﻿using Api.Configurations;
+using Application.Common.Constants;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -9,13 +10,6 @@ namespace Api.Installers
     {
         public void InstallServices(IServiceCollection services, IConfiguration configuration)
         {
-
-            var jwtConfig = new JWTConfiguration();
-            configuration.GetSection(nameof(JWTConfiguration)).Bind(jwtConfig);
-
-
-            services.AddSingleton(jwtConfig);
-
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -24,13 +18,16 @@ namespace Api.Installers
             {
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
-                    ValidateIssuer = false,
+                    ValidIssuer = configuration["JwtSettings:Issuer"], 
+                    ValidateIssuer = true,
                     ValidateAudience = false,
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig.Key)),
-                    ClockSkew = TimeSpan.Zero
+                    IssuerSigningKey =
+                        new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes(configuration["JwtSettings:SecretKey"])) 
                 };
             });
         }
     }
+
 }

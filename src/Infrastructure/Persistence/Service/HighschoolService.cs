@@ -52,7 +52,7 @@ public class HighschoolService : IHighschoolService
             Phone = postModel.Phone,
             Password = postModel.Password,
             RoleId = roleId,
-            Status = true,
+            Status = AccountStatus.Active,
             CreateAt = DateTime.Now
         };      
         var result = await _unitOfWork.HighschoolRepository.AddAsync(highschool);

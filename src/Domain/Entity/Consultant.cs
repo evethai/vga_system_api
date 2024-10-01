@@ -8,13 +8,16 @@ using System.Threading.Tasks;
 
 namespace Domain.Entity
 {
-    public class ExpertLevel : BasicEntity
+    public class Consultant: BaseEntity
     {
+        public Guid AccountId { get; set; }
+        public virtual Account Account { get; set; } = null!;
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
-        public double PriceOnSlot { get; set; }
+        public DateTime DoB { get; set; }
         public bool Status { get; set; }
-        public virtual ICollection<CareerExpert> CareerExperts { get; set; } = null!;
+        public virtual ICollection<Certification> Certifications { get; set; } = null!;
+        public virtual ICollection<ConsultationDay> ConsultationDays { get; set; } = null!;
 
     }
 }
