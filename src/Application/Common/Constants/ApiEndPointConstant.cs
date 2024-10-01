@@ -63,5 +63,6 @@
             public const string StudentEndpoint = ApiEndpoint + "/student/{id}";
             public const string ImportStudentEndpoint = StudentsEndpoint + "/import";
         }
+  
     }
 }

@@ -3,6 +3,7 @@ using Api.Validators;
 using Application.Interface.Service;
 using Domain.Enum;
 using Domain.Model.Test;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers

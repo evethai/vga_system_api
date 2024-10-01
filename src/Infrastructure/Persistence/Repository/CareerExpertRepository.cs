@@ -9,11 +9,10 @@ using Infrastructure.Data;
 
 namespace Infrastructure.Persistence.Repository
 {
-    public class PersonalTestRepository : GenericRepository<PersonalTest>, IPersonalTestRepository
+    public class CareerExpertRepository : GenericRepository<Consultant>, ICareerExpertRepository
     {
-        public PersonalTestRepository(VgaDbContext context) : base(context)
+        public CareerExpertRepository(VgaDbContext context) : base(context)
         {
         }
-
     }
 }

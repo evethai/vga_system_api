@@ -18,6 +18,8 @@ namespace Application.Interface
         IRoleRepository RoleRepository { get; }
         ITestTypeRepository TestTypeRepository { get; }
         IQuestionRepository QuestionRepository { get; }
+        IUniversityRepository UniversityRepository { get; }
+        ICareerExpertRepository CareerExpertRepository { get; }
         Task SaveChangesAsync();
     }
 }

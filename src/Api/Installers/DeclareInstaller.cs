@@ -30,6 +30,7 @@ namespace Api.Installers
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<ITestTypeRepository, TestTypeRepository>();
+            services.AddScoped<IQuestionRepository, QuestionRepository>();
 
 
             //Declare Service
@@ -39,6 +40,8 @@ namespace Api.Installers
             services.AddScoped<IStudentService, StudentService>();
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<ITestTypeService, TestTypeService>();
+            services.AddScoped<IQuestionService, QuestionService>();
+            services.AddScoped<IAccountService, AccountService>();
 
 
 

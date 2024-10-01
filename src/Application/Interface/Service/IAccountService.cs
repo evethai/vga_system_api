@@ -9,6 +9,6 @@ namespace Application.Interface.Service
 {
     public interface IAccountService 
     {
-        //Task<LoginResponseModel> Login(LoginRequestModel loginRequest);
+        Task<LoginResponseModel> Login(LoginRequestModel loginRequest);
     }
 }
