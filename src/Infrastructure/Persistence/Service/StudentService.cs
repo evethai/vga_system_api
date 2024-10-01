@@ -53,7 +53,7 @@ public class StudentService : IStudentService
         }
         exitStudent.Status = putModel.Status;
         var result = await _unitOfWork.StudentRepository.UpdateAsync(exitStudent);
-        await _unitOfWork.SaveChangesAsync();
+         _unitOfWork.SaveChangesAsync();
         return new ResponseModel
         {
             Message = "Student Updated Successfully",
@@ -62,30 +62,28 @@ public class StudentService : IStudentService
         };
 
     }
-    public async Task<ResponseModel> CreateStudentAsyns(StudentPostModel postModel)
+    public async Task<ResponseModel> CreateStudentAsync(StudentPostModel postModel)
     {
         var student = _mapper.Map<Student>(postModel);
+        var roleId = await _unitOfWork.RoleRepository.SingleOrDefaultAsync(selector: x => x.Id, predicate: x => x.Name.Equals(RoleEnum.Student));
+        student.Account = new Account
+        {
+            Id = Guid.NewGuid(), // Create new GUID for Account
+            Email = postModel.Email,
+            Phone = postModel.Phone,
+            Password = postModel.Password,
+            RoleId = roleId,
+            Status = true,
+            CreateAt = DateTime.Now
+        };
         postModel.Status = true;
         var result = await _unitOfWork.StudentRepository.AddAsync(student);
-        await _unitOfWork.SaveChangesAsync();
+         _unitOfWork.SaveChangesAsync();
         return new ResponseModel
         {
             Message = " Student Created Successfully",
             IsSuccess = true,
             Data = student,
-        };
-    }
-
-    public async Task<ResponseModel> DeleteStudent(Guid StudentId)
-    {
-        var student = await _unitOfWork.StudentRepository.GetByIdGuidAsync(StudentId);
-        var result = await _unitOfWork.StudentRepository.DeleteAsync(student);
-        await _unitOfWork.SaveChangesAsync();
-
-        return new ResponseModel
-        {
-            Message = "Student Deleted Successfully",
-            IsSuccess = true,
         };
     }
 
@@ -104,6 +102,7 @@ public class StudentService : IStudentService
                     Message = "No students to import."
                 };
             }
+            var roleId = await _unitOfWork.RoleRepository.SingleOrDefaultAsync(selector: x => x.Id, predicate: x => x.Name.Equals(RoleEnum.Student));
 
             foreach (var studentImport in students.Data)
             {
@@ -113,11 +112,11 @@ public class StudentService : IStudentService
 
                 student.Account = new Account
                 {
-                    Id = Guid.NewGuid(), // Create new GUID for Account
+                    Id = Guid.NewGuid(), 
                     Email = studentImport.Email,
                     Phone = studentImport.Phone,
                     Password = studentImport.Phone,
-                    RoleId = Role.Student,
+                    RoleId = roleId,
                     Status = true,
                     CreateAt = DateTime.Now
                 };
@@ -129,7 +128,7 @@ public class StudentService : IStudentService
                 await _unitOfWork.StudentRepository.AddAsync(student);
             }
 
-             await _unitOfWork.SaveChangesAsync();
+              _unitOfWork.SaveChangesAsync();
 
             return new ResponseModel
             {

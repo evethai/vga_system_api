@@ -16,6 +16,7 @@ using Domain.Model.Region;
 using Domain.Model.Student;
 using Domain.Model.Test;
 using Domain.Model.TimeSlot;
+using Domain.Model.TestType;
 
 namespace Application.Common.Mapper
 {
@@ -62,6 +63,9 @@ namespace Application.Common.Mapper
 
             //PersonalGroup
             CreateMap<PersonalGroup, PersonalGroupModel>().ReverseMap();
+
+            //TestType
+            CreateMap<TestType, TestTypeModel>().ReverseMap();
 
             //Expert level
             CreateMap<ExpertLevel, ExpertLevelViewModel>().ReverseMap();

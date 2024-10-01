@@ -10,7 +10,7 @@ public class HighschoolModel
 {
     public Guid Id { get; set; }
     public string Name { get; set; }   
-    public string LocationDetails { get; set; }
+    public string LocationDetail { get; set; }
     public Guid RegionId { get; set; }
     public Guid AccountId { get; set; }
 }

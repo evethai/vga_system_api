@@ -14,4 +14,8 @@ public class StudentPostModel
     public bool Status { get; set; }
     public DateTime CreateAt { get; set; }
     public Guid HighSchoolId { get; set; }
+    public string Email { get; set; } = string.Empty;
+    public string Password { get; set; } = string.Empty!;
+    public string Phone { get; set; } = string.Empty;
+
 }

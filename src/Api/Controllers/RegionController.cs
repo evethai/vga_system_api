@@ -1,4 +1,5 @@
-﻿using Application.Interface.Service;
+﻿using Api.Constants;
+using Application.Interface.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,13 +13,13 @@ public class RegionController : ControllerBase
     {
         _regionService = regionService;
     }
-    [HttpGet]
+    [HttpGet(ApiEndPointConstant.Region.RegionsEndpoint)]
     public async Task<IActionResult> GetListRegionAsync()
     {
         var result = await _regionService.GetAllRegion();
         return Ok(result);
     }
-    [HttpGet("{id}")]
+    [HttpGet(ApiEndPointConstant.Region.RegionEndpoint)]
     public async Task<IActionResult> GetRegionById(int id)
     {
         var result = await _regionService.GetRegionById(id);
