@@ -73,7 +73,7 @@ public class StudentService : IStudentService
             Phone = postModel.Phone,
             Password = postModel.Password,
             RoleId = roleId,
-            Status = true,
+            Status = AccountStatus.Active,
             CreateAt = DateTime.Now
         };
         postModel.Status = true;
@@ -117,7 +117,7 @@ public class StudentService : IStudentService
                     Phone = studentImport.Phone,
                     Password = studentImport.Phone,
                     RoleId = roleId,
-                    Status = true,
+                    Status = AccountStatus.Active,
                     CreateAt = DateTime.Now
                 };
 

@@ -17,8 +17,8 @@ namespace Domain.Entity
         public string Phone { get; set; } = string.Empty;
         public string? Image_Url { get; set; }
         public Guid RoleId { get; set; }
-        public Role role { get; set; } = null!;
-        public bool Status { get; set; }
+        public Role Role { get; set; } = null!;
+        public AccountStatus Status { get; set; }
         public string? VerifyToken { get; set; } 
         public string? ResetPasswordToken { get; set; } 
         public DateTime CreateAt { get; set; }
@@ -29,7 +29,7 @@ namespace Domain.Entity
         public virtual RefreshToken RefreshTokens { get; set; } = null!;
         public virtual Wallet Wallet { get; set; } = null!;
         public virtual Student Student { get; set; } = null!;
-        public virtual CareerExpert CareerExpert { get; set; } = null!;
+        public virtual Consultant CareerExpert { get; set; } = null!;
         public virtual HighSchool HighSchool { get; set; } = null!;
         public virtual University University { get; set; } = null!;
     }

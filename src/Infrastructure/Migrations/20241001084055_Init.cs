@@ -26,7 +26,7 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "expert_level",
+                name: "consultant_level",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -38,7 +38,7 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_expert_level", x => x.Id);
+                    table.PrimaryKey("PK_consultant_level", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -123,7 +123,7 @@ namespace Infrastructure.Migrations
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Image_Url = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Status = table.Column<bool>(type: "bit", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
                     VerifyToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ResetPasswordToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreateAt = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -209,7 +209,7 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "career_expert",
+                name: "consultant",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -218,21 +218,21 @@ namespace Infrastructure.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DoB = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false),
-                    ExpertLevelId = table.Column<int>(type: "int", nullable: true)
+                    ConsultantLevelId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_career_expert", x => x.Id);
+                    table.PrimaryKey("PK_consultant", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_career_expert_account_AccountId",
+                        name: "FK_consultant_account_AccountId",
                         column: x => x.AccountId,
                         principalTable: "account",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_career_expert_expert_level_ExpertLevelId",
-                        column: x => x.ExpertLevelId,
-                        principalTable: "expert_level",
+                        name: "FK_consultant_consultant_level_ConsultantLevelId",
+                        column: x => x.ConsultantLevelId,
+                        principalTable: "consultant_level",
                         principalColumn: "Id");
                 });
 
@@ -442,9 +442,9 @@ namespace Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_certification", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_certification_career_expert_ExpertId",
+                        name: "FK_certification_consultant_ExpertId",
                         column: x => x.ExpertId,
-                        principalTable: "career_expert",
+                        principalTable: "consultant",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -462,9 +462,9 @@ namespace Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_consultation_day", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_consultation_day_career_expert_ExpertId",
+                        name: "FK_consultation_day_consultant_ExpertId",
                         column: x => x.ExpertId,
-                        principalTable: "career_expert",
+                        principalTable: "consultant",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -749,20 +749,20 @@ namespace Infrastructure.Migrations
                 column: "StudentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_career_expert_AccountId",
-                table: "career_expert",
+                name: "IX_certification_ExpertId",
+                table: "certification",
+                column: "ExpertId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_consultant_AccountId",
+                table: "consultant",
                 column: "AccountId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_career_expert_ExpertLevelId",
-                table: "career_expert",
-                column: "ExpertLevelId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_certification_ExpertId",
-                table: "certification",
-                column: "ExpertId");
+                name: "IX_consultant_ConsultantLevelId",
+                table: "consultant",
+                column: "ConsultantLevelId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_consultation_day_ExpertId",
@@ -982,7 +982,7 @@ namespace Infrastructure.Migrations
                 name: "test_type");
 
             migrationBuilder.DropTable(
-                name: "career_expert");
+                name: "consultant");
 
             migrationBuilder.DropTable(
                 name: "region");
@@ -991,7 +991,7 @@ namespace Infrastructure.Migrations
                 name: "account");
 
             migrationBuilder.DropTable(
-                name: "expert_level");
+                name: "consultant_level");
 
             migrationBuilder.DropTable(
                 name: "role");
