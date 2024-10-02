@@ -15,6 +15,11 @@ namespace Application.Interface
         IStudentTestRepository StudentTestRepository { get; }
         IPersonalTestRepository PersonalTestRepository { get; }
         IAccountRepository AccountRepository { get; }
+        IRoleRepository RoleRepository { get; }
+        ITestTypeRepository TestTypeRepository { get; }
+        IQuestionRepository QuestionRepository { get; }
+        IUniversityRepository UniversityRepository { get; }
+        ICareerExpertRepository CareerExpertRepository { get; }
         IWalletRepository WalletRepository { get; }
         ITransactionRepository TransactionRepository { get; }
         Task SaveChangesAsync();

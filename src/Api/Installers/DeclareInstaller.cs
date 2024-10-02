@@ -26,6 +26,11 @@ namespace Api.Installers
             services.AddScoped<IRegionRepository, RegionRepository>();
             services.AddScoped<IHighschoolRepository, HighschoolRepository>();
             services.AddScoped<IStudentRepository, StudentRepository>();
+            services.AddScoped<IPersonalTestRepository, PersonalTestRepository>();
+            services.AddScoped<IAccountRepository, AccountRepository>();
+            services.AddScoped<IRoleRepository, RoleRepository>();
+            services.AddScoped<ITestTypeRepository, TestTypeRepository>();
+            services.AddScoped<IQuestionRepository, QuestionRepository>();
             services.AddScoped<IWalletRepository, WalletRepository>();
             services.AddScoped<ITransactionRepository, TransactionRepository>();
             
@@ -36,6 +41,11 @@ namespace Api.Installers
             services.AddScoped<IRegionService, RegionService>();
             services.AddScoped<IHighschoolService, HighschoolService>();
             services.AddScoped<IStudentService, StudentService>();
+            services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<ITestTypeService, TestTypeService>();
+            services.AddScoped<IQuestionService, QuestionService>();
+            services.AddScoped<IAccountService, AccountService>();
+
             services.AddScoped<IWalletService, WalletService>();
             //services.AddScoped<ITransactionService, ITransactionService>();
             
