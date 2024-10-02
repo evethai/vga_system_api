@@ -23,13 +23,13 @@ namespace Infrastructure.Persistence.Service
             _mapper = mapper;
         }
 
-        public async Task<Wallet> GetWalletByIdAsync(Guid AccountId)
+        public async Task<Wallet> GetWalletByIdAsync(Guid Id)
         {
-            var wallet = await _unitOfWork.WalletRepository.GetByIdGuidAsync(AccountId);
+            var wallet = await _unitOfWork.WalletRepository.GetByIdGuidAsync(Id);
             return _mapper.Map<Wallet>(wallet);
         }
 
-        public async Task<ResponseModel> UpdateUsingGoldWalletAsync(WalletPutModel putModel, Guid Id)
+        public async Task<ResponseModel> UpdateUsingGoldWalletAsync(WalletPutModel putModel)
         {
             var wallet = _mapper.Map<Wallet>(putModel);
             var result = await _unitOfWork. WalletRepository.UpdateAsync(wallet);

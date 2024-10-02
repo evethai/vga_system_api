@@ -8,6 +8,7 @@ namespace Domain.Model.Wallet
 {
     public class WalletPutModel
     {
+        public Guid Id { get; set; }
         public int GoldBalance { get; set; }
     }
 }

@@ -12,7 +12,7 @@ namespace Application.Interface.Service
 {
     public interface IWalletService
     {       
-        Task<Wallet> GetWalletByIdAsync(Guid AccountId);       
-        Task<ResponseModel> UpdateUsingGoldWalletAsync(WalletPutModel putModel, Guid Id);
+        Task<Wallet> GetWalletByIdAsync(Guid Id);       
+        Task<ResponseModel> UpdateUsingGoldWalletAsync(WalletPutModel putModel);
     }
 }

@@ -14,6 +14,8 @@ using Domain.Model.Question;
 using Domain.Model.Region;
 using Domain.Model.Student;
 using Domain.Model.Test;
+using Domain.Model.Transaction;
+using Domain.Model.Wallet;
 
 namespace Application.Common.Mapper
 {
@@ -60,6 +62,16 @@ namespace Application.Common.Mapper
 
             //PersonalGroup
             CreateMap<PersonalGroup, PersonalGroupModel>().ReverseMap();
+
+
+            //Wallet
+            CreateMap<Wallet, WalletModel>().ReverseMap();
+            CreateMap<Wallet, WalletPutModel>().ReverseMap();
+            
+                
+            //Transaction
+            CreateMap<Transaction, TransactionModel>().ReverseMap();
+            CreateMap<Transaction, TransactionPostModel>().ReverseMap();
 
         }
     }
