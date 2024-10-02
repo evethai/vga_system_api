@@ -65,6 +65,9 @@ namespace Application.Common.Mapper
 
             //TestType
             CreateMap<TestType, TestTypeModel>().ReverseMap();
+            // Account
+
+            CreateMap<Account, AccountStudentModel>().ReverseMap();
 
         }
     }
