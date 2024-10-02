@@ -14,5 +14,6 @@ namespace Infrastructure.Persistence.Repository
         public PersonalTestRepository(VgaDbContext context) : base(context)
         {
         }
+
     }
 }

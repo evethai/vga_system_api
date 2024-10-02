@@ -14,6 +14,7 @@ using Domain.Model.Question;
 using Domain.Model.Region;
 using Domain.Model.Student;
 using Domain.Model.Test;
+using Domain.Model.TestType;
 
 namespace Application.Common.Mapper
 {
@@ -51,6 +52,7 @@ namespace Application.Common.Mapper
 
             //Question
             CreateMap<Question, QuestionModel>().ReverseMap();
+            CreateMap<Question, QuestionPostModel>().ReverseMap();
 
             //Answer
             CreateMap<Answer, AnswerModel>().ReverseMap();
@@ -60,6 +62,9 @@ namespace Application.Common.Mapper
 
             //PersonalGroup
             CreateMap<PersonalGroup, PersonalGroupModel>().ReverseMap();
+
+            //TestType
+            CreateMap<TestType, TestTypeModel>().ReverseMap();
 
         }
     }

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(VgaDbContext))]
-    [Migration("20240921033122_Init")]
+    [Migration("20241001084055_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -55,11 +55,11 @@ namespace Infrastructure.Migrations
                     b.Property<string>("ResetPasswordToken")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("Status")
-                        .HasColumnType("bit");
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("VerifyAt")
                         .HasColumnType("datetime2");
@@ -68,6 +68,8 @@ namespace Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
 
                     b.ToTable("account");
                 });
@@ -180,42 +182,6 @@ namespace Infrastructure.Migrations
                     b.ToTable("booking");
                 });
 
-            modelBuilder.Entity("Domain.Entity.CareerExpert", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("AccountId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("DoB")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("ExpertLevelId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Status")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AccountId")
-                        .IsUnique();
-
-                    b.HasIndex("ExpertLevelId");
-
-                    b.ToTable("career_expert");
-                });
-
             modelBuilder.Entity("Domain.Entity.Certification", b =>
                 {
                     b.Property<int>("Id")
@@ -243,6 +209,69 @@ namespace Infrastructure.Migrations
                     b.HasIndex("ExpertId");
 
                     b.ToTable("certification");
+                });
+
+            modelBuilder.Entity("Domain.Entity.Consultant", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AccountId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int?>("ConsultantLevelId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DoB")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId")
+                        .IsUnique();
+
+                    b.HasIndex("ConsultantLevelId");
+
+                    b.ToTable("consultant");
+                });
+
+            modelBuilder.Entity("Domain.Entity.ConsultantLevel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("PriceOnSlot")
+                        .HasColumnType("float");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("consultant_level");
                 });
 
             modelBuilder.Entity("Domain.Entity.ConsultationDay", b =>
@@ -293,33 +322,6 @@ namespace Infrastructure.Migrations
                     b.HasIndex("TimeSlotId");
 
                     b.ToTable("consultation_time");
-                });
-
-            modelBuilder.Entity("Domain.Entity.ExpertLevel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("PriceOnSlot")
-                        .HasColumnType("float");
-
-                    b.Property<bool>("Status")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("expert_level");
                 });
 
             modelBuilder.Entity("Domain.Entity.HighSchool", b =>
@@ -667,6 +669,21 @@ namespace Infrastructure.Migrations
                     b.ToTable("region");
                 });
 
+            modelBuilder.Entity("Domain.Entity.Role", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("role");
+                });
+
             modelBuilder.Entity("Domain.Entity.Student", b =>
                 {
                     b.Property<Guid>("Id")
@@ -896,6 +913,17 @@ namespace Infrastructure.Migrations
                     b.ToTable("wallet");
                 });
 
+            modelBuilder.Entity("Domain.Entity.Account", b =>
+                {
+                    b.HasOne("Domain.Entity.Role", "Role")
+                        .WithMany("Accounts")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
+                });
+
             modelBuilder.Entity("Domain.Entity.AdmissionInformation", b =>
                 {
                     b.HasOne("Domain.Entity.AdmissionMethod", "AdmissionMethod")
@@ -953,24 +981,9 @@ namespace Infrastructure.Migrations
                     b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("Domain.Entity.CareerExpert", b =>
-                {
-                    b.HasOne("Domain.Entity.Account", "Account")
-                        .WithOne("CareerExpert")
-                        .HasForeignKey("Domain.Entity.CareerExpert", "AccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entity.ExpertLevel", null)
-                        .WithMany("CareerExperts")
-                        .HasForeignKey("ExpertLevelId");
-
-                    b.Navigation("Account");
-                });
-
             modelBuilder.Entity("Domain.Entity.Certification", b =>
                 {
-                    b.HasOne("Domain.Entity.CareerExpert", "Expert")
+                    b.HasOne("Domain.Entity.Consultant", "Expert")
                         .WithMany("Certifications")
                         .HasForeignKey("ExpertId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -979,9 +992,24 @@ namespace Infrastructure.Migrations
                     b.Navigation("Expert");
                 });
 
+            modelBuilder.Entity("Domain.Entity.Consultant", b =>
+                {
+                    b.HasOne("Domain.Entity.Account", "Account")
+                        .WithOne("CareerExpert")
+                        .HasForeignKey("Domain.Entity.Consultant", "AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entity.ConsultantLevel", null)
+                        .WithMany("CareerExperts")
+                        .HasForeignKey("ConsultantLevelId");
+
+                    b.Navigation("Account");
+                });
+
             modelBuilder.Entity("Domain.Entity.ConsultationDay", b =>
                 {
-                    b.HasOne("Domain.Entity.CareerExpert", "Expert")
+                    b.HasOne("Domain.Entity.Consultant", "Expert")
                         .WithMany("ConsultationDays")
                         .HasForeignKey("ExpertId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1266,11 +1294,16 @@ namespace Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Domain.Entity.CareerExpert", b =>
+            modelBuilder.Entity("Domain.Entity.Consultant", b =>
                 {
                     b.Navigation("Certifications");
 
                     b.Navigation("ConsultationDays");
+                });
+
+            modelBuilder.Entity("Domain.Entity.ConsultantLevel", b =>
+                {
+                    b.Navigation("CareerExperts");
                 });
 
             modelBuilder.Entity("Domain.Entity.ConsultationDay", b =>
@@ -1281,11 +1314,6 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entity.ConsultationTime", b =>
                 {
                     b.Navigation("Bookings");
-                });
-
-            modelBuilder.Entity("Domain.Entity.ExpertLevel", b =>
-                {
-                    b.Navigation("CareerExperts");
                 });
 
             modelBuilder.Entity("Domain.Entity.HighSchool", b =>
@@ -1331,6 +1359,11 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entity.Region", b =>
                 {
                     b.Navigation("HighSchools");
+                });
+
+            modelBuilder.Entity("Domain.Entity.Role", b =>
+                {
+                    b.Navigation("Accounts");
                 });
 
             modelBuilder.Entity("Domain.Entity.Student", b =>

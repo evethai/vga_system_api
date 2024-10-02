@@ -86,28 +86,11 @@ namespace Infrastructure.Persistence.Service
 
         }
 
-
-       
-
         public async Task<IEnumerable<PersonalTestModel>> GetAllTest()
         {
             var result = await _unitOfWork.PersonalTestRepository.GetAllAsync();
             var testModels = _mapper.Map<IEnumerable<PersonalTestModel>>(result);
             return testModels;
-        }
-
-        public async Task<IEnumerable<QuestionModel>> GetQuestionByTestId(Guid id)
-        {
-            var questions = await _unitOfWork.StudentTestRepository.GetAllQuestionByTestId(id);
-            var result = _mapper.Map<IEnumerable<QuestionModel>>(questions);
-            return result;
-        }
-
-        public async Task<IEnumerable<AnswerModel>> GetAnswerByQuestionId(int id)
-        {
-            var answers = await _unitOfWork.StudentTestRepository.GetAnswerByQuestionId(id);
-            var result = _mapper.Map<IEnumerable<AnswerModel>>(answers);
-            return result;
         }
 
         public async Task<IEnumerable<HistoryTestModel?>> GetHistoryTestByStudentId(Guid studentId)
