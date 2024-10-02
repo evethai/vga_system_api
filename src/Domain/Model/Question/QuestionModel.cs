@@ -13,6 +13,6 @@ namespace Domain.Model.Question
         public int Id { get; set; }
         public string Content { get; set; } = string.Empty;
         public QuestionGroup Group { get; set; }
-        public List<AnswerModel>? _answerModels { get; set; }
+        public List<AnswerModel>? AnswerModels { get; set; }
     }
 }

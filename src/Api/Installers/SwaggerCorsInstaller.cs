@@ -44,7 +44,7 @@ namespace Api.Installers
             x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles)
             .AddJsonOptions(option =>
             {
-                option.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.KebabCaseLower;
+                //option.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.KebabCaseLower;
                 option.JsonSerializerOptions.WriteIndented = true;
             });
 

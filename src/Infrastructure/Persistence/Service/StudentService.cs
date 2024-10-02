@@ -65,10 +65,10 @@ public class StudentService : IStudentService
     public async Task<ResponseModel> CreateStudentAsync(StudentPostModel postModel)
     {
         var student = _mapper.Map<Student>(postModel);
-        var roleId = await _unitOfWork.RoleRepository.SingleOrDefaultAsync(selector: x => x.Id, predicate: x => x.Name.Equals(RoleEnum.Student));
+        var roleId = await _unitOfWork.RoleRepository.SingleOrDefaultAsync(selector: x => x.Id, predicate: x => x.Name.Equals(RoleEnum.Student.ToString()));
         student.Account = new Account
         {
-            Id = Guid.NewGuid(), // Create new GUID for Account
+            Id = Guid.NewGuid(), 
             Email = postModel.Email,
             Phone = postModel.Phone,
             Password = postModel.Password,
@@ -102,7 +102,7 @@ public class StudentService : IStudentService
                     Message = "No students to import."
                 };
             }
-            var roleId = await _unitOfWork.RoleRepository.SingleOrDefaultAsync(selector: x => x.Id, predicate: x => x.Name.Equals(RoleEnum.Student));
+            var roleId = await _unitOfWork.RoleRepository.SingleOrDefaultAsync(selector: x => x.Id, predicate: x => x.Name.Equals(RoleEnum.Student.ToString()));
 
             foreach (var studentImport in students.Data)
             {
