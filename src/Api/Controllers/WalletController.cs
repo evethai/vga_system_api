@@ -1,4 +1,5 @@
-﻿using Application.Interface.Service;
+﻿using Api.Constants;
+using Application.Interface.Service;
 using Domain.Entity;
 using Domain.Model.Highschool;
 using Domain.Model.Response;
@@ -11,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/wallet")]
     [ApiController]
     public class WalletController : ControllerBase
     {
@@ -21,15 +22,21 @@ namespace Api.Controllers
         {
             _walletService = walletService;
         }
+        [HttpGet(ApiEndPointConstant.Wallet.WalletsEndpoint)]
+        public async Task<IActionResult> GetListWallet()
+        {
+            var result = await _walletService.GetAllWallet();
+            return Ok(result);
+        }
 
-        [HttpGet("{id}")]
+        [HttpGet(ApiEndPointConstant.Wallet.WalletEndpoint)]
         public async Task<IActionResult> GetWalletByIdAsync(Guid id)
         {
             var result = await _walletService.GetWalletByIdAsync(id);
             return Ok(result);
         }
         [HttpPut]
-        public async Task<IActionResult> UpdateUsingGoldWalletAsync([FromForm] WalletPutModel putModel)
+        public async Task<IActionResult> UpdateUsingGoldWalletAsync([FromForm] WalletPutModel putModel, int goldTransaction)
         {
             if (!ModelState.IsValid)
             {
@@ -37,8 +44,7 @@ namespace Api.Controllers
             }
             try
             {
-
-                var result = await _walletService.UpdateUsingGoldWalletAsync(putModel);
+                var result = await _walletService.UpdateUsingGoldWalletAsync(putModel, goldTransaction);
                 return Ok(result);
             }
             catch (Exception ex)

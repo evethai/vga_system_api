@@ -11,5 +11,9 @@ namespace Domain.Model.Wallet
         public Guid Id { get; set; }
         public Guid AccountId { get; set; }
         public int GoldBalance { get; set; }
-    } 
+    }
+    public class ResponseWalletModel
+    {
+        public List<WalletModel> wallets { get; set; }
+    }
 }

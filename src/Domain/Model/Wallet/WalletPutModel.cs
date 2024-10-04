@@ -11,18 +11,13 @@ namespace Domain.Model.Wallet
     {
         public WalletTransferringModel Transferring { get; set; }
         public WalletReceivingModel Receiving { get; set; }
-        public int goldTransaction {  get; set; }
     }
     public class WalletTransferringModel
     {
         public Guid Id { get; set; }
-        public int GoldBalance { get; set; }
-        public TransactionPostModel TransactionPost { get; set; }
     }
     public class WalletReceivingModel
     {
         public Guid Id { get; set; }
-        public int GoldBalance { get; set; }
-        public TransactionPostModel TransactionPost { get; set; }
     }
 }

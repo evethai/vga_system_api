@@ -47,7 +47,7 @@ namespace Api.Installers
             services.AddScoped<IAccountService, AccountService>();
 
             services.AddScoped<IWalletService, WalletService>();
-            //services.AddScoped<ITransactionService, ITransactionService>();
+            services.AddScoped<ITransactionService, TransactionService>();
             
 
            

@@ -12,5 +12,6 @@ namespace Application.Interface.Repository
 {
     public interface IWalletRepository : IGenericRepository<Wallet>
     {
+
     }
 }

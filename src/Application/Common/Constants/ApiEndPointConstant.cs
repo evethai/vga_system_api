@@ -63,6 +63,12 @@
             public const string StudentEndpoint = ApiEndpoint + "/student/{id}";
             public const string ImportStudentEndpoint = StudentsEndpoint + "/import";
         }
-  
+        public static class Wallet
+        {
+            public const string WalletsEndpoint = ApiEndpoint + "/wallet";
+            public const string WalletEndpoint = ApiEndpoint + "/wallet/{id}";
+        }
+
+
     }
 }

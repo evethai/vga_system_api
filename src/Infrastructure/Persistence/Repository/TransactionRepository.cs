@@ -17,7 +17,6 @@ namespace Infrastructure.Persistence.Repository
         public TransactionRepository(VgaDbContext context) : base(context)
         {
         }
-
         public (Expression<Func<Transaction, bool>> filter, Func<IQueryable<Transaction>, IOrderedQueryable<Transaction>> orderBy) BuildFilterAndOrderBy(TransactionSearchModel searchModel)
         {
             Expression<Func<Transaction, bool>> filter = p => true;
