@@ -9,9 +9,9 @@ namespace Domain.Model.Test
 {
     public class HistoryTestModel
     {
-        public int PersonalTestId { get; set; }
+        public Guid PersonalTestId { get; set; }
         public string PersonalTestName { get; set; } = string.Empty;
-        public int PersonalGroupId { get; set; }
+        public Guid PersonalGroupId { get; set; }
         public string PersonalGroupCode { get; set; } = string.Empty;
         public string PersonalGroupName { get; set; } = string.Empty;
         public string PersonalGroupDescription { get; set; } = string.Empty;

@@ -228,7 +228,7 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
         return testType;
     }
 
-    public async Task<IEnumerable<StudentTest?>> GetHistoryTestByStudentId(Guid studentId)
+    public async Task<IEnumerable<HistoryTestModel>> GetHistoryTestByStudentId(Guid studentId)
     {
         var tests = await _context.student_test
             .Where(s => s.StudentId == studentId)
@@ -244,8 +244,26 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
                           })
                           .FirstOrDefault())
             .ToListAsync();
+        if(tests.Count() <= 0)
+        {
+            return null;
+        }
+        List<HistoryTestModel> result = new();
+        foreach (var test in tests)
+        {
+            result.Add(new HistoryTestModel
+            {
+                PersonalTestId = test.Id,
+                PersonalTestName = test.PersonalTest.Name,
+                PersonalGroupId = test.PersonalGroupId,
+                PersonalGroupCode = test.PersonalGroup.Code,
+                PersonalGroupName = test.PersonalGroup.Name,
+                PersonalGroupDescription = test.PersonalGroup.Description,
+                Date = test.Date
+            });
+        }
 
-        return tests;
+        return result;
     }
 
 }
