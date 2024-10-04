@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Common.Utils;
 using Application.Interface;
 using Application.Interface.Service;
 using AutoMapper;
@@ -27,7 +28,7 @@ public class StudentService : IStudentService
     public async Task<ResponseStudentModel> GetListStudentAsync(StudentSearchModel searchModel)
     {
         var (filter, orderBy) = _unitOfWork.StudentRepository.BuildFilterAndOrderBy(searchModel);
-        var student = await _unitOfWork.StudentRepository.GetByConditionAsync(filter, orderBy, pageIndex: searchModel.currentPage, pageSize: searchModel.pageSize);
+        var student = await _unitOfWork.StudentRepository.GetByConditionAsync(filter, orderBy,includeProperties: "Account", pageIndex: searchModel.currentPage, pageSize: searchModel.pageSize);      
         var total = await _unitOfWork.StudentRepository.CountAsync(filter);
         var listStudent = _mapper.Map<List<StudentModel>>(student);
         return new ResponseStudentModel
@@ -71,7 +72,7 @@ public class StudentService : IStudentService
             Id = Guid.NewGuid(), 
             Email = postModel.Email,
             Phone = postModel.Phone,
-            Password = postModel.Password,
+            Password = PasswordUtil.HashPassword(postModel.Password),
             RoleId = roleId,
             Status = AccountStatus.Active,
             CreateAt = DateTime.Now
@@ -81,7 +82,7 @@ public class StudentService : IStudentService
          _unitOfWork.SaveChangesAsync();
         return new ResponseModel
         {
-            Message = " Student Created Successfully",
+            Message = "Student Created Successfully",
             IsSuccess = true,
             Data = student,
         };

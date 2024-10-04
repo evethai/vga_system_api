@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Common.Utils;
 using Application.Interface;
 using Application.Interface.Service;
 using AutoMapper;
@@ -44,13 +45,13 @@ public class HighschoolService : IHighschoolService
     public async Task<ResponseModel> CreateHighschoolAsync(HighschoolPostModel postModel)
     {
         var highschool = _mapper.Map<HighSchool>(postModel);
-        var roleId = await _unitOfWork.RoleRepository.SingleOrDefaultAsync(selector: x=> x.Id,predicate: x=> x.Name.Equals(RoleEnum.HighSchool));
+        var roleId = await _unitOfWork.RoleRepository.SingleOrDefaultAsync(selector: x=> x.Id,predicate: x=> x.Name.Equals(RoleEnum.HighSchool.ToString()));
         highschool.Account = new Account
         {
             Id = Guid.NewGuid(), // Create new GUID for Account
             Email = postModel.Email,
             Phone = postModel.Phone,
-            Password = postModel.Password,
+            Password = PasswordUtil.HashPassword(postModel.Password),
             RoleId = roleId,
             Status = AccountStatus.Active,
             CreateAt = DateTime.Now
