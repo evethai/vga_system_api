@@ -77,7 +77,7 @@ public class StudentService : IStudentService
         var roleId = await _unitOfWork.RoleRepository.SingleOrDefaultAsync(selector: x => x.Id, predicate: x => x.Name.Equals(RoleEnum.Student.ToString()));
         student.Account = new Account
         {
-            Id = Guid.NewGuid(), // Create new GUID for Account
+            Id = Guid.NewGuid(), 
             Email = postModel.Email,
             Phone = postModel.Phone,
             Password = PasswordUtil.HashPassword(postModel.Password),
@@ -117,7 +117,7 @@ public class StudentService : IStudentService
                     Message = "No students to import."
                 };
             }
-            var roleId = await _unitOfWork.RoleRepository.SingleOrDefaultAsync(selector: x => x.Id, predicate: x => x.Name.Equals(RoleEnum.Student));
+            var roleId = await _unitOfWork.RoleRepository.SingleOrDefaultAsync(selector: x => x.Id, predicate: x => x.Name.Equals(RoleEnum.Student.ToString()));
 
             foreach (var studentImport in students.Data)
             {

@@ -123,7 +123,7 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
                 Id = q.Id,
                 Content = q.Content,
                 Group = q.Group,
-                _answerModels = q.Answers
+                AnswerModels = q.Answers
             }).OrderBy(q => q.Group).ToList()
         };
 
