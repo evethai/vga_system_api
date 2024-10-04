@@ -44,7 +44,8 @@ namespace Api.Controllers
             }
 
         }
-        //[CustomAuthorize(RoleEnum.Admin,RoleEnum.Student)]
+
+        //[CustomAuthorize(RoleEnum.HighSchool)]
         [HttpGet(ApiEndPointConstant.PersonalTest.PersonalTestEndpoint)]
         public async Task<IActionResult> GetPersonalTestById(Guid id)
         {
