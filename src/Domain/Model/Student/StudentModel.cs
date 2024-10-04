@@ -4,19 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Domain.Enum;
+using Domain.Model.AccountWallet;
 using Domain.Model.Highschool;
 
 namespace Domain.Model.Student;
 public class StudentModel
 {
     public Guid Id { get; set; }
-    public Guid AccountId { get; set; }
     public string Name { get; set; } = string.Empty;
     public bool Gender { get; set; }
     public DateTime DateOfBirth { get; set; }
     public bool Status { get; set; }
     public DateTime CreateAt { get; set; }
     public Guid HighSchoolId { get; set; }
+    public AccountWalletModel Account { get; set; }   
 }
 public class ResponseStudentModel
 {
