@@ -34,6 +34,13 @@ namespace Application.Interface
             int? pageIndex = null,
             int? pageSize = null
         );
+        Task<IEnumerable<T>> GetBySearchAsync(
+            Expression<Func<T, bool>>? filter = null,
+            Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+            Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
+            int? pageIndex = null,
+            int? pageSize = null
+        );
         Task<IEnumerable<T>> GetAllAsync();
         Task<int> CountAsync(Expression<Func<T, bool>>? filter = null);
 

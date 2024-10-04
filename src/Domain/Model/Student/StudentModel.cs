@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Domain.Enum;
+using Domain.Model.AccountWallet;
 using Domain.Model.Highschool;
 
 namespace Domain.Model.Student;
@@ -16,18 +17,11 @@ public class StudentModel
     public bool Status { get; set; }
     public DateTime CreateAt { get; set; }
     public Guid HighSchoolId { get; set; }
-    public AccountStudentModel Account { get; set; }   
+    public AccountWalletModel Account { get; set; }   
 }
 public class ResponseStudentModel
 {
     public int? total { get; set; }
     public int? currentPage { get; set; }
     public List<StudentModel> students { get; set; }
-}
-public class AccountStudentModel
-{
-    public Guid Id { get; set; }
-    public string Phone { get; set; } = string.Empty;
-    public string? Image_Url { get; set; }
-    public AccountStatus Status { get; set; }
 }

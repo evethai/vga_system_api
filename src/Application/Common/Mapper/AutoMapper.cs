@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Domain.Entity;
 using Domain.Enum;
+using Domain.Model.AccountWallet;
 using Domain.Model.Highschool;
 using Domain.Model.Major;
 using Domain.Model.PersonalGroup;
@@ -66,9 +67,8 @@ namespace Application.Common.Mapper
             //TestType
             CreateMap<TestType, TestTypeModel>().ReverseMap();
             // Account
-
-            CreateMap<Account, AccountStudentModel>().ReverseMap();
-
+            CreateMap<Account, AccountWalletModel>().ReverseMap();
+            CreateMap<Wallet, WalletAccountModel>().ReverseMap();
         }
     }
 }
