@@ -11,5 +11,4 @@ namespace Application.Interface.Repository;
 public interface IStudentRepository: IGenericRepository<Student>
 {
     (Expression<Func<Student, bool>> filter, Func<IQueryable<Student>, IOrderedQueryable<Student>> orderBy) BuildFilterAndOrderBy(StudentSearchModel searchModel);
-
 }

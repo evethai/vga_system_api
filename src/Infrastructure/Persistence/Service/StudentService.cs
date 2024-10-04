@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.WebSockets;
 using System.Text;
 using System.Threading.Tasks;
 using Application.Common.Utils;
@@ -12,6 +13,7 @@ using Domain.Enum;
 using Domain.Model.Highschool;
 using Domain.Model.Response;
 using Domain.Model.Student;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace Infrastructure.Persistence.Service;
@@ -28,7 +30,13 @@ public class StudentService : IStudentService
     public async Task<ResponseStudentModel> GetListStudentAsync(StudentSearchModel searchModel)
     {
         var (filter, orderBy) = _unitOfWork.StudentRepository.BuildFilterAndOrderBy(searchModel);
-        var student = await _unitOfWork.StudentRepository.GetByConditionAsync(filter, orderBy,includeProperties: "Account", pageIndex: searchModel.currentPage, pageSize: searchModel.pageSize);      
+        var student = await _unitOfWork.StudentRepository
+            .GetBySearchAsync(filter, orderBy,
+            q => q.Include(s => s.Account)
+                   .ThenInclude(a => a.Wallet),                     
+            pageIndex: searchModel.currentPage,
+            pageSize: searchModel.pageSize);
+        
         var total = await _unitOfWork.StudentRepository.CountAsync(filter);
         var listStudent = _mapper.Map<List<StudentModel>>(student);
         return new ResponseStudentModel
@@ -76,6 +84,12 @@ public class StudentService : IStudentService
             RoleId = roleId,
             Status = AccountStatus.Active,
             CreateAt = DateTime.Now
+        };
+        student.Account.Wallet = new Wallet
+        {
+            Id = Guid.NewGuid(),
+            GoldBalance = 0,
+            AccountId = student.Account.Id,
         };
         postModel.Status = true;
         var result = await _unitOfWork.StudentRepository.AddAsync(student);
