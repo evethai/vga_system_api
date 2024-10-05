@@ -7,7 +7,8 @@ using Domain.Entity;
 
 namespace Application.Interface.Repository
 {
-    public interface IExpertLevelRepository : IGenericRepository<ExpertLevel>
+    public interface IConsultationTimeRepository  : IGenericRepository<ConsultationTime>
     {
+        Task AddRangeAsync(IEnumerable<ConsultationTime> consultationTimes);
     }
 }

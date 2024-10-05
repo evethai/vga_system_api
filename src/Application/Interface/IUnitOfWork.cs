@@ -19,11 +19,12 @@ namespace Application.Interface
         ITestTypeRepository TestTypeRepository { get; }
         IQuestionRepository QuestionRepository { get; }
         IUniversityRepository UniversityRepository { get; }
-        ICareerExpertRepository CareerExpertRepository { get; }
-        IExpertLevelRepository ExpertLevelRepository { get; }
+        IConsultantLevelRepository ConsultantLevelRepository { get; }
         ITimeSlotRepository TimeSlotRepository { get; }
-        ICareerExpertRepository CareerExpertRepository { get; }
-
+        IConsultantRepository ConsultantRepository { get; }
+        IConsultationDayRepository ConsultationDayRepository { get; }
+        IConsultationTimeRepository ConsultationTimeRepository { get; }
+        IBookingRepository BookingRepository { get; }
         Task SaveChangesAsync();
     }
 }

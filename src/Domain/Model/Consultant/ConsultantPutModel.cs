@@ -4,12 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Model.ExpertLevel
+namespace Domain.Model.Consultant
 {
-    public class ExpertLevelPutModel
+    public class ConsultantPutModel
     {
         public string Name { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Phone { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
-        public double PriceOnSlot { get; set; }
+        public string? Image_Url { get; set; }
     }
 }

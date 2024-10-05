@@ -12,7 +12,8 @@ namespace Application.Interface.Service
     {
         Task<ResponseModel> GetTimeSlotByIdAsync(int timeSlotId);
         Task<ResponseModel> CreateTimeSlotAsync(TimeSlotPostModel postModel);
-        Task<ResponseModel> UpdateTimeSlotAsync(int timeSlotId, TimeSlotPutModel putModel);
+        Task<ResponseModel> UpdateTimeSlotAsync(TimeSlotPutModel putModel, int timeSlotId);
         Task<ResponseModel> DeleteTimeSlotAsync(int timeSlotId);
+        Task<ResponseModel> GetAllTimeSlotsAsync();
     }
 }

@@ -53,7 +53,7 @@ public class StudentService : IStudentService
         }
         exitStudent.Status = putModel.Status;
         var result = await _unitOfWork.StudentRepository.UpdateAsync(exitStudent);
-         _unitOfWork.SaveChangesAsync();
+        _unitOfWork.SaveChangesAsync();
         return new ResponseModel
         {
             Message = "Student Updated Successfully",
@@ -78,7 +78,7 @@ public class StudentService : IStudentService
         };
         postModel.Status = true;
         var result = await _unitOfWork.StudentRepository.AddAsync(student);
-         _unitOfWork.SaveChangesAsync();
+        _unitOfWork.SaveChangesAsync();
         return new ResponseModel
         {
             Message = " Student Created Successfully",
@@ -102,33 +102,41 @@ public class StudentService : IStudentService
                     Message = "No students to import."
                 };
             }
-            var roleId = await _unitOfWork.RoleRepository.SingleOrDefaultAsync(selector: x => x.Id, predicate: x => x.Name.Equals(RoleEnum.Student));
+            var roleId = await _unitOfWork.RoleRepository
+                .SingleOrDefaultAsync(selector: x => x.Id, predicate: x => x.Name.Equals(RoleEnum.Student.ToString()));
 
             foreach (var studentImport in students.Data)
             {
+                //var accountId = Guid.NewGuid();
                 var student = _mapper.Map<Student>(studentImport);
 
                 student.Id = Guid.NewGuid();
 
                 student.Account = new Account
                 {
-                    Id = Guid.NewGuid(), 
+                    Id = Guid.NewGuid(),
                     Email = studentImport.Email,
                     Phone = studentImport.Phone,
                     Password = studentImport.Phone,
                     RoleId = roleId,
                     Status = AccountStatus.Active,
-                    CreateAt = DateTime.Now
+                    CreateAt = DateTime.UtcNow
+                };
+                student.Account.Wallet = new Wallet
+                {
+                    Id = Guid.NewGuid(),
+                    GoldBalance = 0,
+                    AccountId = student.Account.Id,
                 };
 
-                student.CreateAt = DateTime.Now;
+                student.CreateAt = DateTime.UtcNow;
                 student.HighSchoolId = studentImportModel.highschoolId;
                 student.Status = true;
 
                 await _unitOfWork.StudentRepository.AddAsync(student);
             }
 
-              _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync();
 
             return new ResponseModel
             {

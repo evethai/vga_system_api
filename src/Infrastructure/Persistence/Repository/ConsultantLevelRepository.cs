@@ -9,9 +9,9 @@ using Infrastructure.Data;
 
 namespace Infrastructure.Persistence.Repository
 {
-    public class CareerExpertRepository : GenericRepository<Consultant>, ICareerExpertRepository
+    public class ConsultantLevelRepository : GenericRepository<ConsultantLevel>, IConsultantLevelRepository
     {
-        public CareerExpertRepository(VgaDbContext context) : base(context)
+        public ConsultantLevelRepository(VgaDbContext context) : base(context)
         {
         }
     }

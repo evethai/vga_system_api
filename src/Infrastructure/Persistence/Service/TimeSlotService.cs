@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Common.Exceptions;
 using Application.Interface;
 using Application.Interface.Service;
 using AutoMapper;
@@ -53,12 +54,12 @@ namespace Infrastructure.Persistence.Service
         #endregion
 
         #region Update time slot 
-        public async Task<ResponseModel> UpdateTimeSlotAsync(int timeSlotId, TimeSlotPutModel putModel)
+        public async Task<ResponseModel> UpdateTimeSlotAsync(TimeSlotPutModel putModel, int timeSlotId)
         {
             var timeSlot = await _unitOfWork.TimeSlotRepository.GetByIdAsync(timeSlotId)
                     ?? throw new Exception($"Time slot not found by id: {timeSlotId}");
-            _mapper.Map(putModel,timeSlot);
-            await _unitOfWork.TimeSlotRepository.UpdateAsync(timeSlot);  
+            _mapper.Map(putModel, timeSlot);
+            await _unitOfWork.TimeSlotRepository.UpdateAsync(timeSlot);
             await _unitOfWork.SaveChangesAsync();
 
             var result = _mapper.Map<TimeSlotViewModel>(timeSlot);
@@ -85,6 +86,21 @@ namespace Infrastructure.Persistence.Service
                 Message = $"Time slot with id '{timeSlotId}' was deleted successfully",
                 IsSuccess = true,
                 Data = result,
+            };
+        }
+        #endregion
+
+        #region
+        public async Task<ResponseModel> GetAllTimeSlotsAsync()
+        {
+            var timeSlots = await _unitOfWork.TimeSlotRepository.GetAllAsync()
+                ?? throw new NotExistsException();
+            var result = _mapper.Map<List<TimeSlotViewModel>>(timeSlots);
+            return new ResponseModel
+            {
+                IsSuccess = true,
+                Data = result,
+                Message = "Time slots retrieved successfully."
             };
         }
         #endregion

@@ -6,12 +6,10 @@ using System.Threading.Tasks;
 
 namespace Domain.Model.ExpertLevel
 {
-    public class ExpertLevelViewModel
+    public class ConsultantLevelPutModel
     {
-        public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public double PriceOnSlot { get; set; }
-        public bool Status { get; set; }
     }
 }

@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Interface.Service
+namespace Domain.Enum
 {
-    public interface ICareerExpertService
+    public enum ConsultationTimeStatusEnum
     {
+        Available,
+        Booked,
+        Deleted
     }
 }

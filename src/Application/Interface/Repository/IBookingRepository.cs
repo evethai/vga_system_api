@@ -7,7 +7,8 @@ using Domain.Entity;
 
 namespace Application.Interface.Repository
 {
-    public interface ICareerExpertRepository : IGenericRepository<Consultant>
+    public interface IBookingRepository : IGenericRepository<Booking>
     {
+        Task<List<Booking>> GetAllBookingsWithDetailsAsync();
     }
 }
