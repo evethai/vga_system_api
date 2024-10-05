@@ -67,6 +67,7 @@
         {
             public const string WalletsEndpoint = ApiEndpoint + "/wallet";
             public const string WalletEndpoint = ApiEndpoint + "/wallet/{id}";
+            public const string WalletPutEndpoint = ApiEndpoint + "/wallet/distribution";
         }
 
 

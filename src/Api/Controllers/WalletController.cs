@@ -44,7 +44,24 @@ namespace Api.Controllers
             }
             try
             {
-                var result = await _walletService.UpdateUsingGoldWalletAsync(putModel, goldTransaction);
+                var result = await _walletService.UpdateUsingGoldBookCareerExpertWalletAsync(putModel, goldTransaction);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPut(ApiEndPointConstant.Wallet.WalletPutEndpoint)]
+        public async Task<IActionResult> UpdateGoldDistributionWalletAsync([FromForm]Guid putModel, int goldTransaction)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var result = await _walletService.UpdateGoldDistributionWalletAsync(putModel, goldTransaction);
                 return Ok(result);
             }
             catch (Exception ex)

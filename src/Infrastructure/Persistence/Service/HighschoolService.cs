@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Common.Utils;
 using Application.Interface;
 using Application.Interface.Service;
 using AutoMapper;
@@ -10,6 +11,7 @@ using Domain.Entity;
 using Domain.Enum;
 using Domain.Model.Highschool;
 using Domain.Model.Response;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Service;
 public class HighschoolService : IHighschoolService
@@ -31,7 +33,12 @@ public class HighschoolService : IHighschoolService
     public async Task<ResponseHighSchoolModel> GetListHighSchoolAsync(HighschoolSearchModel searchModel)
     {
         var (filter, orderBy) = _unitOfWork.HighschoolRepository.BuildFilterAndOrderBy(searchModel);
-        var highSchools = await _unitOfWork.HighschoolRepository.GetByConditionAsync(filter, orderBy, pageIndex: searchModel.currentPage, pageSize: searchModel.pageSize);
+        var highSchools = await _unitOfWork.HighschoolRepository
+            .GetBySearchAsync(filter, orderBy,
+            q => q.Include(s => s.Account)
+                   .ThenInclude(a => a.Wallet),
+            pageIndex: searchModel.currentPage,
+            pageSize: searchModel.pageSize);
         var total = await _unitOfWork.HighschoolRepository.CountAsync(filter);
         var listHighschool = _mapper.Map<List<HighschoolModel>>(highSchools);
         return new ResponseHighSchoolModel
@@ -44,19 +51,25 @@ public class HighschoolService : IHighschoolService
     public async Task<ResponseModel> CreateHighschoolAsync(HighschoolPostModel postModel)
     {
         var highschool = _mapper.Map<HighSchool>(postModel);
-        var roleId = await _unitOfWork.RoleRepository.SingleOrDefaultAsync(selector: x=> x.Id,predicate: x=> x.Name.Equals(RoleEnum.HighSchool));
+        var roleId = await _unitOfWork.RoleRepository.SingleOrDefaultAsync(selector: x=> x.Id,predicate: x=> x.Name.Equals(RoleEnum.HighSchool.ToString()));
         highschool.Account = new Account
         {
             Id = Guid.NewGuid(), // Create new GUID for Account
             Email = postModel.Email,
             Phone = postModel.Phone,
-            Password = postModel.Password,
+            Password = PasswordUtil.HashPassword(postModel.Password),
             RoleId = roleId,
             Status = AccountStatus.Active,
             CreateAt = DateTime.Now
-        };      
+        };
+        highschool.Account.Wallet = new Wallet
+        {
+            Id = Guid.NewGuid(),
+            GoldBalance = 0,
+            AccountId = highschool.Account.Id,
+        };
         var result = await _unitOfWork.HighschoolRepository.AddAsync(highschool);
-        _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.SaveChangesAsync();
         return new ResponseModel
         {
             Message = " Highschool Created Successfully",

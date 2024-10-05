@@ -162,6 +162,27 @@ namespace Infrastructure.Persistence
             return entity;
         }
 
+        public async Task<IEnumerable<T>> GetBySearchAsync(Expression<Func<T, bool>>? filter = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null, int? pageIndex = null, int? pageSize = null)
+        {
+                IQueryable<T> query = _context.Set<T>();
+                if (filter != null)
+                {
+                    query = query.Where(filter);
+                }
+                if (include != null)
+                {
+                    query = include(query);
+                }
+                if (orderBy != null)
+                {
+                    query = orderBy(query);
+                }
+                if (pageIndex.HasValue && pageSize.HasValue)
+                {
+                    query = query.Skip((pageIndex.Value - 1) * pageSize.Value).Take(pageSize.Value);
+                }
+                return await query.ToListAsync();
+            }
     }
 }
 
