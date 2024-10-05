@@ -64,5 +64,46 @@
             public const string ImportStudentEndpoint = StudentsEndpoint + "/import";
         }
   
+        //consultant
+        public static class Consultant
+        {
+            public const string ConsultantsEndpoint = ApiEndpoint + "/consultants";
+            public const string ConsultantEndpoint = ConsultantsEndpoint + "/{id}";
+        }
+
+        //time slot
+        public static class TimeSlot
+        {
+            public const string TimeSlotsEndpoint = ApiEndpoint + "/timeslots";
+            public const string TimeSlotEndpoint = TimeSlotsEndpoint + "/{id}";
+        }
+
+        //consultant level
+        public static class ConsultantLevel
+        {
+            public const string ConsultantLevelsEndpoint = ApiEndpoint + "/consultant-levels";
+            public const string ConsultantLevelEndpoint = ConsultantLevelsEndpoint + "/{id}";
+        }
+
+        //consultation day
+        public static class ConsultationDay
+        {
+            public const string ConsultationDaysEndpoint = ApiEndpoint + "/consultation-days";
+            public const string ConsultationDayEndpoint = ConsultationDaysEndpoint + "/{id}";
+        }
+
+        //consultation time
+        public static class ConsultationTime
+        {
+            public const string ConsultationTimesEndpoint = ApiEndpoint + "/consultation-times";
+            public const string ConsultationTimeEndpoint = ConsultationTimesEndpoint + "/{id}";
+        }
+
+        //Booking
+        public static class Booking
+        {
+            public const string BookingsEndpoint = ApiEndpoint + "/bookings";
+            public const string BookingEndpoint = BookingsEndpoint + "/{id}";
+        }
     }
 }
