@@ -21,6 +21,7 @@ using Domain.Model.Consultant;
 using Domain.Model.ConsultationDay;
 using Domain.Model.ConsultationTime;
 using Domain.Model.Booking;
+using Domain.Model.ExpertLevel;
 
 namespace Application.Common.Mapper
 {

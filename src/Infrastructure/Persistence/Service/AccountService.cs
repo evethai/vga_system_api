@@ -48,7 +48,7 @@ namespace Infrastructure.Persistence.Service
                 case RoleEnum.Expert:
                     Guid careerExpertId = await _unitOfWork.ConsultantRepository
                         .SingleOrDefaultAsync(selector: x => x.Id, predicate: x => x.AccountId.Equals(account.Id));
-                    name = await _unitOfWork.CareerExpertRepository
+                    name = await _unitOfWork.ConsultantRepository
                         .SingleOrDefaultAsync(selector: x => x.Name, predicate: x => x.AccountId.Equals(account.Id));
                     guidClaim = new Tuple<string, Guid>("CareerExpertId", careerExpertId);
                     loginResponseModel = new CareerExpertAccountResponseModel(account.Id, account.Email, account.Phone, name, role, account.Status, PichUrl, careerExpertId);
