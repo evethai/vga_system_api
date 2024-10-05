@@ -24,8 +24,13 @@ namespace Infrastructure.Persistence
         private IRoleRepository _roleRepository;
         private ITestTypeRepository _testTypeRepository;
         private IQuestionRepository _questionRepository;
-        private ICareerExpertRepository _careerExpertRepository;
         private IUniversityRepository _universityRepository;
+        private IConsultantLevelRepository _consultantLevelRepository;
+        private ITimeSlotRepository _timeSlotRepository;
+        private IConsultantRepository _consultantRepository;
+        private IConsultationDayRepository _consultationDayRepository;
+        private IConsultationTimeRepository _consultationTimeRepository;
+        private IBookingRepository _bookingRepository;
 
         public UnitOfWork(VgaDbContext context)
         {
@@ -41,10 +46,13 @@ namespace Infrastructure.Persistence
         public IRoleRepository RoleRepository => _roleRepository ??= new RoleRepository(_context);
         public ITestTypeRepository TestTypeRepository => _testTypeRepository ??= new TestTypeRepository(_context);
         public IQuestionRepository QuestionRepository => _questionRepository ??= new QuestionRepository(_context);
-        public ICareerExpertRepository CareerExpertRepository => _careerExpertRepository ??= new CareerExpertRepository(_context);
-
         public IUniversityRepository UniversityRepository => _universityRepository ??= new UniversityRepository(_context);
-
+        public IConsultantLevelRepository ConsultantLevelRepository => _consultantLevelRepository ??= new ConsultantLevelRepository(_context);
+        public ITimeSlotRepository TimeSlotRepository => _timeSlotRepository ??= new TimeSlotRepository(_context);
+        public IConsultantRepository ConsultantRepository => _consultantRepository ??= new ConsultantRepository(_context);
+        public IConsultationDayRepository ConsultationDayRepository => _consultationDayRepository ??= new ConsultationDayRepository(_context);
+        public IConsultationTimeRepository ConsultationTimeRepository => _consultationTimeRepository ??= new ConsultationTimeRepository(_context);
+        public IBookingRepository BookingRepository => _bookingRepository ??= new BookingRepository(_context);
         public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();

@@ -31,7 +31,12 @@ namespace Api.Installers
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<ITestTypeRepository, TestTypeRepository>();
             services.AddScoped<IQuestionRepository, QuestionRepository>();
-
+            services.AddScoped<IConsultantLevelRepository, ConsultantLevelRepository>();
+            services.AddScoped<ITimeSlotRepository, TimeSlotRepository>();
+            services.AddScoped<IConsultantRepository, ConsultantRepository>();
+            services.AddScoped<IConsultationDayRepository, ConsultationDayRepository>();
+            services.AddScoped<IConsultationTimeRepository, ConsultationTimeRepository>();
+            services.AddScoped<IBookingRepository, BookingRepository>();    
 
             //Declare Service
             services.AddScoped<IStudentTestService, StudentTestService>();
@@ -42,10 +47,12 @@ namespace Api.Installers
             services.AddScoped<ITestTypeService, TestTypeService>();
             services.AddScoped<IQuestionService, QuestionService>();
             services.AddScoped<IAccountService, AccountService>();
-
-
-
-
+            services.AddScoped<IConsultantLevelService, ConsultantLevelService>();
+            services.AddScoped<ITimeSlotService, TimeSlotService>();
+            services.AddScoped<IConsultantService, ConsultantService>();
+            services.AddScoped<IConsultationDayService, ConsultationDayService>();
+            services.AddScoped<IConsultationTimeService, ConsultationTimeService>();
+            services.AddScoped<IBookingService, BookingService>();
 
             //Declare Email Service
             //services.AddTransient<IEmailService, EmailService>();
