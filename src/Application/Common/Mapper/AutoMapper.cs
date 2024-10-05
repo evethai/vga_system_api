@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Domain.Entity;
 using Domain.Enum;
-using Domain.Model.ExpertLevel;
+using Domain.Model.AccountWallet;
 using Domain.Model.Highschool;
 using Domain.Model.Major;
 using Domain.Model.PersonalGroup;
@@ -139,6 +139,9 @@ namespace Application.Common.Mapper
                 .ForMember(dest => dest.StudentPhone, opt => opt.MapFrom(src => src.Student.Account.Phone))
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status));
 
+            // Account
+            CreateMap<Account, AccountWalletModel>().ReverseMap();
+            CreateMap<Wallet, WalletAccountModel>().ReverseMap();
         }
     }
 }

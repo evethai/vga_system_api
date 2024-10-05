@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Domain.Entity;
+using Domain.Model.AccountWallet;
 
 namespace Domain.Model.Highschool;
 public class HighschoolModel
@@ -12,7 +13,8 @@ public class HighschoolModel
     public string Name { get; set; }   
     public string LocationDetail { get; set; }
     public Guid RegionId { get; set; }
-    public Guid AccountId { get; set; }
+    public AccountWalletModel Account { get; set; }
+
 }
 public class ResponseHighSchoolModel
 {
