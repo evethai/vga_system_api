@@ -41,7 +41,7 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
             { AnswerValue.P, 0 }
         };
 
-        var answers = await _context.answer
+        var answers = await _context.Answer
             .Where(a => listAnswerId.Contains(a.Id))
             .ToListAsync();
 
@@ -57,7 +57,7 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
         mbtiType += (answerValueCounts[AnswerValue.P] >= answerValueCounts[AnswerValue.J]) ? "P" : "J";
 
 
-        var m_Type = await _context.personal_group
+        var m_Type = await _context.PersonalGroup
             .Where(p => p.Code == mbtiType)
             .FirstOrDefaultAsync();
 
@@ -82,7 +82,7 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
     public async Task<PersonalTestModel> GetTestById(Guid personalTestId)
     {
 
-        var test = await _context.personal_test
+        var test = await _context.PersonalTest
             .Where(p => p.Id == personalTestId)
             .Include(p => p.TestType)
             .Select(p => new
@@ -146,7 +146,7 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
         };
 
 
-        var questions = await _context.question
+        var questions = await _context.Question
             .Where(a => listQuestionId.Contains(a.Id))
             .ToListAsync();
 
@@ -172,7 +172,7 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
 
         string type = string.Join("", top3Groups.Select(g => g.Group.ToString()));
 
-        var h_type = await _context.personal_group
+        var h_type = await _context.PersonalGroup
             .Where(p => p.Code.Equals(type))
             .FirstOrDefaultAsync();
 
@@ -181,7 +181,7 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
             throw new KeyNotFoundException("Personality type not found");
         }
 
-        var majors = await _context.major_type.Where(m => m.PersonalGroupId == h_type.Id)
+        var majors = await _context.MajorType.Where(m => m.PersonalGroupId == h_type.Id)
             .Select(m => new MajorModel
             {
                 Id = m.Major.Id,
@@ -208,19 +208,19 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
 
     public async Task<IEnumerable<Question>> GetAllQuestionByTestId(Guid personalTestId)
     {
-        var result = await _context.test_question.Where(q => q.PersonalTestId == personalTestId).Select(p => p.Question).ToListAsync();
+        var result = await _context.TestQuestion.Where(q => q.PersonalTestId == personalTestId).Select(p => p.Question).ToListAsync();
         return result;
     }
 
     public async Task<IEnumerable<Answer>> GetAnswerByQuestionId(int questionId)
     {
-        var result = await _context.answer.Where(a => a.QuestionId == questionId).ToListAsync();
+        var result = await _context.Answer.Where(a => a.QuestionId == questionId).ToListAsync();
         return result;
     }
 
     public async Task<TestTypeCode> CheckTestType(Guid personalTestId)
     {
-        var testType = await _context.personal_test
+        var testType = await _context.PersonalTest
             .Where(p => p.Id == personalTestId)
             .Select(p => p.TestType.TypeCode)
             .FirstOrDefaultAsync();
@@ -228,9 +228,9 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
         return testType;
     }
 
-    public async Task<IEnumerable<StudentTest?>> GetHistoryTestByStudentId(Guid studentId)
+    public async Task<IEnumerable<HistoryTestModel>> GetHistoryTestByStudentId(Guid studentId)
     {
-        var tests = await _context.student_test
+        var tests = await _context.StudentTest
             .Where(s => s.StudentId == studentId)
             .GroupBy(s => s.PersonalTest)
             .Select(g => g.OrderByDescending(s => s.Date)
@@ -244,8 +244,26 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
                           })
                           .FirstOrDefault())
             .ToListAsync();
+        if(tests.Count() <= 0)
+        {
+            return null;
+        }
+        List<HistoryTestModel> result = new();
+        foreach (var test in tests)
+        {
+            result.Add(new HistoryTestModel
+            {
+                PersonalTestId = test.Id,
+                PersonalTestName = test.PersonalTest.Name,
+                PersonalGroupId = test.PersonalGroupId,
+                PersonalGroupCode = test.PersonalGroup.Code,
+                PersonalGroupName = test.PersonalGroup.Name,
+                PersonalGroupDescription = test.PersonalGroup.Description,
+                Date = test.Date
+            });
+        }
 
-        return tests;
+        return result;
     }
 
 }

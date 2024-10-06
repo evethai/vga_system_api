@@ -36,8 +36,8 @@ namespace Infrastructure.Persistence.Service
                 .SingleOrDefaultAsync(
                     predicate: exsitingConsultationTimeFilter,
                     include: q => q
-                        .Include(ct => ct.Day.Expert)
-                        .Include(ct => ct.Day.Expert.Account)
+                        .Include(ct => ct.Day.Consultant)
+                        .Include(ct => ct.Day.Consultant.Account)
                         .Include(ct => ct.SlotTime)
                 );
 
@@ -101,7 +101,7 @@ namespace Infrastructure.Persistence.Service
                 predicate: b => b.Id == bookingId,
                 include: q => q.Include(b => b.ConsultationTime)
                                .ThenInclude(ct => ct.SlotTime)
-                               .Include(b => b.ConsultationTime.Day.Expert)
+                               .Include(b => b.ConsultationTime.Day.Consultant)
                                .ThenInclude(e => e.Account)
                                .Include(b => b.Student)
                                .ThenInclude(s => s.Account)

@@ -10,38 +10,35 @@ namespace Domain.Model.Account
     public class LoginResponseModel
     {
         public string AccessToken { get; set; }
-        public Guid Id { get; set; }
-        public string? Email { get; set; }
-        public string? Phone { get; set; }
-        public string? Name { get; set; }
+        public string RefreshToken { get; set; } 
+        public string Name { get; set; }
         public RoleEnum Role { get; set; }
-        public AccountStatus Status { get; set; }
-        public string? PicUrl { get; set; }
-        
-        public LoginResponseModel(Guid id, string email, string phone, string name, RoleEnum role, AccountStatus status, string? PicUrl)
-        {
-            Id = id;
-            Email = email;
-            Phone = phone;
-            Name = name;
-            Role = role;
-            Status = status;
-            PicUrl = PicUrl;
-        }
 
+
+        public LoginResponseModel( RoleEnum role, string name)
+        {
+            Role = role;
+            Name = name;
+        }
     }
+
     public class StudentAccountResponseModel : LoginResponseModel
     {
         public Guid StudentId { get; set; }
-        public StudentAccountResponseModel(Guid id, string email, string phone, string name, RoleEnum role, AccountStatus status, string? PicUrl, Guid studentId) : base(id, email, phone, name, role, status, PicUrl)
+
+        public StudentAccountResponseModel(RoleEnum role,string name, Guid studentId)
+            : base(role,name) 
         {
             StudentId = studentId;
         }
     }
+
     public class CareerExpertAccountResponseModel : LoginResponseModel
     {
         public Guid CareerExpertId { get; set; }
-        public CareerExpertAccountResponseModel(Guid id, string email, string phone, string name, RoleEnum role, AccountStatus status, string? PicUrl, Guid careerExpertId) : base(id, email, phone, name, role, status, PicUrl)
+
+        public CareerExpertAccountResponseModel(RoleEnum role,string name, Guid careerExpertId)
+            : base(role,name) 
         {
             CareerExpertId = careerExpertId;
         }
@@ -50,7 +47,8 @@ namespace Domain.Model.Account
     public class HighSchoolAccountResponseModel : LoginResponseModel
     {
         public Guid HighSchoolId { get; set; }
-        public HighSchoolAccountResponseModel(Guid id, string email, string phone, string name, RoleEnum role, AccountStatus status, string? PicUrl, Guid highSchoolId) : base(id, email, phone, name, role, status, PicUrl)
+
+        public HighSchoolAccountResponseModel(RoleEnum role, string name, Guid highSchoolId) : base(role, name) 
         {
             HighSchoolId = highSchoolId;
         }
@@ -59,10 +57,12 @@ namespace Domain.Model.Account
     public class UniversityAccountResponseModel : LoginResponseModel
     {
         public Guid UniversityId { get; set; }
-        public UniversityAccountResponseModel(Guid id, string email, string phone, string name, RoleEnum role, AccountStatus status, string? PicUrl, Guid universityId) : base(id, email, phone, name, role, status, PicUrl)
+
+        public UniversityAccountResponseModel(RoleEnum role, string name, Guid universityId) : base(role, name) 
         {
             UniversityId = universityId;
         }
     }
+
 
 }

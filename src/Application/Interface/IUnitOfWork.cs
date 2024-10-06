@@ -19,7 +19,6 @@ namespace Application.Interface
         ITestTypeRepository TestTypeRepository { get; }
         IQuestionRepository QuestionRepository { get; }
         IUniversityRepository UniversityRepository { get; }
-        //ICareerExpertRepository CareerExpertRepository { get; }
         IWalletRepository WalletRepository { get; }
         ITransactionRepository TransactionRepository { get; }
         IConsultantLevelRepository ConsultantLevelRepository { get; }
@@ -28,6 +27,7 @@ namespace Application.Interface
         IConsultationDayRepository ConsultationDayRepository { get; }
         IConsultationTimeRepository ConsultationTimeRepository { get; }
         IBookingRepository BookingRepository { get; }
+        IRefreshTokenRepository RefreshTokenRepository { get; }
         Task SaveChangesAsync();
     }
 }

@@ -13,35 +13,10 @@ namespace Api.Installers
         public void InstallServices(IServiceCollection services, IConfiguration configuration)
         {
             //Declare Middleware
-            //services.AddScoped<TokenValidationMiddleware>();
+            services.AddScoped<TokenValidationMiddleware>();
 
             //Declare UnitOfWork
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-            //Declare Singleton for check multiple login
-            //services.AddSingleton<ILockService, LockService>();
-
-            //Declare Repository
-            services.AddScoped<IStudentTestRepository, StudentTestRepository>();
-            services.AddScoped<IRegionRepository, RegionRepository>();
-            services.AddScoped<IHighschoolRepository, HighschoolRepository>();
-            services.AddScoped<IStudentRepository, StudentRepository>();
-            services.AddScoped<IPersonalTestRepository, PersonalTestRepository>();
-            services.AddScoped<IAccountRepository, AccountRepository>();
-            services.AddScoped<IRoleRepository, RoleRepository>();
-            services.AddScoped<ITestTypeRepository, TestTypeRepository>();
-            services.AddScoped<IQuestionRepository, QuestionRepository>();
-            services.AddScoped<IConsultantLevelRepository, ConsultantLevelRepository>();
-            services.AddScoped<ITimeSlotRepository, TimeSlotRepository>();
-            services.AddScoped<IConsultantRepository, ConsultantRepository>();
-            services.AddScoped<IConsultationDayRepository, ConsultationDayRepository>();
-            services.AddScoped<IConsultationTimeRepository, ConsultationTimeRepository>();
-            services.AddScoped<IBookingRepository, BookingRepository>();    
-
-            services.AddScoped<IWalletRepository, WalletRepository>();
-            services.AddScoped<ITransactionRepository, TransactionRepository>();
-            
-
 
             //Declare Service
             services.AddScoped<IStudentTestService, StudentTestService>();
@@ -58,17 +33,9 @@ namespace Api.Installers
             services.AddScoped<IConsultationDayService, ConsultationDayService>();
             services.AddScoped<IConsultationTimeService, ConsultationTimeService>();
             services.AddScoped<IBookingService, BookingService>();
-
             services.AddScoped<IWalletService, WalletService>();
             services.AddScoped<ITransactionService, TransactionService>();
-            
-
            
-
-
-            //Declare Email Service
-            //services.AddTransient<IEmailService, EmailService>();
-            //services.AddTransient<ICustomerOrderService, CustomerOrderService>();
         }
     }
 }

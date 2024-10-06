@@ -10,8 +10,8 @@ namespace Domain.Entity
 {
     public class Certification : BasicEntity
     {
-        public Guid ExpertId { get; set; }
-        public virtual Consultant Expert { get; set; } = null!;
+        public Guid ConsultantId { get; set; }
+        public virtual Consultant Consultant { get; set; } = null!;
         public string Description { get; set; } = string.Empty;
         public string ImageUrl { get; set; } = string.Empty;
         public bool Status { get; set; }

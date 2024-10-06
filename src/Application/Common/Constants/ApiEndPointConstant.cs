@@ -14,6 +14,10 @@
         {
             public const string AccountsEndpoint = ApiEndpoint + "/accounts";
             public const string AccountEndpoint = AccountsEndpoint + "/{id}";
+            public const string LoginEndpoint = ApiEndpoint + "/login";
+            public const string LoginZaloEndpoint = ApiEndpoint + "/login-zalo";
+            public const string RefreshTokenEndpoint = ApiEndpoint + "/refresh-token";
+            public const string LogoutEndpoint = ApiEndpoint + "/logout/{id}";
         }
 
         public static class PersonalTest

@@ -55,7 +55,7 @@ namespace Infrastructure.Persistence.Service
             }
 
             Expression<Func<ConsultationDay, bool>> exsitingDayFilter = x =>
-            x.ExpertId.Equals(postModel.ExpertId) &&
+            x.ConsultantId.Equals(postModel.ExpertId) &&
             x.Day.Equals(postModel.Day);
             var existingDay = await _unitOfWork.ConsultationDayRepository
                 .SingleOrDefaultAsync(

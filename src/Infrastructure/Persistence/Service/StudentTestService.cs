@@ -96,12 +96,7 @@ namespace Infrastructure.Persistence.Service
         public async Task<IEnumerable<HistoryTestModel?>> GetHistoryTestByStudentId(Guid studentId)
         {
             var tests = await _unitOfWork.StudentTestRepository.GetHistoryTestByStudentId(studentId);
-            if(tests.Count() <= 0)
-            {
-                return null;
-            }
-            var result = _mapper.Map<IEnumerable<HistoryTestModel>>(tests);
-            return result;
+            return tests;
         }
     }
 }

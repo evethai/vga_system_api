@@ -19,11 +19,11 @@ namespace Infrastructure.Persistence.Repository
         }
         public async Task<List<Booking>> GetAllBookingsWithDetailsAsync()
         {
-            return await _context.booking
+            return await _context.Booking
                 .Include(b => b.ConsultationTime)
                     .ThenInclude(ct => ct.SlotTime)
                 .Include(b => b.ConsultationTime.Day)
-                    .ThenInclude(cd => cd.Expert)
+                    .ThenInclude(cd => cd.Consultant)
                         .ThenInclude(e => e.Account)
                 .Include(b => b.Student)
                     .ThenInclude(s => s.Account)

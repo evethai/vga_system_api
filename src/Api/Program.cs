@@ -1,6 +1,7 @@
 ﻿using Api;
 using Api.Installers;
 using Infrastructure;
+using Infrastructure.Persistence;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,7 +27,7 @@ if (app.Environment.IsDevelopment())
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "VGA API V1");
     c.RoutePrefix = string.Empty;
 });
 
@@ -36,6 +37,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseMiddleware<TokenValidationMiddleware>();
 
 
 app.MapControllers();

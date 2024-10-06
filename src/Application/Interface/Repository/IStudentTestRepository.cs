@@ -13,6 +13,6 @@ namespace Application.Interface.Repository
         Task<PersonalTestModel> GetTestById(Guid personalTestId);
         Task<PersonalGroupModel> CalculateResultHollandTest(List<int> listQuestionId);
         Task<TestTypeCode> CheckTestType(Guid personalTestId);
-        Task<IEnumerable<StudentTest?>> GetHistoryTestByStudentId(Guid studentId);
+        Task<IEnumerable<HistoryTestModel>> GetHistoryTestByStudentId(Guid studentId);
     }
 }

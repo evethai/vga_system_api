@@ -83,7 +83,7 @@ public class StudentService : IStudentService
             Password = PasswordUtil.HashPassword(postModel.Password),
             RoleId = roleId,
             Status = AccountStatus.Active,
-            CreateAt = DateTime.Now
+            CreateAt = DateTime.UtcNow
         };
         student.Account.Wallet = new Wallet
         {

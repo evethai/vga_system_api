@@ -12,7 +12,7 @@ namespace Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "admission_method",
+                name: "AdmissionMethod",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -22,11 +22,11 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_admission_method", x => x.Id);
+                    table.PrimaryKey("PK_AdmissionMethod", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "consultant_level",
+                name: "ConsultantLevel",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -38,11 +38,11 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_consultant_level", x => x.Id);
+                    table.PrimaryKey("PK_ConsultantLevel", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "major",
+                name: "Major",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -53,11 +53,11 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_major", x => x.Id);
+                    table.PrimaryKey("PK_Major", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "region",
+                name: "Region",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -66,11 +66,11 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_region", x => x.Id);
+                    table.PrimaryKey("PK_Region", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "role",
+                name: "Role",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -78,11 +78,11 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_role", x => x.Id);
+                    table.PrimaryKey("PK_Role", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "test_type",
+                name: "TestType",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -94,11 +94,11 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_test_type", x => x.Id);
+                    table.PrimaryKey("PK_TestType", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "time_slot",
+                name: "TimeSlot",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -110,11 +110,11 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_time_slot", x => x.Id);
+                    table.PrimaryKey("PK_TimeSlot", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "account",
+                name: "Account",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -124,25 +124,24 @@ namespace Infrastructure.Migrations
                     Image_Url = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
-                    VerifyToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ResetPasswordToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ZaloId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreateAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    VerifyAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ResetPasswordAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_account", x => x.Id);
+                    table.PrimaryKey("PK_Account", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_account_role_RoleId",
+                        name: "FK_Account_Role_RoleId",
                         column: x => x.RoleId,
-                        principalTable: "role",
+                        principalTable: "Role",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "personal_group",
+                name: "PersonalGroup",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -154,17 +153,17 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_personal_group", x => x.Id);
+                    table.PrimaryKey("PK_PersonalGroup", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_personal_group_test_type_TestTypeId",
+                        name: "FK_PersonalGroup_TestType_TestTypeId",
                         column: x => x.TestTypeId,
-                        principalTable: "test_type",
+                        principalTable: "TestType",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "personal_test",
+                name: "PersonalTest",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -176,17 +175,17 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_personal_test", x => x.Id);
+                    table.PrimaryKey("PK_PersonalTest", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_personal_test_test_type_TestTypeId",
+                        name: "FK_PersonalTest_TestType_TestTypeId",
                         column: x => x.TestTypeId,
-                        principalTable: "test_type",
+                        principalTable: "TestType",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "question",
+                name: "Question",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -199,45 +198,46 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_question", x => x.Id);
+                    table.PrimaryKey("PK_Question", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_question_test_type_TestTypeId",
+                        name: "FK_Question_TestType_TestTypeId",
                         column: x => x.TestTypeId,
-                        principalTable: "test_type",
+                        principalTable: "TestType",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "consultant",
+                name: "Consultant",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     AccountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ConsultantLevelId = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DoB = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<bool>(type: "bit", nullable: false),
-                    ConsultantLevelId = table.Column<int>(type: "int", nullable: true)
+                    Status = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_consultant", x => x.Id);
+                    table.PrimaryKey("PK_Consultant", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_consultant_account_AccountId",
+                        name: "FK_Consultant_Account_AccountId",
                         column: x => x.AccountId,
-                        principalTable: "account",
+                        principalTable: "Account",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_consultant_consultant_level_ConsultantLevelId",
+                        name: "FK_Consultant_ConsultantLevel_ConsultantLevelId",
                         column: x => x.ConsultantLevelId,
-                        principalTable: "consultant_level",
-                        principalColumn: "Id");
+                        principalTable: "ConsultantLevel",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "high_school",
+                name: "HighSchool",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -248,23 +248,23 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_high_school", x => x.Id);
+                    table.PrimaryKey("PK_HighSchool", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_high_school_account_AccountId",
+                        name: "FK_HighSchool_Account_AccountId",
                         column: x => x.AccountId,
-                        principalTable: "account",
+                        principalTable: "Account",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_high_school_region_RegionId",
+                        name: "FK_HighSchool_Region_RegionId",
                         column: x => x.RegionId,
-                        principalTable: "region",
+                        principalTable: "Region",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "notification",
+                name: "Notification",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -277,21 +277,20 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_notification", x => x.Id);
+                    table.PrimaryKey("PK_Notification", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_notification_account_AccountId",
+                        name: "FK_Notification_Account_AccountId",
                         column: x => x.AccountId,
-                        principalTable: "account",
+                        principalTable: "Account",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "refresh_token",
+                name: "RefreshToken",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     AccountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Token = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     JwtId = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -302,17 +301,17 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_refresh_token", x => x.Id);
+                    table.PrimaryKey("PK_RefreshToken", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_refresh_token_account_AccountId",
+                        name: "FK_RefreshToken_Account_AccountId",
                         column: x => x.AccountId,
-                        principalTable: "account",
+                        principalTable: "Account",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "university",
+                name: "University",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -323,17 +322,17 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_university", x => x.Id);
+                    table.PrimaryKey("PK_University", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_university_account_AccountId",
+                        name: "FK_University_Account_AccountId",
                         column: x => x.AccountId,
-                        principalTable: "account",
+                        principalTable: "Account",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "wallet",
+                name: "Wallet",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -342,17 +341,17 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_wallet", x => x.Id);
+                    table.PrimaryKey("PK_Wallet", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_wallet_account_AccountId",
+                        name: "FK_Wallet_Account_AccountId",
                         column: x => x.AccountId,
-                        principalTable: "account",
+                        principalTable: "Account",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "major_type",
+                name: "MajorType",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -363,23 +362,23 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_major_type", x => x.Id);
+                    table.PrimaryKey("PK_MajorType", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_major_type_major_MajorId",
+                        name: "FK_MajorType_Major_MajorId",
                         column: x => x.MajorId,
-                        principalTable: "major",
+                        principalTable: "Major",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_major_type_personal_group_PersonalGroupId",
+                        name: "FK_MajorType_PersonalGroup_PersonalGroupId",
                         column: x => x.PersonalGroupId,
-                        principalTable: "personal_group",
+                        principalTable: "PersonalGroup",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "answer",
+                name: "Answer",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -391,17 +390,17 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_answer", x => x.Id);
+                    table.PrimaryKey("PK_Answer", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_answer_question_QuestionId",
+                        name: "FK_Answer_Question_QuestionId",
                         column: x => x.QuestionId,
-                        principalTable: "question",
+                        principalTable: "Question",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "test_question",
+                name: "TestQuestion",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -412,65 +411,65 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_test_question", x => x.Id);
+                    table.PrimaryKey("PK_TestQuestion", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_test_question_personal_test_PersonalTestId",
+                        name: "FK_TestQuestion_PersonalTest_PersonalTestId",
                         column: x => x.PersonalTestId,
-                        principalTable: "personal_test",
+                        principalTable: "PersonalTest",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_test_question_question_QuestionId",
+                        name: "FK_TestQuestion_Question_QuestionId",
                         column: x => x.QuestionId,
-                        principalTable: "question",
+                        principalTable: "Question",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "certification",
+                name: "Certification",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ExpertId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ConsultantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_certification", x => x.Id);
+                    table.PrimaryKey("PK_Certification", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_certification_consultant_ExpertId",
-                        column: x => x.ExpertId,
-                        principalTable: "consultant",
+                        name: "FK_Certification_Consultant_ConsultantId",
+                        column: x => x.ConsultantId,
+                        principalTable: "Consultant",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "consultation_day",
+                name: "ConsultationDay",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ExpertId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ConsultantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Day = table.Column<DateOnly>(type: "date", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_consultation_day", x => x.Id);
+                    table.PrimaryKey("PK_ConsultationDay", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_consultation_day_consultant_ExpertId",
-                        column: x => x.ExpertId,
-                        principalTable: "consultant",
+                        name: "FK_ConsultationDay_Consultant_ConsultantId",
+                        column: x => x.ConsultantId,
+                        principalTable: "Consultant",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "student",
+                name: "Student",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -484,23 +483,23 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_student", x => x.Id);
+                    table.PrimaryKey("PK_Student", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_student_account_AccountId",
+                        name: "FK_Student_Account_AccountId",
                         column: x => x.AccountId,
-                        principalTable: "account",
+                        principalTable: "Account",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_student_high_school_HighSchoolId",
+                        name: "FK_Student_HighSchool_HighSchoolId",
                         column: x => x.HighSchoolId,
-                        principalTable: "high_school",
+                        principalTable: "HighSchool",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "admission_information",
+                name: "AdmissionInformation",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -513,29 +512,29 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_admission_information", x => x.Id);
+                    table.PrimaryKey("PK_AdmissionInformation", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_admission_information_admission_method_AdmissionMethodId",
+                        name: "FK_AdmissionInformation_AdmissionMethod_AdmissionMethodId",
                         column: x => x.AdmissionMethodId,
-                        principalTable: "admission_method",
+                        principalTable: "AdmissionMethod",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_admission_information_major_MajorId",
+                        name: "FK_AdmissionInformation_Major_MajorId",
                         column: x => x.MajorId,
-                        principalTable: "major",
+                        principalTable: "Major",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_admission_information_university_UniversityId",
+                        name: "FK_AdmissionInformation_University_UniversityId",
                         column: x => x.UniversityId,
-                        principalTable: "university",
+                        principalTable: "University",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "news",
+                name: "News",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -547,17 +546,17 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_news", x => x.Id);
+                    table.PrimaryKey("PK_News", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_news_university_UniversityId",
+                        name: "FK_News_University_UniversityId",
                         column: x => x.UniversityId,
-                        principalTable: "university",
+                        principalTable: "University",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "transaction",
+                name: "Transaction",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -569,17 +568,17 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_transaction", x => x.Id);
+                    table.PrimaryKey("PK_Transaction", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_transaction_wallet_WalletId",
+                        name: "FK_Transaction_Wallet_WalletId",
                         column: x => x.WalletId,
-                        principalTable: "wallet",
+                        principalTable: "Wallet",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "consultation_time",
+                name: "ConsultationTime",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -590,23 +589,23 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_consultation_time", x => x.Id);
+                    table.PrimaryKey("PK_ConsultationTime", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_consultation_time_consultation_day_ConsultationDayId",
+                        name: "FK_ConsultationTime_ConsultationDay_ConsultationDayId",
                         column: x => x.ConsultationDayId,
-                        principalTable: "consultation_day",
+                        principalTable: "ConsultationDay",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_consultation_time_time_slot_TimeSlotId",
+                        name: "FK_ConsultationTime_TimeSlot_TimeSlotId",
                         column: x => x.TimeSlotId,
-                        principalTable: "time_slot",
+                        principalTable: "TimeSlot",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "student_test",
+                name: "StudentTest",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -618,29 +617,29 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_student_test", x => x.Id);
+                    table.PrimaryKey("PK_StudentTest", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_student_test_personal_group_PersonalGroupId",
+                        name: "FK_StudentTest_PersonalGroup_PersonalGroupId",
                         column: x => x.PersonalGroupId,
-                        principalTable: "personal_group",
+                        principalTable: "PersonalGroup",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_student_test_personal_test_PersonalTestId",
+                        name: "FK_StudentTest_PersonalTest_PersonalTestId",
                         column: x => x.PersonalTestId,
-                        principalTable: "personal_test",
+                        principalTable: "PersonalTest",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_student_test_student_StudentId",
+                        name: "FK_StudentTest_Student_StudentId",
                         column: x => x.StudentId,
-                        principalTable: "student",
+                        principalTable: "Student",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "image_news",
+                name: "ImageNews",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -651,17 +650,17 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_image_news", x => x.Id);
+                    table.PrimaryKey("PK_ImageNews", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_image_news_news_NewsId",
+                        name: "FK_ImageNews_News_NewsId",
                         column: x => x.NewsId,
-                        principalTable: "news",
+                        principalTable: "News",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "like",
+                name: "Like",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -672,23 +671,23 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_like", x => x.Id);
+                    table.PrimaryKey("PK_Like", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_like_account_AccountId",
+                        name: "FK_Like_Account_AccountId",
                         column: x => x.AccountId,
-                        principalTable: "account",
+                        principalTable: "Account",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_like_news_NewsId",
+                        name: "FK_Like_News_NewsId",
                         column: x => x.NewsId,
-                        principalTable: "news",
+                        principalTable: "News",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "booking",
+                name: "Booking",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -698,204 +697,203 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_booking", x => x.Id);
+                    table.PrimaryKey("PK_Booking", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_booking_consultation_time_ConsultationTimeId",
+                        name: "FK_Booking_ConsultationTime_ConsultationTimeId",
                         column: x => x.ConsultationTimeId,
-                        principalTable: "consultation_time",
+                        principalTable: "ConsultationTime",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_booking_student_StudentId",
+                        name: "FK_Booking_Student_StudentId",
                         column: x => x.StudentId,
-                        principalTable: "student",
+                        principalTable: "Student",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_account_RoleId",
-                table: "account",
+                name: "IX_Account_RoleId",
+                table: "Account",
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_admission_information_AdmissionMethodId",
-                table: "admission_information",
+                name: "IX_AdmissionInformation_AdmissionMethodId",
+                table: "AdmissionInformation",
                 column: "AdmissionMethodId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_admission_information_MajorId",
-                table: "admission_information",
+                name: "IX_AdmissionInformation_MajorId",
+                table: "AdmissionInformation",
                 column: "MajorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_admission_information_UniversityId",
-                table: "admission_information",
+                name: "IX_AdmissionInformation_UniversityId",
+                table: "AdmissionInformation",
                 column: "UniversityId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_answer_QuestionId",
-                table: "answer",
+                name: "IX_Answer_QuestionId",
+                table: "Answer",
                 column: "QuestionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_booking_ConsultationTimeId",
-                table: "booking",
+                name: "IX_Booking_ConsultationTimeId",
+                table: "Booking",
                 column: "ConsultationTimeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_booking_StudentId",
-                table: "booking",
+                name: "IX_Booking_StudentId",
+                table: "Booking",
                 column: "StudentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_certification_ExpertId",
-                table: "certification",
-                column: "ExpertId");
+                name: "IX_Certification_ConsultantId",
+                table: "Certification",
+                column: "ConsultantId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_consultant_AccountId",
-                table: "consultant",
+                name: "IX_Consultant_AccountId",
+                table: "Consultant",
                 column: "AccountId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_consultant_ConsultantLevelId",
-                table: "consultant",
+                name: "IX_Consultant_ConsultantLevelId",
+                table: "Consultant",
                 column: "ConsultantLevelId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_consultation_day_ExpertId",
-                table: "consultation_day",
-                column: "ExpertId");
+                name: "IX_ConsultationDay_ConsultantId",
+                table: "ConsultationDay",
+                column: "ConsultantId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_consultation_time_ConsultationDayId",
-                table: "consultation_time",
+                name: "IX_ConsultationTime_ConsultationDayId",
+                table: "ConsultationTime",
                 column: "ConsultationDayId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_consultation_time_TimeSlotId",
-                table: "consultation_time",
+                name: "IX_ConsultationTime_TimeSlotId",
+                table: "ConsultationTime",
                 column: "TimeSlotId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_high_school_AccountId",
-                table: "high_school",
+                name: "IX_HighSchool_AccountId",
+                table: "HighSchool",
                 column: "AccountId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_high_school_RegionId",
-                table: "high_school",
+                name: "IX_HighSchool_RegionId",
+                table: "HighSchool",
                 column: "RegionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_image_news_NewsId",
-                table: "image_news",
+                name: "IX_ImageNews_NewsId",
+                table: "ImageNews",
                 column: "NewsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_like_AccountId",
-                table: "like",
+                name: "IX_Like_AccountId",
+                table: "Like",
                 column: "AccountId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_like_NewsId",
-                table: "like",
+                name: "IX_Like_NewsId",
+                table: "Like",
                 column: "NewsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_major_type_MajorId",
-                table: "major_type",
+                name: "IX_MajorType_MajorId",
+                table: "MajorType",
                 column: "MajorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_major_type_PersonalGroupId",
-                table: "major_type",
+                name: "IX_MajorType_PersonalGroupId",
+                table: "MajorType",
                 column: "PersonalGroupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_news_UniversityId",
-                table: "news",
+                name: "IX_News_UniversityId",
+                table: "News",
                 column: "UniversityId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_notification_AccountId",
-                table: "notification",
+                name: "IX_Notification_AccountId",
+                table: "Notification",
                 column: "AccountId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_personal_group_TestTypeId",
-                table: "personal_group",
+                name: "IX_PersonalGroup_TestTypeId",
+                table: "PersonalGroup",
                 column: "TestTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_personal_test_TestTypeId",
-                table: "personal_test",
+                name: "IX_PersonalTest_TestTypeId",
+                table: "PersonalTest",
                 column: "TestTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_question_TestTypeId",
-                table: "question",
+                name: "IX_Question_TestTypeId",
+                table: "Question",
                 column: "TestTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_refresh_token_AccountId",
-                table: "refresh_token",
+                name: "IX_RefreshToken_AccountId",
+                table: "RefreshToken",
+                column: "AccountId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Student_AccountId",
+                table: "Student",
                 column: "AccountId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_student_AccountId",
-                table: "student",
-                column: "AccountId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_student_HighSchoolId",
-                table: "student",
+                name: "IX_Student_HighSchoolId",
+                table: "Student",
                 column: "HighSchoolId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_student_test_PersonalGroupId",
-                table: "student_test",
+                name: "IX_StudentTest_PersonalGroupId",
+                table: "StudentTest",
                 column: "PersonalGroupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_student_test_PersonalTestId",
-                table: "student_test",
+                name: "IX_StudentTest_PersonalTestId",
+                table: "StudentTest",
                 column: "PersonalTestId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_student_test_StudentId",
-                table: "student_test",
+                name: "IX_StudentTest_StudentId",
+                table: "StudentTest",
                 column: "StudentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_test_question_PersonalTestId",
-                table: "test_question",
+                name: "IX_TestQuestion_PersonalTestId",
+                table: "TestQuestion",
                 column: "PersonalTestId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_test_question_QuestionId",
-                table: "test_question",
+                name: "IX_TestQuestion_QuestionId",
+                table: "TestQuestion",
                 column: "QuestionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_transaction_WalletId",
-                table: "transaction",
+                name: "IX_Transaction_WalletId",
+                table: "Transaction",
                 column: "WalletId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_university_AccountId",
-                table: "university",
+                name: "IX_University_AccountId",
+                table: "University",
                 column: "AccountId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_wallet_AccountId",
-                table: "wallet",
+                name: "IX_Wallet_AccountId",
+                table: "Wallet",
                 column: "AccountId",
                 unique: true);
         }
@@ -904,97 +902,97 @@ namespace Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "admission_information");
+                name: "AdmissionInformation");
 
             migrationBuilder.DropTable(
-                name: "answer");
+                name: "Answer");
 
             migrationBuilder.DropTable(
-                name: "booking");
+                name: "Booking");
 
             migrationBuilder.DropTable(
-                name: "certification");
+                name: "Certification");
 
             migrationBuilder.DropTable(
-                name: "image_news");
+                name: "ImageNews");
 
             migrationBuilder.DropTable(
-                name: "like");
+                name: "Like");
 
             migrationBuilder.DropTable(
-                name: "major_type");
+                name: "MajorType");
 
             migrationBuilder.DropTable(
-                name: "notification");
+                name: "Notification");
 
             migrationBuilder.DropTable(
-                name: "refresh_token");
+                name: "RefreshToken");
 
             migrationBuilder.DropTable(
-                name: "student_test");
+                name: "StudentTest");
 
             migrationBuilder.DropTable(
-                name: "test_question");
+                name: "TestQuestion");
 
             migrationBuilder.DropTable(
-                name: "transaction");
+                name: "Transaction");
 
             migrationBuilder.DropTable(
-                name: "admission_method");
+                name: "AdmissionMethod");
 
             migrationBuilder.DropTable(
-                name: "consultation_time");
+                name: "ConsultationTime");
 
             migrationBuilder.DropTable(
-                name: "news");
+                name: "News");
 
             migrationBuilder.DropTable(
-                name: "major");
+                name: "Major");
 
             migrationBuilder.DropTable(
-                name: "personal_group");
+                name: "PersonalGroup");
 
             migrationBuilder.DropTable(
-                name: "student");
+                name: "Student");
 
             migrationBuilder.DropTable(
-                name: "personal_test");
+                name: "PersonalTest");
 
             migrationBuilder.DropTable(
-                name: "question");
+                name: "Question");
 
             migrationBuilder.DropTable(
-                name: "wallet");
+                name: "Wallet");
 
             migrationBuilder.DropTable(
-                name: "consultation_day");
+                name: "ConsultationDay");
 
             migrationBuilder.DropTable(
-                name: "time_slot");
+                name: "TimeSlot");
 
             migrationBuilder.DropTable(
-                name: "university");
+                name: "University");
 
             migrationBuilder.DropTable(
-                name: "high_school");
+                name: "HighSchool");
 
             migrationBuilder.DropTable(
-                name: "test_type");
+                name: "TestType");
 
             migrationBuilder.DropTable(
-                name: "consultant");
+                name: "Consultant");
 
             migrationBuilder.DropTable(
-                name: "region");
+                name: "Region");
 
             migrationBuilder.DropTable(
-                name: "account");
+                name: "Account");
 
             migrationBuilder.DropTable(
-                name: "consultant_level");
+                name: "ConsultantLevel");
 
             migrationBuilder.DropTable(
-                name: "role");
+                name: "Role");
         }
     }
 }

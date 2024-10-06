@@ -14,7 +14,7 @@ namespace Domain.Entity
         public string Description { get; set; } = string.Empty;
         public double PriceOnSlot { get; set; }
         public bool Status { get; set; }
-        public virtual ICollection<Consultant> CareerExperts { get; set; } = null!;
+        public virtual ICollection<Consultant> Consultants { get; set; } = null!;
 
     }
 }

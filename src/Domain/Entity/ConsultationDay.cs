@@ -10,8 +10,8 @@ namespace Domain.Entity
 {
     public class ConsultationDay : BaseEntity
     {
-        public Guid ExpertId { get; set; }
-        public Consultant Expert { get; set; } = null!;
+        public Guid ConsultantId { get; set; }
+        public Consultant Consultant { get; set; } = null!;
         public DateOnly Day { get; set; }
         public int Status { get; set; }
         public virtual ICollection<ConsultationTime> ConsultationTimes { get; set; } = null!;

@@ -21,7 +21,7 @@ namespace Infrastructure.Persistence.Repository
 
         public async Task<ConsultationDay?> GetConsultationDayWithTimesByIdAsync(Guid id)
         {
-            return await _context.consultation_day
+            return await _context.ConsultationDay
                 .Include(cd => cd.ConsultationTimes)
                 .FirstOrDefaultAsync(cd => cd.Id == id);
         }

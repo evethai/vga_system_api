@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(VgaDbContext))]
-    [Migration("20241001084055_Init")]
+    [Migration("20241005105148_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -61,17 +61,14 @@ namespace Infrastructure.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("VerifyAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("VerifyToken")
+                    b.Property<string>("ZaloId")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("account");
+                    b.ToTable("Account");
                 });
 
             modelBuilder.Entity("Domain.Entity.AdmissionInformation", b =>
@@ -105,7 +102,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("UniversityId");
 
-                    b.ToTable("admission_information");
+                    b.ToTable("AdmissionInformation");
                 });
 
             modelBuilder.Entity("Domain.Entity.AdmissionMethod", b =>
@@ -127,7 +124,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("admission_method");
+                    b.ToTable("AdmissionMethod");
                 });
 
             modelBuilder.Entity("Domain.Entity.Answer", b =>
@@ -155,7 +152,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("answer");
+                    b.ToTable("Answer");
                 });
 
             modelBuilder.Entity("Domain.Entity.Booking", b =>
@@ -179,7 +176,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("booking");
+                    b.ToTable("Booking");
                 });
 
             modelBuilder.Entity("Domain.Entity.Certification", b =>
@@ -190,12 +187,12 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<Guid>("ConsultantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("ExpertId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ImageUrl")
                         .IsRequired()
@@ -206,9 +203,9 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ExpertId");
+                    b.HasIndex("ConsultantId");
 
-                    b.ToTable("certification");
+                    b.ToTable("Certification");
                 });
 
             modelBuilder.Entity("Domain.Entity.Consultant", b =>
@@ -220,7 +217,7 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("AccountId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int?>("ConsultantLevelId")
+                    b.Property<int>("ConsultantLevelId")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
@@ -244,7 +241,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("ConsultantLevelId");
 
-                    b.ToTable("consultant");
+                    b.ToTable("Consultant");
                 });
 
             modelBuilder.Entity("Domain.Entity.ConsultantLevel", b =>
@@ -271,7 +268,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("consultant_level");
+                    b.ToTable("ConsultantLevel");
                 });
 
             modelBuilder.Entity("Domain.Entity.ConsultationDay", b =>
@@ -280,20 +277,20 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("ConsultantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateOnly>("Day")
                         .HasColumnType("date");
-
-                    b.Property<Guid>("ExpertId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ExpertId");
+                    b.HasIndex("ConsultantId");
 
-                    b.ToTable("consultation_day");
+                    b.ToTable("ConsultationDay");
                 });
 
             modelBuilder.Entity("Domain.Entity.ConsultationTime", b =>
@@ -321,7 +318,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("TimeSlotId");
 
-                    b.ToTable("consultation_time");
+                    b.ToTable("ConsultationTime");
                 });
 
             modelBuilder.Entity("Domain.Entity.HighSchool", b =>
@@ -351,7 +348,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("RegionId");
 
-                    b.ToTable("high_school");
+                    b.ToTable("HighSchool");
                 });
 
             modelBuilder.Entity("Domain.Entity.ImageNews", b =>
@@ -376,7 +373,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("NewsId");
 
-                    b.ToTable("image_news");
+                    b.ToTable("ImageNews");
                 });
 
             modelBuilder.Entity("Domain.Entity.Like", b =>
@@ -402,7 +399,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("NewsId");
 
-                    b.ToTable("like");
+                    b.ToTable("Like");
                 });
 
             modelBuilder.Entity("Domain.Entity.Major", b =>
@@ -428,7 +425,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("major");
+                    b.ToTable("Major");
                 });
 
             modelBuilder.Entity("Domain.Entity.MajorType", b =>
@@ -454,7 +451,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("PersonalGroupId");
 
-                    b.ToTable("major_type");
+                    b.ToTable("MajorType");
                 });
 
             modelBuilder.Entity("Domain.Entity.News", b =>
@@ -484,7 +481,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("UniversityId");
 
-                    b.ToTable("news");
+                    b.ToTable("News");
                 });
 
             modelBuilder.Entity("Domain.Entity.Notification", b =>
@@ -516,7 +513,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("AccountId");
 
-                    b.ToTable("notification");
+                    b.ToTable("Notification");
                 });
 
             modelBuilder.Entity("Domain.Entity.PersonalGroup", b =>
@@ -547,7 +544,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("TestTypeId");
 
-                    b.ToTable("personal_group");
+                    b.ToTable("PersonalGroup");
                 });
 
             modelBuilder.Entity("Domain.Entity.PersonalTest", b =>
@@ -577,7 +574,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("TestTypeId");
 
-                    b.ToTable("personal_test");
+                    b.ToTable("PersonalTest");
                 });
 
             modelBuilder.Entity("Domain.Entity.Question", b =>
@@ -608,16 +605,14 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("TestTypeId");
 
-                    b.ToTable("question");
+                    b.ToTable("Question");
                 });
 
             modelBuilder.Entity("Domain.Entity.RefreshToken", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("AccountId")
                         .HasColumnType("uniqueidentifier");
@@ -644,10 +639,9 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AccountId")
-                        .IsUnique();
+                    b.HasIndex("AccountId");
 
-                    b.ToTable("refresh_token");
+                    b.ToTable("RefreshToken");
                 });
 
             modelBuilder.Entity("Domain.Entity.Region", b =>
@@ -666,7 +660,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("region");
+                    b.ToTable("Region");
                 });
 
             modelBuilder.Entity("Domain.Entity.Role", b =>
@@ -681,7 +675,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("role");
+                    b.ToTable("Role");
                 });
 
             modelBuilder.Entity("Domain.Entity.Student", b =>
@@ -719,7 +713,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("HighSchoolId");
 
-                    b.ToTable("student");
+                    b.ToTable("Student");
                 });
 
             modelBuilder.Entity("Domain.Entity.StudentTest", b =>
@@ -752,7 +746,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("student_test");
+                    b.ToTable("StudentTest");
                 });
 
             modelBuilder.Entity("Domain.Entity.TestQuestion", b =>
@@ -778,7 +772,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("test_question");
+                    b.ToTable("TestQuestion");
                 });
 
             modelBuilder.Entity("Domain.Entity.TestType", b =>
@@ -806,7 +800,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("test_type");
+                    b.ToTable("TestType");
                 });
 
             modelBuilder.Entity("Domain.Entity.TimeSlot", b =>
@@ -832,7 +826,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("time_slot");
+                    b.ToTable("TimeSlot");
                 });
 
             modelBuilder.Entity("Domain.Entity.Transaction", b =>
@@ -861,7 +855,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("WalletId");
 
-                    b.ToTable("transaction");
+                    b.ToTable("Transaction");
                 });
 
             modelBuilder.Entity("Domain.Entity.University", b =>
@@ -890,7 +884,7 @@ namespace Infrastructure.Migrations
                     b.HasIndex("AccountId")
                         .IsUnique();
 
-                    b.ToTable("university");
+                    b.ToTable("University");
                 });
 
             modelBuilder.Entity("Domain.Entity.Wallet", b =>
@@ -910,7 +904,7 @@ namespace Infrastructure.Migrations
                     b.HasIndex("AccountId")
                         .IsUnique();
 
-                    b.ToTable("wallet");
+                    b.ToTable("Wallet");
                 });
 
             modelBuilder.Entity("Domain.Entity.Account", b =>
@@ -983,39 +977,43 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entity.Certification", b =>
                 {
-                    b.HasOne("Domain.Entity.Consultant", "Expert")
+                    b.HasOne("Domain.Entity.Consultant", "Consultant")
                         .WithMany("Certifications")
-                        .HasForeignKey("ExpertId")
+                        .HasForeignKey("ConsultantId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Expert");
+                    b.Navigation("Consultant");
                 });
 
             modelBuilder.Entity("Domain.Entity.Consultant", b =>
                 {
                     b.HasOne("Domain.Entity.Account", "Account")
-                        .WithOne("CareerExpert")
+                        .WithOne("Consultant")
                         .HasForeignKey("Domain.Entity.Consultant", "AccountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entity.ConsultantLevel", null)
-                        .WithMany("CareerExperts")
-                        .HasForeignKey("ConsultantLevelId");
+                    b.HasOne("Domain.Entity.ConsultantLevel", "ConsultantLevel")
+                        .WithMany("Consultants")
+                        .HasForeignKey("ConsultantLevelId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Account");
+
+                    b.Navigation("ConsultantLevel");
                 });
 
             modelBuilder.Entity("Domain.Entity.ConsultationDay", b =>
                 {
-                    b.HasOne("Domain.Entity.Consultant", "Expert")
+                    b.HasOne("Domain.Entity.Consultant", "Consultant")
                         .WithMany("ConsultationDays")
-                        .HasForeignKey("ExpertId")
+                        .HasForeignKey("ConsultantId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Expert");
+                    b.Navigation("Consultant");
                 });
 
             modelBuilder.Entity("Domain.Entity.ConsultationTime", b =>
@@ -1163,8 +1161,8 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entity.RefreshToken", b =>
                 {
                     b.HasOne("Domain.Entity.Account", "Account")
-                        .WithOne("RefreshTokens")
-                        .HasForeignKey("Domain.Entity.RefreshToken", "AccountId")
+                        .WithMany("RefreshTokens")
+                        .HasForeignKey("AccountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1271,7 +1269,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entity.Account", b =>
                 {
-                    b.Navigation("CareerExpert")
+                    b.Navigation("Consultant")
                         .IsRequired();
 
                     b.Navigation("HighSchool")
@@ -1281,8 +1279,7 @@ namespace Infrastructure.Migrations
 
                     b.Navigation("Notifications");
 
-                    b.Navigation("RefreshTokens")
-                        .IsRequired();
+                    b.Navigation("RefreshTokens");
 
                     b.Navigation("Student")
                         .IsRequired();
@@ -1303,7 +1300,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entity.ConsultantLevel", b =>
                 {
-                    b.Navigation("CareerExperts");
+                    b.Navigation("Consultants");
                 });
 
             modelBuilder.Entity("Domain.Entity.ConsultationDay", b =>
