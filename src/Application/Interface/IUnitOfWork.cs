@@ -20,6 +20,7 @@ namespace Application.Interface
         IQuestionRepository QuestionRepository { get; }
         IUniversityRepository UniversityRepository { get; }
         ICareerExpertRepository CareerExpertRepository { get; }
+        IRefreshTokenRepository RefreshTokenRepository { get; }
         Task SaveChangesAsync();
     }
 }

@@ -11,7 +11,6 @@ namespace Domain.Entity
         public Guid AccountId { get; set; }
         public virtual Account Account { get; set; } = null!;
         public int GoldBalance { get; set; }
-
         public virtual ICollection<Transaction> Transactions { get; set; } = null!;
 
     }

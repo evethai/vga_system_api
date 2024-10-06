@@ -13,22 +13,24 @@ namespace Application.Common.Utils
         {
         }
 
-        public static string GenerateJwtToken(Account account, Tuple<string, Guid> guidClaim, IConfiguration configuration)
+        public static (string Token, string Id) GenerateJwtToken(Account account, Tuple<string, Guid> guidClaim, IConfiguration configuration)
         {
             JwtSecurityTokenHandler jwtHandler = new JwtSecurityTokenHandler();
-
 
             SymmetricSecurityKey secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSettings:SecretKey"]));
             var credentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256Signature);
 
-
             string issuer = configuration["JwtSettings:Issuer"];
+
+            string jti = Guid.NewGuid().ToString();
 
             List<Claim> claims = new List<Claim>()
             {
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Sub, account.Email),
+                new Claim(JwtRegisteredClaimNames.Jti, jti),
+                new Claim(JwtRegisteredClaimNames.Email, account.Email),
                 new Claim(ClaimTypes.Role, account.Role.Name),
+                new Claim(JwtRegisteredClaimNames.UniqueName, account.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.PhoneNumber, account.Phone)
             };
 
             if (guidClaim != null)
@@ -39,8 +41,11 @@ namespace Application.Common.Utils
             var expires = DateTime.Now.AddMinutes(configuration.GetValue<long>("JwtSettings:TokenExpireInMinutes"));
 
             var token = new JwtSecurityToken(issuer, null, claims, notBefore: DateTime.Now, expires, credentials);
-            return jwtHandler.WriteToken(token);
+            string tokenString = jwtHandler.WriteToken(token);
+
+            return (Token: tokenString, Id: jti);
         }
     }
+
 }
 

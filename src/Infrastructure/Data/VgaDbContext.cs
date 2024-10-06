@@ -15,37 +15,38 @@ namespace Infrastructure.Data
         {
         }
 
-        public DbSet<Account> account { get; set; }
-        public DbSet<Role> role { get; set; }
-        public DbSet<AdmissionInformation> admission_information { get; set; }
-        public DbSet<AdmissionMethod> admission_method { get; set; }
-        public DbSet<Answer> answer { get; set; }
-        public DbSet<Booking> booking { get; set; }
-        public DbSet<Consultant> consultant { get; set; }
-        public DbSet<Certification> certification { get; set; }
-        public DbSet<ConsultationDay> consultation_day { get; set; }
-        public DbSet<ConsultationTime> consultation_time { get; set; }
-        public DbSet<ConsultantLevel> consultant_level { get; set; }
-        public DbSet<HighSchool> high_school { get; set; }
-        public DbSet<ImageNews> image_news { get; set; }
-        public DbSet<Like> like { get; set; }
-        public DbSet<Major> major { get; set; }
-        public DbSet<MajorType> major_type { get; set; }
-        public DbSet<News> news { get; set; }
-        public DbSet<Notification> notification { get; set; }
-        public DbSet<PersonalGroup> personal_group { get; set; }
-        public DbSet<PersonalTest> personal_test { get; set; }
-        public DbSet<Question> question { get; set; }
-        public DbSet<RefreshToken> refresh_token { get; set; }
-        public DbSet<Region> region { get; set; }
-        public DbSet<Student> student { get; set; }
-        public DbSet<StudentTest> student_test { get; set; }
-        public DbSet<TestQuestion> test_question { get; set; }
-        public DbSet<TestType> test_type { get; set; }
-        public DbSet<TimeSlot> time_slot { get; set; }
-        public DbSet<Transaction> transaction { get; set; }
-        public DbSet<University> university { get; set; }
-        public DbSet<Wallet> wallet { get; set; }
+        public DbSet<Account> Account { get; set; }
+        public DbSet<Role> Role { get; set; }
+        public DbSet<AdmissionInformation> AdmissionInformation { get; set; }
+        public DbSet<AdmissionMethod> AdmissionMethod { get; set; }
+        public DbSet<Answer> Answer { get; set; }
+        public DbSet<Booking> Booking { get; set; }
+        public DbSet<Consultant> Consultant { get; set; }
+        public DbSet<Certification> Certification { get; set; }
+        public DbSet<ConsultationDay> ConsultationDay { get; set; }
+        public DbSet<ConsultationTime> ConsultationTime { get; set; }
+        public DbSet<ConsultantLevel> ConsultantLevel { get; set; }
+        public DbSet<HighSchool> HighSchool { get; set; }
+        public DbSet<ImageNews> ImageNews { get; set; }
+        public DbSet<Like> Like { get; set; }
+        public DbSet<Major> Major { get; set; }
+        public DbSet<MajorType> MajorType { get; set; }
+        public DbSet<News> News { get; set; }
+        public DbSet<Notification> Notification { get; set; }
+        public DbSet<PersonalGroup> PersonalGroup { get; set; }
+        public DbSet<PersonalTest> PersonalTest { get; set; }
+        public DbSet<Question> Question { get; set; }
+        public DbSet<RefreshToken> RefreshToken { get; set; }
+        public DbSet<Region> Region { get; set; }
+        public DbSet<Student> Student { get; set; }
+        public DbSet<StudentTest> StudentTest { get; set; }
+        public DbSet<TestQuestion> TestQuestion { get; set; }
+        public DbSet<TestType> TestType { get; set; }
+        public DbSet<TimeSlot> TimeSlot { get; set; }
+        public DbSet<Transaction> Transaction { get; set; }
+        public DbSet<University> University { get; set; }
+        public DbSet<Wallet> Wallet { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -60,9 +61,10 @@ namespace Infrastructure.Data
             modelBuilder.Entity<Consultant>(entity =>
             {
                 entity.HasKey(c => c.Id);
-                entity.HasOne(c => c.Account).WithOne(a => a.CareerExpert).HasForeignKey<Consultant>(c => c.AccountId);
-                entity.HasMany(c => c.Certifications).WithOne(c => c.Expert).HasForeignKey(c => c.ExpertId).OnDelete(DeleteBehavior.Restrict);
-                entity.HasMany(c => c.ConsultationDays).WithOne(c => c.Expert).HasForeignKey(c => c.ExpertId).OnDelete(DeleteBehavior.Restrict);
+                entity.HasOne(c => c.Account).WithOne(a => a.Consultant).HasForeignKey<Consultant>(c => c.AccountId);
+                entity.HasOne(c => c.ConsultantLevel).WithMany(cl => cl.Consultants).HasForeignKey(c => c.ConsultantLevelId).OnDelete(DeleteBehavior.Restrict);
+                entity.HasMany(c => c.Certifications).WithOne(c => c.Consultant).HasForeignKey(c => c.ConsultantId).OnDelete(DeleteBehavior.Restrict);
+                entity.HasMany(c => c.ConsultationDays).WithOne(c => c.Consultant).HasForeignKey(c => c.ConsultantId).OnDelete(DeleteBehavior.Restrict);
             });
 
             // student 

@@ -16,9 +16,32 @@ namespace Api.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequestModel loginRequest)
+        public async Task<IActionResult> Login(LoginRequestModel loginRequest)
         {
+            if(ModelState.IsValid == false)
+            {
+                return BadRequest(ModelState);
+            }
             var result = await _accountService.Login(loginRequest);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+        }
+
+        [HttpPost("login-zalo")]
+        public async Task<IActionResult> LoginZalo(ZaloLoginModel loginZaloRequest)
+        {
+            if (ModelState.IsValid == false)
+            {
+                return BadRequest(ModelState);
+            }
+            var result = await _accountService.LoginByZalo(loginZaloRequest);
+            if(result == null)
+            {
+                return NotFound();
+            }
             return Ok(result);
         }
 

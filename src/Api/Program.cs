@@ -1,6 +1,7 @@
 ﻿using Api;
 using Api.Installers;
 using Infrastructure;
+using Infrastructure.Persistence;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -36,6 +37,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseMiddleware<TokenValidationMiddleware>();
 
 
 app.MapControllers();

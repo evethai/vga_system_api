@@ -36,7 +36,7 @@ namespace Infrastructure.Persistence.Repository
                         CreateAt = DateTime.Now,
                     };
 
-                    await _context.question.AddAsync(question);
+                    await _context.Question.AddAsync(question);
                     await _context.SaveChangesAsync(); 
 
                     if (model.Answers != null && model.Answers.Any())
@@ -50,7 +50,7 @@ namespace Infrastructure.Persistence.Repository
                         }).ToList();
 
                         
-                        await _context.answer.AddRangeAsync(answers);
+                        await _context.Answer.AddRangeAsync(answers);
                     }
                     await _context.SaveChangesAsync();
 
@@ -83,7 +83,7 @@ namespace Infrastructure.Persistence.Repository
             {
                 try
                 {
-                    var question = await _context.question.FindAsync(model.Id);
+                    var question = await _context.Question.FindAsync(model.Id);
                     if (question == null)
                     {
                         return new ResponseModel
@@ -101,7 +101,7 @@ namespace Infrastructure.Persistence.Repository
                     {
                         foreach (var answer in model.Answers)
                         {
-                            var existingAnswer = await _context.answer.FindAsync(answer.Id);
+                            var existingAnswer = await _context.Answer.FindAsync(answer.Id);
                             if (existingAnswer != null)
                             {
                                 existingAnswer.Content = answer.Content;
