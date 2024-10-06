@@ -13,7 +13,7 @@ namespace Application.Interface.Service
     {
         Task<LoginResponseModel> Login(LoginRequestModel loginRequest);
         Task<LoginResponseModel> LoginByZalo(ZaloLoginModel model);
-        Task<ResponseModel> Logout(Guid id);
+        Task<ResponseModel> Logout(Guid AccountId);
         Task<ResponseModel> CreateRefreshToken(RefreshTokenRequestModel model);
     }
 }

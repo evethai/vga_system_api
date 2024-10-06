@@ -10,7 +10,6 @@ namespace Domain.Model.Account
     public class RefreshTokenRequestModel
     {
         public Guid AccountId { get; set; }
-        public string AccessToken { get; set; }
         public string RefreshToken { get; set; }
     }
 }

@@ -18,12 +18,10 @@ namespace Infrastructure.Persistence.Service
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IConfiguration _configuration;
-        private readonly ILogger _logger;
-        public AccountService(IUnitOfWork unitOfWork, IConfiguration configuration, ILogger logger)
+        public AccountService(IUnitOfWork unitOfWork, IConfiguration configuration)
         {
             _unitOfWork = unitOfWork;
             _configuration = configuration;
-            _logger = logger;
         }
         #region Login
         public async Task<LoginResponseModel> Login(LoginRequestModel loginRequest)
@@ -81,18 +79,18 @@ namespace Infrastructure.Persistence.Service
         #endregion
 
         #region Logout
-        public async Task<ResponseModel> Logout(Guid id)
+        public async Task<ResponseModel> Logout(Guid AccountId)
         {
             try
             {
                 var existingRefreshToken = await _unitOfWork.RefreshTokenRepository
-                    .SingleOrDefaultAsync(predicate: x => x.AccountId == id && !x.IsRevoked);
+                    .SingleOrDefaultAsync(predicate: x => x.AccountId == AccountId && !x.IsRevoked);
 
                 if (existingRefreshToken != null)
                 {
                     existingRefreshToken.IsRevoked = true;
+                    await _unitOfWork.RefreshTokenRepository.UpdateAsync(existingRefreshToken);
                     await _unitOfWork.SaveChangesAsync();
-                    _logger.LogInformation($"User with AccountId {id} logged out and revoked refresh token.");
 
                     return new ResponseModel
                     {
@@ -109,7 +107,6 @@ namespace Infrastructure.Persistence.Service
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error revoking token for AccountId {id}: {ex.Message}");
                 return new ResponseModel
                 {
                     IsSuccess = false,
@@ -211,9 +208,9 @@ namespace Infrastructure.Persistence.Service
                     break;
 
                 case RoleEnum.Expert:
-                    Guid careerExpertId = await _unitOfWork.CareerExpertRepository
+                    Guid careerExpertId = await _unitOfWork.ConsultantRepository
                         .SingleOrDefaultAsync(selector: x => x.Id, predicate: x => x.AccountId.Equals(account.Id));
-                    name = await _unitOfWork.CareerExpertRepository
+                    name = await _unitOfWork.ConsultantRepository
                         .SingleOrDefaultAsync(selector: x => x.Name, predicate: x => x.AccountId.Equals(account.Id));
                     guidClaim = new Tuple<string, Guid>("CareerExpertId", careerExpertId);
                     loginResponseModel = new CareerExpertAccountResponseModel(role,name,careerExpertId);

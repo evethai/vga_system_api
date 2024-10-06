@@ -33,7 +33,7 @@ namespace Infrastructure.Persistence
                         var jwtToken = jwtTokenHandler.ReadJwtToken(token);
 
                         var jti = jwtToken.Claims.First(claim => claim.Type == JwtRegisteredClaimNames.Jti).Value;
-                        var isRevoked = await _unitOfWork.RefreshTokenRepository.SingleOrDefaultAsync(predicate: x=> x.JwtId.Equals(jti) && x.IsRevoked == false);
+                        var isRevoked = await _unitOfWork.RefreshTokenRepository.SingleOrDefaultAsync(predicate: x=> x.JwtId.Equals(jti) && x.IsRevoked == true);
 
                         if (isRevoked != null)
                         {

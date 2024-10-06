@@ -13,25 +13,10 @@ namespace Api.Installers
         public void InstallServices(IServiceCollection services, IConfiguration configuration)
         {
             //Declare Middleware
-            //services.AddScoped<TokenValidationMiddleware>();
+            services.AddScoped<TokenValidationMiddleware>();
 
             //Declare UnitOfWork
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-            //Declare Singleton for check multiple login
-            //services.AddSingleton<ILockService, LockService>();
-
-            //Declare Repository
-            services.AddScoped<IStudentTestRepository, StudentTestRepository>();
-            services.AddScoped<IRegionRepository, RegionRepository>();
-            services.AddScoped<IHighschoolRepository, HighschoolRepository>();
-            services.AddScoped<IStudentRepository, StudentRepository>();
-            services.AddScoped<IPersonalTestRepository, PersonalTestRepository>();
-            services.AddScoped<IAccountRepository, AccountRepository>();
-            services.AddScoped<IRoleRepository, RoleRepository>();
-            services.AddScoped<ITestTypeRepository, TestTypeRepository>();
-            services.AddScoped<IQuestionRepository, QuestionRepository>();
-
 
             //Declare Service
             services.AddScoped<IStudentTestService, StudentTestService>();
@@ -42,14 +27,15 @@ namespace Api.Installers
             services.AddScoped<ITestTypeService, TestTypeService>();
             services.AddScoped<IQuestionService, QuestionService>();
             services.AddScoped<IAccountService, AccountService>();
-
-
-
-
-
-            //Declare Email Service
-            //services.AddTransient<IEmailService, EmailService>();
-            //services.AddTransient<ICustomerOrderService, CustomerOrderService>();
+            services.AddScoped<IConsultantLevelService, ConsultantLevelService>();
+            services.AddScoped<ITimeSlotService, TimeSlotService>();
+            services.AddScoped<IConsultantService, ConsultantService>();
+            services.AddScoped<IConsultationDayService, ConsultationDayService>();
+            services.AddScoped<IConsultationTimeService, ConsultationTimeService>();
+            services.AddScoped<IBookingService, BookingService>();
+            services.AddScoped<IWalletService, WalletService>();
+            services.AddScoped<ITransactionService, TransactionService>();
+           
         }
     }
 }
