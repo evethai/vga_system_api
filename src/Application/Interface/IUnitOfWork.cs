@@ -22,6 +22,12 @@ namespace Application.Interface
         ICareerExpertRepository CareerExpertRepository { get; }
         IWalletRepository WalletRepository { get; }
         ITransactionRepository TransactionRepository { get; }
+        IConsultantLevelRepository ConsultantLevelRepository { get; }
+        ITimeSlotRepository TimeSlotRepository { get; }
+        IConsultantRepository ConsultantRepository { get; }
+        IConsultationDayRepository ConsultationDayRepository { get; }
+        IConsultationTimeRepository ConsultationTimeRepository { get; }
+        IBookingRepository BookingRepository { get; }
         Task SaveChangesAsync();
     }
 }
