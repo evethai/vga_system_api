@@ -27,7 +27,7 @@ public class HighschoolController : ControllerBase
         return Ok(result);
     }
     [HttpPost(ApiEndPointConstant.HighSchool.HighSchoolsEndpoint)]
-    public async Task<IActionResult> CreateHighschoolAsync([FromForm] HighschoolPostModel postModel)
+    public async Task<IActionResult> CreateHighschoolAsync(HighschoolPostModel postModel)
     {
         if (!ModelState.IsValid)
         {
@@ -43,7 +43,7 @@ public class HighschoolController : ControllerBase
         }
     }
     [HttpPut(ApiEndPointConstant.HighSchool.HighSchoolEndpoint)]
-    public async Task<IActionResult> UpdateHighschoolAsync([FromForm] HighschoolPutModel putModel)
+    public async Task<IActionResult> UpdateHighschoolAsync(HighschoolPutModel putModel)
     {
         if (!ModelState.IsValid)
         {

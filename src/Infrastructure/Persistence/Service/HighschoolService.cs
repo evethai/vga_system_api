@@ -69,7 +69,7 @@ public class HighschoolService : IHighschoolService
             AccountId = highschool.Account.Id,
         };
         var result = await _unitOfWork.HighschoolRepository.AddAsync(highschool);
-        _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.SaveChangesAsync();
         return new ResponseModel
         {
             Message = " Highschool Created Successfully",
