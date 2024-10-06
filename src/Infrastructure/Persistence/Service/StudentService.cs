@@ -93,7 +93,7 @@ public class StudentService : IStudentService
         };
         postModel.Status = true;
         var result = await _unitOfWork.StudentRepository.AddAsync(student);
-         _unitOfWork.SaveChangesAsync();
+         await _unitOfWork.SaveChangesAsync();
         return new ResponseModel
         {
             Message = "Student Created Successfully",

@@ -16,12 +16,16 @@ using Domain.Model.Region;
 using Domain.Model.Student;
 using Domain.Model.Test;
 using Domain.Model.TimeSlot;
+using Domain.Model.Transaction;
+using Domain.Model.Wallet;
+
 using Domain.Model.TestType;
 using Domain.Model.Consultant;
 using Domain.Model.ConsultationDay;
 using Domain.Model.ConsultationTime;
 using Domain.Model.Booking;
 using Domain.Model.ExpertLevel;
+
 
 namespace Application.Common.Mapper
 {
@@ -70,6 +74,16 @@ namespace Application.Common.Mapper
             //PersonalGroup
             CreateMap<PersonalGroup, PersonalGroupModel>().ReverseMap();
 
+
+
+            //Wallet
+            CreateMap<Wallet, WalletModel>().ReverseMap();
+            CreateMap<Wallet, WalletPutModel>().ReverseMap();
+            
+                
+            //Transaction
+            CreateMap<Transaction, TransactionModel>().ReverseMap();
+            CreateMap<Transaction, TransactionPostModel>().ReverseMap();
             //TestType
             CreateMap<TestType, TestTypeModel>().ReverseMap();
 

@@ -19,6 +19,9 @@ namespace Application.Interface
         ITestTypeRepository TestTypeRepository { get; }
         IQuestionRepository QuestionRepository { get; }
         IUniversityRepository UniversityRepository { get; }
+        ICareerExpertRepository CareerExpertRepository { get; }
+        IWalletRepository WalletRepository { get; }
+        ITransactionRepository TransactionRepository { get; }
         IConsultantLevelRepository ConsultantLevelRepository { get; }
         ITimeSlotRepository TimeSlotRepository { get; }
         IConsultantRepository ConsultantRepository { get; }

@@ -21,6 +21,8 @@ namespace Infrastructure.Persistence
         private IStudentTestRepository _studentTestRepository;
         private IPersonalTestRepository _personalTestRepository;
         private IAccountRepository _accountRepository;
+        private IWalletRepository _walletRepository;
+        private ITransactionRepository _transactionRepository;
         private IRoleRepository _roleRepository;
         private ITestTypeRepository _testTypeRepository;
         private IQuestionRepository _questionRepository;
@@ -43,6 +45,8 @@ namespace Infrastructure.Persistence
         public IStudentTestRepository StudentTestRepository => _studentTestRepository ??= new StudentTestRepository(_context);
         public IPersonalTestRepository PersonalTestRepository => _personalTestRepository ??= new PersonalTestRepository(_context);
         public IAccountRepository AccountRepository => _accountRepository ??= new AccountRepository(_context);
+        public IWalletRepository WalletRepository => _walletRepository ??= new WalletRepository(_context);
+        public ITransactionRepository TransactionRepository => _transactionRepository ??= new TransactionRepository(_context);
         public IRoleRepository RoleRepository => _roleRepository ??= new RoleRepository(_context);
         public ITestTypeRepository TestTypeRepository => _testTypeRepository ??= new TestTypeRepository(_context);
         public IQuestionRepository QuestionRepository => _questionRepository ??= new QuestionRepository(_context);

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Domain.Entity;
 using Domain.Model.Student;
+using Domain.Model.Wallet;
 
 namespace Application.Interface.Repository;
 public interface IStudentRepository: IGenericRepository<Student>
