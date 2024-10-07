@@ -44,7 +44,7 @@ namespace Infrastructure.Persistence.Service
         public async Task<ResponseModel> CreateConsultantAsync(ConsultantPostModel postModel)
         {
             var roleId = await _unitOfWork.RoleRepository
-                .SingleOrDefaultAsync(selector: x => x.Id, predicate: x => x.Name.Equals(RoleEnum.Expert.ToString()));
+                .SingleOrDefaultAsync(selector: x => x.Id, predicate: x => x.Name.Equals(RoleEnum.Consultant.ToString()));
             var consultant = _mapper.Map<Consultant>(postModel);
             consultant.Id = Guid.NewGuid();
             consultant.Account = new Account
