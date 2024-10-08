@@ -11,7 +11,7 @@ namespace Domain.Enum
         Admin ,
         University,
         HighSchool,
-        Expert,
+        Consultant,
         Student
     }
 }
