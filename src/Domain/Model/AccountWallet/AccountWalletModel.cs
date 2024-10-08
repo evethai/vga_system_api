@@ -20,6 +20,5 @@ namespace Domain.Model.AccountWallet
     {
         public Guid Id { get; set; }
         public int GoldBalance { get; set; }
-
     }
 }
