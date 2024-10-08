@@ -7,15 +7,19 @@ using System.Threading.Tasks;
 using Application.Common.Extensions;
 using Application.Interface.Repository;
 using Domain.Entity;
+using Domain.Enum;
 using Domain.Model.Transaction;
 using Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Repository
 {
     public class TransactionRepository : GenericRepository<Transaction>, ITransactionRepository
     {
+        private readonly VgaDbContext _context;
         public TransactionRepository(VgaDbContext context) : base(context)
         {
+            _context = context;
         }
         public (Expression<Func<Transaction, bool>> filter, Func<IQueryable<Transaction>, IOrderedQueryable<Transaction>> orderBy) BuildFilterAndOrderBy(TransactionSearchModel searchModel)
         {
@@ -51,6 +55,56 @@ namespace Infrastructure.Persistence.Repository
                 filter = filter.And(p => p.TransactionDateTime.Date == searchModel.transaction_date_time.Value.Date);
             }
             return (filter, orderBy);
+        }
+
+        public async Task<Transaction> CreateTransactionWhenUsingGold(TransactionType transactionType, TransactionPostModel transactionModel)
+        {
+            if (transactionModel == null)
+            {
+                throw new KeyNotFoundException("Null data");
+            }
+            Transaction transaction = null;
+            switch (transactionType)
+            {
+                case TransactionType.Transferring:
+                    transaction = new Transaction
+                    {
+                        Id = Guid.NewGuid(),
+                        WalletId = transactionModel.WalletId,
+                        TransactionType = transactionType,
+                        Description = "Bạn đã chuyển " + transactionModel.GoldAmount + " Gold",
+                        GoldAmount = transactionModel.GoldAmount,
+                        TransactionDateTime = DateTime.UtcNow,
+                    };
+                    break;
+                case TransactionType.Receiving:
+                    transaction = new Transaction
+                    {
+                        Id = Guid.NewGuid(),
+                        WalletId = transactionModel.WalletId,
+                        TransactionType = transactionType,
+                        Description = "Bạn đã nhận " + transactionModel.GoldAmount + " Gold",
+                        GoldAmount = transactionModel.GoldAmount,
+                        TransactionDateTime = DateTime.UtcNow,
+                    };
+                    break;
+                case TransactionType.Using:
+                    transaction = new Transaction
+                    {
+                        Id = Guid.NewGuid(),
+                        WalletId = transactionModel.WalletId,
+                        TransactionType = transactionType,
+                        Description = "Bạn đã sử dụng " + transactionModel.GoldAmount + " Gold vào bài Test",
+                        GoldAmount = transactionModel.GoldAmount,
+                        TransactionDateTime = DateTime.UtcNow,
+                    };
+                    break;
+                default:
+                    break;
+            }
+            var result = await _context.Transaction.AddAsync(transaction);
+            _context.SaveChanges();
+            return transaction;
         }
     }
 }

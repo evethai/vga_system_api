@@ -9,10 +9,13 @@ namespace Domain.Model.Transaction
 {
     public class TransactionPostModel
     {
+        public TransactionPostModel(Guid walletId, int goldAmount)
+        {
+            WalletId = walletId;
+            GoldAmount = goldAmount;
+        }
+
         public Guid WalletId { get; set; }
         public int GoldAmount { get; set; }
-        public string Description { get; set; } = null!;
-        public DateTime TransactionDateTime { get; set; }
-        public TransactionType TransactionType { get; set; } 
     }
 }

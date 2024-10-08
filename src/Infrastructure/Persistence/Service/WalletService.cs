@@ -12,6 +12,7 @@ using Domain.Enum;
 using Domain.Model.Highschool;
 using Domain.Model.Region;
 using Domain.Model.Response;
+using Domain.Model.Transaction;
 using Domain.Model.Wallet;
 using Microsoft.EntityFrameworkCore;
 
@@ -42,28 +43,12 @@ namespace Infrastructure.Persistence.Service
             return _mapper.Map<Wallet>(wallet);
         }
 
-        public async Task<ResponseModel> UpdateWalletUsingGoldDistributionAsync(Guid WalletHigchoolId, int goldTransaction)
+        public async Task<ResponseModel> UpdateWalletUsingGoldDistributionAsync(Guid WalletHigchoolId, int goldDistribution)
         {
             var walletTransferring = await _unitOfWork.WalletRepository.GetByIdGuidAsync(WalletHigchoolId);
             var receivingWallets = await _unitOfWork.WalletRepository.GetInforStudentHasWalletReceiving(walletTransferring.AccountId);
-            foreach (var receivingWallet in receivingWallets)
-            {
-                receivingWallet.GoldBalance = receivingWallet.GoldBalance + goldTransaction;
-                var transactionReceiving = new Transaction
-                {
-                    Id = Guid.NewGuid(),
-                    WalletId = receivingWallet.Id,
-                    Description = "Bạn nhận được " + goldTransaction + " Gold",
-                    GoldAmount = goldTransaction,
-                    TransactionDateTime = DateTime.Now,
-                    TransactionType = TransactionType.Receiving,
-                };
-                var result = _mapper.Map<Wallet>(receivingWallet);
-                await _unitOfWork.WalletRepository.UpdateAsync(result);
-                await _unitOfWork.TransactionRepository.AddAsync(transactionReceiving);
-            }
-            walletTransferring.GoldBalance = walletTransferring.GoldBalance - (goldTransaction * receivingWallets.Count());
-            if (walletTransferring.GoldBalance < 0)
+            var totalgoldDistribution = goldDistribution * receivingWallets.Count();           
+            if (walletTransferring.GoldBalance < totalgoldDistribution)
             {
                 return new ResponseModel
                 {
@@ -71,89 +56,71 @@ namespace Infrastructure.Persistence.Service
                     Message = "Distribution gold is fail when Gold not enough",
                 };
             }
-            var transactionTransferring = _mapper.Map<Transaction>(walletTransferring.Transactions);
-            transactionTransferring = new Transaction
-            {
-                Id = Guid.NewGuid(),
-                WalletId = walletTransferring.Id,
-                Description = "Bạn chuyển đi " + goldTransaction + " Gold",
-                GoldAmount = goldTransaction,
-                TransactionDateTime = DateTime.Now,
-                TransactionType = TransactionType.Transferring,
-            };
-            await _unitOfWork.TransactionRepository.AddAsync(transactionTransferring);
-            await _unitOfWork.SaveChangesAsync();
+            walletTransferring.GoldBalance = walletTransferring.GoldBalance - totalgoldDistribution;
+            TransactionPostModel transaction_Transferring =
+               new TransactionPostModel(walletTransferring.Id, totalgoldDistribution);
+            await _unitOfWork.TransactionRepository
+                .CreateTransactionWhenUsingGold(TransactionType.Transferring, transaction_Transferring);
 
+            await _unitOfWork.WalletRepository.UpdateAsync(walletTransferring);
+            foreach (var receivingWallet in receivingWallets)
+            {
+                receivingWallet.GoldBalance = receivingWallet.GoldBalance + goldDistribution;
+                TransactionPostModel transaction = new TransactionPostModel(receivingWallet.Id, goldDistribution);
+                await _unitOfWork.TransactionRepository.
+                    CreateTransactionWhenUsingGold(TransactionType.Receiving, transaction);
+                var result = _mapper.Map<Wallet>(receivingWallet);
+                await _unitOfWork.WalletRepository.UpdateAsync(result);
+            }           
+            await _unitOfWork.SaveChangesAsync();
             return new ResponseModel
             {
                 IsSuccess = true,
-                Message = "Distribution gold is success",
+                Message = "Distribution gold is Successfully",
                 Data = walletTransferring
             };
 
         }
-        public async Task<ResponseModel> UpdateWalletUsingGoldBookConsultantAsync(WalletPutModel putModel , int goldTransaction)
-        {        
-            var walletTransferring = await _unitOfWork.WalletRepository.GetByIdGuidAsync(putModel.Transferring.Id);
-            walletTransferring.GoldBalance = walletTransferring.GoldBalance - goldTransaction;
-            var transactionTransferring = _mapper.Map<Transaction>(walletTransferring.Transactions);
-            transactionTransferring = new Transaction
-            {
-                Id = Guid.NewGuid(),
-                WalletId = walletTransferring.Id,
-                Description = "Bạn chuyển đi " + goldTransaction + " Gold",
-                GoldAmount = goldTransaction,
-                TransactionDateTime = DateTime.Now,
-                TransactionType = TransactionType.Transferring,
-            };
-            await _unitOfWork.TransactionRepository.AddAsync(transactionTransferring);
+        public async Task<ResponseModel> UpdateWalletUsingGoldBookConsultantAsync(WalletPutModel putModel , int goldBookConslutant)
+        {   
+            // Wallet chuyển
+            var walletTransferring = await _unitOfWork.WalletRepository.GetByIdGuidAsync(putModel.wallet_id_tranferring.Id);
+            walletTransferring.GoldBalance = walletTransferring.GoldBalance - goldBookConslutant;
+            TransactionPostModel transaction_Transferring = 
+                new TransactionPostModel(walletTransferring.Id, goldBookConslutant);
+            await _unitOfWork.TransactionRepository
+                .CreateTransactionWhenUsingGold(TransactionType.Transferring, transaction_Transferring);
             await _unitOfWork.WalletRepository.UpdateAsync(walletTransferring);
-
-            var walletReceiving = await _unitOfWork.WalletRepository.GetByIdGuidAsync(putModel.Receiving.Id);
-            walletReceiving.GoldBalance = walletReceiving.GoldBalance + goldTransaction;
-            var transactionReceiving = _mapper.Map<Transaction>(walletReceiving.Transactions);
-            transactionReceiving = new Transaction
-            {
-                Id = Guid.NewGuid(),
-                WalletId = walletReceiving.Id,
-                Description = "Bạn nhận được " + goldTransaction + " Gold",
-                GoldAmount = goldTransaction,
-                TransactionDateTime = DateTime.Now,
-                TransactionType = TransactionType.Receiving,
-            };
-            await _unitOfWork.TransactionRepository.AddAsync(transactionReceiving);
+            //Wallet Nhận
+            var walletReceiving = await _unitOfWork.WalletRepository.GetByIdGuidAsync(putModel.wallet_id_receiving.Id);
+            walletReceiving.GoldBalance = walletReceiving.GoldBalance + goldBookConslutant;
+            TransactionPostModel transaction_Receiving  =
+               new TransactionPostModel(walletTransferring.Id, goldBookConslutant);
+            await _unitOfWork.TransactionRepository
+                .CreateTransactionWhenUsingGold(TransactionType.Receiving, transaction_Transferring);
             await _unitOfWork.WalletRepository.UpdateAsync(walletReceiving);
-
             await _unitOfWork.SaveChangesAsync();
             return new ResponseModel
             {
-                Message = "Wallet Transferrring Successfully",
+                Message = "Wallet using by book conslutant Successfully",
                 IsSuccess = true,
-                Data = putModel,
+                Data = transaction_Transferring + " - "+ transaction_Receiving,
             };
         }
         public async Task<ResponseModel> UpdateWalletUsingByTestAsync(Guid WalletStudentId, int goldUsingTest)
         {
             var walletStudent = await _unitOfWork.WalletRepository.GetByIdGuidAsync(WalletStudentId);
             walletStudent.GoldBalance -= goldUsingTest;
-            var transactionStudent = _mapper.Map<Transaction>(walletStudent.Transactions);
-            transactionStudent = new Transaction
-            {
-                Id = Guid.NewGuid(),
-                WalletId = walletStudent.Id,
-                Description = "Bạn đã dùng " + goldUsingTest + " vào bài test.",
-                GoldAmount = goldUsingTest,
-                TransactionDateTime = DateTime.Now,
-                TransactionType = TransactionType.Using,
-            };
-            await _unitOfWork.TransactionRepository.AddAsync(transactionStudent);
+            TransactionPostModel  transaction = new TransactionPostModel(WalletStudentId, goldUsingTest);
+            var TransactionInfor = _unitOfWork.TransactionRepository.
+                CreateTransactionWhenUsingGold(TransactionType.Using, transaction);
             await _unitOfWork.WalletRepository.UpdateAsync(walletStudent);
             await _unitOfWork.SaveChangesAsync();
             return new ResponseModel
             {
-                Message = "Wallet Using Successfully",
+                Message = "Wallet using by test Successfully",
                 IsSuccess = true,
-                Data = walletStudent,
+                Data = TransactionInfor,
             };
         }
     }
