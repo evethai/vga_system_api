@@ -10,6 +10,7 @@ using Application.Interface.Service;
 using AutoMapper;
 using Domain.Entity;
 using Domain.Enum;
+using Domain.Model.Account;
 using Domain.Model.Highschool;
 using Domain.Model.Response;
 using Domain.Model.Student;
@@ -74,24 +75,11 @@ public class StudentService : IStudentService
     public async Task<ResponseModel> CreateStudentAsync(StudentPostModel postModel)
     {
         var student = _mapper.Map<Student>(postModel);
-        var roleId = await _unitOfWork.RoleRepository.SingleOrDefaultAsync(selector: x => x.Id, predicate: x => x.Name.Equals(RoleEnum.Student.ToString()));
-        student.Account = new Account
-        {
-            Id = Guid.NewGuid(), 
-            Email = postModel.Email,
-            Phone = postModel.Phone,
-            Password = PasswordUtil.HashPassword(postModel.Password),
-            RoleId = roleId,
-            Status = AccountStatus.Active,
-            CreateAt = DateTime.UtcNow
-        };
-        student.Account.Wallet = new Wallet
-        {
-            Id = Guid.NewGuid(),
-            GoldBalance = 0,
-            AccountId = student.Account.Id,
-        };
-        postModel.Status = true;
+        RegisterAccountModel accountModel = new RegisterAccountModel(postModel.Email
+            , postModel.Password
+            , postModel.Phone);
+        var AccountId = await _unitOfWork.AccountRepository.CreateAccountAndWallet(accountModel,RoleEnum.Student);
+        student.AccountId = AccountId;
         var result = await _unitOfWork.StudentRepository.AddAsync(student);
          await _unitOfWork.SaveChangesAsync();
         return new ResponseModel
