@@ -9,8 +9,8 @@ namespace Domain.Model.Wallet
 {
     public class WalletPutModel
     {
-        public WalletTransferringModel Transferring { get; set; }
-        public WalletReceivingModel Receiving { get; set; }
+        public WalletTransferringModel wallet_id_tranferring { get; set; }
+        public WalletReceivingModel wallet_id_receiving { get; set; }
     }
     public class WalletTransferringModel
     {
