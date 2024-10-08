@@ -64,6 +64,7 @@
         public static class Student
         {
             public const string StudentsEndpoint = ApiEndpoint + "/students";
+            public const string StudentPostEndpoint = ApiEndpoint + "/student";
             public const string StudentEndpoint = ApiEndpoint + "/student/{id}";
             public const string ImportStudentEndpoint = StudentsEndpoint + "/import";
         }
