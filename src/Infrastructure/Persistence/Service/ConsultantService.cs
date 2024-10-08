@@ -28,92 +28,140 @@ namespace Infrastructure.Persistence.Service
         #region Get consultant by id
         public async Task<ResponseModel> GetConsultantByIdAsync(Guid consultantId)
         {
-            var consultant = await _unitOfWork.ConsultantRepository.GetByIdGuidAsync(consultantId)
-                ?? throw new Exception($"Consultant not found by id: {consultantId}");
-            var result = _mapper.Map<ConsultantViewModel>(consultant);
-            return new ResponseModel
+            try
             {
-                Message = $"Get consultant by id '{consultantId}' successfull",
-                IsSuccess = true,
-                Data = result,
-            };
+                var consultant = await _unitOfWork.ConsultantRepository.GetByIdGuidAsync(consultantId)
+                    ?? throw new Exception($"Consultant not found by id: {consultantId}");
+                var result = _mapper.Map<ConsultantViewModel>(consultant);
+                return new ResponseModel
+                {
+                    Message = $"Get consultant by id '{consultantId}' successfull",
+                    IsSuccess = true,
+                    Data = result,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    IsSuccess = false,
+                    Message = $"An error occurred while get consultant by id: {ex.Message}"
+                };
+            }
         }
         #endregion
 
         #region Create consultant
         public async Task<ResponseModel> CreateConsultantAsync(ConsultantPostModel postModel)
         {
-            var roleId = await _unitOfWork.RoleRepository
-                .SingleOrDefaultAsync(selector: x => x.Id, predicate: x => x.Name.Equals(RoleEnum.Expert.ToString()));
-            var consultant = _mapper.Map<Consultant>(postModel);
-            consultant.Id = Guid.NewGuid();
-            consultant.Account = new Account
+            try
             {
-                Id = Guid.NewGuid(),
-                Email = postModel.Email,
-                Phone = postModel.Phone,
-                Password = PasswordUtil.HashPassword(postModel.Phone),
-                RoleId = roleId,
-                Status = AccountStatus.Active,
-                CreateAt = DateTime.UtcNow
-            };
-            consultant.Account.Wallet = new Wallet
-            {
-                Id = Guid.NewGuid(),
-                GoldBalance = 0,
-                AccountId = consultant.Account.Id,
-            };
+                var roleId = await _unitOfWork.RoleRepository
+                    .SingleOrDefaultAsync(selector: x => x.Id, predicate: x => x.Name.Equals(RoleEnum.Expert.ToString()));
 
-            consultant.Status = true;
+                var consultantLevel = await _unitOfWork.ConsultantLevelRepository.GetByIdAsync(postModel.ConsultantLevelId) ??
+                    throw new Exception("Consultant level not exist");
 
-            await _unitOfWork.ConsultantRepository.AddAsync(consultant);
-            await _unitOfWork.SaveChangesAsync();
-            var result = _mapper.Map<ConsultantViewModel>(consultant);
-            return new ResponseModel
+                var consultant = _mapper.Map<Consultant>(postModel);
+                consultant.Id = Guid.NewGuid();
+                consultant.Account = new Account
+                {
+                    Id = Guid.NewGuid(),
+                    Email = postModel.Email,
+                    Phone = postModel.Phone,
+                    Password = PasswordUtil.HashPassword(postModel.Phone),
+                    RoleId = roleId,
+                    Status = AccountStatus.Active,
+                    CreateAt = DateTime.UtcNow
+                };
+                consultant.Account.Wallet = new Wallet
+                {
+                    Id = Guid.NewGuid(),
+                    GoldBalance = 0,
+                    AccountId = consultant.Account.Id,
+                };
+
+                consultant.Status = true;
+
+                await _unitOfWork.ConsultantRepository.AddAsync(consultant);
+                await _unitOfWork.SaveChangesAsync();
+                var result = _mapper.Map<ConsultantViewModel>(consultant);
+                return new ResponseModel
+                {
+                    Message = $"Create consultant successfull",
+                    IsSuccess = true,
+                    Data = result,
+                };
+            }
+            catch (Exception ex)
             {
-                Message = $"Create consultant successfull",
-                IsSuccess = true,
-                Data = result,
-            };
+                return new ResponseModel
+                {
+                    IsSuccess = false,
+                    Message = $"An error occurred while create consultant: {ex.Message}"
+                };
+            }
         }
         #endregion
 
         #region Update consultant
         public async Task<ResponseModel> UpdateConsultantAsync(Guid consultantId, ConsultantPutModel putModel)
         {
-            var consultant = await _unitOfWork.ConsultantRepository.GetByIdGuidAsync(consultantId)
-                ?? throw new Exception($"Consultant not found by id: {consultantId}");
-            _mapper.Map(putModel, consultant);
-            await _unitOfWork.ConsultantRepository.UpdateAsync(consultant);
-            await _unitOfWork.SaveChangesAsync();
-
-            var result = _mapper.Map<ConsultantViewModel>(consultant);
-            return new ResponseModel
+            try
             {
-                Message = $"Consultant with id '{consultantId}' was updated successfully",
-                IsSuccess = true,
-                Data = result,
-            };
+                var consultant = await _unitOfWork.ConsultantRepository.GetByIdGuidAsync(consultantId)
+                    ?? throw new Exception($"Consultant not found by id: {consultantId}");
+                _mapper.Map(putModel, consultant);
+                await _unitOfWork.ConsultantRepository.UpdateAsync(consultant);
+                await _unitOfWork.SaveChangesAsync();
+
+                var result = _mapper.Map<ConsultantViewModel>(consultant);
+                return new ResponseModel
+                {
+                    Message = $"Consultant with id '{consultantId}' was updated successfully",
+                    IsSuccess = true,
+                    Data = result,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    IsSuccess = false,
+                    Message = $"An error occurred while update consultant: {ex.Message}"
+                };
+            }
         }
         #endregion
 
         #region Delete consultant
         public async Task<ResponseModel> DeleteConsultantAsync(Guid consultantId)
         {
-            var consultant = await _unitOfWork.ConsultantRepository.GetByIdGuidAsync(consultantId)
+            try
+            {
+                var consultant = await _unitOfWork.ConsultantRepository.GetByIdGuidAsync(consultantId)
                 ?? throw new Exception($"Consultant not found by id: {consultantId}");
 
-            consultant.Status = false;
-            await _unitOfWork.ConsultantRepository.UpdateAsync(consultant);
-            await _unitOfWork.SaveChangesAsync();
+                consultant.Status = false;
+                await _unitOfWork.ConsultantRepository.UpdateAsync(consultant);
+                await _unitOfWork.SaveChangesAsync();
 
-            var result = _mapper.Map<ConsultantViewModel>(consultant);
-            return new ResponseModel
+                var result = _mapper.Map<ConsultantViewModel>(consultant);
+                return new ResponseModel
+                {
+                    Message = $"Consultant with id '{consultantId}' was deleted successfully",
+                    IsSuccess = true,
+                    Data = result,
+                };
+            }
+            catch (Exception ex)
             {
-                Message = $"Consultant with id '{consultantId}' was deleted successfully",
-                IsSuccess = true,
-                Data = result,
-            };
+                return new ResponseModel
+                {
+                    IsSuccess = false,
+                    Message = $"An error occurred while delete consultant: {ex.Message}"
+                };
+            }
         }
         #endregion
 

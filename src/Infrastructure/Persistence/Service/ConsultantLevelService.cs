@@ -26,68 +26,113 @@ namespace Infrastructure.Persistence.Service
         #region Get consultant level by id
         public async Task<ResponseModel> GetConsultantLevelByIdAsync(int consultantLevelId)
         {
-            var consultantLevel = await _unitOfWork.ConsultantLevelRepository.GetByIdAsync(consultantLevelId)
-                ?? throw new Exception($"Consultant level not found by id: {consultantLevelId}");
-            var result = _mapper.Map<ConsultantLevelViewModel>(consultantLevel);
-            return new ResponseModel
+            try
             {
-                Message = $"Get consultant level by id '{consultantLevelId}' successfull",
-                IsSuccess = true,
-                Data = result,
-            };
+                var consultantLevel = await _unitOfWork.ConsultantLevelRepository.GetByIdAsync(consultantLevelId)
+                    ?? throw new Exception($"Consultant level not found by id: {consultantLevelId}");
+                var result = _mapper.Map<ConsultantLevelViewModel>(consultantLevel);
+                return new ResponseModel
+                {
+                    Message = $"Get consultant level by id '{consultantLevelId}' successfull",
+                    IsSuccess = true,
+                    Data = result,
+                };
+
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    IsSuccess = false,
+                    Message = $"An error occurred while get consultant level by id: {ex.Message}"
+                };
+            }
         }
         #endregion
 
         #region Create new consultant level
         public async Task<ResponseModel> CreateConsultantLevelAsync(ConsultantLevelPostModel postModel)
         {
-            var consultantLevel = _mapper.Map<ConsultantLevel>(postModel);
-            await _unitOfWork.ConsultantLevelRepository.AddAsync(consultantLevel);
-            await _unitOfWork.SaveChangesAsync();
-            return new ResponseModel
+            try
             {
-                Message = "Consultant level was created successfully",
-                IsSuccess = true,
-                Data = consultantLevel,
-            };
+                var consultantLevel = _mapper.Map<ConsultantLevel>(postModel);
+                await _unitOfWork.ConsultantLevelRepository.AddAsync(consultantLevel);
+                await _unitOfWork.SaveChangesAsync();
+                return new ResponseModel
+                {
+                    Message = "Consultant level was created successfully",
+                    IsSuccess = true,
+                    Data = consultantLevel,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    IsSuccess = false,
+                    Message = $"An error occurred while create consultant level: {ex.Message}"
+                };
+            }
         }
         #endregion
 
         #region Update consultant level
         public async Task<ResponseModel> UpdateConsultantLevelAsync(ConsultantLevelPutModel putModel, int consultantLevelId)
         {
-            var consultantLevel = await _unitOfWork.ConsultantLevelRepository.GetByIdAsync(consultantLevelId)
-                ?? throw new Exception($"Consultant level not found by id: {consultantLevelId}");
-            _mapper.Map(putModel, consultantLevel);
-            await _unitOfWork.ConsultantLevelRepository.UpdateAsync(consultantLevel);
-            await _unitOfWork.SaveChangesAsync();
-
-            var result = _mapper.Map<ConsultantLevelViewModel>(consultantLevel);
-            return new ResponseModel
+            try
             {
-                Message = $"Consultant level with id '{consultantLevelId}' was updated successfully",
-                IsSuccess = true,
-                Data = result,
-            };
+                var consultantLevel = await _unitOfWork.ConsultantLevelRepository.GetByIdAsync(consultantLevelId)
+                                ?? throw new Exception($"Consultant level not found by id: {consultantLevelId}");
+                _mapper.Map(putModel, consultantLevel);
+                await _unitOfWork.ConsultantLevelRepository.UpdateAsync(consultantLevel);
+                await _unitOfWork.SaveChangesAsync();
+
+                var result = _mapper.Map<ConsultantLevelViewModel>(consultantLevel);
+                return new ResponseModel
+                {
+                    Message = $"Consultant level with id '{consultantLevelId}' was updated successfully",
+                    IsSuccess = true,
+                    Data = result,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    IsSuccess = false,
+                    Message = $"An error occurred while update consultant level: {ex.Message}"
+                };
+            }
         }
         #endregion
 
         #region Delete consultant level
         public async Task<ResponseModel> DeleteConsultantLevelAsync(int consultantLevelId)
         {
-            var consultantLevel = await _unitOfWork.ConsultantLevelRepository.GetByIdAsync(consultantLevelId)
-                   ?? throw new Exception($"Consultant level not found by id: {consultantLevelId}");
-            consultantLevel.Status = false;
-            await _unitOfWork.ConsultantLevelRepository.UpdateAsync(consultantLevel);
-            await _unitOfWork.SaveChangesAsync();
-
-            var result = _mapper.Map<ConsultantLevelViewModel>(consultantLevel);
-            return new ResponseModel
+            try
             {
-                Message = $"Consultant level with id '{consultantLevelId}' was deleted successfully",
-                IsSuccess = true,
-                Data = result,
-            };
+                var consultantLevel = await _unitOfWork.ConsultantLevelRepository.GetByIdAsync(consultantLevelId)
+                       ?? throw new Exception($"Consultant level not found by id: {consultantLevelId}");
+                consultantLevel.Status = false;
+                await _unitOfWork.ConsultantLevelRepository.UpdateAsync(consultantLevel);
+                await _unitOfWork.SaveChangesAsync();
+
+                var result = _mapper.Map<ConsultantLevelViewModel>(consultantLevel);
+                return new ResponseModel
+                {
+                    Message = $"Consultant level with id '{consultantLevelId}' was deleted successfully",
+                    IsSuccess = true,
+                    Data = result,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    IsSuccess = false,
+                    Message = $"An error occurred while dalete consultant level: {ex.Message}"
+                };
+            }
         }
         #endregion
 

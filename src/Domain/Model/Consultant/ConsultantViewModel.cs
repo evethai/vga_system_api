@@ -11,6 +11,7 @@ namespace Domain.Model.Consultant
         public Guid Id { get; set; }
         public Guid AccountId { get; set; }
         public string Name { get; set; } = string.Empty;
+        public int ConsultantLevelId { get; set; }
         public string Email { get; set; } = string.Empty;
         public string Phone { get; set; } = string.Empty;
         public string? Image_Url { get; set; }

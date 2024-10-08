@@ -27,7 +27,9 @@ namespace Api.Controllers
             try
             {
                 var result = await _consultationTimeService.CreateConsultationTimeAsync(postModel, consultationDayId);
-                return Ok(result);
+                return (result.IsSuccess == false)
+                    ? BadRequest(result)
+                    : Ok(result);
             }
             catch (Exception ex)
             {
@@ -38,8 +40,18 @@ namespace Api.Controllers
         [HttpDelete(ApiEndPointConstant.ConsultationTime.ConsultationTimeEndpoint)]
         public async Task<IActionResult> DeleteTimeSlotAsync(Guid id)
         {
-            var result = await _consultationTimeService.DeleteConsultationTimeAsync(id);
-            return Ok(result);
+            try
+            {
+                var result = await _consultationTimeService.DeleteConsultationTimeAsync(id);
+                return (result.IsSuccess == false)
+                    ? BadRequest(result)
+                    : Ok(result);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

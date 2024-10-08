@@ -9,6 +9,7 @@ namespace Domain.Model.Consultant
     public class ConsultantPostModel
     {
         public string Name { get; set; } = string.Empty;
+        public int ConsultantLevelId { get; set; }
         public string Email { get; set; } = string.Empty;
         public string Phone { get; set; } = string.Empty;
         public string? Image_Url { get; set; }

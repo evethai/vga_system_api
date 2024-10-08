@@ -1,5 +1,6 @@
 ﻿using Api.Constants;
 using Application.Interface.Service;
+using Domain.Model.Response;
 using Domain.Model.Student;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,20 +15,23 @@ public class StudentController : ControllerBase
     {
         _studentService = studentService;
     }
+
     [HttpGet(ApiEndPointConstant.Student.StudentsEndpoint)]
     public async Task<IActionResult> GetListStudentAsync([FromQuery] StudentSearchModel searchModel)
     {
         var result = await _studentService.GetListStudentAsync(searchModel);
         return Ok(result);
     }
+
     [HttpGet(ApiEndPointConstant.Student.StudentEndpoint)]
     public async Task<IActionResult> GetStudentByIdAsync(Guid id)
     {
         var result = await _studentService.GetStudentByIdAsync(id);
         return Ok(result);
     }
+
     [HttpPost(ApiEndPointConstant.Student.StudentsEndpoint)]
-    public async Task<IActionResult> CreateStudentAsyns( StudentPostModel postModel)
+    public async Task<IActionResult> CreateStudentAsyns(StudentPostModel postModel)
     {
         if (!ModelState.IsValid)
         {
@@ -43,6 +47,7 @@ public class StudentController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
+
     [HttpPut(ApiEndPointConstant.Student.StudentEndpoint)]
     public async Task<IActionResult> UpdateStudentAsync(StudentPutModel putModel, Guid id)
     {
@@ -65,7 +70,6 @@ public class StudentController : ControllerBase
     [HttpPost(ApiEndPointConstant.Student.ImportStudentEndpoint)]
     public async Task<IActionResult> ImportFromJsonAsync([FromForm] StudentImportModel studentImportModel)
     {
-
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
@@ -73,7 +77,9 @@ public class StudentController : ControllerBase
         try
         {
             var result = await _studentService.ImportStudentsFromJsonAsync(studentImportModel);
-            return Ok(result);
+            return (result.IsSuccess == false)
+                ? BadRequest(result)
+                : Ok(result);
         }
         catch (Exception ex)
         {

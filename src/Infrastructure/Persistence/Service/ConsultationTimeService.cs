@@ -27,61 +27,84 @@ namespace Infrastructure.Persistence.Service
         #region Create consultation time
         public async Task<ResponseModel> CreateConsultationTimeAsync(ConsultationTimePostModel postModel, Guid consultationDayId)
         {
-            var consultationDay = await _unitOfWork.ConsultationDayRepository
-                .SingleOrDefaultAsync(
-                predicate: x => x.Id.Equals(consultationDayId),
-                include: query => query.Include(cd => cd.ConsultationTimes)
-                ) ?? throw new Exception($"Consultation day with id '{consultationDayId}' not exist");
-            if (consultationDay.ConsultationTimes.Any(existingCt => existingCt.TimeSlotId == postModel.TimeSlotId))
+            try
+            {
+                var consultationDay = await _unitOfWork.ConsultationDayRepository
+                    .SingleOrDefaultAsync(
+                    predicate: x => x.Id.Equals(consultationDayId),
+                    include: query => query.Include(cd => cd.ConsultationTimes)
+                    ) ?? throw new Exception($"Consultation day with id '{consultationDayId}' not exist");
+                if (consultationDay.ConsultationTimes.Any(existingCt => existingCt.TimeSlotId == postModel.TimeSlotId))
+                {
+                    return new ResponseModel
+                    {
+                        IsSuccess = false,
+                        Message = $"New consultation time is existed with time slot id '{postModel.TimeSlotId}' .",
+                    };
+                }
+
+                var consultationTime = _mapper.Map<ConsultationTime>(postModel);
+                consultationTime.Id = Guid.NewGuid();
+                consultationTime.ConsultationDayId = consultationDayId;
+                consultationTime.Status = (int)ConsultationTimeStatusEnum.Available;
+
+                await _unitOfWork.ConsultationTimeRepository.AddAsync(consultationTime);
+                await _unitOfWork.SaveChangesAsync();
+
+                var result = _mapper.Map<ConsultationTimeViewModel>(consultationTime);
+                return new ResponseModel
+                {
+                    IsSuccess = true,
+                    Message = $"New consultation time was created successfully.",
+                    Data = result
+                };
+            }
+            catch (Exception ex)
             {
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"New consultation time is existed with time slot id '{postModel.TimeSlotId}' .",
+                    Message = $"An error occurred while create consultation time: {ex.Message}"
                 };
             }
-
-            var consultationTime = _mapper.Map<ConsultationTime>(postModel);
-            consultationTime.Id = Guid.NewGuid();
-            consultationTime.ConsultationDayId = consultationDayId;
-            consultationTime.Status = (int)ConsultationTimeStatusEnum.Available;
-
-            await _unitOfWork.ConsultationTimeRepository.AddAsync(consultationTime);
-            await _unitOfWork.SaveChangesAsync();
-
-            var result = _mapper.Map<ConsultationTimeViewModel>(consultationTime);
-            return new ResponseModel
-            {
-                IsSuccess = true,
-                Message = $"New consultation time was created successfully.",
-                Data = result
-            };
         }
         #endregion
 
         #region Delete consultation time
         public async Task<ResponseModel> DeleteConsultationTimeAsync(Guid consultationTimeId)
         {
-            var consultationTime = await _unitOfWork.ConsultationTimeRepository.GetByIdGuidAsync(consultationTimeId)
-                ?? throw new Exception($"Consultation time with id '{consultationTimeId}' not exist");
-            if (consultationTime.Status == (int)ConsultationTimeStatusEnum.Booked)
+            try
+            {
+                var consultationTime = await _unitOfWork.ConsultationTimeRepository.GetByIdGuidAsync(consultationTimeId)
+                    ?? throw new Exception($"Consultation time with id '{consultationTimeId}' not exist");
+                if (consultationTime.Status == (int)ConsultationTimeStatusEnum.Booked)
+                {
+                    return new ResponseModel
+                    {
+                        IsSuccess = false,
+                        Message = "Cannot delete the consultation time because it already booked."
+                    };
+                }
+                consultationTime.Status = (int)ConsultationTimeStatusEnum.Deleted;
+
+                await _unitOfWork.ConsultationTimeRepository.UpdateAsync(consultationTime);
+                await _unitOfWork.SaveChangesAsync();
+
+                return new ResponseModel
+                {
+                    IsSuccess = true,
+                    Message = "Consultation time deleted successfully."
+                };
+
+            }
+            catch (Exception ex)
             {
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = "Cannot delete the consultation time because it already booked."
+                    Message = $"An error occurred while delete consultation time: {ex.Message}"
                 };
             }
-            consultationTime.Status = (int)ConsultationTimeStatusEnum.Deleted;
-
-            await _unitOfWork.ConsultationTimeRepository.UpdateAsync(consultationTime);
-            await _unitOfWork.SaveChangesAsync();
-
-            return new ResponseModel
-            {
-                IsSuccess = true,
-                Message = "Consultation time deleted successfully."
-            };
         }
         #endregion
     }

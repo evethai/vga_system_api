@@ -20,15 +20,33 @@ namespace Api.Controllers
         [HttpGet(ApiEndPointConstant.Consultant.ConsultantEndpoint)]
         public async Task<IActionResult> GetConsultantByIdAsync(Guid id)
         {
-            var result = await _consultantService.GetConsultantByIdAsync(id);
-            return Ok(result);
+            try
+            {
+                var result = await _consultantService.GetConsultantByIdAsync(id);
+                return (result.IsSuccess == false)
+                    ? BadRequest(result)
+                    : Ok(result);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet(ApiEndPointConstant.Consultant.ConsultantsEndpoint)]
         public async Task<IActionResult> GetListConsultantsWithPaginateAsync([FromQuery] ConsultantSearchModel searchModel)
         {
-            var result = await _consultantService.GetListConsultantsWithPaginateAsync(searchModel);
-            return Ok(result);
+            try
+            {
+                var result = await _consultantService.GetListConsultantsWithPaginateAsync(searchModel);
+                return Ok(result);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost(ApiEndPointConstant.Consultant.ConsultantsEndpoint)]
@@ -41,7 +59,9 @@ namespace Api.Controllers
             try
             {
                 var result = await _consultantService.CreateConsultantAsync(postModel);
-                return Ok(result);
+                return (result.IsSuccess == false)
+                    ? BadRequest(result)
+                    : Ok(result);
             }
             catch (Exception ex)
             {
@@ -58,9 +78,10 @@ namespace Api.Controllers
             }
             try
             {
-
                 var result = await _consultantService.UpdateConsultantAsync(id, putModel);
-                return Ok(result);
+                return (result.IsSuccess == false)
+                    ? BadRequest(result)
+                    : Ok(result);
             }
             catch (Exception ex)
             {
@@ -71,8 +92,17 @@ namespace Api.Controllers
         [HttpDelete(ApiEndPointConstant.Consultant.ConsultantEndpoint)]
         public async Task<IActionResult> DeleteConsultantAsync(Guid id)
         {
-            var result = await _consultantService.DeleteConsultantAsync(id);
-            return Ok(result);
+            try
+            {
+                var result = await _consultantService.DeleteConsultantAsync(id);
+                return (result.IsSuccess == false)
+                    ? BadRequest(result)
+                    : Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
     }
