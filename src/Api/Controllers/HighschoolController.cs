@@ -43,7 +43,7 @@ public class HighschoolController : ControllerBase
         }
     }
     [HttpPut(ApiEndPointConstant.HighSchool.HighSchoolEndpoint)]
-    public async Task<IActionResult> UpdateHighschoolAsync([FromForm] HighschoolPutModel putModel)
+    public async Task<IActionResult> UpdateHighschoolAsync(HighschoolPutModel putModel, Guid Id)
     {
         if (!ModelState.IsValid)
         {
@@ -52,7 +52,7 @@ public class HighschoolController : ControllerBase
         try
         {
 
-            var result = await _highschoolService.UpdateHighschoolAsync(putModel);
+            var result = await _highschoolService.UpdateHighschoolAsync(putModel, Id);
             return Ok(result);
         }
         catch (Exception ex)

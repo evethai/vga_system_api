@@ -4,9 +4,10 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.Model.Account;
 
 namespace Domain.Model.Highschool;
-public class HighschoolPutModel
+public class HighschoolPutModel : AccountPostModel
 {
     [Required(ErrorMessage = "Id is required.")]
     public Guid Id { get; set; }
