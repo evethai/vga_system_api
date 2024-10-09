@@ -117,5 +117,11 @@
             public const string BookingsEndpoint = ApiEndpoint + "/bookings";
             public const string BookingEndpoint = BookingsEndpoint + "/{id}";
         }
+        //University
+        public static class University
+        {
+            public const string UniversitiesEndpoint = ApiEndpoint + "/universities";
+            public const string UniversityEndpoint = ApiEndpoint + "/{id}";
+        }
     }
 }

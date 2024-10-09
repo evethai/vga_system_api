@@ -27,7 +27,7 @@ public class StudentController : ControllerBase
         return Ok(result);
     }
     [HttpPost(ApiEndPointConstant.Student.StudentsEndpoint)]
-    public async Task<IActionResult> CreateStudentAsyns( StudentPostModel postModel)
+    public async Task<IActionResult> CreateStudentAsyns(StudentPostModel postModel)
     {
         if (!ModelState.IsValid)
         {

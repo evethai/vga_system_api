@@ -61,7 +61,11 @@ public class StudentService : IStudentService
         {
             throw new Exception("Student Id not found");
         }
-        exitStudent.Status = putModel.Status;
+        var exitAccount = await _unitOfWork.AccountRepository.GetByIdGuidAsync(exitStudent.AccountId);
+        exitAccount.Phone = putModel.Phone;
+        exitAccount.Email = putModel.Email;
+        exitAccount.Password = PasswordUtil.HashPassword(putModel.Password);
+        await _unitOfWork.AccountRepository.UpdateAsync(exitAccount);
         var result = await _unitOfWork.StudentRepository.UpdateAsync(exitStudent);
          _unitOfWork.SaveChangesAsync();
         return new ResponseModel
@@ -130,12 +134,8 @@ public class StudentService : IStudentService
                     Id = Guid.NewGuid(),
                     GoldBalance = 0,
                     AccountId = student.Account.Id,
-                };
-
-                student.CreateAt = DateTime.UtcNow;
+                };              
                 student.HighSchoolId = studentImportModel.highschoolId;
-                student.Status = true;
-
                 await _unitOfWork.StudentRepository.AddAsync(student);
             }
 
