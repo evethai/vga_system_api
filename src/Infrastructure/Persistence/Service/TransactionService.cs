@@ -22,30 +22,6 @@ namespace Application.Interface.Service
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-
-        public Task<ResponseModel> CreateTransactionReceivingAsync(TransactionPostModel postModel)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ResponseModel> CreateTransactionTransferringAsync(TransactionPostModel postModel)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<ResponseModel> CreateTransactionUsingAsync(TransactionPostModel postModel)
-        {
-            var transaction = _mapper.Map<Transaction>(postModel);
-            var result = await _unitOfWork.TransactionRepository.AddAsync(transaction);
-            _unitOfWork.SaveChangesAsync();
-            return new ResponseModel
-            {
-                Message = " Transaction Created Successfully",
-                IsSuccess = true,
-                Data = postModel,
-            };
-        }
-
         public async Task<ResponseTransactionModel> GetListTransactionAsync(TransactionSearchModel searchModel)
         {
             var (filter, orderBy) = _unitOfWork.TransactionRepository.BuildFilterAndOrderBy(searchModel);

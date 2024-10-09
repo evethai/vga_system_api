@@ -27,7 +27,7 @@ public class HighschoolController : ControllerBase
         return Ok(result);
     }
     [HttpPost(ApiEndPointConstant.HighSchool.HighSchoolsEndpoint)]
-    public async Task<IActionResult> CreateHighschoolAsync(HighschoolPostModel postModel)
+    public async Task<IActionResult> CreateHighschoolAsync([FromForm] HighschoolPostModel postModel)
     {
         if (!ModelState.IsValid)
         {

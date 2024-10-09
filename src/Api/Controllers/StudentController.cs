@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
-[Route("api/students")]
 [ApiController]
 public class StudentController : ControllerBase
 {
@@ -44,7 +43,7 @@ public class StudentController : ControllerBase
         }
     }
     [HttpPut(ApiEndPointConstant.Student.StudentEndpoint)]
-    public async Task<IActionResult> UpdateStudentAsync(StudentPutModel putModel, Guid id)
+    public async Task<IActionResult> UpdateStudentAsync([FromForm] StudentPutModel putModel, Guid id)
     {
         if (!ModelState.IsValid)
         {
