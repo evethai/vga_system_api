@@ -35,8 +35,8 @@ namespace Api.Controllers
             var result = await _walletService.GetWalletByIdAsync(id);
             return Ok(result);
         }
-        [HttpPut]
-        public async Task<IActionResult> UpdateUsingGoldWalletAsync([FromForm] WalletPutModel putModel, int goldTransaction)
+        [HttpPut(ApiEndPointConstant.Wallet.WalletBook)]
+        public async Task<IActionResult> UpdateWalletUsingGoldBookConsultantAsync([FromForm] WalletPutModel putModel, int GoldBookConsultant)
         {
             if (!ModelState.IsValid)
             {
@@ -44,7 +44,7 @@ namespace Api.Controllers
             }
             try
             {
-                var result = await _walletService.UpdateUsingGoldBookCareerExpertWalletAsync(putModel, goldTransaction);
+                var result = await _walletService.UpdateWalletUsingGoldBookConsultantAsync(putModel, GoldBookConsultant);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -52,8 +52,8 @@ namespace Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPut(ApiEndPointConstant.Wallet.WalletPutEndpoint)]
-        public async Task<IActionResult> UpdateGoldDistributionWalletAsync([FromForm]Guid putModel, int goldTransaction)
+        [HttpPut(ApiEndPointConstant.Wallet.WalletDistribution)]
+        public async Task<IActionResult> UpdateWalletUsingGoldDistributionAsync([FromForm] Guid WalletHighschoolId, int GoldDistribution)
         {
             if (!ModelState.IsValid)
             {
@@ -61,7 +61,24 @@ namespace Api.Controllers
             }
             try
             {
-                var result = await _walletService.UpdateGoldDistributionWalletAsync(putModel, goldTransaction);
+                var result = await _walletService.UpdateWalletUsingGoldDistributionAsync(WalletHighschoolId, GoldDistribution);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPut(ApiEndPointConstant.Wallet.WalletTest)]
+        public async Task<IActionResult> UpdateWalletUsingByTestAsync(Guid WalletStudentId, int goldUsingTest)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var result = await _walletService.UpdateWalletUsingByTestAsync(WalletStudentId, goldUsingTest);
                 return Ok(result);
             }
             catch (Exception ex)

@@ -11,9 +11,6 @@ namespace Application.Interface.Service
 {
     public interface ITransactionService
     {
-        Task<ResponseTransactionModel> GetListTransactionAsync(TransactionSearchModel searchModel);
-        Task<ResponseModel> CreateTransactionUsingAsync(TransactionPostModel postModel);
-        Task<ResponseModel> CreateTransactionReceivingAsync(TransactionPostModel postModel);
-        Task<ResponseModel> CreateTransactionTransferringAsync(TransactionPostModel postModel);
+        Task<ResponseTransactionModel> GetListTransactionAsync(TransactionSearchModel searchModel);       
     }
 }

@@ -9,6 +9,7 @@ using Application.Interface.Service;
 using AutoMapper;
 using Domain.Entity;
 using Domain.Enum;
+using Domain.Model.Account;
 using Domain.Model.Highschool;
 using Domain.Model.Response;
 using Microsoft.EntityFrameworkCore;
@@ -51,23 +52,11 @@ public class HighschoolService : IHighschoolService
     public async Task<ResponseModel> CreateHighschoolAsync(HighschoolPostModel postModel)
     {
         var highschool = _mapper.Map<HighSchool>(postModel);
-        var roleId = await _unitOfWork.RoleRepository.SingleOrDefaultAsync(selector: x=> x.Id,predicate: x=> x.Name.Equals(RoleEnum.HighSchool.ToString()));
-        highschool.Account = new Account
-        {
-            Id = Guid.NewGuid(), // Create new GUID for Account
-            Email = postModel.Email,
-            Phone = postModel.Phone,
-            Password = PasswordUtil.HashPassword(postModel.Password),
-            RoleId = roleId,
-            Status = AccountStatus.Active,
-            CreateAt = DateTime.Now
-        };
-        highschool.Account.Wallet = new Wallet
-        {
-            Id = Guid.NewGuid(),
-            GoldBalance = 0,
-            AccountId = highschool.Account.Id,
-        };
+        RegisterAccountModel accountModel = new RegisterAccountModel(postModel.Email
+            , postModel.Password
+            , postModel.Phone);
+        var AccountId = await _unitOfWork.AccountRepository.CreateAccountAndWallet(accountModel, RoleEnum.HighSchool);
+        highschool.AccountId = AccountId;
         var result = await _unitOfWork.HighschoolRepository.AddAsync(highschool);
         await _unitOfWork.SaveChangesAsync();
         return new ResponseModel
