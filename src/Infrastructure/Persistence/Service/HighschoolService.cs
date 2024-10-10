@@ -79,6 +79,7 @@ public class HighschoolService : IHighschoolService
         }
         exitHighschool.LocationDetail = putModel.LocationDetail;
         exitHighschool.Name = putModel.Name;
+        exitHighschool.RegionId = putModel.RegionId;
         var exitAccount = await _unitOfWork.AccountRepository.GetByIdGuidAsync(exitHighschool.AccountId);
         if (exitAccount == null)
         {
@@ -93,7 +94,7 @@ public class HighschoolService : IHighschoolService
         exitAccount.Password = PasswordUtil.HashPassword(putModel.Password);
         await _unitOfWork.AccountRepository.UpdateAsync(exitAccount);      
         await _unitOfWork.HighschoolRepository.UpdateAsync(exitHighschool);
-        _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.SaveChangesAsync();
         return new ResponseModel
         {
             Message = " Highschool Updated Successfully",

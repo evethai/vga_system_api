@@ -13,4 +13,6 @@ public class HighschoolPutModel : AccountPostModel
     public string Name { get; set; }
     [Required(ErrorMessage = "LocationDetail is required.")]
     public string LocationDetail { get; set; }
+    [Required(ErrorMessage = "RegionId is required.")]
+    public Guid RegionId { get; set; }
 }
