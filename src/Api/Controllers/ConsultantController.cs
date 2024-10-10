@@ -55,7 +55,7 @@ namespace Api.Controllers
 
         //[CustomAuthorize(RoleEnum.Admin)]
         [HttpPost(ApiEndPointConstant.Consultant.ConsultantsEndpoint)]
-        public async Task<IActionResult> CreateConsultantAsyns([FromForm] ConsultantPostModel postModel)
+        public async Task<IActionResult> CreateConsultantAsyns(ConsultantPostModel postModel)
         {
             if (!ModelState.IsValid)
             {
@@ -76,7 +76,7 @@ namespace Api.Controllers
 
         //[CustomAuthorize(RoleEnum.Admin)]
         [HttpPut(ApiEndPointConstant.Consultant.ConsultantEndpoint)]
-        public async Task<IActionResult> UpdateConsultantAsync([FromForm] ConsultantPutModel putModel, Guid id)
+        public async Task<IActionResult> UpdateConsultantAsync(ConsultantPutModel putModel, Guid id)
         {
             if (!ModelState.IsValid)
             {

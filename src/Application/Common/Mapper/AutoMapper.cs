@@ -107,7 +107,7 @@ namespace Application.Common.Mapper
                 .ForMember(dest => dest.Image_Url, opt => opt.MapFrom(src => src.Account.Image_Url))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
                 .ForMember(dest => dest.DateOfBirth, opt => opt.MapFrom(src => src.DoB))
-                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status))
+                .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender))
                 .ForMember(dest => dest.CreateAt, opt => opt.MapFrom(src => src.Account.CreateAt))
                 .ReverseMap();
             CreateMap<Consultant, ConsultantPostModel>()

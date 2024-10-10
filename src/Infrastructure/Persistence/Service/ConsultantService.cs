@@ -72,7 +72,7 @@ namespace Infrastructure.Persistence.Service
 
                 consultant.Id = Guid.NewGuid();
                 consultant.AccountId = accountId;
-                consultant.Status = true;
+                consultant.Gender = postModel.Gender; 
 
                 await _unitOfWork.ConsultantRepository.AddAsync(consultant);
                 await _unitOfWork.SaveChangesAsync();
@@ -102,8 +102,11 @@ namespace Infrastructure.Persistence.Service
             {
                 var consultant = await _unitOfWork.ConsultantRepository.GetByIdGuidAsync(consultantId)
                     ?? throw new Exception($"Consultant not found by id: {consultantId}");
+                var exAccountConsultant = await _unitOfWork.AccountRepository.GetByIdGuidAsync(consultant.AccountId)
+                ?? throw new Exception($"Consultant Account not found by id");
                 _mapper.Map(putModel, consultant);
                 await _unitOfWork.ConsultantRepository.UpdateAsync(consultant);
+                await _unitOfWork.AccountRepository.UpdateAsync(exAccountConsultant);
                 await _unitOfWork.SaveChangesAsync();
 
                 var result = _mapper.Map<ConsultantViewModel>(consultant);
@@ -133,8 +136,11 @@ namespace Infrastructure.Persistence.Service
                 var consultant = await _unitOfWork.ConsultantRepository.GetByIdGuidAsync(consultantId)
                 ?? throw new Exception($"Consultant not found by id: {consultantId}");
 
-                consultant.Status = false;
+                var exAccountConsultant = await _unitOfWork.AccountRepository.GetByIdGuidAsync(consultant.AccountId)
+                ?? throw new Exception($"Consultant Account not found by id");
+                exAccountConsultant.Status = AccountStatus.Blocked;
                 await _unitOfWork.ConsultantRepository.UpdateAsync(consultant);
+                await _unitOfWork.AccountRepository.UpdateAsync(exAccountConsultant);
                 await _unitOfWork.SaveChangesAsync();
 
                 var result = _mapper.Map<ConsultantViewModel>(consultant);
