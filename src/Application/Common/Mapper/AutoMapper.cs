@@ -54,11 +54,7 @@ namespace Application.Common.Mapper
             CreateMap<Student, StudentModel>().ReverseMap();
             CreateMap<Student, StudentPostModel>().ReverseMap();
             CreateMap<Student, StudentPutModel>().ReverseMap();
-            CreateMap<Student, StudentJsonModel>()
-            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
-            .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender))
-            .ForMember(dest => dest.DateOfBirth, opt => opt.MapFrom(src => src.DateOfBirth))
-            .ReverseMap();
+            CreateMap<Student, StudentJsonModel>().ReverseMap();
 
 
             //Question
@@ -90,7 +86,9 @@ namespace Application.Common.Mapper
             //Consultant level
             CreateMap<ConsultantLevel, ConsultantLevelViewModel>().ReverseMap();
             CreateMap<ConsultantLevel, ConsultantLevelPostModel>().ReverseMap();
-            CreateMap<ConsultantLevel, ConsultantLevelPutModel>().ReverseMap();
+            CreateMap<ConsultantLevel, ConsultantLevelPutModel>()
+                .ReverseMap()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             //Time slot
             CreateMap<TimeSlot, TimeSlotViewModel>().ReverseMap();

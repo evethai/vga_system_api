@@ -9,6 +9,7 @@ using Application.Interface.Service;
 using AutoMapper;
 using Domain.Entity;
 using Domain.Enum;
+using Domain.Model.Account;
 using Domain.Model.Consultant;
 using Domain.Model.Response;
 using Domain.Model.Student;
@@ -57,30 +58,20 @@ namespace Infrastructure.Persistence.Service
             try
             {
                 var roleId = await _unitOfWork.RoleRepository
-                    .SingleOrDefaultAsync(selector: x => x.Id, predicate: x => x.Name.Equals(RoleEnum.Expert.ToString()));
+                    .SingleOrDefaultAsync(selector: x => x.Id, predicate: x => x.Name.Equals(RoleEnum.Consultant.ToString()));
 
                 var consultantLevel = await _unitOfWork.ConsultantLevelRepository.GetByIdAsync(postModel.ConsultantLevelId) ??
                     throw new Exception("Consultant level not exist");
 
                 var consultant = _mapper.Map<Consultant>(postModel);
-                consultant.Id = Guid.NewGuid();
-                consultant.Account = new Account
-                {
-                    Id = Guid.NewGuid(),
-                    Email = postModel.Email,
-                    Phone = postModel.Phone,
-                    Password = PasswordUtil.HashPassword(postModel.Phone),
-                    RoleId = roleId,
-                    Status = AccountStatus.Active,
-                    CreateAt = DateTime.UtcNow
-                };
-                consultant.Account.Wallet = new Wallet
-                {
-                    Id = Guid.NewGuid(),
-                    GoldBalance = 0,
-                    AccountId = consultant.Account.Id,
-                };
 
+                RegisterAccountModel accountModel = new RegisterAccountModel(postModel.Email
+                       , postModel.Password
+                       , postModel.Phone);
+                var accountId = await _unitOfWork.AccountRepository.CreateAccountAndWallet(accountModel, RoleEnum.Consultant);
+
+                consultant.Id = Guid.NewGuid();
+                consultant.AccountId = accountId;
                 consultant.Status = true;
 
                 await _unitOfWork.ConsultantRepository.AddAsync(consultant);

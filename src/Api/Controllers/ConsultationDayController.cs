@@ -25,7 +25,7 @@ namespace Api.Controllers
         }
 
         [HttpPost(ApiEndPointConstant.ConsultationDay.ConsultationDaysEndpoint)]
-        public async Task<IActionResult> CreateConsultationDayWithTimesAsync([FromForm] ConsultationDayPostModel postModel)
+        public async Task<IActionResult> CreateConsultationDayWithTimesAsync( ConsultationDayPostModel postModel)
         {
             if (!ModelState.IsValid)
             {

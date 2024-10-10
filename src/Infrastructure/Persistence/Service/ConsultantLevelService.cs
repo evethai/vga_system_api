@@ -56,13 +56,15 @@ namespace Infrastructure.Persistence.Service
             try
             {
                 var consultantLevel = _mapper.Map<ConsultantLevel>(postModel);
+                consultantLevel.Status = true;
                 await _unitOfWork.ConsultantLevelRepository.AddAsync(consultantLevel);
                 await _unitOfWork.SaveChangesAsync();
+                var result = _mapper.Map<ConsultantLevelViewModel>(consultantLevel);
                 return new ResponseModel
                 {
                     Message = "Consultant level was created successfully",
                     IsSuccess = true,
-                    Data = consultantLevel,
+                    Data = result,
                 };
             }
             catch (Exception ex)
@@ -83,6 +85,10 @@ namespace Infrastructure.Persistence.Service
             {
                 var consultantLevel = await _unitOfWork.ConsultantLevelRepository.GetByIdAsync(consultantLevelId)
                                 ?? throw new Exception($"Consultant level not found by id: {consultantLevelId}");
+                if (putModel.PriceOnSlot.HasValue && putModel.PriceOnSlot == 0)
+                {
+                    putModel.PriceOnSlot = consultantLevel.PriceOnSlot;
+                }
                 _mapper.Map(putModel, consultantLevel);
                 await _unitOfWork.ConsultantLevelRepository.UpdateAsync(consultantLevel);
                 await _unitOfWork.SaveChangesAsync();

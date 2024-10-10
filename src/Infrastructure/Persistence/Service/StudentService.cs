@@ -34,10 +34,10 @@ public class StudentService : IStudentService
         var student = await _unitOfWork.StudentRepository
             .GetBySearchAsync(filter, orderBy,
             q => q.Include(s => s.Account)
-                   .ThenInclude(a => a.Wallet),                     
+                   .ThenInclude(a => a.Wallet),
             pageIndex: searchModel.currentPage,
             pageSize: searchModel.pageSize);
-        
+
         var total = await _unitOfWork.StudentRepository.CountAsync(filter);
         var listStudent = _mapper.Map<List<StudentModel>>(student);
         return new ResponseStudentModel
@@ -63,7 +63,7 @@ public class StudentService : IStudentService
         }
         exitStudent.Status = putModel.Status;
         var result = await _unitOfWork.StudentRepository.UpdateAsync(exitStudent);
-         _unitOfWork.SaveChangesAsync();
+        _unitOfWork.SaveChangesAsync();
         return new ResponseModel
         {
             Message = "Student Updated Successfully",
@@ -78,10 +78,10 @@ public class StudentService : IStudentService
         RegisterAccountModel accountModel = new RegisterAccountModel(postModel.Email
             , postModel.Password
             , postModel.Phone);
-        var AccountId = await _unitOfWork.AccountRepository.CreateAccountAndWallet(accountModel,RoleEnum.Student);
+        var AccountId = await _unitOfWork.AccountRepository.CreateAccountAndWallet(accountModel, RoleEnum.Student);
         student.AccountId = AccountId;
         var result = await _unitOfWork.StudentRepository.AddAsync(student);
-         await _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.SaveChangesAsync();
         return new ResponseModel
         {
             Message = "Student Created Successfully",
@@ -110,31 +110,16 @@ public class StudentService : IStudentService
 
             foreach (var studentImport in students.Data)
             {
-                //var accountId = Guid.NewGuid();
+                RegisterAccountModel accountModel = new RegisterAccountModel(studentImport.Email
+                       , studentImport.Password
+                       , studentImport.Phone);
+
                 var student = _mapper.Map<Student>(studentImport);
+                var AccountId = await _unitOfWork.AccountRepository.CreateAccountAndWallet(accountModel, RoleEnum.Student);
 
                 student.Id = Guid.NewGuid();
-
-                student.Account = new Account
-                {
-                    Id = Guid.NewGuid(),
-                    Email = studentImport.Email,
-                    Phone = studentImport.Phone,
-                    Password = studentImport.Phone,
-                    RoleId = roleId,
-                    Status = AccountStatus.Active,
-                    CreateAt = DateTime.UtcNow
-                };
-                student.Account.Wallet = new Wallet
-                {
-                    Id = Guid.NewGuid(),
-                    GoldBalance = 0,
-                    AccountId = student.Account.Id,
-                };
-
-                student.CreateAt = DateTime.UtcNow;
+                student.AccountId = AccountId;
                 student.HighSchoolId = studentImportModel.highschoolId;
-                student.Status = true;
 
                 await _unitOfWork.StudentRepository.AddAsync(student);
             }

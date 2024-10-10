@@ -66,9 +66,16 @@ namespace Infrastructure.Persistence.Service
                         Message = "The consultation day must be in the future."
                     };
                 }
-
+                if (!postModel.ConsultationTimes.Any())
+                {
+                    return new ResponseModel
+                    {
+                        IsSuccess = false,
+                        Message = "Please pick time slot."
+                    };
+                }
                 Expression<Func<ConsultationDay, bool>> exsitingDayFilter = x =>
-                x.ConsultantId.Equals(postModel.ExpertId) &&
+                x.ConsultantId.Equals(postModel.ConsultantId) &&
                 x.Day.Equals(postModel.Day);
                 var existingDay = await _unitOfWork.ConsultationDayRepository
                     .SingleOrDefaultAsync(
@@ -113,7 +120,6 @@ namespace Infrastructure.Persistence.Service
                 var consultationDay = _mapper.Map<ConsultationDay>(postModel);
                 consultationDay.Id = Guid.NewGuid();
                 consultationDay.Status = (int)ConsultationDayStatusEnum.Available;
-
                 var consultationTimes = postModel.ConsultationTimes.Select(ct => new ConsultationTime
                 {
                     Id = Guid.NewGuid(),

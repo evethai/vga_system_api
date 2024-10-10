@@ -56,6 +56,7 @@ namespace Infrastructure.Persistence.Service
             try
             {
                 var timeSlot = _mapper.Map<TimeSlot>(postModel);
+                timeSlot.Status = true;
                 await _unitOfWork.TimeSlotRepository.AddAsync(timeSlot);
                 await _unitOfWork.SaveChangesAsync();
                 return new ResponseModel
