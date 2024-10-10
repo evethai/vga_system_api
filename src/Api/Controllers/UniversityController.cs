@@ -25,12 +25,12 @@ namespace Api.Controllers
             return Ok(result);
         }
         [HttpGet(ApiEndPointConstant.University.UniversityEndpoint)]
-        public async Task<IActionResult> GetUniversityByIdAsync(Guid Id)
+        public async Task<IActionResult> GetUniversityByIdAsync(Guid id)
         {
-            var result = await _universityService.GetUniversityByIdAsync(Id);
+            var result = await _universityService.GetUniversityByIdAsync(id);
             return Ok(result);
         }
-        [HttpPost]
+        [HttpPost(ApiEndPointConstant.University.UniversityPostEndpoint)]
         public async Task<IActionResult> CreateUniversityAsync(UniversityPostModel postModel)
         {
             if (!ModelState.IsValid)
@@ -47,8 +47,8 @@ namespace Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPut]
-        public async Task<IActionResult> UpdateUniversityAsync(UniversityPutModel putModel, Guid Id)
+        [HttpPut(ApiEndPointConstant.University.UniversityPutEndpoint)]
+        public async Task<IActionResult> UpdateUniversityAsync(UniversityPutModel putModel, Guid id)
         {
             if (!ModelState.IsValid)
             {
@@ -57,7 +57,24 @@ namespace Api.Controllers
             try
             {
 
-                var result = await _universityService.UpdateUniversityAsync(putModel, Id);
+                var result = await _universityService.UpdateUniversityAsync(putModel, id);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpDelete(ApiEndPointConstant.University.UniversityDeleteEndpoint)]
+        public async Task<IActionResult> DeleteUniversityAsync(Guid id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var result = await _universityService.DeleteUniversityAsync(id);
                 return Ok(result);
             }
             catch (Exception ex)
