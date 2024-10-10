@@ -20,6 +20,7 @@ public class StudentController : ControllerBase
         var result = await _studentService.GetListStudentAsync(searchModel);
         return Ok(result);
     }
+
     [HttpGet(ApiEndPointConstant.Student.StudentEndpoint)]
     public async Task<IActionResult> GetStudentByIdAsync(Guid id)
     {
@@ -64,7 +65,6 @@ public class StudentController : ControllerBase
     [HttpPost(ApiEndPointConstant.Student.ImportStudentEndpoint)]
     public async Task<IActionResult> ImportFromJsonAsync([FromForm] StudentImportModel studentImportModel)
     {
-
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
@@ -72,7 +72,9 @@ public class StudentController : ControllerBase
         try
         {
             var result = await _studentService.ImportStudentsFromJsonAsync(studentImportModel);
-            return Ok(result);
+            return (result.IsSuccess == false)
+                ? BadRequest(result)
+                : Ok(result);
         }
         catch (Exception ex)
         {

@@ -19,15 +19,35 @@ namespace Api.Controllers
         [HttpGet(ApiEndPointConstant.Booking.BookingEndpoint)]
         public async Task<IActionResult> GetBookingByIdAsync(Guid id)
         {
-            var result = await _bookingService.GetBookingByIdAsync(id);
-            return Ok(result);
+            try
+            {
+                var result = await _bookingService.GetBookingByIdAsync(id);
+                return (result.IsSuccess == false)
+                    ? BadRequest(result)
+                    : Ok(result);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet(ApiEndPointConstant.Booking.BookingsEndpoint)]
         public async Task<IActionResult> GetAllBookingsAsync()
         {
-            var result = await _bookingService.GetAllBookingsAsync();
-            return Ok(result);
+            try
+            {
+                var result = await _bookingService.GetAllBookingsAsync();
+                return (result.IsSuccess == false)
+                    ? BadRequest(result)
+                    : Ok(result);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost(ApiEndPointConstant.Booking.BookingsEndpoint)]
@@ -40,7 +60,9 @@ namespace Api.Controllers
             try
             {
                 var result = await _bookingService.BookConsultationTimeAsync(consultationTimeId, studentId);
-                return Ok(result);
+                return (result.IsSuccess == false)
+                    ? BadRequest(result)
+                    : Ok(result);
             }
             catch (Exception ex)
             {
