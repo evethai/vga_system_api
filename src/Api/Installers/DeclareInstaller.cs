@@ -35,7 +35,8 @@ namespace Api.Installers
             services.AddScoped<IBookingService, BookingService>();
             services.AddScoped<IWalletService, WalletService>();
             services.AddScoped<ITransactionService, TransactionService>();
-           
+            services.AddScoped<IAdminService, AdminService>();
+
         }
     }
 }
