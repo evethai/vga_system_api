@@ -17,7 +17,7 @@ namespace Domain.Entity
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public DateTime DoB { get; set; }
-        public bool Status { get; set; }
+        public bool Gender { get; set; }
         public virtual ICollection<Certification> Certifications { get; set; } = null!;
         public virtual ICollection<ConsultationDay> ConsultationDays { get; set; } = null!;
 

@@ -19,5 +19,7 @@ namespace Domain.Model.Consultant
         public string Description { get; set; } = string.Empty;
         [Required(ErrorMessage = "DateOfBirth is required.")]
         public DateTime DoB { get; set; }
+        [Required(ErrorMessage = "Gender is required.")]
+        public bool Gender { get; set; }
     }
 }

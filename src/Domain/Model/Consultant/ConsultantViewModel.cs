@@ -17,7 +17,7 @@ namespace Domain.Model.Consultant
         public string? Image_Url { get; set; }
         public string Description { get; set; } = string.Empty;
         public DateTime DateOfBirth { get; set; }
-        public bool Status { get; set; }
+        public bool Gender { get; set; }
         public DateTime CreateAt { get; set; }
     }
 }

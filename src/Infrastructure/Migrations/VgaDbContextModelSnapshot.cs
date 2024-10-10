@@ -224,12 +224,12 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("DoB")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("Gender")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Status")
-                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
