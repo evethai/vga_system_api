@@ -27,8 +27,6 @@ namespace Infrastructure.Persistence.Service
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-
-
         public async Task<ResponseModel> CreateUniversityAsync(UniversityPostModel postModel)
         {
             var university = _mapper.Map<University>(postModel);
@@ -44,6 +42,36 @@ namespace Infrastructure.Persistence.Service
                 Message = " University Created Successfully",
                 IsSuccess = true,
                 Data = postModel,
+            };
+        }
+
+        public async Task<ResponseModel> DeleteUniversityAsync(Guid Id)
+        {
+            var exUniversity = await _unitOfWork.UniversityRepository.GetByIdGuidAsync(Id);
+            if (exUniversity == null)
+            {
+                return new ResponseModel
+                {
+                    Message = "University Id is not found",
+                    IsSuccess = false,
+                };
+            }
+            var exAccount = await _unitOfWork.AccountRepository.GetByIdGuidAsync(exUniversity.AccountId);
+            if (exAccount == null)
+            {
+                return new ResponseModel
+                {
+                    Message = "University Account Id is not found",
+                    IsSuccess = false,
+                };
+            }
+            exAccount.Status = AccountStatus.Blocked;
+            await _unitOfWork.AccountRepository.UpdateAsync(exAccount);
+            return new ResponseModel
+            {
+                Message = "Delete University is Successfully",
+                IsSuccess = true,
+                Data = exAccount
             };
         }
 
@@ -83,19 +111,29 @@ namespace Infrastructure.Persistence.Service
                     IsSuccess = false,
                 };
             }
+            exitUniversity.Description = putModel.Description;
+            exitUniversity.Name = putModel.Name;
+            exitUniversity.Address = putModel.Address;
             var exitAccount = await _unitOfWork.AccountRepository.GetByIdGuidAsync(exitUniversity.AccountId);
+            if (exitAccount == null)
+            {
+                return new ResponseModel
+                {
+                    Message = "University Account Id is not found",
+                    IsSuccess = false,
+                };
+            } 
             exitAccount.Phone = putModel.Phone;
             exitAccount.Email = putModel.Email;
             exitAccount.Password = PasswordUtil.HashPassword(putModel.Password);
             await _unitOfWork.AccountRepository.UpdateAsync(exitAccount);
-            var university = _mapper.Map<University>(putModel);
-            var result = await _unitOfWork.UniversityRepository.UpdateAsync(university);
-            _unitOfWork.SaveChangesAsync();
+            var result = await _unitOfWork.UniversityRepository.UpdateAsync(exitUniversity);
+            await _unitOfWork.SaveChangesAsync();
             return new ResponseModel
             {
                 Message = " Highschool Updated Successfully",
                 IsSuccess = true,
-                Data = university,
+                Data = exitUniversity,
             };
         }
     }

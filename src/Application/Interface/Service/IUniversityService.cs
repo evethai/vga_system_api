@@ -12,6 +12,7 @@ namespace Application.Interface.Service
     {
         Task<ResponseUniversityModel> GetListUniversityAsync(UniversitySearchModel searchModel);
         Task<UniversityModel> GetUniversityByIdAsync(Guid Id);
+        Task<ResponseModel> DeleteUniversityAsync(Guid Id);
         Task<ResponseModel> CreateUniversityAsync(UniversityPostModel postModel);
         Task<ResponseModel> UpdateUniversityAsync(UniversityPutModel putModel, Guid Id);
     }

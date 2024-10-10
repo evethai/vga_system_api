@@ -49,8 +49,11 @@
         //high-school
         public static class HighSchool
         {
-            public const string HighSchoolsEndpoint = ApiEndpoint + "/high-schools";
+            public const string HighSchoolGetListEndpoint = ApiEndpoint + "/high-schools";
             public const string HighSchoolEndpoint = ApiEndpoint + "/high-school/{id}";
+            public const string HighSchoolPostEndpoint = ApiEndpoint + "/high-school";
+            public const string HighSchoolPutEndpoint = ApiEndpoint + "/high-school/{id}";
+            public const string HighSchoolDeleteEndpoint = ApiEndpoint + "/high-school/{id}";
         }
 
         //region
@@ -63,10 +66,12 @@
         //student
         public static class Student
         {
-            public const string StudentsEndpoint = ApiEndpoint + "/students";
+            public const string StudentGetListEndpoint = ApiEndpoint + "/students";
             public const string StudentPostEndpoint = ApiEndpoint + "/student";
+            public const string StudentPutEndpoint = ApiEndpoint + "/student/{id}";
             public const string StudentEndpoint = ApiEndpoint + "/student/{id}";
-            public const string ImportStudentEndpoint = StudentsEndpoint + "/import";
+            public const string StudentDeleteEndpoint = ApiEndpoint + "/student/{id}";
+            public const string ImportStudentEndpoint = StudentGetListEndpoint + "/import";
         }
         public static class Wallet
         {
@@ -124,7 +129,10 @@
         public static class University
         {
             public const string UniversitiesEndpoint = ApiEndpoint + "/universities";
-            public const string UniversityEndpoint = ApiEndpoint + "/{id}";
+            public const string UniversityEndpoint = ApiEndpoint + "/university/{id}";
+            public const string UniversityPutEndpoint = ApiEndpoint + "/university/{id}";
+            public const string UniversityDeleteEndpoint = ApiEndpoint + "/university/{id}";
+            public const string UniversityPostEndpoint = ApiEndpoint + "/university";
         }
     }
 }

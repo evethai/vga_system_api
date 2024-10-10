@@ -1,5 +1,6 @@
 ﻿using Api.Constants;
 using Application.Interface.Service;
+using Domain.Model.Response;
 using Domain.Model.Student;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +14,7 @@ public class StudentController : ControllerBase
     {
         _studentService = studentService;
     }
-    [HttpGet(ApiEndPointConstant.Student.StudentsEndpoint)]
+    [HttpGet(ApiEndPointConstant.Student.StudentGetListEndpoint)]
     public async Task<IActionResult> GetListStudentAsync([FromQuery] StudentSearchModel searchModel)
     {
         var result = await _studentService.GetListStudentAsync(searchModel);
@@ -25,7 +26,7 @@ public class StudentController : ControllerBase
         var result = await _studentService.GetStudentByIdAsync(id);
         return Ok(result);
     }
-    [HttpPost(ApiEndPointConstant.Student.StudentEndpoint)]
+    [HttpPost(ApiEndPointConstant.Student.StudentPostEndpoint)]
     public async Task<IActionResult> CreateStudentAsyns(StudentPostModel postModel)
     {
         if (!ModelState.IsValid)
@@ -42,8 +43,8 @@ public class StudentController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
-    [HttpPut(ApiEndPointConstant.Student.StudentEndpoint)]
-    public async Task<IActionResult> UpdateStudentAsync([FromForm] StudentPutModel putModel, Guid id)
+    [HttpPut(ApiEndPointConstant.Student.StudentPutEndpoint)]
+    public async Task<IActionResult> UpdateStudentAsync(StudentPutModel putModel, Guid id)
     {
         if (!ModelState.IsValid)
         {
@@ -51,7 +52,6 @@ public class StudentController : ControllerBase
         }
         try
         {
-
             var result = await _studentService.UpdateStudentAsync(putModel, id);
             return Ok(result);
         }
@@ -78,5 +78,22 @@ public class StudentController : ControllerBase
         {
             return BadRequest(ex.Message);
         }
+    }
+    [HttpDelete(ApiEndPointConstant.Student.StudentDeleteEndpoint)]
+    public async Task<IActionResult> DeleteStudentAsync(Guid id)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        try
+        {
+            var result = await _studentService.DeleteStudentAsync(id);
+            return Ok(result);
+        }catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+
     }
 }
