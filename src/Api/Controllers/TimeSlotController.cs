@@ -1,5 +1,7 @@
 ﻿using Api.Constants;
+using Api.Validators;
 using Application.Interface.Service;
+using Domain.Enum;
 using Domain.Model.Student;
 using Domain.Model.TimeSlot;
 using Infrastructure.Persistence.Service;
@@ -17,6 +19,7 @@ namespace Api.Controllers
             _timeSlotService = timeSlotService;
         }
 
+        //[CustomAuthorize(RoleEnum.Admin, RoleEnum.Consultant)]
         [HttpGet(ApiEndPointConstant.TimeSlot.TimeSlotEndpoint)]
         public async Task<IActionResult> GetTimeSlotByIdAsync(int id)
         {
@@ -33,6 +36,7 @@ namespace Api.Controllers
             }
         }
 
+        //[CustomAuthorize(RoleEnum.Admin)]
         [HttpPost(ApiEndPointConstant.TimeSlot.TimeSlotsEndpoint)]
         public async Task<IActionResult> CreateTimeSlotAsync([FromForm] TimeSlotPostModel postModel)
         {
@@ -53,6 +57,7 @@ namespace Api.Controllers
             }
         }
 
+        //[CustomAuthorize(RoleEnum.Admin)]
         [HttpPut(ApiEndPointConstant.TimeSlot.TimeSlotsEndpoint)]
         public async Task<IActionResult> UpdateTimeSlotAsync([FromForm] TimeSlotPutModel putModel, int timeSlotId)
         {
@@ -73,6 +78,7 @@ namespace Api.Controllers
             }
         }
 
+        //[CustomAuthorize(RoleEnum.Admin)]
         [HttpDelete(ApiEndPointConstant.TimeSlot.TimeSlotsEndpoint)]
         public async Task<IActionResult> DeleteTimeSlotAsync(int id)
         {
@@ -89,6 +95,7 @@ namespace Api.Controllers
             }
         }
 
+        //[CustomAuthorize(RoleEnum.Admin, RoleEnum.Consultant)]
         [HttpGet(ApiEndPointConstant.TimeSlot.TimeSlotsEndpoint)]
         public async Task<IActionResult> GetAllTimeSlotsAsync()
         {

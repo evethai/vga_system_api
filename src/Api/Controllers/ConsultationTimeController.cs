@@ -1,5 +1,7 @@
 ﻿using Api.Constants;
+using Api.Validators;
 using Application.Interface.Service;
+using Domain.Enum;
 using Domain.Model.ConsultationTime;
 using Domain.Model.TimeSlot;
 using Infrastructure.Persistence.Service;
@@ -17,6 +19,7 @@ namespace Api.Controllers
             _consultationTimeService = consultationTimeService;
         }
 
+        //[CustomAuthorize(RoleEnum.Consultant, RoleEnum.Student)]
         [HttpPost(ApiEndPointConstant.ConsultationTime.ConsultationTimesEndpoint)]
         public async Task<IActionResult> CreateConsultationTimeAsync([FromForm] ConsultationTimePostModel postModel, Guid consultationDayId)
         {
@@ -37,6 +40,7 @@ namespace Api.Controllers
             }
         }
 
+        //[CustomAuthorize(RoleEnum.Consultant)]
         [HttpDelete(ApiEndPointConstant.ConsultationTime.ConsultationTimeEndpoint)]
         public async Task<IActionResult> DeleteTimeSlotAsync(Guid id)
         {

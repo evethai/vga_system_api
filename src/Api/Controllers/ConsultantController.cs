@@ -1,5 +1,7 @@
 ﻿using Api.Constants;
+using Api.Validators;
 using Application.Interface.Service;
+using Domain.Enum;
 using Domain.Model.Consultant;
 using Domain.Model.Student;
 using Infrastructure.Persistence.Service;
@@ -17,6 +19,7 @@ namespace Api.Controllers
             _consultantService = consultantService;
         }
 
+        //[CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
         [HttpGet(ApiEndPointConstant.Consultant.ConsultantEndpoint)]
         public async Task<IActionResult> GetConsultantByIdAsync(Guid id)
         {
@@ -34,6 +37,7 @@ namespace Api.Controllers
             }
         }
 
+        //[CustomAuthorize(RoleEnum.Admin,RoleEnum.Student)]
         [HttpGet(ApiEndPointConstant.Consultant.ConsultantsEndpoint)]
         public async Task<IActionResult> GetListConsultantsWithPaginateAsync([FromQuery] ConsultantSearchModel searchModel)
         {
@@ -49,6 +53,7 @@ namespace Api.Controllers
             }
         }
 
+        //[CustomAuthorize(RoleEnum.Admin)]
         [HttpPost(ApiEndPointConstant.Consultant.ConsultantsEndpoint)]
         public async Task<IActionResult> CreateConsultantAsyns([FromForm] ConsultantPostModel postModel)
         {
@@ -69,6 +74,7 @@ namespace Api.Controllers
             }
         }
 
+        //[CustomAuthorize(RoleEnum.Admin)]
         [HttpPut(ApiEndPointConstant.Consultant.ConsultantEndpoint)]
         public async Task<IActionResult> UpdateConsultantAsync([FromForm] ConsultantPutModel putModel, Guid id)
         {
@@ -89,6 +95,7 @@ namespace Api.Controllers
             }
         }
 
+        //[CustomAuthorize(RoleEnum.Admin)]
         [HttpDelete(ApiEndPointConstant.Consultant.ConsultantEndpoint)]
         public async Task<IActionResult> DeleteConsultantAsync(Guid id)
         {
