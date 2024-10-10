@@ -14,7 +14,7 @@ public class HighschoolController : ControllerBase
     {
         _highschoolService = highschoolService;
     }
-    [HttpGet(ApiEndPointConstant.HighSchool.HighSchoolsEndpoint)]
+    [HttpGet(ApiEndPointConstant.HighSchool.HighSchoolGetListEndpoint)]
     public async Task<IActionResult> GetListHighschoolAsync([FromQuery] HighschoolSearchModel searchModel)
     {
         var result = await _highschoolService.GetListHighSchoolAsync(searchModel);
@@ -26,8 +26,8 @@ public class HighschoolController : ControllerBase
         var result = await _highschoolService.GetHighschoolByIdAsync(id);
         return Ok(result);
     }
-    [HttpPost(ApiEndPointConstant.HighSchool.HighSchoolsEndpoint)]
-    public async Task<IActionResult> CreateHighschoolAsync([FromForm] HighschoolPostModel postModel)
+    [HttpPost(ApiEndPointConstant.HighSchool.HighSchoolPostEndpoint)]
+    public async Task<IActionResult> CreateHighschoolAsync(HighschoolPostModel postModel)
     {
         if (!ModelState.IsValid)
         {
@@ -42,8 +42,8 @@ public class HighschoolController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
-    [HttpPut(ApiEndPointConstant.HighSchool.HighSchoolEndpoint)]
-    public async Task<IActionResult> UpdateHighschoolAsync([FromForm] HighschoolPutModel putModel)
+    [HttpPut(ApiEndPointConstant.HighSchool.HighSchoolPutEndpoint)]
+    public async Task<IActionResult> UpdateHighschoolAsync(HighschoolPutModel putModel, Guid id)
     {
         if (!ModelState.IsValid)
         {
@@ -51,8 +51,24 @@ public class HighschoolController : ControllerBase
         }
         try
         {
-
-            var result = await _highschoolService.UpdateHighschoolAsync(putModel);
+            var result = await _highschoolService.UpdateHighschoolAsync(putModel, id);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+    [HttpDelete(ApiEndPointConstant.HighSchool.HighSchoolDeleteEndpoint)]
+    public async Task<IActionResult> DeleteHighschoolAsync(Guid id)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        try
+        {
+            var result = await _highschoolService.DeleteHighschoolAsync(id);
             return Ok(result);
         }
         catch (Exception ex)

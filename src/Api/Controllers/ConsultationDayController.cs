@@ -1,5 +1,7 @@
 ﻿using Api.Constants;
+using Api.Validators;
 using Application.Interface.Service;
+using Domain.Enum;
 using Domain.Model.ConsultationDay;
 using Domain.Model.TimeSlot;
 using Infrastructure.Persistence.Service;
@@ -17,6 +19,7 @@ namespace Api.Controllers
             _consultationDayService = consultationDayService;
         }
 
+        //[CustomAuthorize(RoleEnum.Admin, RoleEnum.Student, RoleEnum.Consultant)]
         [HttpGet(ApiEndPointConstant.ConsultationDay.ConsultationDayEndpoint)]
         public async Task<IActionResult> GetConsultationDayByIdAsync(Guid id)
         {
@@ -24,8 +27,9 @@ namespace Api.Controllers
             return Ok(result);
         }
 
+        //[CustomAuthorize(RoleEnum.Consultant)]
         [HttpPost(ApiEndPointConstant.ConsultationDay.ConsultationDaysEndpoint)]
-        public async Task<IActionResult> CreateConsultationDayWithTimesAsync([FromForm] ConsultationDayPostModel postModel)
+        public async Task<IActionResult> CreateConsultationDayWithTimesAsync( ConsultationDayPostModel postModel)
         {
             if (!ModelState.IsValid)
             {
@@ -34,7 +38,9 @@ namespace Api.Controllers
             try
             {
                 var result = await _consultationDayService.CreateConsultationDayWithTimesAsync(postModel);
-                return Ok(result);
+                return (result.IsSuccess == false)
+                    ? BadRequest(result)
+                    : Ok(result);
             }
             catch (Exception ex)
             {
@@ -42,11 +48,22 @@ namespace Api.Controllers
             }
         }
 
+        //[CustomAuthorize(RoleEnum.Consultant)]
         [HttpDelete(ApiEndPointConstant.ConsultationDay.ConsultationDayEndpoint)]
         public async Task<IActionResult> DeleteConsultationDayAsync(Guid id)
         {
-            var result = await _consultationDayService.DeleteConsultationDayAsync(id);
-            return Ok(result);
+            try
+            {
+                var result = await _consultationDayService.DeleteConsultationDayAsync(id);
+                return (result.IsSuccess == false)
+                    ? BadRequest(result)
+                    : Ok(result);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +17,8 @@ public class StudentSearchModel
     public string? name { get; set; }
     [FromQuery(Name = "highschool-id")]
     public Guid? highschoolId { get; set; }
+    [FromQuery(Name = "school-years")]
+    public int? SchoolYears { get; set; }
     [FromQuery(Name = "descending")]
     public bool? descending { get; set; } = false;
 }

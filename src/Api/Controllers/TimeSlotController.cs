@@ -1,5 +1,7 @@
 ﻿using Api.Constants;
+using Api.Validators;
 using Application.Interface.Service;
+using Domain.Enum;
 using Domain.Model.Student;
 using Domain.Model.TimeSlot;
 using Infrastructure.Persistence.Service;
@@ -17,13 +19,24 @@ namespace Api.Controllers
             _timeSlotService = timeSlotService;
         }
 
+        //[CustomAuthorize(RoleEnum.Admin, RoleEnum.Consultant)]
         [HttpGet(ApiEndPointConstant.TimeSlot.TimeSlotEndpoint)]
         public async Task<IActionResult> GetTimeSlotByIdAsync(int id)
         {
-            var result = await _timeSlotService.GetTimeSlotByIdAsync(id);
-            return Ok(result);
+            try
+            {
+                var result = await _timeSlotService.GetTimeSlotByIdAsync(id);
+                return (result.IsSuccess == false)
+                    ? BadRequest(result)
+                    : Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
+        //[CustomAuthorize(RoleEnum.Admin)]
         [HttpPost(ApiEndPointConstant.TimeSlot.TimeSlotsEndpoint)]
         public async Task<IActionResult> CreateTimeSlotAsync([FromForm] TimeSlotPostModel postModel)
         {
@@ -34,7 +47,9 @@ namespace Api.Controllers
             try
             {
                 var result = await _timeSlotService.CreateTimeSlotAsync(postModel);
-                return Ok(result);
+                return (result.IsSuccess == false)
+                    ? BadRequest(result)
+                    : Ok(result);
             }
             catch (Exception ex)
             {
@@ -42,6 +57,7 @@ namespace Api.Controllers
             }
         }
 
+        //[CustomAuthorize(RoleEnum.Admin)]
         [HttpPut(ApiEndPointConstant.TimeSlot.TimeSlotsEndpoint)]
         public async Task<IActionResult> UpdateTimeSlotAsync([FromForm] TimeSlotPutModel putModel, int timeSlotId)
         {
@@ -52,7 +68,9 @@ namespace Api.Controllers
             try
             {
                 var result = await _timeSlotService.UpdateTimeSlotAsync(putModel, timeSlotId);
-                return Ok(result);
+                return (result.IsSuccess == false)
+                    ? BadRequest(result)
+                    : Ok(result);
             }
             catch (Exception ex)
             {
@@ -60,18 +78,38 @@ namespace Api.Controllers
             }
         }
 
+        //[CustomAuthorize(RoleEnum.Admin)]
         [HttpDelete(ApiEndPointConstant.TimeSlot.TimeSlotsEndpoint)]
         public async Task<IActionResult> DeleteTimeSlotAsync(int id)
         {
-            var result = await _timeSlotService.DeleteTimeSlotAsync(id);
-            return Ok(result);
+            try
+            {
+                var result = await _timeSlotService.DeleteTimeSlotAsync(id);
+                return (result.IsSuccess == false)
+                    ? BadRequest(result)
+                    : Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
+        //[CustomAuthorize(RoleEnum.Admin, RoleEnum.Consultant)]
         [HttpGet(ApiEndPointConstant.TimeSlot.TimeSlotsEndpoint)]
         public async Task<IActionResult> GetAllTimeSlotsAsync()
         {
+            try
+            {
             var result = await _timeSlotService.GetAllTimeSlotsAsync();
-            return Ok(result);
+            return (result.IsSuccess == false)
+                ? BadRequest(result)
+                : Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
     }

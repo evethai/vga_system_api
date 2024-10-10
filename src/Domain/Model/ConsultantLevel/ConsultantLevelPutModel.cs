@@ -8,8 +8,8 @@ namespace Domain.Model.ExpertLevel
 {
     public class ConsultantLevelPutModel
     {
-        public string Name { get; set; } = string.Empty;
-        public string Description { get; set; } = string.Empty;
-        public double PriceOnSlot { get; set; }
+        public string? Name { get; set; }
+        public string? Description { get; set; } 
+        public double? PriceOnSlot { get; set; }
     }
 }

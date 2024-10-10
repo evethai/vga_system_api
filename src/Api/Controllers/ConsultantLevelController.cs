@@ -1,5 +1,7 @@
 ﻿using Api.Constants;
+using Api.Validators;
 using Application.Interface.Service;
+using Domain.Enum;
 using Domain.Model.ExpertLevel;
 using Domain.Model.TimeSlot;
 using Infrastructure.Persistence.Service;
@@ -17,13 +19,25 @@ namespace Api.Controllers
             _consultantLevelService = consultantLevelService;
         }
 
+        //[CustomAuthorize(RoleEnum.Admin)]
         [HttpGet(ApiEndPointConstant.ConsultantLevel.ConsultantLevelEndpoint)]
         public async Task<IActionResult> GetConsultantLevelByIdAsync(int id)
         {
-            var result = await _consultantLevelService.GetConsultantLevelByIdAsync(id);
-            return Ok(result);
+            try
+            {
+                var result = await _consultantLevelService.GetConsultantLevelByIdAsync(id);
+                return (result.IsSuccess == false)
+                    ? BadRequest(result)
+                    : Ok(result);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
+        //[CustomAuthorize(RoleEnum.Admin)]
         [HttpPost(ApiEndPointConstant.ConsultantLevel.ConsultantLevelsEndpoint)]
         public async Task<IActionResult> CreateConsultantLevelAsync([FromForm] ConsultantLevelPostModel postModel)
         {
@@ -34,7 +48,9 @@ namespace Api.Controllers
             try
             {
                 var result = await _consultantLevelService.CreateConsultantLevelAsync(postModel);
-                return Ok(result);
+                return (result.IsSuccess == false)
+                    ? BadRequest(result)
+                    : Ok(result);
             }
             catch (Exception ex)
             {
@@ -42,6 +58,7 @@ namespace Api.Controllers
             }
         }
 
+        //[CustomAuthorize(RoleEnum.Admin)]
         [HttpPut(ApiEndPointConstant.ConsultantLevel.ConsultantLevelEndpoint)]
         public async Task<IActionResult> UpdateConsultantLevelAsync([FromForm] ConsultantLevelPutModel putModel, int id)
         {
@@ -52,7 +69,9 @@ namespace Api.Controllers
             try
             {
                 var result = await _consultantLevelService.UpdateConsultantLevelAsync(putModel, id);
-                return Ok(result);
+                return (result.IsSuccess == false)
+                    ? BadRequest(result)
+                    : Ok(result);
             }
             catch (Exception ex)
             {
@@ -60,13 +79,23 @@ namespace Api.Controllers
             }
         }
 
+        //[CustomAuthorize(RoleEnum.Admin)]
         [HttpDelete(ApiEndPointConstant.ConsultantLevel.ConsultantLevelEndpoint)]
         public async Task<IActionResult> DeleteConsultantLevelAsync(int id)
         {
-            var result = await _consultantLevelService.DeleteConsultantLevelAsync(id);
-            return Ok(result);
-        }
+            try
+            {
+                var result = await _consultantLevelService.DeleteConsultantLevelAsync(id);
+                return (result.IsSuccess == false)
+                    ? BadRequest(result)
+                    : Ok(result);
 
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
     }
 }
