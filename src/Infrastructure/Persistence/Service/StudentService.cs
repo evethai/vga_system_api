@@ -61,7 +61,19 @@ public class StudentService : IStudentService
         {
             throw new Exception("Student Id not found");
         }
-        exitStudent.Status = putModel.Status;
+        exitStudent.DateOfBirth = putModel.DateOfBirth;
+        exitStudent.SchoolYears = putModel.SchoolYears;
+        exitStudent.Name = putModel.Name;
+        exitStudent.Gender = putModel.Gender;
+        var exitAccount = await _unitOfWork.AccountRepository.GetByIdGuidAsync(exitStudent.AccountId);
+        if (exitAccount == null)
+        {
+            throw new Exception("Student Account Id not found");
+        }
+        exitAccount.Phone = putModel.Phone;
+        exitAccount.Email = putModel.Email;
+        exitAccount.Password = PasswordUtil.HashPassword(putModel.Password);
+        await _unitOfWork.AccountRepository.UpdateAsync(exitAccount);
         var result = await _unitOfWork.StudentRepository.UpdateAsync(exitStudent);
         _unitOfWork.SaveChangesAsync();
         return new ResponseModel
@@ -90,6 +102,20 @@ public class StudentService : IStudentService
         };
     }
 
+    public async Task<ResponseModel> DeleteStudentAsync(Guid StudentId)
+    {
+        var exStudent = await _unitOfWork.StudentRepository.GetByIdGuidAsync(StudentId);
+        var exAccountStudent = await _unitOfWork.AccountRepository.GetByIdGuidAsync(exStudent.AccountId);
+        exAccountStudent.Status = AccountStatus.Blocked;
+        await _unitOfWork.AccountRepository.UpdateAsync(exAccountStudent);
+        await _unitOfWork.SaveChangesAsync();
+        return new ResponseModel
+        {
+            Message = "Delete Student is Successfully",
+            IsSuccess = true,
+            Data = exStudent,
+        };
+    }
     #region Import Students From Json Async
     public async Task<ResponseModel> ImportStudentsFromJsonAsync(StudentImportModel studentImportModel)
     {

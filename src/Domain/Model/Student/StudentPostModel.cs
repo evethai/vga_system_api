@@ -17,9 +17,8 @@ public class StudentPostModel : AccountPostModel
     [Required(ErrorMessage = "DateOfBirth is required.")]
     [DataType(DataType.DateTime)]
     public DateTime DateOfBirth { get; set; }
-    [Required(ErrorMessage = "Status is required.")]
-    public bool Status { get; set; }
-    public DateTime CreateAt { get; set; }
+    [Required(ErrorMessage = "SchoolYears is required.")]
+    public int SchoolYears { get; set; }
     [Required(ErrorMessage = "HighSchoolId is required.")]
     public Guid HighSchoolId { get; set; }
 }

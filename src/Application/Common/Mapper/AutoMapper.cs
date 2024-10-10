@@ -25,6 +25,7 @@ using Domain.Model.ConsultationDay;
 using Domain.Model.ConsultationTime;
 using Domain.Model.Booking;
 using Domain.Model.ExpertLevel;
+using Domain.Model.University;
 
 
 namespace Application.Common.Mapper
@@ -159,6 +160,10 @@ namespace Application.Common.Mapper
             // Account
             CreateMap<Account, AccountWalletModel>().ReverseMap();
             CreateMap<Wallet, WalletAccountModel>().ReverseMap();
+            // University
+            CreateMap<University, UniversityModel>().ReverseMap();
+            CreateMap<University, UniversityPostModel>().ReverseMap();
+            CreateMap<University, UniversityPutModel>().ReverseMap();
         }
     }
 }

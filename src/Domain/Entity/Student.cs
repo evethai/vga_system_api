@@ -19,8 +19,7 @@ namespace Domain.Entity
         public string Name { get; set; } = string.Empty;
         public bool Gender { get; set; }
         public DateTime DateOfBirth { get; set; }
-        public bool Status { get; set; }
-        public DateTime CreateAt { get; set; }
+        public int SchoolYears { get; set; }
         public virtual ICollection<StudentTest> StudentTests { get; set; } = null!;
         public virtual ICollection<Booking> Bookings { get; set; } = null!;
     }
