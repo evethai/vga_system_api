@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Common.Exceptions;
 using Application.Interface;
 using Application.Interface.Service;
 using AutoMapper;
 using Domain.Entity;
-using Domain.Model.ExpertLevel;
+using Domain.Model.ConsultantLevel;
 using Domain.Model.Response;
+using Domain.Model.Student;
 using Domain.Model.TimeSlot;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Service
 {
@@ -142,5 +145,53 @@ namespace Infrastructure.Persistence.Service
         }
         #endregion
 
+        #region Get list consultant level with paginate
+        public async Task<ResponseConsultantLevelModel> GetListConsultantLevelWithPaginateAsync(ConsultantLevelSearchModel searchModel)
+        {
+            var (filter, orderBy) = _unitOfWork.ConsultantLevelRepository.BuildFilterAndOrderBy(searchModel);
+            var levels = await _unitOfWork.ConsultantLevelRepository
+                .GetBySearchAsync(
+                    filter, 
+                    orderBy,
+                    pageIndex: searchModel.currentPage,
+                    pageSize: searchModel.pageSize
+                 );
+
+            var total = await _unitOfWork.ConsultantLevelRepository.CountAsync(filter);
+            var listLevel = _mapper.Map<List<ConsultantLevelViewModel>>(levels);
+            return new ResponseConsultantLevelModel
+            {
+                total = total,
+                currentPage = searchModel.currentPage,
+                consultantLevels = listLevel,
+            };
+        }
+        #endregion
+
+        #region Get all level async
+        public async Task<ResponseModel> GetAllConsultantLevelAsync()
+        {
+            try
+            {
+                var levels = await _unitOfWork.ConsultantLevelRepository.GetAllAsync()
+                    ?? throw new NotExistsException();
+                var result = _mapper.Map<List<ConsultantLevelViewModel>>(levels);
+                return new ResponseModel
+                {
+                    IsSuccess = true,
+                    Data = result,
+                    Message = "Consultant levels retrieved successfully."
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    IsSuccess = false,
+                    Message = $"An error occurred while get all consultant levels: {ex.Message}"
+                };
+            }
+        }
+        #endregion
     }
 }

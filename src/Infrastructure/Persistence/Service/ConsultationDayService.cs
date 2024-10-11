@@ -10,6 +10,7 @@ using Application.Interface.Service;
 using AutoMapper;
 using Domain.Entity;
 using Domain.Enum;
+using Domain.Model.Consultant;
 using Domain.Model.ConsultationDay;
 using Domain.Model.Response;
 using Microsoft.EntityFrameworkCore;
@@ -195,5 +196,28 @@ namespace Infrastructure.Persistence.Service
         }
         #endregion
 
+        #region Get list consultation days with paginate
+        public async Task<ResponseConsultationDayModel> GetListConsultationDaysWithPaginateAsync(ConsultationDaySearchModel searchModel)
+        {
+            var (filter, orderBy) = _unitOfWork.ConsultationDayRepository.BuildFilterAndOrderBy(searchModel);
+            var consultationDays = await _unitOfWork.ConsultationDayRepository
+                .GetBySearchAsync(
+                    filter,
+                    orderBy,
+                    include: q => q.Include(s => s.Consultant).Include(s => s.ConsultationTimes).ThenInclude(t => t.SlotTime),
+                    pageIndex: searchModel.currentPage,
+                    pageSize: searchModel.pageSize
+                );
+
+            var total = await _unitOfWork.ConsultationDayRepository.CountAsync(filter);
+            var listConsultationDays = _mapper.Map<List<ConsultationDayViewModel>>(consultationDays);
+            return new ResponseConsultationDayModel
+            {
+                total = total,
+                currentPage = searchModel.currentPage,
+                consultationDay = listConsultationDays,
+            };
+        }
+        #endregion
     }
 }

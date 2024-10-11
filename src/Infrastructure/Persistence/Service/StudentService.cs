@@ -146,6 +146,7 @@ public class StudentService : IStudentService
                 student.Id = Guid.NewGuid();
                 student.AccountId = AccountId;
                 student.HighSchoolId = studentImportModel.highschoolId;
+                student.SchoolYears = studentImportModel.schoolYear;
 
                 await _unitOfWork.StudentRepository.AddAsync(student);
             }

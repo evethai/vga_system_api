@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Model.ExpertLevel
+namespace Domain.Model.ConsultantLevel
 {
     public class ConsultantLevelPutModel
     {
