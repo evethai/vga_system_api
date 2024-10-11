@@ -97,19 +97,10 @@ namespace Api.Controllers
 
         //[CustomAuthorize(RoleEnum.Admin, RoleEnum.Consultant)]
         [HttpGet(ApiEndPointConstant.TimeSlot.TimeSlotsEndpoint)]
-        public async Task<IActionResult> GetAllTimeSlotsAsync()
+        public async Task<IActionResult> GetListTimeSlotsWithPaginateAsync([FromQuery] TimeSlotSearchModel searchModel)
         {
-            try
-            {
-            var result = await _timeSlotService.GetAllTimeSlotsAsync();
-            return (result.IsSuccess == false)
-                ? BadRequest(result)
-                : Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var result = await _timeSlotService.GetListTimeSlotsWithPaginateAsync(searchModel);
+            return Ok(result);
         }
 
     }

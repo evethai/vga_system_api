@@ -15,5 +15,7 @@ namespace Domain.Model.Consultant
         public int? pageSize { get; set; }
         [FromQuery(Name = "name")]
         public string? name { get; set; }
+        [FromQuery(Name = "consultant-level-id")]
+        public int consultantLevelId { get; set; }
     }
 }
