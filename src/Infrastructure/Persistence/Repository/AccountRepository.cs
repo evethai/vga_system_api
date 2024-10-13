@@ -37,6 +37,7 @@ namespace Infrastructure.Persistence.Repository
             {
                 case RoleEnum.Student:
                     role = _context.Role.Where(a => a.Name.Equals(RoleEnum.Student.ToString())).FirstOrDefault();
+                    registerAccount.Phone = "84" + registerAccount.Phone.Substring(1);
                     account = new Account
                     {
                         Id = Guid.NewGuid(),
