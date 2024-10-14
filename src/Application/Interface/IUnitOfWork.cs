@@ -28,6 +28,7 @@ namespace Application.Interface
         IConsultationTimeRepository ConsultationTimeRepository { get; }
         IBookingRepository BookingRepository { get; }
         IRefreshTokenRepository RefreshTokenRepository { get; }
+        INotificationRepository NotificationRepository { get; }
         Task SaveChangesAsync();
     }
 }

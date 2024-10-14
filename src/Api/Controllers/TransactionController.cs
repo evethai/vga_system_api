@@ -20,23 +20,6 @@ namespace Api.Controllers
         {
             var result = await _transactionService.GetListTransactionAsync(searchModel);
             return Ok(result);
-        }
-        [HttpPost]
-        public async Task<IActionResult> CreateTransactionAsync([FromForm] TransactionPostModel postModel)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            try
-            {
-                var result = await _transactionService.CreateTransactionUsingAsync(postModel);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
+        }  
     }
 }

@@ -12,7 +12,7 @@ namespace Domain.Model.ConsultationDay
 {
     public class ConsultationDayPostModel
     {
-        public Guid ExpertId { get; set; }
+        public Guid ConsultantId { get; set; }
         public DateOnly Day { get; set; }
         public List<ConsultationTimePostModel> ConsultationTimes { get; set; } = new();
     }

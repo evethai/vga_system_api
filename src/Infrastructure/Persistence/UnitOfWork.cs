@@ -34,6 +34,7 @@ namespace Infrastructure.Persistence
         private IConsultationTimeRepository _consultationTimeRepository;
         private IBookingRepository _bookingRepository;
         private IRefreshTokenRepository _refreshTokenRepository;
+        private INotificationRepository _notificationRepository;
 
         public UnitOfWork(VgaDbContext context)
         {
@@ -59,6 +60,8 @@ namespace Infrastructure.Persistence
         public IConsultationTimeRepository ConsultationTimeRepository => _consultationTimeRepository ??= new ConsultationTimeRepository(_context);
         public IBookingRepository BookingRepository => _bookingRepository ??= new BookingRepository(_context);
         public IRefreshTokenRepository RefreshTokenRepository => _refreshTokenRepository ??= new RefreshTokenRepository(_context);
+
+        public INotificationRepository NotificationRepository => _notificationRepository ??= new NotificationRepository(_context);
 
         public async Task SaveChangesAsync()
         {

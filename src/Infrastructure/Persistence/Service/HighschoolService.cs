@@ -9,10 +9,10 @@ using Application.Interface.Service;
 using AutoMapper;
 using Domain.Entity;
 using Domain.Enum;
+using Domain.Model.Account;
 using Domain.Model.Highschool;
 using Domain.Model.Response;
 using Microsoft.EntityFrameworkCore;
-
 namespace Infrastructure.Persistence.Service;
 public class HighschoolService : IHighschoolService
 {
@@ -51,23 +51,11 @@ public class HighschoolService : IHighschoolService
     public async Task<ResponseModel> CreateHighschoolAsync(HighschoolPostModel postModel)
     {
         var highschool = _mapper.Map<HighSchool>(postModel);
-        var roleId = await _unitOfWork.RoleRepository.SingleOrDefaultAsync(selector: x=> x.Id,predicate: x=> x.Name.Equals(RoleEnum.HighSchool.ToString()));
-        highschool.Account = new Account
-        {
-            Id = Guid.NewGuid(), // Create new GUID for Account
-            Email = postModel.Email,
-            Phone = postModel.Phone,
-            Password = PasswordUtil.HashPassword(postModel.Password),
-            RoleId = roleId,
-            Status = AccountStatus.Active,
-            CreateAt = DateTime.Now
-        };
-        highschool.Account.Wallet = new Wallet
-        {
-            Id = Guid.NewGuid(),
-            GoldBalance = 0,
-            AccountId = highschool.Account.Id,
-        };
+        RegisterAccountModel accountModel = new RegisterAccountModel(postModel.Email
+            , postModel.Password
+            , postModel.Phone);
+        var AccountId = await _unitOfWork.AccountRepository.CreateAccountAndWallet(accountModel, RoleEnum.HighSchool);
+        highschool.AccountId = AccountId;
         var result = await _unitOfWork.HighschoolRepository.AddAsync(highschool);
         await _unitOfWork.SaveChangesAsync();
         return new ResponseModel
@@ -78,16 +66,72 @@ public class HighschoolService : IHighschoolService
         };
     }
 
-    public async Task<ResponseModel> UpdateHighschoolAsync(HighschoolPutModel putModel)
+    public async Task<ResponseModel> UpdateHighschoolAsync(HighschoolPutModel putModel, Guid Id)
     {
-        var highschool = _mapper.Map<HighSchool>(putModel);
-        var result = await _unitOfWork.HighschoolRepository.UpdateAsync(highschool);
-        _unitOfWork.SaveChangesAsync();
+        var exitHighschool = await _unitOfWork.HighschoolRepository.GetByIdGuidAsync(Id);
+        if (exitHighschool == null)
+        {
+            return new ResponseModel
+            {
+                Message = "Highschool Id is not found",
+                IsSuccess = true,
+            };
+        }
+        exitHighschool.LocationDetail = putModel.LocationDetail;
+        exitHighschool.Name = putModel.Name;
+        exitHighschool.RegionId = putModel.RegionId;
+        var exitAccount = await _unitOfWork.AccountRepository.GetByIdGuidAsync(exitHighschool.AccountId);
+        if (exitAccount == null)
+        {
+            return new ResponseModel
+            {
+                Message = "Highschool Account Id is not found",
+                IsSuccess = true,
+            };
+        }
+        exitAccount.Phone = putModel.Phone;
+        exitAccount.Email = putModel.Email;
+        exitAccount.Password = PasswordUtil.HashPassword(putModel.Password);
+        await _unitOfWork.AccountRepository.UpdateAsync(exitAccount);      
+        await _unitOfWork.HighschoolRepository.UpdateAsync(exitHighschool);
+        await _unitOfWork.SaveChangesAsync();
         return new ResponseModel
         {
             Message = " Highschool Updated Successfully",
             IsSuccess = true,
-            Data = highschool,
+            Data = exitHighschool,
+        };
+    }
+
+    public async Task<ResponseModel> DeleteHighschoolAsync(Guid Id)
+    {
+        var exHighschool = await _unitOfWork.HighschoolRepository.GetByIdGuidAsync(Id);
+        if (exHighschool == null)
+        {
+            return new ResponseModel
+            {
+                Message = "Highschool Id is not found",
+                IsSuccess = true,
+            };
+        }
+        var exAccount = await _unitOfWork.AccountRepository.GetByIdGuidAsync(exHighschool.AccountId);
+        if (exAccount == null)
+        {
+            return new ResponseModel
+            {
+                Message = "Highschool Acccount Id is not found",
+                IsSuccess = true,
+            };
+        }
+        exAccount.Status = AccountStatus.Blocked;
+        await _unitOfWork.AccountRepository.UpdateAsync(exAccount);
+        await _unitOfWork.SaveChangesAsync();
+        return new ResponseModel
+        {
+
+            Message = " Highschool Delete Successfully",
+            IsSuccess = true,
+            Data = exHighschool
         };
     }
 }

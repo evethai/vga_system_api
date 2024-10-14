@@ -207,7 +207,7 @@ namespace Infrastructure.Persistence.Service
                     loginResponseModel = new StudentAccountResponseModel(role,name,studentId);
                     break;
 
-                case RoleEnum.Expert:
+                case RoleEnum.Consultant:
                     Guid careerExpertId = await _unitOfWork.ConsultantRepository
                         .SingleOrDefaultAsync(selector: x => x.Id, predicate: x => x.AccountId.Equals(account.Id));
                     name = await _unitOfWork.ConsultantRepository

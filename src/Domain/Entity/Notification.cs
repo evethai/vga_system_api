@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.Enum;
 
 namespace Domain.Entity
 {
@@ -15,6 +16,6 @@ namespace Domain.Entity
         public string Title { get; set; } = string.Empty;
         public string Message { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
-        public int Status { get; set; }
+        public NotiStatus Status{ get; set; }
     }
 }

@@ -25,6 +25,7 @@ using Domain.Model.ConsultationDay;
 using Domain.Model.ConsultationTime;
 using Domain.Model.Booking;
 using Domain.Model.ExpertLevel;
+using Domain.Model.University;
 
 
 namespace Application.Common.Mapper
@@ -54,11 +55,7 @@ namespace Application.Common.Mapper
             CreateMap<Student, StudentModel>().ReverseMap();
             CreateMap<Student, StudentPostModel>().ReverseMap();
             CreateMap<Student, StudentPutModel>().ReverseMap();
-            CreateMap<Student, StudentJsonModel>()
-            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
-            .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender))
-            .ForMember(dest => dest.DateOfBirth, opt => opt.MapFrom(src => src.DateOfBirth))
-            .ReverseMap();
+            CreateMap<Student, StudentJsonModel>().ReverseMap();
 
 
             //Question
@@ -90,7 +87,9 @@ namespace Application.Common.Mapper
             //Consultant level
             CreateMap<ConsultantLevel, ConsultantLevelViewModel>().ReverseMap();
             CreateMap<ConsultantLevel, ConsultantLevelPostModel>().ReverseMap();
-            CreateMap<ConsultantLevel, ConsultantLevelPutModel>().ReverseMap();
+            CreateMap<ConsultantLevel, ConsultantLevelPutModel>()
+                .ReverseMap()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             //Time slot
             CreateMap<TimeSlot, TimeSlotViewModel>().ReverseMap();
@@ -101,21 +100,25 @@ namespace Application.Common.Mapper
             CreateMap<Consultant, ConsultantViewModel>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.AccountId, opt => opt.MapFrom(src => src.AccountId))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.ConsultantLevelId, opt => opt.MapFrom(src => src.ConsultantLevelId))    
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Account.Email))
                 .ForMember(dest => dest.Phone, opt => opt.MapFrom(src => src.Account.Phone))
                 .ForMember(dest => dest.Image_Url, opt => opt.MapFrom(src => src.Account.Image_Url))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
                 .ForMember(dest => dest.DateOfBirth, opt => opt.MapFrom(src => src.DoB))
-                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status))
+                .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender))
                 .ForMember(dest => dest.CreateAt, opt => opt.MapFrom(src => src.Account.CreateAt))
                 .ReverseMap();
             CreateMap<Consultant, ConsultantPostModel>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.ConsultantLevelId, opt => opt.MapFrom(src => src.ConsultantLevelId))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
                 .ForMember(dest => dest.DoB, opt => opt.MapFrom(src => src.DoB))
                 .ReverseMap();
             CreateMap<Consultant, ConsultantPutModel>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.ConsultantLevelId, opt => opt.MapFrom(src => src.ConsultantLevelId))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Account.Email))
                 .ForMember(dest => dest.Phone, opt => opt.MapFrom(src => src.Account.Phone))
@@ -157,6 +160,10 @@ namespace Application.Common.Mapper
             // Account
             CreateMap<Account, AccountWalletModel>().ReverseMap();
             CreateMap<Wallet, WalletAccountModel>().ReverseMap();
+            // University
+            CreateMap<University, UniversityModel>().ReverseMap();
+            CreateMap<University, UniversityPostModel>().ReverseMap();
+            CreateMap<University, UniversityPutModel>().ReverseMap();
         }
     }
 }

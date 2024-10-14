@@ -14,8 +14,7 @@ public class StudentModel
     public string Name { get; set; } = string.Empty;
     public bool Gender { get; set; }
     public DateTime DateOfBirth { get; set; }
-    public bool Status { get; set; }
-    public DateTime CreateAt { get; set; }
+    public int SchoolYears { get; set; }
     public Guid HighSchoolId { get; set; }
     public AccountWalletModel Account { get; set; }   
 }

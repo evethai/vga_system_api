@@ -10,6 +10,7 @@ using Application.Interface.Service;
 using AutoMapper;
 using Domain.Entity;
 using Domain.Enum;
+using Domain.Model.Account;
 using Domain.Model.Highschool;
 using Domain.Model.Response;
 using Domain.Model.Student;
@@ -33,10 +34,10 @@ public class StudentService : IStudentService
         var student = await _unitOfWork.StudentRepository
             .GetBySearchAsync(filter, orderBy,
             q => q.Include(s => s.Account)
-                   .ThenInclude(a => a.Wallet),                     
+                   .ThenInclude(a => a.Wallet),
             pageIndex: searchModel.currentPage,
             pageSize: searchModel.pageSize);
-        
+
         var total = await _unitOfWork.StudentRepository.CountAsync(filter);
         var listStudent = _mapper.Map<List<StudentModel>>(student);
         return new ResponseStudentModel
@@ -60,9 +61,21 @@ public class StudentService : IStudentService
         {
             throw new Exception("Student Id not found");
         }
-        exitStudent.Status = putModel.Status;
+        exitStudent.DateOfBirth = putModel.DateOfBirth;
+        exitStudent.SchoolYears = putModel.SchoolYears;
+        exitStudent.Name = putModel.Name;
+        exitStudent.Gender = putModel.Gender;
+        var exitAccount = await _unitOfWork.AccountRepository.GetByIdGuidAsync(exitStudent.AccountId);
+        if (exitAccount == null)
+        {
+            throw new Exception("Student Account Id not found");
+        }
+        exitAccount.Phone = putModel.Phone;
+        exitAccount.Email = putModel.Email;
+        exitAccount.Password = PasswordUtil.HashPassword(putModel.Password);
+        await _unitOfWork.AccountRepository.UpdateAsync(exitAccount);
         var result = await _unitOfWork.StudentRepository.UpdateAsync(exitStudent);
-         _unitOfWork.SaveChangesAsync();
+        _unitOfWork.SaveChangesAsync();
         return new ResponseModel
         {
             Message = "Student Updated Successfully",
@@ -74,26 +87,13 @@ public class StudentService : IStudentService
     public async Task<ResponseModel> CreateStudentAsync(StudentPostModel postModel)
     {
         var student = _mapper.Map<Student>(postModel);
-        var roleId = await _unitOfWork.RoleRepository.SingleOrDefaultAsync(selector: x => x.Id, predicate: x => x.Name.Equals(RoleEnum.Student.ToString()));
-        student.Account = new Account
-        {
-            Id = Guid.NewGuid(), 
-            Email = postModel.Email,
-            Phone = postModel.Phone,
-            Password = PasswordUtil.HashPassword(postModel.Password),
-            RoleId = roleId,
-            Status = AccountStatus.Active,
-            CreateAt = DateTime.UtcNow
-        };
-        student.Account.Wallet = new Wallet
-        {
-            Id = Guid.NewGuid(),
-            GoldBalance = 0,
-            AccountId = student.Account.Id,
-        };
-        postModel.Status = true;
+        RegisterAccountModel accountModel = new RegisterAccountModel(postModel.Email
+            , postModel.Password
+            , postModel.Phone);
+        var AccountId = await _unitOfWork.AccountRepository.CreateAccountAndWallet(accountModel, RoleEnum.Student);
+        student.AccountId = AccountId;
         var result = await _unitOfWork.StudentRepository.AddAsync(student);
-         await _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.SaveChangesAsync();
         return new ResponseModel
         {
             Message = "Student Created Successfully",
@@ -102,6 +102,20 @@ public class StudentService : IStudentService
         };
     }
 
+    public async Task<ResponseModel> DeleteStudentAsync(Guid StudentId)
+    {
+        var exStudent = await _unitOfWork.StudentRepository.GetByIdGuidAsync(StudentId);
+        var exAccountStudent = await _unitOfWork.AccountRepository.GetByIdGuidAsync(exStudent.AccountId);
+        exAccountStudent.Status = AccountStatus.Blocked;
+        await _unitOfWork.AccountRepository.UpdateAsync(exAccountStudent);
+        await _unitOfWork.SaveChangesAsync();
+        return new ResponseModel
+        {
+            Message = "Delete Student is Successfully",
+            IsSuccess = true,
+            Data = exStudent,
+        };
+    }
     #region Import Students From Json Async
     public async Task<ResponseModel> ImportStudentsFromJsonAsync(StudentImportModel studentImportModel)
     {
@@ -122,31 +136,16 @@ public class StudentService : IStudentService
 
             foreach (var studentImport in students.Data)
             {
-                //var accountId = Guid.NewGuid();
+                RegisterAccountModel accountModel = new RegisterAccountModel(studentImport.Email
+                       , studentImport.Password
+                       , studentImport.Phone);
+
                 var student = _mapper.Map<Student>(studentImport);
+                var AccountId = await _unitOfWork.AccountRepository.CreateAccountAndWallet(accountModel, RoleEnum.Student);
 
                 student.Id = Guid.NewGuid();
-
-                student.Account = new Account
-                {
-                    Id = Guid.NewGuid(),
-                    Email = studentImport.Email,
-                    Phone = studentImport.Phone,
-                    Password = studentImport.Phone,
-                    RoleId = roleId,
-                    Status = AccountStatus.Active,
-                    CreateAt = DateTime.UtcNow
-                };
-                student.Account.Wallet = new Wallet
-                {
-                    Id = Guid.NewGuid(),
-                    GoldBalance = 0,
-                    AccountId = student.Account.Id,
-                };
-
-                student.CreateAt = DateTime.UtcNow;
+                student.AccountId = AccountId;
                 student.HighSchoolId = studentImportModel.highschoolId;
-                student.Status = true;
 
                 await _unitOfWork.StudentRepository.AddAsync(student);
             }
