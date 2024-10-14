@@ -96,6 +96,7 @@
         {
             public const string TimeSlotsEndpoint = ApiEndpoint + "/timeslots";
             public const string TimeSlotEndpoint = TimeSlotsEndpoint + "/{id}";
+            public const string TimeSlotsGetAllEndpoint = TimeSlotsEndpoint + "/all";
         }
 
         //consultant level

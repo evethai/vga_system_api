@@ -67,6 +67,8 @@ namespace Infrastructure.Persistence.Service
             }
             exAccount.Status = AccountStatus.Blocked;
             await _unitOfWork.AccountRepository.UpdateAsync(exAccount);
+            await _unitOfWork.SaveChangesAsync();
+            var result = _mapper.Map<UniversityModel>(exUniversity);
             return new ResponseModel
             {
                 Message = "Delete University is Successfully",
@@ -127,13 +129,14 @@ namespace Infrastructure.Persistence.Service
             exitAccount.Email = putModel.Email;
             exitAccount.Password = PasswordUtil.HashPassword(putModel.Password);
             await _unitOfWork.AccountRepository.UpdateAsync(exitAccount);
-            var result = await _unitOfWork.UniversityRepository.UpdateAsync(exitUniversity);
+            await _unitOfWork.UniversityRepository.UpdateAsync(exitUniversity);
+            var result = _mapper.Map<UniversityModel>(exitUniversity);
             await _unitOfWork.SaveChangesAsync();
             return new ResponseModel
             {
-                Message = " Highschool Updated Successfully",
+                Message = " University Updated Successfully",
                 IsSuccess = true,
-                Data = exitUniversity,
+                Data = result,
             };
         }
     }

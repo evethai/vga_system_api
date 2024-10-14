@@ -15,5 +15,6 @@ namespace Application.Interface.Repository
         (Expression<Func<Consultant, bool>> filter, Func<IQueryable<Consultant>, IOrderedQueryable<Consultant>> orderBy) 
             BuildFilterAndOrderBy(ConsultantSearchModel searchModel);
 
+        Task<Consultant?> GetConsultantByIdAsync(Guid id);
     }
 }

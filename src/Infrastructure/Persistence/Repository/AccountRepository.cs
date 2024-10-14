@@ -41,7 +41,7 @@ namespace Infrastructure.Persistence.Repository
                     {
                         Id = Guid.NewGuid(),
                         Email = registerAccount.Email,
-                        Phone = registerAccount.Phone,
+                        Phone = string.Concat("84", registerAccount.Phone.AsSpan(1)),
                         Password = PasswordUtil.HashPassword(registerAccount.Password),
                         RoleId = role.Id,
                         Status = AccountStatus.Active,

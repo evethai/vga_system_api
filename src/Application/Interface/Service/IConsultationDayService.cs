@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Domain.Model.ConsultationDay;
 using Domain.Model.Response;
+using Domain.Model.TimeSlot;
 
 namespace Application.Interface.Service
 {
@@ -13,5 +14,6 @@ namespace Application.Interface.Service
         Task<ResponseModel> GetConsultationDayByIdAsync(Guid id);
         Task<ResponseModel> CreateConsultationDayWithTimesAsync(ConsultationDayPostModel postModel);
         Task<ResponseModel> DeleteConsultationDayAsync(Guid consultationDayId);
+        Task<ResponseConsultationDayModel> GetListConsultationDaysWithPaginateAsync(ConsultationDaySearchModel searchModel);
     }
 }

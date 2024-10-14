@@ -14,4 +14,7 @@ public class StudentImportModel
     public string stringJson { get; set; } = string.Empty;
     [Required(ErrorMessage = "High school Id is required.")]
     public Guid highschoolId { get; set; }
+
+    [Required(ErrorMessage = "School year is required.")]
+    public int schoolYear { get; set; }
 }
