@@ -24,7 +24,7 @@ using Domain.Model.Consultant;
 using Domain.Model.ConsultationDay;
 using Domain.Model.ConsultationTime;
 using Domain.Model.Booking;
-using Domain.Model.ExpertLevel;
+using Domain.Model.ConsultantLevel;
 using Domain.Model.University;
 
 
@@ -115,6 +115,7 @@ namespace Application.Common.Mapper
                 .ForMember(dest => dest.ConsultantLevelId, opt => opt.MapFrom(src => src.ConsultantLevelId))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
                 .ForMember(dest => dest.DoB, opt => opt.MapFrom(src => src.DoB))
+                .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender))
                 .ReverseMap();
             CreateMap<Consultant, ConsultantPutModel>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))

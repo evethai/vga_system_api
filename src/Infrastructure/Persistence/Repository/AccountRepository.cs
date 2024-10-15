@@ -31,6 +31,7 @@ namespace Infrastructure.Persistence.Repository
             {
                 throw new KeyNotFoundException("Null data");
             }
+            registerAccount.Phone = string.Concat("84", registerAccount.Phone.AsSpan(1));
             Role role = null;
             Account account = null;
             switch (_role)

@@ -3,6 +3,7 @@ using Api.Validators;
 using Application.Interface.Service;
 using Domain.Enum;
 using Domain.Model.ConsultationDay;
+using Domain.Model.Student;
 using Domain.Model.TimeSlot;
 using Infrastructure.Persistence.Service;
 using Microsoft.AspNetCore.Mvc;
@@ -64,6 +65,14 @@ namespace Api.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        //[CustomAuthorize(RoleEnum.Consultant, RoleEnum.Student)]
+        [HttpDelete(ApiEndPointConstant.ConsultationDay.ConsultationDaysEndpoint)]
+        public async Task<IActionResult> GetListConsultationDaysWithPaginateAsync([FromQuery] ConsultationDaySearchModel searchModel)
+        {
+            var result = await _consultationDayService.GetListConsultationDaysWithPaginateAsync(searchModel);
+            return Ok(result);
         }
     }
 }

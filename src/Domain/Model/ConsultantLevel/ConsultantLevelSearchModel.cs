@@ -5,18 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Domain.Model.ConsultationDay
+namespace Domain.Model.ConsultantLevel
 {
-    public class ConsultationDaySearchModel
+    public class ConsultantLevelSearchModel
     {
         [FromQuery(Name = "current-page")]
         public int? currentPage { get; set; }
         [FromQuery(Name = "page-size")]
         public int? pageSize { get; set; }
         [FromQuery(Name = "name")]
-        public string? name { get; set; } 
-        [FromQuery(Name = "day")]
-        public DateOnly? Day { get; set; }
-
+        public string? name { get; set; }
     }
 }

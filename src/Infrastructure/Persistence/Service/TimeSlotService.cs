@@ -10,6 +10,7 @@ using AutoMapper;
 using Domain.Entity;
 using Domain.Model.Response;
 using Domain.Model.TimeSlot;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Service
 {
@@ -137,7 +138,7 @@ namespace Infrastructure.Persistence.Service
         }
         #endregion
 
-        #region
+        #region Get all time slots
         public async Task<ResponseModel> GetAllTimeSlotsAsync()
         {
             try
@@ -160,6 +161,29 @@ namespace Infrastructure.Persistence.Service
                     Message = $"An error occurred while get all time slots: {ex.Message}"
                 };
             }
+        }
+        #endregion
+
+        #region  Get list time slots with paginate
+        public async Task<ResponseTimeSlotModel> GetListTimeSlotsWithPaginateAsync(TimeSlotSearchModel searchModel)
+        {
+            var (filter, orderBy) = _unitOfWork.TimeSlotRepository.BuildFilterAndOrderBy(searchModel);
+            var slot = await _unitOfWork.TimeSlotRepository
+                .GetBySearchAsync(
+                    filter, 
+                    orderBy,
+                    pageIndex: searchModel.currentPage,
+                    pageSize: searchModel.pageSize
+                );
+
+            var total = await _unitOfWork.TimeSlotRepository.CountAsync(filter);
+            var listSlots = _mapper.Map<List<TimeSlotViewModel>>(slot);
+            return new ResponseTimeSlotModel
+            {
+                total = total,
+                currentPage = searchModel.currentPage,
+                timeSlots = listSlots,
+            };
         }
         #endregion
     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Application.Common.Utils;
@@ -12,7 +13,7 @@ using Domain.Enum;
 using Domain.Model.Account;
 using Domain.Model.Consultant;
 using Domain.Model.Response;
-using Domain.Model.Student;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Service
 {
@@ -31,8 +32,8 @@ namespace Infrastructure.Persistence.Service
         {
             try
             {
-                var consultant = await _unitOfWork.ConsultantRepository.GetByIdGuidAsync(consultantId)
-                    ?? throw new Exception($"Consultant not found by id: {consultantId}");
+                var consultant = await _unitOfWork.ConsultantRepository.GetConsultantByIdAsync(consultantId)
+                     ?? throw new Exception($"Consultant not found by id: {consultantId}");
                 var result = _mapper.Map<ConsultantViewModel>(consultant);
                 return new ResponseModel
                 {
@@ -72,7 +73,6 @@ namespace Infrastructure.Persistence.Service
 
                 consultant.Id = Guid.NewGuid();
                 consultant.AccountId = accountId;
-                consultant.Gender = postModel.Gender; 
 
                 await _unitOfWork.ConsultantRepository.AddAsync(consultant);
                 await _unitOfWork.SaveChangesAsync();
@@ -167,7 +167,14 @@ namespace Infrastructure.Persistence.Service
         {
             var (filter, orderBy) = _unitOfWork.ConsultantRepository.BuildFilterAndOrderBy(searchModel);
             var consultant = await _unitOfWork.ConsultantRepository
-                .GetByConditionAsync(filter, orderBy, pageIndex: searchModel.currentPage, pageSize: searchModel.pageSize);
+                .GetBySearchAsync(
+                    filter, 
+                    orderBy, 
+                    include: q => q.Include(s => s.Account).ThenInclude(a => a.Wallet),
+                    pageIndex: searchModel.currentPage,
+                    pageSize: searchModel.pageSize
+                );
+
             var total = await _unitOfWork.ConsultantRepository.CountAsync(filter);
             var listConsultants = _mapper.Map<List<ConsultantViewModel>>(consultant);
             return new ResponseConsultantModel

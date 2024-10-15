@@ -2,7 +2,8 @@
 using Api.Validators;
 using Application.Interface.Service;
 using Domain.Enum;
-using Domain.Model.ExpertLevel;
+using Domain.Model.ConsultantLevel;
+using Domain.Model.Student;
 using Domain.Model.TimeSlot;
 using Infrastructure.Persistence.Service;
 using Microsoft.AspNetCore.Mvc;
@@ -95,6 +96,13 @@ namespace Api.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+        //[CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
+        [HttpGet(ApiEndPointConstant.ConsultantLevel.ConsultantLevelsEndpoint)]
+        public async Task<IActionResult> GetListConsultantLevelWithPaginateAsync([FromQuery] ConsultantLevelSearchModel searchModel)
+        {
+            var result = await _consultantLevelService.GetListConsultantLevelWithPaginateAsync(searchModel);
+            return Ok(result);
         }
 
     }

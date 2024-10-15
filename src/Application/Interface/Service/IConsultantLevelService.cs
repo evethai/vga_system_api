@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Domain.Model.ExpertLevel;
+using Domain.Model.ConsultantLevel;
 using Domain.Model.Response;
 using Domain.Model.TimeSlot;
 
@@ -15,5 +15,7 @@ namespace Application.Interface.Service
         Task<ResponseModel> CreateConsultantLevelAsync(ConsultantLevelPostModel postModel);
         Task<ResponseModel> UpdateConsultantLevelAsync(ConsultantLevelPutModel putModel, int consultantLevelId);
         Task<ResponseModel> DeleteConsultantLevelAsync(int consultantLevelId);
+        Task<ResponseConsultantLevelModel> GetListConsultantLevelWithPaginateAsync(ConsultantLevelSearchModel searchModel);
+        Task<ResponseModel> GetAllConsultantLevelAsync();
     }
 }
