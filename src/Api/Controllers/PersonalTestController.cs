@@ -45,7 +45,7 @@ namespace Api.Controllers
 
         }
 
-        //[CustomAuthorize(RoleEnum.HighSchool)]
+        [CustomAuthorize(RoleEnum.Admin,RoleEnum.Student)]
         [HttpGet(ApiEndPointConstant.PersonalTest.PersonalTestEndpoint)]
         public async Task<IActionResult> GetPersonalTestById(Guid id)
         {
@@ -64,7 +64,7 @@ namespace Api.Controllers
         }
 
 
-
+        [CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
         [HttpGet(ApiEndPointConstant.PersonalTest.PersonalTestsEndpoint)]
         public async Task<IActionResult> GetAllTest()
         {
@@ -78,7 +78,7 @@ namespace Api.Controllers
                 return BadRequest(e.Message);
             }
         }
-
+        [CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
         [HttpGet(ApiEndPointConstant.PersonalTest.GetHistoryUserTestEndpoint)]
         public async Task<IActionResult> GetHistoryTestByStudentId(Guid id)
         {

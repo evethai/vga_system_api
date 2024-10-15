@@ -1,4 +1,5 @@
 ﻿using Api.Constants;
+using Api.Validators;
 using Application.Interface.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +14,7 @@ namespace Api.Controllers
         {
             _testTypeService = testTypeService;
         }
-
+        [CustomAuthorize()]
         [HttpGet(ApiEndPointConstant.TestType.TestTypesEndpoint)]
         public async Task<IActionResult> GetAllTestTypes()
         {

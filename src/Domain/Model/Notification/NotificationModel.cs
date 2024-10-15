@@ -1,21 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Domain.Enum;
 
-namespace Domain.Entity
+namespace Domain.Model.Notification
 {
-    public class Notification : BasicEntity
+    public class NotificationModel
     {
         public Guid AccountId { get; set; }
-        public Account Account { get; set; } = null!;
         public string Title { get; set; } = string.Empty;
         public string Message { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
-        public NotiStatus Status{ get; set; }
+        public NotiStatus Status { get; set; }
     }
 }
