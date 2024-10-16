@@ -30,11 +30,11 @@ namespace Infrastructure.Persistence.Service
             try
             {
                 var timeSlot = await _unitOfWork.TimeSlotRepository.GetByIdAsync(timeSlotId)
-                    ?? throw new Exception($"Time slot not found by id: {timeSlotId}");
+                    ?? throw new NotExistsException();
                 var result = _mapper.Map<TimeSlotViewModel>(timeSlot);
                 return new ResponseModel
                 {
-                    Message = $"Get time slot by id '{timeSlotId}' successfull",
+                    Message = $"Lấy khoảng thời gian với id '{timeSlotId}' thành công",
                     IsSuccess = true,
                     Data = result,
                 };
@@ -56,13 +56,16 @@ namespace Infrastructure.Persistence.Service
         {
             try
             {
+                if (postModel.EndTime < postModel.StartTime)
+                    throw new NotExistsException();
+
                 var timeSlot = _mapper.Map<TimeSlot>(postModel);
                 timeSlot.Status = true;
                 await _unitOfWork.TimeSlotRepository.AddAsync(timeSlot);
                 await _unitOfWork.SaveChangesAsync();
                 return new ResponseModel
                 {
-                    Message = "Time slot was created successfully",
+                    Message = "Khaongr thời gian được tạo thành công",
                     IsSuccess = true,
                     Data = timeSlot,
                 };
@@ -85,7 +88,7 @@ namespace Infrastructure.Persistence.Service
             try
             {
                 var timeSlot = await _unitOfWork.TimeSlotRepository.GetByIdAsync(timeSlotId)
-                        ?? throw new Exception($"Time slot not found by id: {timeSlotId}");
+                        ?? throw new NotExistsException();
                 _mapper.Map(putModel, timeSlot);
                 await _unitOfWork.TimeSlotRepository.UpdateAsync(timeSlot);
                 await _unitOfWork.SaveChangesAsync();
@@ -93,7 +96,7 @@ namespace Infrastructure.Persistence.Service
                 var result = _mapper.Map<TimeSlotViewModel>(timeSlot);
                 return new ResponseModel
                 {
-                    Message = $"Time slot with id '{timeSlotId}' was updated successfully",
+                    Message = $"Khoảng thời gian với id '{timeSlotId}' đã được cập nhật thành công",
                     IsSuccess = true,
                     Data = result,
                 };
@@ -115,14 +118,14 @@ namespace Infrastructure.Persistence.Service
             try
             {
                 var timeSlot = await _unitOfWork.TimeSlotRepository.GetByIdAsync(timeSlotId)
-                       ?? throw new Exception($"Time slot not found by id: {timeSlotId}");
+                       ?? throw new NotExistsException();
                 timeSlot.Status = false;
                 await _unitOfWork.TimeSlotRepository.UpdateAsync(timeSlot);
                 await _unitOfWork.SaveChangesAsync();
                 var result = _mapper.Map<TimeSlotViewModel>(timeSlot);
                 return new ResponseModel
                 {
-                    Message = $"Time slot with id '{timeSlotId}' was deleted successfully",
+                    Message = $"Khoảng thời gian với id '{timeSlotId}' đã được xóa thành công",
                     IsSuccess = true,
                     Data = result,
                 };
@@ -170,7 +173,7 @@ namespace Infrastructure.Persistence.Service
             var (filter, orderBy) = _unitOfWork.TimeSlotRepository.BuildFilterAndOrderBy(searchModel);
             var slot = await _unitOfWork.TimeSlotRepository
                 .GetBySearchAsync(
-                    filter, 
+                    filter,
                     orderBy,
                     pageIndex: searchModel.currentPage,
                     pageSize: searchModel.pageSize

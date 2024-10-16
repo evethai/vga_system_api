@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Common.Exceptions;
 using Application.Interface;
 using Application.Interface.Service;
 using AutoMapper;
@@ -51,7 +52,7 @@ namespace Infrastructure.Persistence.Service
                     return new ResponseModel
                     {
                         IsSuccess = false,
-                        Message = "The consultation time does not exist or is already booked"
+                        Message = "Khoảng thời gian tư vấn đã được đặt hoặc không tồn tại"
                     };
                 }
 
@@ -62,7 +63,7 @@ namespace Infrastructure.Persistence.Service
                     return new ResponseModel
                     {
                         IsSuccess = false,
-                        Message = "Consultant wallet not found"
+                        Message = "Không thể tìm thấy ví của người tư vấn"
                     };
                 }
 
@@ -72,14 +73,14 @@ namespace Infrastructure.Persistence.Service
                     .SingleOrDefaultAsync(
                         predicate: s => s.Id.Equals(studentId), 
                         include: s => s.Include(st => st.Account.Wallet)) 
-                    ?? throw new Exception("Student does not exist");
+                    ?? throw new NotExistsException();
 
                 if (student.Account.Wallet == null)
                 {
                     return new ResponseModel
                     {
                         IsSuccess = false,
-                        Message = "Student wallet not found"
+                        Message = "Không thể tìm thấy ví của học sinh"
                     };
                 }
 
@@ -90,7 +91,7 @@ namespace Infrastructure.Persistence.Service
                     return new ResponseModel
                     {
                         IsSuccess = false,
-                        Message = "Insufficient balance in the wallet to book the consultation time"
+                        Message = "Số dư trong ví của học sinh không đủ để thực hiện đặt lịch"
                     };
                 }
 
@@ -108,7 +109,7 @@ namespace Infrastructure.Persistence.Service
                     return new ResponseModel
                     {
                         IsSuccess = false,
-                        Message = "You have already booked another consultation time with the same time slot on this day"
+                        Message = "Bạn đã đặt một khoảng thời gian tư vấn tương tự trong ngày này"
                     };
                 }
 
@@ -146,7 +147,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = true,
-                    Message = "Consultation time booked successfully.",
+                    Message = "Đặt khoảng thời gan tư vấn thành công",
                     Data = result
                 };
             }
@@ -174,13 +175,13 @@ namespace Infrastructure.Persistence.Service
                                    .ThenInclude(e => e.Account)
                                    .Include(b => b.Student)
                                    .ThenInclude(s => s.Account)
-                ) ?? throw new Exception($"Booking not found with id '{bookingId}'");
+                ) ?? throw new NotExistsException();
 
                 var result = _mapper.Map<BookingViewModel>(booking);
                 return new ResponseModel
                 {
                     IsSuccess = true,
-                    Message = "Booking retrieved successfully.",
+                    Message = "Lấy lịch đã đặt thành công",
                     Data = result
                 };
             }

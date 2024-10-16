@@ -17,6 +17,9 @@ namespace Domain.Model.ConsultationDay
         public string? name { get; set; } 
         [FromQuery(Name = "day")]
         public DateOnly? Day { get; set; }
+        [FromQuery(Name = "consultant-id")]
+        public Guid? ConsultantId { get; set; }
+
 
     }
 }

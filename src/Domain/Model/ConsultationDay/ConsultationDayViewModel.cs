@@ -10,7 +10,7 @@ namespace Domain.Model.ConsultationDay
     public class ConsultationDayViewModel
     {
         public Guid Id { get; set; }
-        public Guid ExpertId { get; set; }
+        public Guid ConsultantId { get; set; }
         public DateOnly Day { get; set; }
         public int Status { get; set; }
         public List<ConsultationTimeViewModel> ConsultationTimes { get; set; } = new();

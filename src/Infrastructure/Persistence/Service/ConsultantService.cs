@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Common.Exceptions;
 using Application.Common.Utils;
 using Application.Interface;
 using Application.Interface.Service;
@@ -33,11 +34,11 @@ namespace Infrastructure.Persistence.Service
             try
             {
                 var consultant = await _unitOfWork.ConsultantRepository.GetConsultantByIdAsync(consultantId)
-                     ?? throw new Exception($"Consultant not found by id: {consultantId}");
+                     ?? throw new($"Người tư vấn không thể tìm thấy với id: {consultantId}");
                 var result = _mapper.Map<ConsultantViewModel>(consultant);
                 return new ResponseModel
                 {
-                    Message = $"Get consultant by id '{consultantId}' successfull",
+                    Message = $"Lấy người tư vấn với id '{consultantId}' thành công",
                     IsSuccess = true,
                     Data = result,
                 };
@@ -61,8 +62,8 @@ namespace Infrastructure.Persistence.Service
                 var roleId = await _unitOfWork.RoleRepository
                     .SingleOrDefaultAsync(selector: x => x.Id, predicate: x => x.Name.Equals(RoleEnum.Consultant.ToString()));
 
-                var consultantLevel = await _unitOfWork.ConsultantLevelRepository.GetByIdAsync(postModel.ConsultantLevelId) ??
-                    throw new Exception("Consultant level not exist");
+                var consultantLevel = await _unitOfWork.ConsultantLevelRepository.GetByIdAsync(postModel.ConsultantLevelId)
+                    ?? throw new NotExistsException();
 
                 var consultant = _mapper.Map<Consultant>(postModel);
 
@@ -79,7 +80,7 @@ namespace Infrastructure.Persistence.Service
                 var result = _mapper.Map<ConsultantViewModel>(consultant);
                 return new ResponseModel
                 {
-                    Message = $"Create consultant successfull",
+                    Message = $"Người tư vấn mới đã được tạo thành công",
                     IsSuccess = true,
                     Data = result,
                 };
@@ -101,9 +102,9 @@ namespace Infrastructure.Persistence.Service
             try
             {
                 var consultant = await _unitOfWork.ConsultantRepository.GetByIdGuidAsync(consultantId)
-                    ?? throw new Exception($"Consultant not found by id: {consultantId}");
+                    ?? throw new NotExistsException();
                 var exAccountConsultant = await _unitOfWork.AccountRepository.GetByIdGuidAsync(consultant.AccountId)
-                ?? throw new Exception($"Consultant Account not found by id");
+                    ?? throw new NotExistsException();
                 _mapper.Map(putModel, consultant);
                 await _unitOfWork.ConsultantRepository.UpdateAsync(consultant);
                 await _unitOfWork.AccountRepository.UpdateAsync(exAccountConsultant);
@@ -112,7 +113,7 @@ namespace Infrastructure.Persistence.Service
                 var result = _mapper.Map<ConsultantViewModel>(consultant);
                 return new ResponseModel
                 {
-                    Message = $"Consultant with id '{consultantId}' was updated successfully",
+                    Message = $"Người tư vấn với id '{consultantId}' đã được cập nhật thành công",
                     IsSuccess = true,
                     Data = result,
                 };
@@ -134,10 +135,10 @@ namespace Infrastructure.Persistence.Service
             try
             {
                 var consultant = await _unitOfWork.ConsultantRepository.GetByIdGuidAsync(consultantId)
-                ?? throw new Exception($"Consultant not found by id: {consultantId}");
+                    ?? throw new NotExistsException();
 
                 var exAccountConsultant = await _unitOfWork.AccountRepository.GetByIdGuidAsync(consultant.AccountId)
-                ?? throw new Exception($"Consultant Account not found by id");
+                    ?? throw new NotExistsException();
                 exAccountConsultant.Status = AccountStatus.Blocked;
                 await _unitOfWork.ConsultantRepository.UpdateAsync(consultant);
                 await _unitOfWork.AccountRepository.UpdateAsync(exAccountConsultant);
@@ -146,7 +147,7 @@ namespace Infrastructure.Persistence.Service
                 var result = _mapper.Map<ConsultantViewModel>(consultant);
                 return new ResponseModel
                 {
-                    Message = $"Consultant with id '{consultantId}' was deleted successfully",
+                    Message = $"Người tư vấn với id '{consultantId}' đã được xóa thành công",
                     IsSuccess = true,
                     Data = result,
                 };
@@ -168,8 +169,8 @@ namespace Infrastructure.Persistence.Service
             var (filter, orderBy) = _unitOfWork.ConsultantRepository.BuildFilterAndOrderBy(searchModel);
             var consultant = await _unitOfWork.ConsultantRepository
                 .GetBySearchAsync(
-                    filter, 
-                    orderBy, 
+                    filter,
+                    orderBy,
                     include: q => q.Include(s => s.Account).ThenInclude(a => a.Wallet).Include(s => s.ConsultantLevel),
                     pageIndex: searchModel.currentPage,
                     pageSize: searchModel.pageSize

@@ -21,7 +21,7 @@ namespace Api.Controllers
 
         //[CustomAuthorize(RoleEnum.Consultant, RoleEnum.Student)]
         [HttpPost(ApiEndPointConstant.ConsultationTime.ConsultationTimesEndpoint)]
-        public async Task<IActionResult> CreateConsultationTimeAsync([FromForm] ConsultationTimePostModel postModel, Guid consultationDayId)
+        public async Task<IActionResult> CreateConsultationTimeAsync(ConsultationTimePostModel postModel, Guid consultationDayId)
         {
             if (!ModelState.IsValid)
             {

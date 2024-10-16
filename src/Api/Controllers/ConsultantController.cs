@@ -39,7 +39,7 @@ namespace Api.Controllers
 
         //[CustomAuthorize(RoleEnum.Admin,RoleEnum.Student)]
         [HttpGet(ApiEndPointConstant.Consultant.ConsultantsEndpoint)]
-        public async Task<IActionResult> GetListConsultantsWithPaginateAsync([FromQuery] ConsultantSearchModel searchModel)
+        public async Task<IActionResult> GetListConsultantsWithPaginateAsync(ConsultantSearchModel searchModel)
         {
             try
             {
