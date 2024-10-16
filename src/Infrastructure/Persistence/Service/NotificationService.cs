@@ -8,6 +8,7 @@ using Application.Interface.Service;
 using AutoMapper;
 using Domain.Enum;
 using Domain.Model.Notification;
+using Domain.Model.Response;
 
 namespace Infrastructure.Persistence.Service
 {
@@ -27,7 +28,6 @@ namespace Infrastructure.Persistence.Service
             return result;
         }
 
-        //update
         public async Task<NotificationModel> UpdateNotification(int id, NotiStatus status)
         {
             var noti = await _unitOfWork.NotificationRepository.GetByIdAsync(id);
@@ -39,6 +39,17 @@ namespace Infrastructure.Persistence.Service
             await _unitOfWork.NotificationRepository.UpdateAsync(noti);
             await _unitOfWork.SaveChangesAsync();
             return _mapper.Map<NotificationModel>(noti);
+        }
+
+        public async Task<ResponseModel> AddNotification(NotificationPostModel model)
+        {
+            var noti = _unitOfWork.NotificationRepository.CreateNotification(model);
+            return new ResponseModel
+            {
+                IsSuccess = true,
+                Message = "Notification created successfully",
+                Data = noti
+            };
         }
 
 

@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using Application.Common.Constants;
 using Microsoft.OpenApi.Models;
 
 namespace Api.Installers
@@ -51,12 +52,16 @@ namespace Api.Installers
             // CORS Configuration
             services.AddCors(options =>
             {
-                options.AddPolicy("AllowAll", builder =>
-                {
-                    builder.AllowAnyOrigin()
-                           .AllowAnyMethod()
-                           .AllowAnyHeader();
-                });
+                //options.AddPolicy(name: CorsConstant.PolicyName,
+                //policy => { policy.WithOrigins(CorsConstant.AllowedOrigins).AllowAnyHeader().AllowAnyMethod().AllowCredentials(); });
+                options.AddPolicy(name: CorsConstant.PolicyName,
+                        policy =>
+                        {
+                            policy.WithOrigins(CorsConstant.AllowedOrigins)
+                                  .AllowAnyHeader()
+                                  .AllowAnyMethod()
+                                  .AllowCredentials();
+                        });
             });
         }
     }

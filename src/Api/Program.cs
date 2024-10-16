@@ -1,5 +1,6 @@
 ﻿using Api;
 using Api.Installers;
+using Application.Common.Constants;
 using Application.Common.Hubs;
 using Infrastructure;
 using Infrastructure.Persistence;
@@ -16,7 +17,10 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.InstallServicesInAssembly(builder.Configuration);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-builder.Services.AddSignalR();
+builder.Services.AddSignalR(options =>
+{
+    options.EnableDetailedErrors = true;
+});
 builder.Services.AddSingleton<UserConnectionManager>();
 var app = builder.Build();
 
@@ -33,7 +37,7 @@ app.UseSwaggerUI(c =>
     c.RoutePrefix = string.Empty;
 });
 
-app.UseCors("AllowAll");
+app.UseCors(CorsConstant.PolicyName);
 
 app.UseHttpsRedirection();
 

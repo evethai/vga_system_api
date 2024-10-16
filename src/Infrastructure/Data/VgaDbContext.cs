@@ -58,9 +58,9 @@ namespace Infrastructure.Data
         {
             var entries = ChangeTracker.Entries<Notification>();
 
-            foreach (var entry in entries)
+            foreach (var entry in entries )
             {
-                if (entry.State == EntityState.Added)
+                if (entry.State == EntityState.Added || entry.State == EntityState.Modified)
                 {
                     var accountId = entry.Entity.AccountId.ToString();
 
