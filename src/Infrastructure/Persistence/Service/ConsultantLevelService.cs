@@ -32,11 +32,11 @@ namespace Infrastructure.Persistence.Service
             try
             {
                 var consultantLevel = await _unitOfWork.ConsultantLevelRepository.GetByIdAsync(consultantLevelId)
-                    ?? throw new Exception($"Consultant level not found by id: {consultantLevelId}");
+                    ?? throw new NotExistsException();
                 var result = _mapper.Map<ConsultantLevelViewModel>(consultantLevel);
                 return new ResponseModel
                 {
-                    Message = $"Get consultant level by id '{consultantLevelId}' successfull",
+                    Message = $"Lấy cấp độ người tư vấn với id '{consultantLevelId}' thành công",
                     IsSuccess = true,
                     Data = result,
                 };
@@ -65,7 +65,7 @@ namespace Infrastructure.Persistence.Service
                 var result = _mapper.Map<ConsultantLevelViewModel>(consultantLevel);
                 return new ResponseModel
                 {
-                    Message = "Consultant level was created successfully",
+                    Message = "Cấp độ người tư cấn tạo thành công",
                     IsSuccess = true,
                     Data = result,
                 };
@@ -87,7 +87,7 @@ namespace Infrastructure.Persistence.Service
             try
             {
                 var consultantLevel = await _unitOfWork.ConsultantLevelRepository.GetByIdAsync(consultantLevelId)
-                                ?? throw new Exception($"Consultant level not found by id: {consultantLevelId}");
+                    ?? throw new NotExistsException();
                 if (putModel.PriceOnSlot.HasValue && putModel.PriceOnSlot == 0)
                 {
                     putModel.PriceOnSlot = consultantLevel.PriceOnSlot;
@@ -99,7 +99,7 @@ namespace Infrastructure.Persistence.Service
                 var result = _mapper.Map<ConsultantLevelViewModel>(consultantLevel);
                 return new ResponseModel
                 {
-                    Message = $"Consultant level with id '{consultantLevelId}' was updated successfully",
+                    Message = $"Cấp độ người tư vấn với id '{consultantLevelId}' đã được cập nhật thành công",
                     IsSuccess = true,
                     Data = result,
                 };
@@ -121,7 +121,7 @@ namespace Infrastructure.Persistence.Service
             try
             {
                 var consultantLevel = await _unitOfWork.ConsultantLevelRepository.GetByIdAsync(consultantLevelId)
-                       ?? throw new Exception($"Consultant level not found by id: {consultantLevelId}");
+                    ?? throw new NotExistsException();
                 consultantLevel.Status = false;
                 await _unitOfWork.ConsultantLevelRepository.UpdateAsync(consultantLevel);
                 await _unitOfWork.SaveChangesAsync();
@@ -129,7 +129,7 @@ namespace Infrastructure.Persistence.Service
                 var result = _mapper.Map<ConsultantLevelViewModel>(consultantLevel);
                 return new ResponseModel
                 {
-                    Message = $"Consultant level with id '{consultantLevelId}' was deleted successfully",
+                    Message = $"Cấp độ người tư vấn với id '{consultantLevelId}' đã được xóa thành công",
                     IsSuccess = true,
                     Data = result,
                 };

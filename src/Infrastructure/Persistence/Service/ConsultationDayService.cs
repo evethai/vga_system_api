@@ -39,7 +39,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = true,
-                    Message = "Consultation day retrieved successfully.",
+                    Message = $"Lấy ngày tư vấn với id '{id}' thành công",
                     Data = result
                 };
             }
@@ -64,7 +64,7 @@ namespace Infrastructure.Persistence.Service
                     return new ResponseModel
                     {
                         IsSuccess = false,
-                        Message = "The consultation day must be in the future."
+                        Message = "Ngày tư vấn phải sau ngày hiện tại"
                     };
                 }
                 if (!postModel.ConsultationTimes.Any())
@@ -72,7 +72,7 @@ namespace Infrastructure.Persistence.Service
                     return new ResponseModel
                     {
                         IsSuccess = false,
-                        Message = "Please pick time slot."
+                        Message = "Vui lòng chọn thời gian tư vấn"
                     };
                 }
                 Expression<Func<ConsultationDay, bool>> exsitingDayFilter = x =>
@@ -110,8 +110,8 @@ namespace Infrastructure.Persistence.Service
                                   ? true
                                   : false,
                         Message = newConsultationTimes.Any()
-                                  ? "New consultation times added successfully."
-                                  : "No new consultation times to add.",
+                                  ? $"Khoảng thời gian tư vấn mới đã được thêm cho ngày tư vấn: '{existingDay.Day}'"
+                                  : "Không có khoảng thời gian tư vấn mới để thêm",
                         Data = newConsultationTimes.Any()
                                   ? resultDayExisted
                                   : null,
@@ -138,7 +138,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = true,
-                    Message = "New consultation day and times created successfully.",
+                    Message = "Ngày tư vấn với khoảng thời gian tư vấn mới được thêm thành công",
                     Data = result
                 };
 
@@ -163,14 +163,14 @@ namespace Infrastructure.Persistence.Service
                     .SingleOrDefaultAsync(
                     predicate: x => x.Id.Equals(consultationDayId),
                     include: query => query.Include(cd => cd.ConsultationTimes)
-                    ) ?? throw new Exception($"Consultation day with id '{consultationDayId}' not exist");
+                    ) ?? throw new NotExistsException();
 
                 if (consultationDay.ConsultationTimes.Any(ct => ct.Status == (int)ConsultationTimeStatusEnum.Booked))
                 {
                     return new ResponseModel
                     {
                         IsSuccess = false,
-                        Message = "Cannot delete the consultation day because one or more consultation times are already booked."
+                        Message = "Không thể xóa ngày tư vấn bởi vì đã có khoảng thời gian tư vấn được đặt"
                     };
                 }
 
@@ -182,7 +182,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = true,
-                    Message = "Consultation day deleted successfully."
+                    Message = $"Ngày tư vấn với id '{consultationDayId}' xóa thành công"
                 };
             }
             catch (Exception ex)
@@ -204,7 +204,7 @@ namespace Infrastructure.Persistence.Service
                 .GetBySearchAsync(
                     filter,
                     orderBy,
-                    include: q => q.Include(s => s.Consultant).Include(s => s.ConsultationTimes).ThenInclude(t => t.SlotTime),
+                    include: q => q.Include(s => s.Consultant).ThenInclude(c => c.Account).Include(s => s.ConsultationTimes).ThenInclude(t => t.SlotTime),
                     pageIndex: searchModel.currentPage,
                     pageSize: searchModel.pageSize
                 );

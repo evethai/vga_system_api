@@ -33,13 +33,13 @@ namespace Infrastructure.Persistence.Service
                     .SingleOrDefaultAsync(
                     predicate: x => x.Id.Equals(consultationDayId),
                     include: query => query.Include(cd => cd.ConsultationTimes)
-                    ) ?? throw new Exception($"Consultation day with id '{consultationDayId}' not exist");
+                    ) ?? throw new Exception($"Ngày tư vấn với id '{consultationDayId}' không tồn tại");
                 if (consultationDay.ConsultationTimes.Any(existingCt => existingCt.TimeSlotId == postModel.TimeSlotId))
                 {
                     return new ResponseModel
                     {
                         IsSuccess = false,
-                        Message = $"New consultation time is existed with time slot id '{postModel.TimeSlotId}' .",
+                        Message = $"Khoảng thời gian tư vấn đã tồn tại với id: '{postModel.TimeSlotId}'",
                     };
                 }
 
@@ -55,7 +55,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = true,
-                    Message = $"New consultation time was created successfully.",
+                    Message = $"Khoảng thời gian tư vấn đã được tạo thành công",
                     Data = result
                 };
             }
@@ -76,13 +76,13 @@ namespace Infrastructure.Persistence.Service
             try
             {
                 var consultationTime = await _unitOfWork.ConsultationTimeRepository.GetByIdGuidAsync(consultationTimeId)
-                    ?? throw new Exception($"Consultation time with id '{consultationTimeId}' not exist");
+                    ?? throw new Exception($"Khoảng thời gian tư vấn với id '{consultationTimeId}' không tồn tại");
                 if (consultationTime.Status == (int)ConsultationTimeStatusEnum.Booked)
                 {
                     return new ResponseModel
                     {
                         IsSuccess = false,
-                        Message = "Cannot delete the consultation time because it already booked."
+                        Message = "Không thể xóa khoảng thời gian tư vấn này vì nó đã được đặt"
                     };
                 }
                 consultationTime.Status = (int)ConsultationTimeStatusEnum.Deleted;
@@ -93,7 +93,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = true,
-                    Message = "Consultation time deleted successfully."
+                    Message = "Khoảng thời gian tư vấn đã được xóa thành công"
                 };
 
             }

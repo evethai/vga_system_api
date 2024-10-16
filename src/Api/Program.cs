@@ -1,5 +1,6 @@
 ﻿using Api;
 using Api.Installers;
+using Application.Common.Hubs;
 using Infrastructure;
 using Infrastructure.Persistence;
 using Microsoft.OpenApi.Models;
@@ -15,7 +16,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.InstallServicesInAssembly(builder.Configuration);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
+builder.Services.AddSignalR();
+builder.Services.AddSingleton<UserConnectionManager>();
 var app = builder.Build();
 
 //Configure the HTTP request pipeline.
@@ -38,7 +40,7 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<TokenValidationMiddleware>();
-
+app.MapHub<NotificationHub>("/notification_hub");
 
 app.MapControllers();
 

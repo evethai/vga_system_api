@@ -18,16 +18,31 @@ namespace Api.Installers
             {
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
-                    ValidIssuer = configuration["JwtSettings:Issuer"], 
+                    ValidIssuer = configuration["JwtSettings:Issuer"],
                     ValidateIssuer = true,
                     ValidateAudience = false,
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey =
                         new SymmetricSecurityKey(
-                            Encoding.UTF8.GetBytes(configuration["JwtSettings:SecretKey"])) 
+                            Encoding.UTF8.GetBytes(configuration["JwtSettings:SecretKey"]))
+                };
+
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/notification_hub"))
+                        {
+                            context.Token = accessToken;
+                        }
+                        return Task.CompletedTask;
+                    }
                 };
             });
         }
     }
+
 
 }
