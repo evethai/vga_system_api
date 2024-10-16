@@ -1,5 +1,7 @@
 ﻿using Api.Constants;
 using Application.Interface.Service;
+using Domain.Model.Booking;
+using Domain.Model.Consultant;
 using Domain.Model.TimeSlot;
 using Infrastructure.Persistence.Service;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +18,7 @@ namespace Api.Controllers
             _bookingService = bookingService;
         }
 
+        //[CustomAuthorize(RoleEnum.Consultant,RoleEnum.Student)]
         [HttpGet(ApiEndPointConstant.Booking.BookingEndpoint)]
         public async Task<IActionResult> GetBookingByIdAsync(Guid id)
         {
@@ -33,23 +36,7 @@ namespace Api.Controllers
             }
         }
 
-        [HttpGet(ApiEndPointConstant.Booking.BookingsEndpoint)]
-        public async Task<IActionResult> GetAllBookingsAsync()
-        {
-            try
-            {
-                var result = await _bookingService.GetAllBookingsAsync();
-                return (result.IsSuccess == false)
-                    ? BadRequest(result)
-                    : Ok(result);
-
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
+        //[CustomAuthorize(RoleEnum.Student)]
         [HttpPost(ApiEndPointConstant.Booking.BookingsEndpoint)]
         public async Task<IActionResult> BookConsultationTimeAsync([FromForm] Guid consultationTimeId, Guid studentId)
         {
@@ -63,6 +50,22 @@ namespace Api.Controllers
                 return (result.IsSuccess == false)
                     ? BadRequest(result)
                     : Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        //[CustomAuthorize(RoleEnum.Consultant,RoleEnum.Student)]
+        [HttpGet(ApiEndPointConstant.Booking.BookingsEndpoint)]
+        public async Task<IActionResult> GetListBookingsWithPaginateAsync([FromQuery] BookingSearchModel searchModel)
+        {
+            try
+            {
+                var result = await _bookingService.GetListBookingsWithPaginateAsync(searchModel);
+                return Ok(result);
+
             }
             catch (Exception ex)
             {

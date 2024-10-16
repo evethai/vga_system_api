@@ -101,7 +101,7 @@ namespace Application.Common.Mapper
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.AccountId, opt => opt.MapFrom(src => src.AccountId))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
-                .ForMember(dest => dest.ConsultantLevelId, opt => opt.MapFrom(src => src.ConsultantLevelId))    
+                .ForMember(dest => dest.ConsultantLevel, opt => opt.MapFrom(src => src.ConsultantLevel))
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Account.Email))
                 .ForMember(dest => dest.Phone, opt => opt.MapFrom(src => src.Account.Phone))
                 .ForMember(dest => dest.Image_Url, opt => opt.MapFrom(src => src.Account.Image_Url))

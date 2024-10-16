@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Common.Extensions;
 using Application.Interface.Repository;
 using Domain.Entity;
+using Domain.Model.Booking;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,6 +20,23 @@ namespace Infrastructure.Persistence.Repository
         {
             _context = context;
         }
+
+        public (Expression<Func<Booking, bool>> filter, Func<IQueryable<Booking>, IOrderedQueryable<Booking>> orderBy) 
+            BuildFilterAndOrderBy(BookingSearchModel searchModel)
+        {
+            Expression<Func<Booking, bool>> filter = p => true;
+            Func<IQueryable<Booking>, IOrderedQueryable<Booking>> orderBy = null;
+            if (!string.IsNullOrEmpty(searchModel.consultantName))
+            {
+                filter = filter.And(p => p.ConsultationTime.Day.Consultant.Name.Contains(searchModel.consultantName));
+            }
+            if (!string.IsNullOrEmpty(searchModel.studentName))
+            {
+                filter = filter.And(p => p.Student.Name.Contains(searchModel.studentName));
+            }
+            return (filter, orderBy);
+        }
+
         public async Task<List<Booking>> GetAllBookingsWithDetailsAsync()
         {
             return await _context.Booking

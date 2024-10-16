@@ -170,7 +170,7 @@ namespace Infrastructure.Persistence.Service
                 .GetBySearchAsync(
                     filter, 
                     orderBy, 
-                    include: q => q.Include(s => s.Account).ThenInclude(a => a.Wallet),
+                    include: q => q.Include(s => s.Account).ThenInclude(a => a.Wallet).Include(s => s.ConsultantLevel),
                     pageIndex: searchModel.currentPage,
                     pageSize: searchModel.pageSize
                 );
