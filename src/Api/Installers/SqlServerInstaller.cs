@@ -21,15 +21,6 @@ namespace Api.Installers
                     );
                 }));
 
-            //services.AddDbContext<VgaDbContext>(options =>
-            //    options.UseNpgsql(sqlConfig.ConnectionString, npgsqlOptions =>
-            //    {
-            //        npgsqlOptions.EnableRetryOnFailure(
-            //            maxRetryCount: 5,
-            //            maxRetryDelay: TimeSpan.FromSeconds(10),
-            //            errorCodesToAdd: null
-            //        );
-            //    }));
         }
     }
 }

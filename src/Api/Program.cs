@@ -1,9 +1,10 @@
-﻿using Api;
-using Api.Installers;
+﻿using Api.Installers;
+using Application.Common.Constants;
 using Application.Common.Hubs;
-using Infrastructure;
 using Infrastructure.Persistence;
-using Microsoft.OpenApi.Models;
+
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.InstallServicesInAssembly(builder.Configuration);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddSignalR();
+builder.Services.AddSignalR(options =>
+{
+    options.EnableDetailedErrors = true;
+});
 builder.Services.AddSingleton<UserConnectionManager>();
 var app = builder.Build();
 
@@ -32,11 +37,8 @@ app.UseSwaggerUI(c =>
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "VGA API V1");
     c.RoutePrefix = string.Empty;
 });
-
-app.UseCors("AllowAll");
-
 app.UseHttpsRedirection();
-
+app.UseCors(CorsConstant.PolicyName);
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<TokenValidationMiddleware>();

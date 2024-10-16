@@ -31,15 +31,26 @@ namespace Api.Installers
                 {
                     OnMessageReceived = context =>
                     {
-                        var accessToken = context.Request.Query["access_token"];
-                        var path = context.HttpContext.Request.Path;
-                        if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/notification_hub"))
+                        var authorizationHeader = context.Request.Headers["Authorization"].FirstOrDefault();
+                        if (!string.IsNullOrEmpty(authorizationHeader) && authorizationHeader.StartsWith("Bearer "))
                         {
-                            context.Token = accessToken;
+                            var token = authorizationHeader.Substring("Bearer ".Length).Trim(); 
+                            var path = context.HttpContext.Request.Path;
+                            if (path.StartsWithSegments("/notification_hub"))
+                            {
+                                context.Token = token;
+                            }
                         }
+                        return Task.CompletedTask;
+                    },
+                    OnAuthenticationFailed = context =>
+                    {
+                        context.Response.Headers["Token-Error"] = "Invalid token";
                         return Task.CompletedTask;
                     }
                 };
+
+
             });
         }
     }
