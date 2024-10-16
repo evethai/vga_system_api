@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(VgaDbContext))]
-    [Migration("20241005105148_Init")]
+    [Migration("20241010124024_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -227,12 +227,12 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("DoB")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("Gender")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Status")
-                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -687,9 +687,6 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("AccountId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreateAt")
-                        .HasColumnType("datetime2");
-
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
 
@@ -703,8 +700,8 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("Status")
-                        .HasColumnType("bit");
+                    b.Property<int>("SchoolYears")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

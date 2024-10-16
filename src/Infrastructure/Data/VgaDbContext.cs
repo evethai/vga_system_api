@@ -3,16 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Common.Hubs;
 using Domain.Entity;
 using Domain.Enum;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data
 {
     public class VgaDbContext : DbContext
     {
-        public VgaDbContext(DbContextOptions<VgaDbContext> options) : base(options)
+        private readonly IHubContext<NotificationHub> _hubContext;
+        private readonly UserConnectionManager _userConnectionManager;
+        public VgaDbContext(DbContextOptions<VgaDbContext> options,IHubContext<NotificationHub> hubContext, UserConnectionManager userConnectionManager) : base(options)
         {
+            _hubContext = hubContext;
+            _userConnectionManager = userConnectionManager;
         }
 
         public DbSet<Account> Account { get; set; }
@@ -47,6 +53,33 @@ namespace Infrastructure.Data
         public DbSet<University> University { get; set; }
         public DbSet<Wallet> Wallet { get; set; }
 
+
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            var entries = ChangeTracker.Entries<Notification>();
+
+            foreach (var entry in entries)
+            {
+                if (entry.State == EntityState.Added)
+                {
+                    var accountId = entry.Entity.AccountId.ToString();
+
+                    var connections = _userConnectionManager.GetConnections(accountId);
+
+                    foreach (var connectionId in connections)
+                    {
+                        await _hubContext.Clients.Client(connectionId).SendAsync("ReceiveNotification", new
+                        {
+                            Title = entry.Entity.Title,
+                            Message = entry.Entity.Message,
+                            CreatedAt = entry.Entity.CreatedAt,
+                        });
+                    }
+                }
+            }
+
+            return await base.SaveChangesAsync(cancellationToken);
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

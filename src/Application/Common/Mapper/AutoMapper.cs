@@ -26,6 +26,7 @@ using Domain.Model.ConsultationTime;
 using Domain.Model.Booking;
 using Domain.Model.ConsultantLevel;
 using Domain.Model.University;
+using Domain.Model.Notification;
 
 
 namespace Application.Common.Mapper
@@ -165,6 +166,10 @@ namespace Application.Common.Mapper
             CreateMap<University, UniversityModel>().ReverseMap();
             CreateMap<University, UniversityPostModel>().ReverseMap();
             CreateMap<University, UniversityPutModel>().ReverseMap();
+
+            //Notification
+            CreateMap<Notification, NotificationModel>().ReverseMap();
+            CreateMap<Notification, NotificationPostModel>().ReverseMap();
         }
     }
 }
