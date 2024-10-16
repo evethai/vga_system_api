@@ -68,8 +68,8 @@ namespace Api.Controllers
         }
 
         //[CustomAuthorize(RoleEnum.Consultant, RoleEnum.Student)]
-        [HttpDelete(ApiEndPointConstant.ConsultationDay.ConsultationDaysEndpoint)]
-        public async Task<IActionResult> GetListConsultationDaysWithPaginateAsync([FromQuery] ConsultationDaySearchModel searchModel)
+        [HttpGet(ApiEndPointConstant.ConsultationDay.ConsultationDaysEndpoint)]
+        public async Task<IActionResult> GetListConsultationDaysWithPaginateAsync( ConsultationDaySearchModel searchModel)
         {
             var result = await _consultationDayService.GetListConsultationDaysWithPaginateAsync(searchModel);
             return Ok(result);

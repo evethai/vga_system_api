@@ -38,7 +38,7 @@ namespace Api.Controllers
 
         //[CustomAuthorize(RoleEnum.Admin)]
         [HttpPost(ApiEndPointConstant.TimeSlot.TimeSlotsEndpoint)]
-        public async Task<IActionResult> CreateTimeSlotAsync([FromForm] TimeSlotPostModel postModel)
+        public async Task<IActionResult> CreateTimeSlotAsync(TimeSlotPostModel postModel)
         {
             if (!ModelState.IsValid)
             {
@@ -59,7 +59,7 @@ namespace Api.Controllers
 
         //[CustomAuthorize(RoleEnum.Admin)]
         [HttpPut(ApiEndPointConstant.TimeSlot.TimeSlotsEndpoint)]
-        public async Task<IActionResult> UpdateTimeSlotAsync([FromForm] TimeSlotPutModel putModel, int timeSlotId)
+        public async Task<IActionResult> UpdateTimeSlotAsync(TimeSlotPutModel putModel, int timeSlotId)
         {
             if (!ModelState.IsValid)
             {
@@ -97,7 +97,7 @@ namespace Api.Controllers
 
         //[CustomAuthorize(RoleEnum.Admin, RoleEnum.Consultant)]
         [HttpGet(ApiEndPointConstant.TimeSlot.TimeSlotsEndpoint)]
-        public async Task<IActionResult> GetListTimeSlotsWithPaginateAsync([FromQuery] TimeSlotSearchModel searchModel)
+        public async Task<IActionResult> GetListTimeSlotsWithPaginateAsync(TimeSlotSearchModel searchModel)
         {
             var result = await _timeSlotService.GetListTimeSlotsWithPaginateAsync(searchModel);
             return Ok(result);

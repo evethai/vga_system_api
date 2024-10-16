@@ -40,7 +40,7 @@ namespace Api.Controllers
 
         //[CustomAuthorize(RoleEnum.Admin)]
         [HttpPost(ApiEndPointConstant.ConsultantLevel.ConsultantLevelsEndpoint)]
-        public async Task<IActionResult> CreateConsultantLevelAsync([FromForm] ConsultantLevelPostModel postModel)
+        public async Task<IActionResult> CreateConsultantLevelAsync(ConsultantLevelPostModel postModel)
         {
             if (!ModelState.IsValid)
             {
@@ -61,7 +61,7 @@ namespace Api.Controllers
 
         //[CustomAuthorize(RoleEnum.Admin)]
         [HttpPut(ApiEndPointConstant.ConsultantLevel.ConsultantLevelEndpoint)]
-        public async Task<IActionResult> UpdateConsultantLevelAsync([FromForm] ConsultantLevelPutModel putModel, int id)
+        public async Task<IActionResult> UpdateConsultantLevelAsync(ConsultantLevelPutModel putModel, int id)
         {
             if (!ModelState.IsValid)
             {
@@ -99,7 +99,7 @@ namespace Api.Controllers
         }
         //[CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
         [HttpGet(ApiEndPointConstant.ConsultantLevel.ConsultantLevelsEndpoint)]
-        public async Task<IActionResult> GetListConsultantLevelWithPaginateAsync([FromQuery] ConsultantLevelSearchModel searchModel)
+        public async Task<IActionResult> GetListConsultantLevelWithPaginateAsync(ConsultantLevelSearchModel searchModel)
         {
             var result = await _consultantLevelService.GetListConsultantLevelWithPaginateAsync(searchModel);
             return Ok(result);

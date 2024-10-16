@@ -5,21 +5,17 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Domain.Model.ConsultationDay
+namespace Domain.Model.Booking
 {
-    public class ConsultationDaySearchModel
+    public class BookingSearchModel
     {
         [FromQuery(Name = "current-page")]
         public int? currentPage { get; set; }
         [FromQuery(Name = "page-size")]
         public int? pageSize { get; set; }
-        [FromQuery(Name = "name")]
-        public string? name { get; set; } 
-        [FromQuery(Name = "day")]
-        public DateOnly? Day { get; set; }
-        [FromQuery(Name = "consultant-id")]
-        public Guid? ConsultantId { get; set; }
-
-
+        [FromQuery(Name = "student-name")]
+        public string? studentName { get; set; }
+        [FromQuery(Name = "consultant-name")]
+        public string? consultantName { get; set; }
     }
 }
