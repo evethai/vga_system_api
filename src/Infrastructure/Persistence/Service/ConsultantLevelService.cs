@@ -99,7 +99,7 @@ namespace Infrastructure.Persistence.Service
                 var result = _mapper.Map<ConsultantLevelViewModel>(consultantLevel);
                 return new ResponseModel
                 {
-                    Message = $"Cấp độ người tư vấn vói id '{consultantLevelId}' đã được cập nhật thành công",
+                    Message = $"Cấp độ người tư vấn với id '{consultantLevelId}' đã được cập nhật thành công",
                     IsSuccess = true,
                     Data = result,
                 };
@@ -129,7 +129,7 @@ namespace Infrastructure.Persistence.Service
                 var result = _mapper.Map<ConsultantLevelViewModel>(consultantLevel);
                 return new ResponseModel
                 {
-                    Message = $"Cấp độ người tư vấn vói id '{consultantLevelId}' đã được xóa thành công",
+                    Message = $"Cấp độ người tư vấn với id '{consultantLevelId}' đã được xóa thành công",
                     IsSuccess = true,
                     Data = result,
                 };

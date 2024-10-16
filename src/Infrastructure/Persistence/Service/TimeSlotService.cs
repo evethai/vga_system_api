@@ -65,7 +65,7 @@ namespace Infrastructure.Persistence.Service
                 await _unitOfWork.SaveChangesAsync();
                 return new ResponseModel
                 {
-                    Message = "Khaongr thời gian được tạo thành công",
+                    Message = "Khoảng thời gian được tạo thành công",
                     IsSuccess = true,
                     Data = timeSlot,
                 };
