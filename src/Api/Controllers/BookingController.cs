@@ -38,7 +38,7 @@ namespace Api.Controllers
 
         //[CustomAuthorize(RoleEnum.Student)]
         [HttpPost(ApiEndPointConstant.Booking.BookingsEndpoint)]
-        public async Task<IActionResult> BookConsultationTimeAsync([FromForm] Guid consultationTimeId, Guid studentId)
+        public async Task<IActionResult> BookConsultationTimeAsync( Guid consultationTimeId, Guid studentId)
         {
             if (!ModelState.IsValid)
             {
@@ -59,7 +59,7 @@ namespace Api.Controllers
 
         //[CustomAuthorize(RoleEnum.Consultant,RoleEnum.Student)]
         [HttpGet(ApiEndPointConstant.Booking.BookingsEndpoint)]
-        public async Task<IActionResult> GetListBookingsWithPaginateAsync([FromQuery] BookingSearchModel searchModel)
+        public async Task<IActionResult> GetListBookingsWithPaginateAsync(BookingSearchModel searchModel)
         {
             try
             {

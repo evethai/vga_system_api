@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Application.Interface.Repository;
 using Domain.Entity;
+using Domain.Enum;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 

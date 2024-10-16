@@ -17,5 +17,12 @@ namespace Application.Interface.Repository
         (Expression<Func<Booking, bool>> filter, Func<IQueryable<Booking>, IOrderedQueryable<Booking>> orderBy)
             BuildFilterAndOrderBy(BookingSearchModel searchModel);
 
+        Task SaveBookingDataAsync(
+            ConsultationTime consultationTime,
+            Wallet studentWallet,
+            Wallet consultantWallet,
+            Booking booking,
+            Transaction studentTransaction,
+            Transaction consultantTransaction);
     }
 }

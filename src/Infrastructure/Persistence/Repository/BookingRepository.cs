@@ -50,5 +50,29 @@ namespace Infrastructure.Persistence.Repository
                 .AsNoTracking()
                 .ToListAsync();
         }
+
+        public async Task SaveBookingDataAsync(
+            ConsultationTime consultationTime,
+            Wallet studentWallet,
+            Wallet consultantWallet,
+            Booking booking,
+            Transaction studentTransaction,
+            Transaction consultantTransaction)
+        {
+            // Update consultation time
+            _context.ConsultationTime.Update(consultationTime);
+
+            // Update student and consultant wallets
+            _context.Wallet.Update(studentWallet);
+            _context.Wallet.Update(consultantWallet);
+
+            // Add booking and transactions
+            await _context.Booking.AddAsync(booking);
+            await _context.Transaction.AddRangeAsync(studentTransaction, consultantTransaction);
+
+            // Save all changes
+            await _context.SaveChangesAsync();
+        }
+
     }
 }

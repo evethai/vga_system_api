@@ -31,12 +31,13 @@ namespace Infrastructure.Persistence.Service
         #region Book consultation time
         public async Task<ResponseModel> BookConsultationTimeAsync(Guid consultationTimeId, Guid studentId)
         {
-
             try
             {
+                // Get consultation time and include necessary relationships
                 Expression<Func<ConsultationTime, bool>> exsitingConsultationTimeFilter = x =>
                     x.Id.Equals(consultationTimeId) &&
                     x.Status.Equals((int)ConsultationTimeStatusEnum.Available);
+
                 var consultationTime = await _unitOfWork.ConsultationTimeRepository
                     .SingleOrDefaultAsync(
                         predicate: exsitingConsultationTimeFilter,
@@ -57,32 +58,13 @@ namespace Infrastructure.Persistence.Service
                 }
 
                 var consultantWallet = consultationTime.Day.Consultant.Account.Wallet;
-
-                if (consultantWallet == null)
-                {
-                    return new ResponseModel
-                    {
-                        IsSuccess = false,
-                        Message = "Không thể tìm thấy ví của người tư vấn"
-                    };
-                }
-
                 var priceOnSlot = consultationTime.Day.Consultant.ConsultantLevel.PriceOnSlot;
 
                 var student = await _unitOfWork.StudentRepository
                     .SingleOrDefaultAsync(
-                        predicate: s => s.Id.Equals(studentId), 
-                        include: s => s.Include(st => st.Account.Wallet)) 
+                        predicate: s => s.Id.Equals(studentId),
+                        include: s => s.Include(st => st.Account.Wallet))
                     ?? throw new NotExistsException();
-
-                if (student.Account.Wallet == null)
-                {
-                    return new ResponseModel
-                    {
-                        IsSuccess = false,
-                        Message = "Không thể tìm thấy ví của học sinh"
-                    };
-                }
 
                 var studentWallet = student.Account.Wallet;
 
@@ -95,14 +77,14 @@ namespace Infrastructure.Persistence.Service
                     };
                 }
 
+                // Check for existing bookings
                 Expression<Func<Booking, bool>> exsitingTimeSlotFilter = x =>
                     x.StudentId.Equals(studentId) &&
                     x.ConsultationTime.TimeSlotId.Equals(consultationTime.TimeSlotId) &&
-                    x.ConsultationTime.ConsultationDayId.Equals(consultationTime.ConsultationDayId);
+                    x.ConsultationTime.Day.Day.Equals(consultationTime.Day.Day);
+
                 var existingBookingWithSameTimeSlot = await _unitOfWork.BookingRepository
-                    .SingleOrDefaultAsync(
-                        predicate: exsitingTimeSlotFilter
-                    );
+                    .SingleOrDefaultAsync(predicate: exsitingTimeSlotFilter);
 
                 if (existingBookingWithSameTimeSlot != null)
                 {
@@ -113,6 +95,7 @@ namespace Infrastructure.Persistence.Service
                     };
                 }
 
+                // Create booking and update statuses
                 var booking = new Booking
                 {
                     Id = Guid.NewGuid(),
@@ -122,32 +105,45 @@ namespace Infrastructure.Persistence.Service
                 };
 
                 consultationTime.Status = (int)ConsultationTimeStatusEnum.Booked;
-
-                consultationTime.Bookings.Add(booking);
-
                 studentWallet.GoldBalance -= (int)priceOnSlot;
-
                 consultantWallet.GoldBalance += (int)priceOnSlot;
 
-                await _unitOfWork.ConsultationTimeRepository.UpdateAsync(consultationTime);
-                await _unitOfWork.WalletRepository.UpdateAsync(studentWallet);
-                await _unitOfWork.WalletRepository.UpdateAsync(consultantWallet);
-                await _unitOfWork.SaveChangesAsync();
+                // Create transactions
+                var studentTransaction = new Transaction
+                {
+                    Id = Guid.NewGuid(),
+                    WalletId = studentWallet.Id,
+                    TransactionType = TransactionType.Using,
+                    Description = $"Bạn đã sử dụng {priceOnSlot} Gold để đặt tư vấn",
+                    GoldAmount = (int)priceOnSlot,
+                    TransactionDateTime = DateTime.UtcNow
+                };
 
-                
-                var studentTransactionPostModel = new TransactionPostModel(studentWallet.Id, (int)priceOnSlot);
-                await _unitOfWork.TransactionRepository
-                    .CreateTransactionWhenUsingGold(TransactionType.Using, studentTransactionPostModel);
+                var consultantTransaction = new Transaction
+                {
+                    Id = Guid.NewGuid(),
+                    WalletId = consultantWallet.Id,
+                    TransactionType = TransactionType.Receiving,
+                    Description = $"Bạn đã nhận {priceOnSlot} Gold từ buổi tư vấn",
+                    GoldAmount = (int)priceOnSlot,
+                    TransactionDateTime = DateTime.UtcNow
+                };
 
-                var consultantTransactionPostModel = new TransactionPostModel(consultantWallet.Id, (int)priceOnSlot);
-                await _unitOfWork.TransactionRepository
-                    .CreateTransactionWhenUsingGold(TransactionType.Receiving, consultantTransactionPostModel);
+                // Call consolidated method in the repository
+                await _unitOfWork.BookingRepository.SaveBookingDataAsync(
+                    consultationTime,
+                    studentWallet,
+                    consultantWallet,
+                    booking,
+                    studentTransaction,
+                    consultantTransaction
+                );
 
                 var result = _mapper.Map<BookingViewModel>(booking);
                 return new ResponseModel
                 {
                     IsSuccess = true,
-                    Message = "Đặt khoảng thời gan tư vấn thành công",
+                    Message = "Đặt khoảng thời gian tư vấn thành công",
                     Data = result
                 };
             }
@@ -156,11 +152,12 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while book consultation time: {ex.Message}"
+                    Message = $"An error occurred while booking consultation time: {ex.Message}"
                 };
             }
         }
         #endregion
+
 
         #region Get booking by id
         public async Task<ResponseModel> GetBookingByIdAsync(Guid bookingId)
