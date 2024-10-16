@@ -135,5 +135,12 @@
             public const string UniversityDeleteEndpoint = ApiEndpoint + "/university/{id}";
             public const string UniversityPostEndpoint = ApiEndpoint + "/university";
         }
+
+        //Notification
+        public static class Notification
+        {
+            public const string NotificationsEndpoint = ApiEndpoint + "/notifications";
+            public const string NotificationEndpoint = ApiEndpoint + "/notification/account/{id}";
+        }
     }
 }
