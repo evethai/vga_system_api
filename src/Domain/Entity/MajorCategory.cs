@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Domain.Entity
 {
-    public class WorkSkills : BaseEntity
+    public class MajorCategory : BaseEntity
     {
         public string Name { get; set; } = string.Empty;
         public bool Status { get; set; }
-        public virtual ICollection<OccupationalSKills> OccupationalSKills { get; set; } = null!;
+        public virtual ICollection<Major> Majors { get; set; } = null!;
     }
 }

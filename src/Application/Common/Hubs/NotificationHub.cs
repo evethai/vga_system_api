@@ -28,24 +28,25 @@ namespace Application.Common.Hubs
 
             if (accountId != null)
             {
-                _userConnectionManager.AddConnection(accountId, Context.ConnectionId);
+                _userConnectionManager.AddConnection(accountId, Context.ConnectionId); 
             }
 
             return base.OnConnectedAsync();
         }
 
-
-
         public override Task OnDisconnectedAsync(Exception exception)
         {
-            var accountId = Context.User?.FindFirst(JwtRegisteredClaimNames.UniqueName)?.Value;
+            var claims = Context.User?.Claims;
+            var nameClaim = claims?.FirstOrDefault(c => c.Type.Equals(ClaimTypes.Name) || c.Type.Equals(JwtRegisteredClaimNames.UniqueName));
+            var accountId = nameClaim?.Value;
+
             if (accountId != null)
             {
-                _userConnectionManager.RemoveConnection(accountId, Context.ConnectionId);
+                _userConnectionManager.RemoveConnection(accountId, Context.ConnectionId); 
             }
 
             return base.OnDisconnectedAsync(exception);
         }
-
     }
+
 }

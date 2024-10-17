@@ -55,6 +55,19 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "MajorCategory",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MajorCategory", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "OccupationalGroup",
                 columns: table => new
                 {
@@ -147,11 +160,18 @@ namespace Infrastructure.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false),
-                    OccupationalGroupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    OccupationalGroupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MajorCategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Major", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Major_MajorCategory_MajorCategoryId",
+                        column: x => x.MajorCategoryId,
+                        principalTable: "MajorCategory",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Major_OccupationalGroup_OccupationalGroupId",
                         column: x => x.OccupationalGroupId,
@@ -910,6 +930,11 @@ namespace Infrastructure.Migrations
                 column: "NewsId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Major_MajorCategoryId",
+                table: "Major",
+                column: "MajorCategoryId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Major_OccupationalGroupId",
                 table: "Major",
                 column: "OccupationalGroupId");
@@ -1111,6 +1136,9 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "University");
+
+            migrationBuilder.DropTable(
+                name: "MajorCategory");
 
             migrationBuilder.DropTable(
                 name: "EntryLevelEducation");

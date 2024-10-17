@@ -10,5 +10,6 @@ namespace Domain.Entity
     {
         public string Name { get; set; } = string.Empty;
         public bool Status { get; set; }
+        public virtual ICollection<Occupation> Occupations { get; set; } = null!;
     }
 }
