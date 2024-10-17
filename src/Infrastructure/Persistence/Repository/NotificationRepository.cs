@@ -29,7 +29,7 @@ namespace Infrastructure.Persistence.Repository
                 Status = Domain.Enum.NotiStatus.Unread
             };
             await AddAsync(notification);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }

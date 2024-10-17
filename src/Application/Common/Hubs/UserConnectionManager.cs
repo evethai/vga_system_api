@@ -31,7 +31,7 @@ namespace Application.Common.Hubs
                     _userConnections[accountId].Remove(connectionId);
                     if (_userConnections[accountId].Count == 0)
                     {
-                        _userConnections.Remove(accountId);
+                        _userConnections.Remove(accountId); 
                     }
                 }
             }
@@ -45,5 +45,6 @@ namespace Application.Common.Hubs
             }
         }
     }
+
 
 }

@@ -16,6 +16,8 @@ namespace Domain.Entity
         public bool Status { get; set; }
         public Guid OccupationalGroupId { get; set; }
         public virtual OccupationalGroup OccupationalGroup { get; set; } = null!;
+        public Guid MajorCategoryId { get; set; }
+        public virtual MajorCategory MajorCategory { get; set; } = null!;
         public virtual ICollection<MajorType> MajorTypes { get; set; } = null!;
         public virtual ICollection<AdmissionInformation> AdmissionInformation { get; set; } = null!;
 

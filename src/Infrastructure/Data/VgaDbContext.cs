@@ -57,29 +57,32 @@ namespace Infrastructure.Data
         public DbSet<EntryLevelEducation> EntryLevelEducation { get; set; }
         public DbSet<WorkSkills> WorkSkills { get; set; }
         public DbSet<OccupationalSKills> OccupationalSKills { get; set; }
+        public DbSet<MajorCategory> MajorCategory { get; set; }
 
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
+
             var entries = ChangeTracker.Entries<Notification>();
 
-            foreach (var entry in entries )
+            foreach (var entry in entries)
             {
-                if (entry.State == EntityState.Added || entry.State == EntityState.Modified)
+                if (entry.State == EntityState.Added || entry.State == EntityState.Modified )
                 {
                     var accountId = entry.Entity.AccountId.ToString();
 
                     var connections = _userConnectionManager.GetConnections(accountId);
 
-                    foreach (var connectionId in connections)
-                    {
-                        await _hubContext.Clients.Client(connectionId).SendAsync("ReceiveNotification", new
+                    var tasks = connections.Select(connectionId =>
+                        _hubContext.Clients.Client(connectionId).SendAsync("ReceiveNotification", new
                         {
                             Title = entry.Entity.Title,
                             Message = entry.Entity.Message,
                             CreatedAt = entry.Entity.CreatedAt,
-                        });
-                    }
+                        })
+                    );
+
+                    await Task.WhenAll(tasks);
                 }
             }
 
@@ -195,6 +198,7 @@ namespace Infrastructure.Data
             modelBuilder.Entity<EntryLevelEducation>(entity => entity.HasKey(el => el.Id));
             modelBuilder.Entity<WorkSkills>(entity => entity.HasKey(ws => ws.Id));
             modelBuilder.Entity<OccupationalSKills>(entity => entity.HasKey(os => os.Id));
+            modelBuilder.Entity<MajorCategory>(entity => entity.HasKey(mc => mc.Id));
 
 
             base.OnModelCreating(modelBuilder);

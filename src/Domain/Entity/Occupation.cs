@@ -16,6 +16,9 @@ namespace Domain.Entity
         public string? Description { get; set; }
         public string HowToWork { get; set; } = string.Empty;
         public string WorkEnvironment { get; set; } = string.Empty;
+        public string? PayScale { get; set; }
+        public string? JobOutlook { get; set; }
         public bool Status { get; set; }
+        public virtual ICollection<OccupationalSKills> OccupationalSKills { get; set; } = null!;
     }
 }
