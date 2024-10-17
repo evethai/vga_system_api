@@ -27,6 +27,7 @@ using Domain.Model.Booking;
 using Domain.Model.ConsultantLevel;
 using Domain.Model.University;
 using Domain.Model.Notification;
+using Domain.Model.News;
 
 
 namespace Application.Common.Mapper
@@ -170,6 +171,10 @@ namespace Application.Common.Mapper
             //Notification
             CreateMap<Notification, NotificationModel>().ReverseMap();
             CreateMap<Notification, NotificationPostModel>().ReverseMap();
+            // News
+            CreateMap<News, NewsModel>().ReverseMap();
+            CreateMap<News, NewsPostModel>().ReverseMap();
+            CreateMap<News, NewsPutModel>().ReverseMap();
         }
     }
 }

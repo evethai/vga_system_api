@@ -29,6 +29,7 @@ namespace Application.Interface
         IBookingRepository BookingRepository { get; }
         IRefreshTokenRepository RefreshTokenRepository { get; }
         INotificationRepository NotificationRepository { get; }
+        INewsRepository NewsRepository { get; }
         Task SaveChangesAsync();
     }
 }

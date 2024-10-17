@@ -16,7 +16,5 @@ namespace Domain.Entity
         public int Status { get; set; }
         public virtual ICollection<ImageNews> ImageNews { get; set; } = null!;
         public virtual ICollection<Like> Likes { get; set; } = null!;
-
-
     }
 }
