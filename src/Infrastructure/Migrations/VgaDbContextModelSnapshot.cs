@@ -318,6 +318,24 @@ namespace Infrastructure.Migrations
                     b.ToTable("ConsultationTime");
                 });
 
+            modelBuilder.Entity("Domain.Entity.EntryLevelEducation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EntryLevelEducation");
+                });
+
             modelBuilder.Entity("Domain.Entity.HighSchool", b =>
                 {
                     b.Property<Guid>("Id")
@@ -417,10 +435,15 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("OccupationalGroupId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OccupationalGroupId");
 
                     b.ToTable("Major");
                 });
@@ -511,6 +534,100 @@ namespace Infrastructure.Migrations
                     b.HasIndex("AccountId");
 
                     b.ToTable("Notification");
+                });
+
+            modelBuilder.Entity("Domain.Entity.Occupation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("EntryLevelEducationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("EntryLevelId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("HowToWork")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("OccupationGroupId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("OccupationalGroupId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("WorkEnvironment")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EntryLevelEducationId");
+
+                    b.HasIndex("OccupationalGroupId");
+
+                    b.ToTable("Occupation");
+                });
+
+            modelBuilder.Entity("Domain.Entity.OccupationalGroup", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OccupationalGroup");
+                });
+
+            modelBuilder.Entity("Domain.Entity.OccupationalSKills", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("OccupationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("WorkSkillsId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OccupationId");
+
+                    b.HasIndex("WorkSkillsId");
+
+                    b.ToTable("OccupationalSKills");
                 });
 
             modelBuilder.Entity("Domain.Entity.PersonalGroup", b =>
@@ -901,6 +1018,24 @@ namespace Infrastructure.Migrations
                     b.ToTable("Wallet");
                 });
 
+            modelBuilder.Entity("Domain.Entity.WorkSkills", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("WorkSkills");
+                });
+
             modelBuilder.Entity("Domain.Entity.Account", b =>
                 {
                     b.HasOne("Domain.Entity.Role", "Role")
@@ -1078,6 +1213,17 @@ namespace Infrastructure.Migrations
                     b.Navigation("News");
                 });
 
+            modelBuilder.Entity("Domain.Entity.Major", b =>
+                {
+                    b.HasOne("Domain.Entity.OccupationalGroup", "OccupationalGroup")
+                        .WithMany()
+                        .HasForeignKey("OccupationalGroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("OccupationalGroup");
+                });
+
             modelBuilder.Entity("Domain.Entity.MajorType", b =>
                 {
                     b.HasOne("Domain.Entity.Major", "Major")
@@ -1117,6 +1263,44 @@ namespace Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Account");
+                });
+
+            modelBuilder.Entity("Domain.Entity.Occupation", b =>
+                {
+                    b.HasOne("Domain.Entity.EntryLevelEducation", "EntryLevelEducation")
+                        .WithMany()
+                        .HasForeignKey("EntryLevelEducationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entity.OccupationalGroup", "OccupationalGroup")
+                        .WithMany()
+                        .HasForeignKey("OccupationalGroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("EntryLevelEducation");
+
+                    b.Navigation("OccupationalGroup");
+                });
+
+            modelBuilder.Entity("Domain.Entity.OccupationalSKills", b =>
+                {
+                    b.HasOne("Domain.Entity.Occupation", "Occupation")
+                        .WithMany()
+                        .HasForeignKey("OccupationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entity.WorkSkills", "WorkSkills")
+                        .WithMany()
+                        .HasForeignKey("WorkSkillsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Occupation");
+
+                    b.Navigation("WorkSkills");
                 });
 
             modelBuilder.Entity("Domain.Entity.PersonalGroup", b =>

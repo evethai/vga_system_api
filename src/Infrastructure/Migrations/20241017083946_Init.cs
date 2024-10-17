@@ -42,18 +42,30 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Major",
+                name: "EntryLevelEducation",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Major", x => x.Id);
+                    table.PrimaryKey("PK_EntryLevelEducation", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OccupationalGroup",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Status = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OccupationalGroup", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -111,6 +123,73 @@ namespace Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TimeSlot", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "WorkSkills",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WorkSkills", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Major",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<bool>(type: "bit", nullable: false),
+                    OccupationalGroupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Major", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Major_OccupationalGroup_OccupationalGroupId",
+                        column: x => x.OccupationalGroupId,
+                        principalTable: "OccupationalGroup",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Occupation",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    EntryLevelId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    EntryLevelEducationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OccupationGroupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OccupationalGroupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HowToWork = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    WorkEnvironment = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Occupation", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Occupation_EntryLevelEducation_EntryLevelEducationId",
+                        column: x => x.EntryLevelEducationId,
+                        principalTable: "EntryLevelEducation",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Occupation_OccupationalGroup_OccupationalGroupId",
+                        column: x => x.OccupationalGroupId,
+                        principalTable: "OccupationalGroup",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -203,6 +282,33 @@ namespace Infrastructure.Migrations
                         name: "FK_Question_TestType_TestTypeId",
                         column: x => x.TestTypeId,
                         principalTable: "TestType",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OccupationalSKills",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    WorkSkillsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OccupationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OccupationalSKills", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_OccupationalSKills_Occupation_OccupationId",
+                        column: x => x.OccupationId,
+                        principalTable: "Occupation",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_OccupationalSKills_WorkSkills_WorkSkillsId",
+                        column: x => x.WorkSkillsId,
+                        principalTable: "WorkSkills",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -804,6 +910,11 @@ namespace Infrastructure.Migrations
                 column: "NewsId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Major_OccupationalGroupId",
+                table: "Major",
+                column: "OccupationalGroupId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_MajorType_MajorId",
                 table: "MajorType",
                 column: "MajorId");
@@ -822,6 +933,26 @@ namespace Infrastructure.Migrations
                 name: "IX_Notification_AccountId",
                 table: "Notification",
                 column: "AccountId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Occupation_EntryLevelEducationId",
+                table: "Occupation",
+                column: "EntryLevelEducationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Occupation_OccupationalGroupId",
+                table: "Occupation",
+                column: "OccupationalGroupId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OccupationalSKills_OccupationId",
+                table: "OccupationalSKills",
+                column: "OccupationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OccupationalSKills_WorkSkillsId",
+                table: "OccupationalSKills",
+                column: "WorkSkillsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PersonalGroup_TestTypeId",
@@ -925,6 +1056,9 @@ namespace Infrastructure.Migrations
                 name: "Notification");
 
             migrationBuilder.DropTable(
+                name: "OccupationalSKills");
+
+            migrationBuilder.DropTable(
                 name: "RefreshToken");
 
             migrationBuilder.DropTable(
@@ -949,6 +1083,12 @@ namespace Infrastructure.Migrations
                 name: "Major");
 
             migrationBuilder.DropTable(
+                name: "Occupation");
+
+            migrationBuilder.DropTable(
+                name: "WorkSkills");
+
+            migrationBuilder.DropTable(
                 name: "PersonalGroup");
 
             migrationBuilder.DropTable(
@@ -971,6 +1111,12 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "University");
+
+            migrationBuilder.DropTable(
+                name: "EntryLevelEducation");
+
+            migrationBuilder.DropTable(
+                name: "OccupationalGroup");
 
             migrationBuilder.DropTable(
                 name: "HighSchool");
