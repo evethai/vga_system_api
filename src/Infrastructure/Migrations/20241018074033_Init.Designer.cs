@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(VgaDbContext))]
-    [Migration("20241017083946_Init")]
+    [Migration("20241018074033_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -434,21 +434,62 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("MajorCategoryId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("OccupationalGroupId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OccupationalGroupId");
+                    b.HasIndex("MajorCategoryId");
 
                     b.ToTable("Major");
+                });
+
+            modelBuilder.Entity("Domain.Entity.MajorCategory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MajorCategory");
+                });
+
+            modelBuilder.Entity("Domain.Entity.MajorOccupationMatrix", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<Guid>("MajorCategoryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("OccupationalGroupId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MajorCategoryId");
+
+                    b.HasIndex("OccupationalGroupId");
+
+                    b.ToTable("MajorOccupationMatrix");
                 });
 
             modelBuilder.Entity("Domain.Entity.MajorType", b =>
@@ -548,6 +589,10 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Education")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid>("EntryLevelEducationId")
                         .HasColumnType("uniqueidentifier");
 
@@ -558,15 +603,18 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("JobOutlook")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("OccupationGroupId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("OccupationalGroupId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("PayScale")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
@@ -1218,11 +1266,30 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entity.Major", b =>
                 {
+                    b.HasOne("Domain.Entity.MajorCategory", "MajorCategory")
+                        .WithMany("Majors")
+                        .HasForeignKey("MajorCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MajorCategory");
+                });
+
+            modelBuilder.Entity("Domain.Entity.MajorOccupationMatrix", b =>
+                {
+                    b.HasOne("Domain.Entity.MajorCategory", "MajorCategory")
+                        .WithMany("MajorOccupationMatrix")
+                        .HasForeignKey("MajorCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Domain.Entity.OccupationalGroup", "OccupationalGroup")
-                        .WithMany()
+                        .WithMany("MajorOccupationMatrix")
                         .HasForeignKey("OccupationalGroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("MajorCategory");
 
                     b.Navigation("OccupationalGroup");
                 });
@@ -1271,13 +1338,13 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entity.Occupation", b =>
                 {
                     b.HasOne("Domain.Entity.EntryLevelEducation", "EntryLevelEducation")
-                        .WithMany()
+                        .WithMany("Occupations")
                         .HasForeignKey("EntryLevelEducationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Entity.OccupationalGroup", "OccupationalGroup")
-                        .WithMany()
+                        .WithMany("Occupations")
                         .HasForeignKey("OccupationalGroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1290,13 +1357,13 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entity.OccupationalSKills", b =>
                 {
                     b.HasOne("Domain.Entity.Occupation", "Occupation")
-                        .WithMany()
+                        .WithMany("OccupationalSKills")
                         .HasForeignKey("OccupationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Entity.WorkSkills", "WorkSkills")
-                        .WithMany()
+                        .WithMany("OccupationalSKills")
                         .HasForeignKey("WorkSkillsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1494,6 +1561,11 @@ namespace Infrastructure.Migrations
                     b.Navigation("Bookings");
                 });
 
+            modelBuilder.Entity("Domain.Entity.EntryLevelEducation", b =>
+                {
+                    b.Navigation("Occupations");
+                });
+
             modelBuilder.Entity("Domain.Entity.HighSchool", b =>
                 {
                     b.Navigation("Students");
@@ -1506,11 +1578,30 @@ namespace Infrastructure.Migrations
                     b.Navigation("MajorTypes");
                 });
 
+            modelBuilder.Entity("Domain.Entity.MajorCategory", b =>
+                {
+                    b.Navigation("MajorOccupationMatrix");
+
+                    b.Navigation("Majors");
+                });
+
             modelBuilder.Entity("Domain.Entity.News", b =>
                 {
                     b.Navigation("ImageNews");
 
                     b.Navigation("Likes");
+                });
+
+            modelBuilder.Entity("Domain.Entity.Occupation", b =>
+                {
+                    b.Navigation("OccupationalSKills");
+                });
+
+            modelBuilder.Entity("Domain.Entity.OccupationalGroup", b =>
+                {
+                    b.Navigation("MajorOccupationMatrix");
+
+                    b.Navigation("Occupations");
                 });
 
             modelBuilder.Entity("Domain.Entity.PersonalGroup", b =>
@@ -1575,6 +1666,11 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entity.Wallet", b =>
                 {
                     b.Navigation("Transactions");
+                });
+
+            modelBuilder.Entity("Domain.Entity.WorkSkills", b =>
+                {
+                    b.Navigation("OccupationalSKills");
                 });
 #pragma warning restore 612, 618
         }

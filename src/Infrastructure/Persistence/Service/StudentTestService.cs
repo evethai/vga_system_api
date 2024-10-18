@@ -20,7 +20,7 @@ namespace Infrastructure.Persistence.Service
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-
+        #region result for test
         public async Task<ResponseModel> CreateResultForTest(StudentTestResultModel result)
         {
             TestTypeCode type = await _unitOfWork.StudentTestRepository.CheckTestType(result.PersonalTestId);
@@ -78,6 +78,7 @@ namespace Infrastructure.Persistence.Service
             };
 
         }
+        #endregion
 
         public async Task<PersonalTestModel> GetTestById(Guid id)
         {

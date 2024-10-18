@@ -31,16 +31,21 @@ namespace Api.Installers
                 {
                     OnMessageReceived = context =>
                     {
-                        var authorizationHeader = context.Request.Headers["Authorization"].FirstOrDefault();
-                        if (!string.IsNullOrEmpty(authorizationHeader) && authorizationHeader.StartsWith("Bearer "))
+                        var accessToken = context.Request.Query["access_token"];
+
+                        if (!string.IsNullOrEmpty(accessToken))
                         {
-                            var token = authorizationHeader.Substring("Bearer ".Length).Trim();
-                            var path = context.HttpContext.Request.Path;
-                            if (path.StartsWithSegments("/notification_hub"))
+                            context.Token = accessToken;
+                        }
+                        else
+                        {
+                            var authorizationHeader = context.Request.Headers["Authorization"].FirstOrDefault();
+                            if (!string.IsNullOrEmpty(authorizationHeader) && authorizationHeader.StartsWith("Bearer "))
                             {
-                                context.Token = token;
+                                context.Token = authorizationHeader.Substring("Bearer ".Length).Trim();
                             }
                         }
+
                         return Task.CompletedTask;
                     },
                     OnAuthenticationFailed = context =>
@@ -49,6 +54,7 @@ namespace Api.Installers
                         return Task.CompletedTask;
                     }
                 };
+
             });
         }
     }
