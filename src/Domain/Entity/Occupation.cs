@@ -10,12 +10,13 @@ namespace Domain.Entity
     {
         public Guid EntryLevelId { get; set; }
         public virtual EntryLevelEducation EntryLevelEducation { get; set; } = null!;
-        public Guid OccupationGroupId { get; set; }
+        public Guid OccupationalGroupId { get; set; }
         public virtual OccupationalGroup OccupationalGroup { get; set; } = null!;
         public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }
         public string HowToWork { get; set; } = string.Empty;
         public string WorkEnvironment { get; set; } = string.Empty;
+        public string Education { get; set;} = string.Empty;
         public string? PayScale { get; set; }
         public string? JobOutlook { get; set; }
         public bool Status { get; set; }
