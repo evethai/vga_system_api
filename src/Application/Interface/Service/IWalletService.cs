@@ -19,5 +19,6 @@ namespace Application.Interface.Service
         Task<ResponseWalletModel> GetAllWallet();
         Task<ResponseModel> UpdateWalletUsingGoldDistributionAsync(Guid WalletHigchoolId, int goldTransaction);
         Task<ResponseModel> UpdateWalletUsingByTestAsync(Guid WalletStudentId, int goldUsingTest);
+        Task<ResponseModel> UpdateWallet(Guid id, int gold);
     }
 }

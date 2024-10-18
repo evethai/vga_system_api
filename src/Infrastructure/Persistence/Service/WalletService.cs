@@ -123,5 +123,21 @@ namespace Infrastructure.Persistence.Service
                 Data = TransactionInfor,
             };
         }
+        public async Task<ResponseModel> UpdateWallet(Guid id, int gold)
+        {
+            var exitWallet = await _unitOfWork.WalletRepository.GetByIdGuidAsync(id);
+            exitWallet.GoldBalance += gold;
+            TransactionPostModel transaction = new TransactionPostModel(id, gold);
+            var TransactionInfor = _unitOfWork.TransactionRepository.
+                CreateTransactionWhenUsingGold(TransactionType.Receiving, transaction);
+            await _unitOfWork.WalletRepository.UpdateAsync(exitWallet);
+            await _unitOfWork.SaveChangesAsync();
+            return new ResponseModel
+            {
+                Message = "Admin tranferring gold is Successfully",
+                IsSuccess = true,
+                Data = TransactionInfor,
+            };
+        }
     }
 }
