@@ -4,6 +4,7 @@ using System.Data.SqlTypes;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Common.Exceptions;
 using Application.Interface;
 using Application.Interface.Service;
 using AutoMapper;
@@ -31,7 +32,7 @@ namespace Infrastructure.Persistence.Service
             var news = _mapper.Map<News>(postModel);
             var result = await _unitOfWork.NewsRepository.AddAsync(news);
             await _unitOfWork.SaveChangesAsync();
-            var img = await _unitOfWork.NewsRepository.CreateImageNew(news.Id, postModel.ImageNews);
+            var img = await _unitOfWork.NewsRepository.CreateImageNews(news.Id, postModel.ImageNews);
             if(img == false)
             {
                 return new ResponseModel
@@ -59,7 +60,7 @@ namespace Infrastructure.Persistence.Service
                     IsSuccess = false,
                 };
             }
-            await _unitOfWork.NewsRepository.DeleteImageNew(exitNews.Id);
+            await _unitOfWork.NewsRepository.DeleteAllImageNews(exitNews.Id);
             await _unitOfWork.NewsRepository.DeleteAsync(exitNews);
             await _unitOfWork.SaveChangesAsync();
             return new ResponseModel
@@ -90,13 +91,16 @@ namespace Infrastructure.Persistence.Service
 
         public async Task<NewsModel> GetNewsByIdAsync(Guid NewsId)
         {
-            var news = await _unitOfWork.NewsRepository.GetByIdGuidAsync(NewsId);
+
+            var news = await _unitOfWork.NewsRepository.
+                SingleOrDefaultAsync(predicate: c => c.Id.Equals(NewsId), include: c => c.Include(c => c.ImageNews))
+                ?? throw new NotExistsException();
             return _mapper.Map<NewsModel>(news);
         }
 
         public async Task<ResponseModel> UpdateNewsAsync(NewsPutModel putModel, Guid Id)
         {
-            var exit = await _unitOfWork.NewsRepository.GetByIdGuidAsync(Id);
+            var exit = await _unitOfWork.NewsRepository.SingleOrDefaultAsync(predicate: c => c.Id.Equals(Id), include: c => c.Include(c => c.ImageNews));
             if (exit ==null)
             {
                 return new ResponseModel
@@ -116,9 +120,46 @@ namespace Infrastructure.Persistence.Service
                 Data = exit
             }; 
         }
-        public async Task<ResponseModel> UpdateImageNews(ImageNewsModel imageNewsModel)
-        {           
-            var result = await _unitOfWork.NewsRepository.UpdateImageNew(imageNewsModel);
+
+        public async Task<ResponseModel> CreateImageNewsAsync(Guid NewsId, List<ImageNewsPostModel> imageNews)
+        {
+            var result = await _unitOfWork.NewsRepository.CreateImageNews(NewsId, imageNews);
+            if (result == false)
+            {
+                return new ResponseModel
+                {
+                    Message = "News Id is not found",
+                    IsSuccess = false
+                };
+            }
+            return new ResponseModel
+            {
+                Message = "Create Image news is Successfully",
+                IsSuccess = true,
+            };
+        }
+
+        public async Task<ResponseModel> DeleteImageNewsAsync(int Id)
+        {
+            var result = await _unitOfWork.NewsRepository.DeleteOneImageNews(Id);
+            if (result == false)
+            {
+                return new ResponseModel
+                {
+                    Message = "ImageNews Id is not found",
+                    IsSuccess = false
+                };
+            }
+            return new ResponseModel
+            {
+                Message = "Delete Image news is Successfully",
+                IsSuccess = true,
+            };
+        }
+
+        public async Task<ResponseModel> UpdateImageNewsAsync(ImageNewsPutModel imageNewsModel, int id)
+        {
+            var result = await _unitOfWork.NewsRepository.UpdateImageNews(imageNewsModel, id);
             if (result == false)
             {
                 return new ResponseModel
@@ -131,7 +172,8 @@ namespace Infrastructure.Persistence.Service
             {
                 Message = "Update Image news is Successfully",
                 IsSuccess = true,
+                Data = imageNewsModel
             };
-        } 
+        }
     }
 }

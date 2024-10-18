@@ -52,15 +52,20 @@ namespace Infrastructure.Data
         public DbSet<Transaction> Transaction { get; set; }
         public DbSet<University> University { get; set; }
         public DbSet<Wallet> Wallet { get; set; }
+        public DbSet<Occupation> Occupation { get; set; }
+        public DbSet<OccupationalGroup> OccupationalGroup { get; set; }
+        public DbSet<EntryLevelEducation> EntryLevelEducation { get; set; }
+        public DbSet<WorkSkills> WorkSkills { get; set; }
+        public DbSet<OccupationalSKills> OccupationalSKills { get; set; }
 
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             var entries = ChangeTracker.Entries<Notification>();
 
-            foreach (var entry in entries)
+            foreach (var entry in entries )
             {
-                if (entry.State == EntityState.Added)
+                if (entry.State == EntityState.Added || entry.State == EntityState.Modified)
                 {
                     var accountId = entry.Entity.AccountId.ToString();
 
@@ -185,6 +190,12 @@ namespace Infrastructure.Data
             modelBuilder.Entity<Transaction>(entity => entity.HasKey(t => t.Id));
             modelBuilder.Entity<Wallet>(entity => entity.HasKey(w => w.Id));
             modelBuilder.Entity<Role>(entity => entity.HasKey(r => r.Id));
+            modelBuilder.Entity<Occupation>(entity => entity.HasKey(o => o.Id));
+            modelBuilder.Entity<OccupationalGroup>(entity => entity.HasKey(og => og.Id));
+            modelBuilder.Entity<EntryLevelEducation>(entity => entity.HasKey(el => el.Id));
+            modelBuilder.Entity<WorkSkills>(entity => entity.HasKey(ws => ws.Id));
+            modelBuilder.Entity<OccupationalSKills>(entity => entity.HasKey(os => os.Id));
+
 
             base.OnModelCreating(modelBuilder);
         }

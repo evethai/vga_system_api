@@ -11,7 +11,6 @@ namespace Domain.Entity
         public Guid NewsId { get; set; }
         public News News { get; set; } = null!;
         public string ImageUrl { get; set; } = string.Empty;
-        public string DescriptionTitle { get; set; } = string.Empty;  
-        public bool Status { get; set; }
+        public string DescriptionTitle { get; set; } = string.Empty;          
     }
 }

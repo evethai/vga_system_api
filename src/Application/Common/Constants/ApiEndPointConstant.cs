@@ -142,5 +142,18 @@
             public const string NotificationsEndpoint = ApiEndpoint + "/notifications";
             public const string NotificationEndpoint = ApiEndpoint + "/notification/account/{id}";
         }
+        //News
+        public static class News
+        {
+            public const string NewsEndpoint = ApiEndpoint + "/news";
+            public const string NewEndpoint = ApiEndpoint + "/news/{id}";
+        }
+        // Image News
+        public static class ImageNews
+        {
+            public const string ImageNewsEndpoint = ApiEndpoint + "/image-news";
+            public const string ImageNewsDeleteEndpoint = ApiEndpoint + "/image-news/{id}";
+            public const string ImageNewsUpdateEndpoint = ApiEndpoint + "/image-news/{id}";
+        }
     }
 }

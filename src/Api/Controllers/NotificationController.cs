@@ -1,6 +1,7 @@
 ﻿using Api.Constants;
 using Application.Interface.Service;
 using Domain.Enum;
+using Domain.Model.Notification;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,10 +23,16 @@ namespace Api.Controllers
             var result = await _notificationService.GetNotiByAccountId(id);
             return Ok(result);
         }
-        [HttpPost]
+        [HttpPut]
         public async Task<IActionResult> UpdateNotification(int id, NotiStatus status)
         {
             var result = await _notificationService.UpdateNotification(id, status);
+            return Ok(result);
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddNotification(NotificationPostModel model)
+        {
+            var result = await _notificationService.AddNotification(model);
             return Ok(result);
         }
     }

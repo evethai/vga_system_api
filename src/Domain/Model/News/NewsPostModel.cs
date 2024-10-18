@@ -15,6 +15,6 @@ namespace Domain.Model.News
         public string Title { get; set; } = string.Empty;
         [Required(ErrorMessage = "Content is required.")]
         public string Content { get; set; } = string.Empty;
-        public List<ImageNewsModel>? ImageNews { get; set; }
+        public List<ImageNewsPostModel>? ImageNews { get; set; }
     }
 }

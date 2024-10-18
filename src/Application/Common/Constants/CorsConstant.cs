@@ -9,5 +9,10 @@ namespace Application.Common.Constants
     public static class CorsConstant
     {
         public const string PolicyName = "MyDefaultPolicy";
+        public static readonly string[] AllowedOrigins = new[]
+        {
+            "http://localhost:3000",
+
+        };
     }
 }

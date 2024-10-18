@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.Model.ConsultantLevel;
 
 namespace Domain.Model.Consultant
 {
@@ -11,7 +12,7 @@ namespace Domain.Model.Consultant
         public Guid Id { get; set; }
         public Guid AccountId { get; set; }
         public string Name { get; set; } = string.Empty;
-        public int ConsultantLevelId { get; set; }
+        public ConsultantLevelViewModel ConsultantLevel { get; set; }
         public string Email { get; set; } = string.Empty;
         public string Phone { get; set; } = string.Empty;
         public string? Image_Url { get; set; }

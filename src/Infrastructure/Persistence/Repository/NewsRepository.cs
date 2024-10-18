@@ -36,7 +36,7 @@ namespace Infrastructure.Persistence.Repository
             return (filter, orderBy);
         }
 
-        public Task<Boolean> CreateImageNew(Guid NewsId, List<ImageNewsModel> imageNews)
+        public Task<Boolean> CreateImageNews(Guid NewsId, List<ImageNewsPostModel> imageNews)
         {
             var _newsId =  _context.News.Where(s=> s.Id.Equals(NewsId)).FirstOrDefault();
             if (_newsId == null)
@@ -49,30 +49,40 @@ namespace Infrastructure.Persistence.Repository
                 {
                     NewsId = NewsId,
                     DescriptionTitle = image.DescriptionTitle,
-                    ImageUrl = image.ImageUrl,
-                    Status = true
+                    ImageUrl = image.ImageUrl,                   
                 };
                 _context.ImageNews.Add(img);             
             }
-            _context.SaveChanges();
             return Task.FromResult(true);
         }
 
-        public Task<bool> DeleteImageNew(Guid NewsId)
+        public Task<bool> DeleteAllImageNews(Guid NewId)
         {
-            var exitNewsId = _context.ImageNews.Where(s => s.NewsId.Equals(NewsId)).FirstOrDefault();
-            if (exitNewsId == null)
+            var exitNewsImageId = _context.ImageNews.Where(s => s.NewsId.Equals(NewId)).FirstOrDefault();
+            if (exitNewsImageId == null)
             {
                 return Task.FromResult(false);
             }
-            _context.ImageNews.Remove(exitNewsId);
+            _context.ImageNews.Remove(exitNewsImageId);
             _context.SaveChanges();
             return Task.FromResult(true);
         }
 
-        public Task<bool> UpdateImageNew(ImageNewsModel imageNews)
+        public Task<bool> DeleteOneImageNews(int id)
         {
-            var _imgNews = _context.ImageNews.Where(s => s.Id == imageNews.Id).FirstOrDefault();
+            var exitNewsImageId = _context.ImageNews.Where(s => s.Id.Equals(id)).FirstOrDefault();
+            if (exitNewsImageId == null)
+            {
+                return Task.FromResult(false);
+            }
+            _context.ImageNews.Remove(exitNewsImageId);
+            _context.SaveChanges();
+            return Task.FromResult(true);
+        }
+
+        public Task<bool> UpdateImageNews(ImageNewsPutModel imageNews, int id)
+        {
+            var _imgNews = _context.ImageNews.Where(s => s.Id == id).FirstOrDefault();
             if (_imgNews == null)
             {
                 return Task.FromResult(false);

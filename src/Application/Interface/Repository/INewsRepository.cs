@@ -13,8 +13,9 @@ namespace Application.Interface.Repository
     public interface INewsRepository :IGenericRepository<News>
     {
         (Expression<Func<News, bool>> filter, Func<IQueryable<News>, IOrderedQueryable<News>> orderBy) BuildFilterAndOrderBy(NewsSearchModel searchModel);
-        Task<Boolean> DeleteImageNew(Guid NewsId);
-        Task<Boolean> CreateImageNew(Guid NewsId, List<ImageNewsModel> imageNews);
-        Task<Boolean> UpdateImageNew(ImageNewsModel imageNews);
+        Task<Boolean> DeleteOneImageNews(int id);
+        Task<Boolean> DeleteAllImageNews(Guid NewId);
+        Task<Boolean> CreateImageNews(Guid NewsId, List<ImageNewsPostModel> imageNews);
+        Task<Boolean> UpdateImageNews(ImageNewsPutModel imageNews, int id);
     }
 }

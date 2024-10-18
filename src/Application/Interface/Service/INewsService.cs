@@ -15,5 +15,9 @@ namespace Application.Interface.Service
         Task<ResponseModel> CreateNewsAsync(NewsPostModel postModel);
         Task<ResponseModel> UpdateNewsAsync(NewsPutModel putModel, Guid Id);
         Task<ResponseModel> DeleteNewsAsync(Guid Id);
+
+        Task<ResponseModel> CreateImageNewsAsync(Guid NewsId, List<ImageNewsPostModel> imageNews);
+        Task<ResponseModel> DeleteImageNewsAsync(int Id);
+        Task<ResponseModel> UpdateImageNewsAsync(ImageNewsPutModel imageNewsModel, int id);
     }
 }
