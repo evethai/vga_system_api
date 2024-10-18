@@ -160,7 +160,6 @@ namespace Infrastructure.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false),
-                    OccupationalGroupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     MajorCategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -172,8 +171,28 @@ namespace Infrastructure.Migrations
                         principalTable: "MajorCategory",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MajorOccupationMatrix",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    MajorCategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OccupationalGroupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MajorOccupationMatrix", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Major_OccupationalGroup_OccupationalGroupId",
+                        name: "FK_MajorOccupationMatrix_MajorCategory_MajorCategoryId",
+                        column: x => x.MajorCategoryId,
+                        principalTable: "MajorCategory",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MajorOccupationMatrix_OccupationalGroup_OccupationalGroupId",
                         column: x => x.OccupationalGroupId,
                         principalTable: "OccupationalGroup",
                         principalColumn: "Id",
@@ -187,12 +206,14 @@ namespace Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     EntryLevelId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     EntryLevelEducationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    OccupationGroupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     OccupationalGroupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     HowToWork = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     WorkEnvironment = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Education = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PayScale = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    JobOutlook = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Status = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -935,8 +956,13 @@ namespace Infrastructure.Migrations
                 column: "MajorCategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Major_OccupationalGroupId",
-                table: "Major",
+                name: "IX_MajorOccupationMatrix_MajorCategoryId",
+                table: "MajorOccupationMatrix",
+                column: "MajorCategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MajorOccupationMatrix_OccupationalGroupId",
+                table: "MajorOccupationMatrix",
                 column: "OccupationalGroupId");
 
             migrationBuilder.CreateIndex(
@@ -1073,6 +1099,9 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Like");
+
+            migrationBuilder.DropTable(
+                name: "MajorOccupationMatrix");
 
             migrationBuilder.DropTable(
                 name: "MajorType");

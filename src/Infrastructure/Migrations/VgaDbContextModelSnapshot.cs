@@ -438,17 +438,12 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("OccupationalGroupId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
 
                     b.HasIndex("MajorCategoryId");
-
-                    b.HasIndex("OccupationalGroupId");
 
                     b.ToTable("Major");
                 });
@@ -469,6 +464,29 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("MajorCategory");
+                });
+
+            modelBuilder.Entity("Domain.Entity.MajorOccupationMatrix", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<Guid>("MajorCategoryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("OccupationalGroupId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MajorCategoryId");
+
+                    b.HasIndex("OccupationalGroupId");
+
+                    b.ToTable("MajorOccupationMatrix");
                 });
 
             modelBuilder.Entity("Domain.Entity.MajorType", b =>
@@ -568,6 +586,10 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Education")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid>("EntryLevelEducationId")
                         .HasColumnType("uniqueidentifier");
 
@@ -584,9 +606,6 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("OccupationGroupId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("OccupationalGroupId")
                         .HasColumnType("uniqueidentifier");
@@ -1250,8 +1269,19 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("MajorCategory");
+                });
+
+            modelBuilder.Entity("Domain.Entity.MajorOccupationMatrix", b =>
+                {
+                    b.HasOne("Domain.Entity.MajorCategory", "MajorCategory")
+                        .WithMany("MajorOccupationMatrix")
+                        .HasForeignKey("MajorCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Domain.Entity.OccupationalGroup", "OccupationalGroup")
-                        .WithMany("Majors")
+                        .WithMany("MajorOccupationMatrix")
                         .HasForeignKey("OccupationalGroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1547,6 +1577,8 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entity.MajorCategory", b =>
                 {
+                    b.Navigation("MajorOccupationMatrix");
+
                     b.Navigation("Majors");
                 });
 
@@ -1564,7 +1596,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entity.OccupationalGroup", b =>
                 {
-                    b.Navigation("Majors");
+                    b.Navigation("MajorOccupationMatrix");
 
                     b.Navigation("Occupations");
                 });

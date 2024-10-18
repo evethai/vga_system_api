@@ -58,6 +58,7 @@ namespace Infrastructure.Data
         public DbSet<WorkSkills> WorkSkills { get; set; }
         public DbSet<OccupationalSKills> OccupationalSKills { get; set; }
         public DbSet<MajorCategory> MajorCategory { get; set; }
+        public DbSet<MajorOccupationMatrix> MajorOccupationMatrix { get; set; }
 
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
@@ -199,6 +200,7 @@ namespace Infrastructure.Data
             modelBuilder.Entity<WorkSkills>(entity => entity.HasKey(ws => ws.Id));
             modelBuilder.Entity<OccupationalSKills>(entity => entity.HasKey(os => os.Id));
             modelBuilder.Entity<MajorCategory>(entity => entity.HasKey(mc => mc.Id));
+            modelBuilder.Entity<MajorOccupationMatrix>(entity => entity.HasKey(moc => moc.Id));
 
 
             base.OnModelCreating(modelBuilder);
