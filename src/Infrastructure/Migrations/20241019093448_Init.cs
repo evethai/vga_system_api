@@ -87,7 +87,7 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    DOET = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -237,6 +237,7 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -360,7 +361,6 @@ namespace Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     AccountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ConsultantLevelId = table.Column<int>(type: "int", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DoB = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Gender = table.Column<bool>(type: "bit", nullable: false)
@@ -389,8 +389,7 @@ namespace Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     RegionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     AccountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LocationDetail = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -462,9 +461,10 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     AccountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EstablishedYear = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -497,26 +497,25 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "MajorType",
+                name: "MajorPersonalMatrix",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PersonalGroupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    MajorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Status = table.Column<bool>(type: "bit", nullable: false)
+                    MajorCategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MajorType", x => x.Id);
+                    table.PrimaryKey("PK_MajorPersonalMatrix", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_MajorType_Major_MajorId",
-                        column: x => x.MajorId,
-                        principalTable: "Major",
+                        name: "FK_MajorPersonalMatrix_MajorCategory_MajorCategoryId",
+                        column: x => x.MajorCategoryId,
+                        principalTable: "MajorCategory",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_MajorType_PersonalGroup_PersonalGroupId",
+                        name: "FK_MajorPersonalMatrix_PersonalGroup_PersonalGroupId",
                         column: x => x.PersonalGroupId,
                         principalTable: "PersonalGroup",
                         principalColumn: "Id",
@@ -621,7 +620,6 @@ namespace Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     AccountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     HighSchoolId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Gender = table.Column<bool>(type: "bit", nullable: false),
                     DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
                     SchoolYears = table.Column<int>(type: "int", nullable: false)
@@ -652,7 +650,9 @@ namespace Infrastructure.Migrations
                     UniversityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     MajorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     AdmissionMethodId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    MinimumFees = table.Column<double>(type: "float", nullable: false),
+                    TuitionFee = table.Column<double>(type: "float", nullable: false),
+                    Year = table.Column<int>(type: "int", nullable: false),
+                    QuantityTarget = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -701,6 +701,33 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UniversityLocation",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UniversityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RegionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UniversityLocation", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UniversityLocation_Region_RegionId",
+                        column: x => x.RegionId,
+                        principalTable: "Region",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UniversityLocation_University_UniversityId",
+                        column: x => x.UniversityId,
+                        principalTable: "University",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Transaction",
                 columns: table => new
                 {
@@ -745,6 +772,31 @@ namespace Infrastructure.Migrations
                         name: "FK_ConsultationTime_TimeSlot_TimeSlotId",
                         column: x => x.TimeSlotId,
                         principalTable: "TimeSlot",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StudentChoice",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    StudentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MajorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OccupationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MajorVote = table.Column<int>(type: "int", nullable: false),
+                    OccupationVote = table.Column<int>(type: "int", nullable: false),
+                    CreateAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Status = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StudentChoice", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_StudentChoice_Student_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "Student",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -798,33 +850,6 @@ namespace Infrastructure.Migrations
                     table.PrimaryKey("PK_ImageNews", x => x.Id);
                     table.ForeignKey(
                         name: "FK_ImageNews_News_NewsId",
-                        column: x => x.NewsId,
-                        principalTable: "News",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Like",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    NewsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AccountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Status = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Like", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Like_Account_AccountId",
-                        column: x => x.AccountId,
-                        principalTable: "Account",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Like_News_NewsId",
                         column: x => x.NewsId,
                         principalTable: "News",
                         principalColumn: "Id",
@@ -940,16 +965,6 @@ namespace Infrastructure.Migrations
                 column: "NewsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Like_AccountId",
-                table: "Like",
-                column: "AccountId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Like_NewsId",
-                table: "Like",
-                column: "NewsId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Major_MajorCategoryId",
                 table: "Major",
                 column: "MajorCategoryId");
@@ -965,13 +980,13 @@ namespace Infrastructure.Migrations
                 column: "OccupationalGroupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MajorType_MajorId",
-                table: "MajorType",
-                column: "MajorId");
+                name: "IX_MajorPersonalMatrix_MajorCategoryId",
+                table: "MajorPersonalMatrix",
+                column: "MajorCategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MajorType_PersonalGroupId",
-                table: "MajorType",
+                name: "IX_MajorPersonalMatrix_PersonalGroupId",
+                table: "MajorPersonalMatrix",
                 column: "PersonalGroupId");
 
             migrationBuilder.CreateIndex(
@@ -1036,6 +1051,11 @@ namespace Infrastructure.Migrations
                 column: "HighSchoolId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_StudentChoice_StudentId",
+                table: "StudentChoice",
+                column: "StudentId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_StudentTest_PersonalGroupId",
                 table: "StudentTest",
                 column: "PersonalGroupId");
@@ -1072,6 +1092,16 @@ namespace Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_UniversityLocation_RegionId",
+                table: "UniversityLocation",
+                column: "RegionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UniversityLocation_UniversityId",
+                table: "UniversityLocation",
+                column: "UniversityId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Wallet_AccountId",
                 table: "Wallet",
                 column: "AccountId",
@@ -1097,13 +1127,10 @@ namespace Infrastructure.Migrations
                 name: "ImageNews");
 
             migrationBuilder.DropTable(
-                name: "Like");
-
-            migrationBuilder.DropTable(
                 name: "MajorOccupationMatrix");
 
             migrationBuilder.DropTable(
-                name: "MajorType");
+                name: "MajorPersonalMatrix");
 
             migrationBuilder.DropTable(
                 name: "Notification");
@@ -1115,6 +1142,9 @@ namespace Infrastructure.Migrations
                 name: "RefreshToken");
 
             migrationBuilder.DropTable(
+                name: "StudentChoice");
+
+            migrationBuilder.DropTable(
                 name: "StudentTest");
 
             migrationBuilder.DropTable(
@@ -1124,16 +1154,19 @@ namespace Infrastructure.Migrations
                 name: "Transaction");
 
             migrationBuilder.DropTable(
+                name: "UniversityLocation");
+
+            migrationBuilder.DropTable(
                 name: "AdmissionMethod");
+
+            migrationBuilder.DropTable(
+                name: "Major");
 
             migrationBuilder.DropTable(
                 name: "ConsultationTime");
 
             migrationBuilder.DropTable(
                 name: "News");
-
-            migrationBuilder.DropTable(
-                name: "Major");
 
             migrationBuilder.DropTable(
                 name: "Occupation");
@@ -1157,6 +1190,9 @@ namespace Infrastructure.Migrations
                 name: "Wallet");
 
             migrationBuilder.DropTable(
+                name: "MajorCategory");
+
+            migrationBuilder.DropTable(
                 name: "ConsultationDay");
 
             migrationBuilder.DropTable(
@@ -1164,9 +1200,6 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "University");
-
-            migrationBuilder.DropTable(
-                name: "MajorCategory");
 
             migrationBuilder.DropTable(
                 name: "EntryLevelEducation");

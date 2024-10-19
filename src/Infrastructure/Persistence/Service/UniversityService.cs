@@ -114,8 +114,8 @@ namespace Infrastructure.Persistence.Service
                 };
             }
             exitUniversity.Description = putModel.Description;
-            exitUniversity.Name = putModel.Name;
-            exitUniversity.Address = putModel.Address;
+            //exitUniversity.Name = putModel.Name;
+            //exitUniversity.Address = putModel.Address;
             var exitAccount = await _unitOfWork.AccountRepository.GetByIdGuidAsync(exitUniversity.AccountId);
             if (exitAccount == null)
             {

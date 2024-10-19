@@ -26,7 +26,7 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
     {
         _context = context;
     }
-
+    #region MBTI Test
     public async Task<PersonalGroupModel> CalculateResultMBTITest(List<int> listAnswerId)
     {
         var answerValueCounts = new Dictionary<AnswerValue, int>
@@ -76,9 +76,9 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
 
         return result;
     }
+    #endregion
 
-
-
+    #region Get Test
     public async Task<PersonalTestModel> GetTestById(Guid personalTestId)
     {
 
@@ -129,9 +129,9 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
 
         return model;
     }
+    #endregion
 
-
-
+    #region Holland Test
     public async Task<PersonalGroupModel> CalculateResultHollandTest(List<int> listQuestionId)
     {
 
@@ -196,9 +196,6 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
         })
         .ToList();
 
-
-
-
         var result = new PersonalGroupModel
         {
             Id = h_type.Id,
@@ -211,7 +208,9 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
 
         return result;
     }
+    #endregion
 
+    #region Get By Id
     public async Task<IEnumerable<Question>> GetAllQuestionByTestId(Guid personalTestId)
     {
         var result = await _context.TestQuestion.Where(q => q.PersonalTestId == personalTestId).Select(p => p.Question).ToListAsync();
@@ -223,7 +222,9 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
         var result = await _context.Answer.Where(a => a.QuestionId == questionId).ToListAsync();
         return result;
     }
+    #endregion
 
+    #region Check Type
     public async Task<TestTypeCode> CheckTestType(Guid personalTestId)
     {
         var testType = await _context.PersonalTest
@@ -233,7 +234,9 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
 
         return testType;
     }
+    #endregion
 
+    #region History Test
     public async Task<IEnumerable<HistoryTestModel>> GetHistoryTestByStudentId(Guid studentId)
     {
         var tests = await _context.StudentTest
@@ -271,7 +274,7 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
 
         return result;
     }
-
+    #endregion
 }
 
 

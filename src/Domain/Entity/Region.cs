@@ -8,6 +8,7 @@ namespace Domain.Entity;
 public class Region : BaseEntity
 {
     public string Name { get; set; } = string.Empty;
-    public string Description { get; set; } = null!;
+    public string DOET { get; set; } = null!;
     public virtual ICollection<HighSchool> HighSchools { get; set; } = null!;
+    public virtual ICollection<UniversityLocation> UniversityLocations { get; set; } = null!;
 }
