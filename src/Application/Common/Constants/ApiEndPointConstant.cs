@@ -73,6 +73,7 @@
             public const string StudentDeleteEndpoint = ApiEndpoint + "/student/{id}";
             public const string ImportStudentEndpoint = StudentGetListEndpoint + "/import";
         }
+        //Wallet
         public static class Wallet
         {
             public const string WalletsEndpoint = ApiEndpoint + "/wallet";
@@ -81,9 +82,12 @@
             public const string WalletTest = ApiEndpoint + "/wallet/do-the-test";
             public const string WalletBook = ApiEndpoint + "/wallet/book-conslutant";
         }
+        //Transaction
+        public static class Transaction
+        {
+            public const string TransactionEndPoint = ApiEndpoint + "/transactions";
+        }
 
-
-  
         //consultant
         public static class Consultant
         {

@@ -110,6 +110,15 @@ namespace Infrastructure.Persistence.Service
         public async Task<ResponseModel> UpdateWalletUsingByTestAsync(Guid WalletStudentId, int goldUsingTest)
         {
             var walletStudent = await _unitOfWork.WalletRepository.GetByIdGuidAsync(WalletStudentId);
+            if (walletStudent==null)
+            {
+                return new ResponseModel
+                {
+                    Message = "WalletId is not found",
+                    IsSuccess = false,
+                    Data = WalletStudentId,
+                };
+            } 
             walletStudent.GoldBalance -= goldUsingTest;
             TransactionPostModel  transaction = new TransactionPostModel(WalletStudentId, goldUsingTest);
             var TransactionInfor = _unitOfWork.TransactionRepository.
