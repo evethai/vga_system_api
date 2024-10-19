@@ -34,6 +34,14 @@ namespace Infrastructure.Persistence.Repository
             {
                 filter = filter.And(p => p.Student.Name.Contains(searchModel.studentName));
             }
+            if (searchModel.studentId.HasValue)
+            {
+                filter = filter.And(p => p.StudentId.Equals(searchModel.studentId.Value));
+            }
+            if (searchModel.consultantId.HasValue)
+            {
+                filter = filter.And(p => p.ConsultationTime.Day.ConsultantId.Equals(searchModel.consultantId.Value));
+            }
             return (filter, orderBy);
         }
 
