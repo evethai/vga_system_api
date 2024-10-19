@@ -593,9 +593,6 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("EntryLevelEducationId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("EntryLevelId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("HowToWork")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");

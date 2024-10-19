@@ -8,13 +8,11 @@ using System.Threading.Tasks;
 
 namespace Domain.Entity
 {
-    public class MajorType : BasicEntity
+    public class MajorPersonalityMatrix : BasicEntity
     {
-
         public Guid PersonalGroupId { get; set; }
-        public PersonalGroup PersonalGroup { get; set; } = null!;
-        public Guid MajorId { get; set; }
-        public Major Major { get; set; } = null!;
-        public bool Status { get; set; }
+        public virtual PersonalGroup PersonalGroup { get; set; } = null!;
+        public Guid MajorCategoryId { get; set; }
+        public virtual MajorCategory MajorCategory { get; set; } = null!;
     }
 }

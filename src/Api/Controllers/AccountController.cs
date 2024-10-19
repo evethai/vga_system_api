@@ -77,5 +77,17 @@ namespace Api.Controllers
             return Ok(result);
         }
 
+        [HttpPut(ApiEndPointConstant.Account.AccountEndpoint)]
+        //[CustomAuthorize(RoleEnum.Admin)]
+        public async Task<IActionResult> UpdateStatusAccount(Guid id, AccountStatus status)
+        {
+            var result = await _accountService.UpdateStatusAccount(id, status);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+        }
+
     }
 }
