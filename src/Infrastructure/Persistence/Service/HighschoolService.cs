@@ -77,8 +77,8 @@ public class HighschoolService : IHighschoolService
                 IsSuccess = true,
             };
         }
-        exitHighschool.LocationDetail = putModel.LocationDetail;
-        exitHighschool.Name = putModel.Name;
+        //exitHighschool.LocationDetail = putModel.LocationDetail;
+        //exitHighschool.Name = putModel.Name;
         exitHighschool.RegionId = putModel.RegionId;
         var exitAccount = await _unitOfWork.AccountRepository.GetByIdGuidAsync(exitHighschool.AccountId);
         if (exitAccount == null)

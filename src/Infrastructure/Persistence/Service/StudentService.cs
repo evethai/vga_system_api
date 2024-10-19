@@ -63,7 +63,7 @@ public class StudentService : IStudentService
         }
         exitStudent.DateOfBirth = putModel.DateOfBirth;
         exitStudent.SchoolYears = putModel.SchoolYears;
-        exitStudent.Name = putModel.Name;
+        //exitStudent.Name = putModel.Name;
         exitStudent.Gender = putModel.Gender;
         var exitAccount = await _unitOfWork.AccountRepository.GetByIdGuidAsync(exitStudent.AccountId);
         if (exitAccount == null)

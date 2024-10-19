@@ -34,7 +34,6 @@ namespace Infrastructure.Data
         public DbSet<ConsultantLevel> ConsultantLevel { get; set; }
         public DbSet<HighSchool> HighSchool { get; set; }
         public DbSet<ImageNews> ImageNews { get; set; }
-        public DbSet<Like> Like { get; set; }
         public DbSet<Major> Major { get; set; }
         public DbSet<MajorPersonalityMatrix> MajorPersonalMatrix { get; set; }
         public DbSet<News> News { get; set; }
@@ -60,6 +59,7 @@ namespace Infrastructure.Data
         public DbSet<MajorCategory> MajorCategory { get; set; }
         public DbSet<MajorOccupationMatrix> MajorOccupationMatrix { get; set; }
         public DbSet<StudentChoice> StudentChoice { get; set; }
+        public DbSet<UniversityLocation> UniversityLocation { get; set; }
 
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
@@ -97,7 +97,6 @@ namespace Infrastructure.Data
             {
                 entity.HasKey(a => a.Id);
                 entity.HasMany(a => a.Notifications).WithOne(n => n.Account).HasForeignKey(n => n.AccountId).OnDelete(DeleteBehavior.Restrict);
-                entity.HasMany(a => a.Likes).WithOne(l => l.Account).HasForeignKey(l => l.AccountId).OnDelete(DeleteBehavior.Restrict);
             });
 
             // expert
@@ -182,7 +181,6 @@ namespace Infrastructure.Data
             modelBuilder.Entity<ConsultationTime>(entity => entity.HasKey(ct => ct.Id));
             modelBuilder.Entity<ConsultantLevel>(entity => entity.HasKey(el => el.Id));
             modelBuilder.Entity<ImageNews>(entity => entity.HasKey(im => im.Id));
-            modelBuilder.Entity<Like>(entity => entity.HasKey(l => l.Id));
             modelBuilder.Entity<Major>(entity => entity.HasKey(m => m.Id));
             modelBuilder.Entity<News>(entity => entity.HasKey(n => n.Id));
             modelBuilder.Entity<Notification>(entity => entity.HasKey(n => n.Id));

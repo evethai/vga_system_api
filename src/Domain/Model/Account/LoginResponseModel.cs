@@ -11,14 +11,14 @@ namespace Domain.Model.Account
     {
         public string AccessToken { get; set; }
         public string RefreshToken { get; set; } 
-        public string Name { get; set; }
+        //public string Name { get; set; }
         public RoleEnum Role { get; set; }
 
 
-        public LoginResponseModel( RoleEnum role, string name)
+        public LoginResponseModel( RoleEnum role)
         {
             Role = role;
-            Name = name;
+            //Name = name;
         }
     }
 
@@ -26,8 +26,8 @@ namespace Domain.Model.Account
     {
         public Guid StudentId { get; set; }
 
-        public StudentAccountResponseModel(RoleEnum role,string name, Guid studentId)
-            : base(role,name) 
+        public StudentAccountResponseModel(RoleEnum role, Guid studentId)
+            : base(role) 
         {
             StudentId = studentId;
         }
@@ -37,8 +37,8 @@ namespace Domain.Model.Account
     {
         public Guid CareerExpertId { get; set; }
 
-        public CareerExpertAccountResponseModel(RoleEnum role,string name, Guid careerExpertId)
-            : base(role,name) 
+        public CareerExpertAccountResponseModel(RoleEnum role, Guid careerExpertId)
+            : base(role) 
         {
             CareerExpertId = careerExpertId;
         }
@@ -48,7 +48,7 @@ namespace Domain.Model.Account
     {
         public Guid HighSchoolId { get; set; }
 
-        public HighSchoolAccountResponseModel(RoleEnum role, string name, Guid highSchoolId) : base(role, name) 
+        public HighSchoolAccountResponseModel(RoleEnum role, Guid highSchoolId) : base(role) 
         {
             HighSchoolId = highSchoolId;
         }
@@ -58,7 +58,7 @@ namespace Domain.Model.Account
     {
         public Guid UniversityId { get; set; }
 
-        public UniversityAccountResponseModel(RoleEnum role, string name, Guid universityId) : base(role, name) 
+        public UniversityAccountResponseModel(RoleEnum role, Guid universityId) : base(role) 
         {
             UniversityId = universityId;
         }
