@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(VgaDbContext))]
-    [Migration("20241018074033_Init")]
+    [Migration("20241018091454_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -594,9 +594,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("EntryLevelEducationId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("EntryLevelId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("HowToWork")

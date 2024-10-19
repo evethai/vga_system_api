@@ -36,7 +36,7 @@ namespace Infrastructure.Data
         public DbSet<ImageNews> ImageNews { get; set; }
         public DbSet<Like> Like { get; set; }
         public DbSet<Major> Major { get; set; }
-        public DbSet<MajorType> MajorType { get; set; }
+        public DbSet<MajorPersonalityMatrix> MajorPersonalMatrix { get; set; }
         public DbSet<News> News { get; set; }
         public DbSet<Notification> Notification { get; set; }
         public DbSet<PersonalGroup> PersonalGroup { get; set; }
@@ -59,6 +59,7 @@ namespace Infrastructure.Data
         public DbSet<OccupationalSKills> OccupationalSKills { get; set; }
         public DbSet<MajorCategory> MajorCategory { get; set; }
         public DbSet<MajorOccupationMatrix> MajorOccupationMatrix { get; set; }
+        public DbSet<StudentChoice> StudentChoice { get; set; }
 
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
@@ -165,11 +166,11 @@ namespace Infrastructure.Data
             });
 
             //major type
-            modelBuilder.Entity<MajorType>(entity =>
+            modelBuilder.Entity<MajorPersonalityMatrix>(entity =>
             {
                 entity.HasKey(mt => mt.Id);
-                entity.HasOne(mt => mt.Major).WithMany(m => m.MajorTypes).HasForeignKey(m => m.MajorId).OnDelete(DeleteBehavior.Restrict);
-                entity.HasOne(mt => mt.PersonalGroup).WithMany(m => m.MajorTypes).HasForeignKey(m => m.PersonalGroupId).OnDelete(DeleteBehavior.Restrict);
+                entity.HasOne(mt => mt.MajorCategory).WithMany(m => m.MajorPersonalMatrixs).HasForeignKey(m => m.MajorCategoryId).OnDelete(DeleteBehavior.Restrict);
+                entity.HasOne(mt => mt.PersonalGroup).WithMany(m => m.MajorPersonalMatrixs).HasForeignKey(m => m.PersonalGroupId).OnDelete(DeleteBehavior.Restrict);
             });
 
             // other entities
@@ -201,6 +202,7 @@ namespace Infrastructure.Data
             modelBuilder.Entity<OccupationalSKills>(entity => entity.HasKey(os => os.Id));
             modelBuilder.Entity<MajorCategory>(entity => entity.HasKey(mc => mc.Id));
             modelBuilder.Entity<MajorOccupationMatrix>(entity => entity.HasKey(moc => moc.Id));
+            modelBuilder.Entity<StudentChoice>(entity => entity.HasKey(sc => sc.Id));
 
 
             base.OnModelCreating(modelBuilder);

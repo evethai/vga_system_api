@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Domain.Model.Major
 {
-    public class MajorModel
+    public class MajorCategoryModel
     {
         public Guid Id { get; set; }
-        public string Code { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
+        public List<MajorModel> Majors { get; set; } = new List<MajorModel>();
     }
 }

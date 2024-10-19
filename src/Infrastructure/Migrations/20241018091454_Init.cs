@@ -204,7 +204,6 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    EntryLevelId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     EntryLevelEducationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     OccupationalGroupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),

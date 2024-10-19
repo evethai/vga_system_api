@@ -8,7 +8,7 @@ namespace Domain.Entity
 {
     public class Occupation : BaseEntity
     {
-        public Guid EntryLevelId { get; set; }
+        public Guid EntryLevelEducationId { get; set; }
         public virtual EntryLevelEducation EntryLevelEducation { get; set; } = null!;
         public Guid OccupationalGroupId { get; set; }
         public virtual OccupationalGroup OccupationalGroup { get; set; } = null!;
