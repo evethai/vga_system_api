@@ -12,7 +12,6 @@ namespace Domain.Entity
         public bool Status { get; set; }
         public virtual ICollection<Major> Majors { get; set; } = null!;
         public virtual ICollection<MajorOccupationMatrix> MajorOccupationMatrix { get; set; } = null!;
-
-
+        public virtual ICollection<MajorPersonalityMatrix> MajorPersonalMatrixs { get; set; } = null!;
     }
 }

@@ -33,7 +33,7 @@ namespace Infrastructure.Persistence.Service
             Account account = await _unitOfWork.AccountRepository
                 .SingleOrDefaultAsync(predicate: searchFilter, include: x => x.Include(x => x.Role));
 
-            if (account == null) return null;
+            if (account == null || account.Status == AccountStatus.Blocked) return null;
 
             RoleEnum role = EnumUtil.ParseEnum<RoleEnum>(account.Role.Name);
 
@@ -47,7 +47,7 @@ namespace Infrastructure.Persistence.Service
             Account account = await _unitOfWork.AccountRepository
                 .SingleOrDefaultAsync(predicate: x => x.ZaloId.Equals(model.ZaloId), include: x => x.Include(x => x.Role));
 
-            if (account != null)
+            if (account != null && account.Status == AccountStatus.Active)
             {
                 // 1. If ZaloId exists, return login response
                 RoleEnum role = EnumUtil.ParseEnum<RoleEnum>(account.Role.Name);
@@ -60,7 +60,7 @@ namespace Infrastructure.Persistence.Service
                 account = await _unitOfWork.AccountRepository
                     .SingleOrDefaultAsync(predicate: x => x.Phone.Equals(model.Phone), include: x => x.Include(x => x.Role));
 
-                if (account != null)
+                if (account != null && account.Status == AccountStatus.Active)
                 {
 
                     // If account with phone exists, update ZaloId, image
@@ -289,9 +289,39 @@ namespace Infrastructure.Persistence.Service
             return Convert.ToBase64String(randomNumber);
         }
 
-
-        
-
+        #region update status account
+        public async Task<ResponseModel> UpdateStatusAccount(Guid accountId, AccountStatus status)
+        {
+            try
+            {
+                var account = await _unitOfWork.AccountRepository.SingleOrDefaultAsync(predicate: x => x.Id == accountId);
+                if (account == null)
+                {
+                    return new ResponseModel
+                    {
+                        IsSuccess = false,
+                        Message = "Account not found"
+                    };
+                }
+                account.Status = status;
+                await _unitOfWork.AccountRepository.UpdateAsync(account);
+                await _unitOfWork.SaveChangesAsync();
+                return new ResponseModel
+                {
+                    IsSuccess = true,
+                    Message = "Update status account success"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    IsSuccess = false,
+                    Message = "An error occurred while updating status account"
+                };
+            }
+        }
+        #endregion
 
     }
 }

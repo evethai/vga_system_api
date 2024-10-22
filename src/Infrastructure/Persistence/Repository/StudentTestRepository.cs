@@ -181,15 +181,21 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
             throw new KeyNotFoundException("Personality type not found");
         }
 
-        var majors = await _context.MajorType.Where(m => m.PersonalGroupId == h_type.Id)
-            .Select(m => new MajorModel
+         var majors = _context.MajorPersonalMatrix
+        .Where(p => p.PersonalGroupId == h_type.Id)
+        .Select(p => new MajorCategoryModel
+        {
+            Id = p.MajorCategory.Id,
+            Name = p.MajorCategory.Name,
+            Majors = p.MajorCategory.Majors.Select(m => new MajorModel
             {
-                Id = m.Major.Id,
-                Code = m.Major.Code,
-                Name = m.Major.Name,
-                Description = m.Major.Description
-            })
-            .ToListAsync();
+                Id = m.Id,
+                Name = m.Name,
+                Code = m.Code
+            }).ToList()
+        })
+        .ToList();
+
 
 
 

@@ -24,7 +24,6 @@ namespace Domain.Entity
         public DateTime CreateAt { get; set; }
         public DateTime ResetPasswordAt { get; set; }
         public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
-        public virtual ICollection<Like> Likes { get; set; } = new List<Like>();
         public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
         public virtual Wallet Wallet { get; set; } = null!;
         public virtual Student Student { get; set; } = null!;

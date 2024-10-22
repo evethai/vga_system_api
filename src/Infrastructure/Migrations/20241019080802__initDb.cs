@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class _initDB : Migration
+    public partial class _initDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -204,7 +204,6 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    EntryLevelId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     EntryLevelEducationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     OccupationalGroupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -498,26 +497,25 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "MajorType",
+                name: "MajorPersonalMatrix",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PersonalGroupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    MajorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Status = table.Column<bool>(type: "bit", nullable: false)
+                    MajorCategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MajorType", x => x.Id);
+                    table.PrimaryKey("PK_MajorPersonalMatrix", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_MajorType_Major_MajorId",
-                        column: x => x.MajorId,
-                        principalTable: "Major",
+                        name: "FK_MajorPersonalMatrix_MajorCategory_MajorCategoryId",
+                        column: x => x.MajorCategoryId,
+                        principalTable: "MajorCategory",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_MajorType_PersonalGroup_PersonalGroupId",
+                        name: "FK_MajorPersonalMatrix_PersonalGroup_PersonalGroupId",
                         column: x => x.PersonalGroupId,
                         principalTable: "PersonalGroup",
                         principalColumn: "Id",
@@ -750,6 +748,31 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "StudentChoice",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    StudentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MajorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OccupationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MajorVote = table.Column<int>(type: "int", nullable: false),
+                    OccupationVote = table.Column<int>(type: "int", nullable: false),
+                    CreateAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Status = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StudentChoice", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_StudentChoice_Student_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "Student",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "StudentTest",
                 columns: table => new
                 {
@@ -798,33 +821,6 @@ namespace Infrastructure.Migrations
                     table.PrimaryKey("PK_ImageNews", x => x.Id);
                     table.ForeignKey(
                         name: "FK_ImageNews_News_NewsId",
-                        column: x => x.NewsId,
-                        principalTable: "News",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Like",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    NewsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AccountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Status = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Like", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Like_Account_AccountId",
-                        column: x => x.AccountId,
-                        principalTable: "Account",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Like_News_NewsId",
                         column: x => x.NewsId,
                         principalTable: "News",
                         principalColumn: "Id",
@@ -940,16 +936,6 @@ namespace Infrastructure.Migrations
                 column: "NewsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Like_AccountId",
-                table: "Like",
-                column: "AccountId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Like_NewsId",
-                table: "Like",
-                column: "NewsId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Major_MajorCategoryId",
                 table: "Major",
                 column: "MajorCategoryId");
@@ -965,13 +951,13 @@ namespace Infrastructure.Migrations
                 column: "OccupationalGroupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MajorType_MajorId",
-                table: "MajorType",
-                column: "MajorId");
+                name: "IX_MajorPersonalMatrix_MajorCategoryId",
+                table: "MajorPersonalMatrix",
+                column: "MajorCategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MajorType_PersonalGroupId",
-                table: "MajorType",
+                name: "IX_MajorPersonalMatrix_PersonalGroupId",
+                table: "MajorPersonalMatrix",
                 column: "PersonalGroupId");
 
             migrationBuilder.CreateIndex(
@@ -1036,6 +1022,11 @@ namespace Infrastructure.Migrations
                 column: "HighSchoolId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_StudentChoice_StudentId",
+                table: "StudentChoice",
+                column: "StudentId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_StudentTest_PersonalGroupId",
                 table: "StudentTest",
                 column: "PersonalGroupId");
@@ -1097,13 +1088,10 @@ namespace Infrastructure.Migrations
                 name: "ImageNews");
 
             migrationBuilder.DropTable(
-                name: "Like");
-
-            migrationBuilder.DropTable(
                 name: "MajorOccupationMatrix");
 
             migrationBuilder.DropTable(
-                name: "MajorType");
+                name: "MajorPersonalMatrix");
 
             migrationBuilder.DropTable(
                 name: "Notification");
@@ -1113,6 +1101,9 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "RefreshToken");
+
+            migrationBuilder.DropTable(
+                name: "StudentChoice");
 
             migrationBuilder.DropTable(
                 name: "StudentTest");
@@ -1127,13 +1118,13 @@ namespace Infrastructure.Migrations
                 name: "AdmissionMethod");
 
             migrationBuilder.DropTable(
+                name: "Major");
+
+            migrationBuilder.DropTable(
                 name: "ConsultationTime");
 
             migrationBuilder.DropTable(
                 name: "News");
-
-            migrationBuilder.DropTable(
-                name: "Major");
 
             migrationBuilder.DropTable(
                 name: "Occupation");
@@ -1157,6 +1148,9 @@ namespace Infrastructure.Migrations
                 name: "Wallet");
 
             migrationBuilder.DropTable(
+                name: "MajorCategory");
+
+            migrationBuilder.DropTable(
                 name: "ConsultationDay");
 
             migrationBuilder.DropTable(
@@ -1164,9 +1158,6 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "University");
-
-            migrationBuilder.DropTable(
-                name: "MajorCategory");
 
             migrationBuilder.DropTable(
                 name: "EntryLevelEducation");

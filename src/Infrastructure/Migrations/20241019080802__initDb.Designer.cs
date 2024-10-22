@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(VgaDbContext))]
-    [Migration("20241018100004__initDB")]
-    partial class _initDB
+    [Migration("20241019080802__initDb")]
+    partial class _initDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -395,32 +395,6 @@ namespace Infrastructure.Migrations
                     b.ToTable("ImageNews");
                 });
 
-            modelBuilder.Entity("Domain.Entity.Like", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<Guid>("AccountId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("NewsId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("Status")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AccountId");
-
-                    b.HasIndex("NewsId");
-
-                    b.ToTable("Like");
-                });
-
             modelBuilder.Entity("Domain.Entity.Major", b =>
                 {
                     b.Property<Guid>("Id")
@@ -493,7 +467,7 @@ namespace Infrastructure.Migrations
                     b.ToTable("MajorOccupationMatrix");
                 });
 
-            modelBuilder.Entity("Domain.Entity.MajorType", b =>
+            modelBuilder.Entity("Domain.Entity.MajorPersonalityMatrix", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -501,22 +475,19 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<Guid>("MajorId")
+                    b.Property<Guid>("MajorCategoryId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("PersonalGroupId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("Status")
-                        .HasColumnType("bit");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("MajorId");
+                    b.HasIndex("MajorCategoryId");
 
                     b.HasIndex("PersonalGroupId");
 
-                    b.ToTable("MajorType");
+                    b.ToTable("MajorPersonalMatrix");
                 });
 
             modelBuilder.Entity("Domain.Entity.News", b =>
@@ -592,9 +563,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("EntryLevelEducationId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("EntryLevelId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("HowToWork")
@@ -874,6 +842,42 @@ namespace Infrastructure.Migrations
                     b.HasIndex("HighSchoolId");
 
                     b.ToTable("Student");
+                });
+
+            modelBuilder.Entity("Domain.Entity.StudentChoice", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("MajorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("MajorVote")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("OccupationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("OccupationVote")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("StudentChoice");
                 });
 
             modelBuilder.Entity("Domain.Entity.StudentTest", b =>
@@ -1243,25 +1247,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("News");
                 });
 
-            modelBuilder.Entity("Domain.Entity.Like", b =>
-                {
-                    b.HasOne("Domain.Entity.Account", "Account")
-                        .WithMany("Likes")
-                        .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entity.News", "News")
-                        .WithMany()
-                        .HasForeignKey("NewsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Account");
-
-                    b.Navigation("News");
-                });
-
             modelBuilder.Entity("Domain.Entity.Major", b =>
                 {
                     b.HasOne("Domain.Entity.MajorCategory", "MajorCategory")
@@ -1292,21 +1277,21 @@ namespace Infrastructure.Migrations
                     b.Navigation("OccupationalGroup");
                 });
 
-            modelBuilder.Entity("Domain.Entity.MajorType", b =>
+            modelBuilder.Entity("Domain.Entity.MajorPersonalityMatrix", b =>
                 {
-                    b.HasOne("Domain.Entity.Major", "Major")
-                        .WithMany("MajorTypes")
-                        .HasForeignKey("MajorId")
+                    b.HasOne("Domain.Entity.MajorCategory", "MajorCategory")
+                        .WithMany("MajorPersonalMatrixs")
+                        .HasForeignKey("MajorCategoryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Domain.Entity.PersonalGroup", "PersonalGroup")
-                        .WithMany("MajorTypes")
+                        .WithMany("MajorPersonalMatrixs")
                         .HasForeignKey("PersonalGroupId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Major");
+                    b.Navigation("MajorCategory");
 
                     b.Navigation("PersonalGroup");
                 });
@@ -1434,6 +1419,17 @@ namespace Infrastructure.Migrations
                     b.Navigation("HighSchool");
                 });
 
+            modelBuilder.Entity("Domain.Entity.StudentChoice", b =>
+                {
+                    b.HasOne("Domain.Entity.Student", "Student")
+                        .WithMany("StudentChoices")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Student");
+                });
+
             modelBuilder.Entity("Domain.Entity.StudentTest", b =>
                 {
                     b.HasOne("Domain.Entity.PersonalGroup", "PersonalGroup")
@@ -1521,8 +1517,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("HighSchool")
                         .IsRequired();
 
-                    b.Navigation("Likes");
-
                     b.Navigation("Notifications");
 
                     b.Navigation("RefreshTokens");
@@ -1572,13 +1566,13 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entity.Major", b =>
                 {
                     b.Navigation("AdmissionInformation");
-
-                    b.Navigation("MajorTypes");
                 });
 
             modelBuilder.Entity("Domain.Entity.MajorCategory", b =>
                 {
                     b.Navigation("MajorOccupationMatrix");
+
+                    b.Navigation("MajorPersonalMatrixs");
 
                     b.Navigation("Majors");
                 });
@@ -1602,7 +1596,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entity.PersonalGroup", b =>
                 {
-                    b.Navigation("MajorTypes");
+                    b.Navigation("MajorPersonalMatrixs");
 
                     b.Navigation("StudentTests");
                 });
@@ -1634,6 +1628,8 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entity.Student", b =>
                 {
                     b.Navigation("Bookings");
+
+                    b.Navigation("StudentChoices");
 
                     b.Navigation("StudentTests");
                 });
