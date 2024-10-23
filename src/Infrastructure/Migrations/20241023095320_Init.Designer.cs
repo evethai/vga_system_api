@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(VgaDbContext))]
-    [Migration("20241019093448_Init")]
+    [Migration("20241023095320_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -59,8 +59,8 @@ namespace Infrastructure.Migrations
                     b.Property<string>("ResetPasswordToken")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("RoleId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -69,8 +69,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("RoleId");
 
                     b.ToTable("Account");
                 });
@@ -793,24 +791,12 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
 
                     b.ToTable("Region");
-                });
-
-            modelBuilder.Entity("Domain.Entity.Role", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Role");
                 });
 
             modelBuilder.Entity("Domain.Entity.Student", b =>
@@ -852,30 +838,25 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreateAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("MajorId")
+                    b.Property<Guid>("MajorOrOccupationId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("MajorVote")
+                    b.Property<string>("MajorOrOccupationName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Rating")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("OccupationId")
+                    b.Property<Guid>("StudentTestId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("OccupationVote")
+                    b.Property<int>("Type")
                         .HasColumnType("int");
-
-                    b.Property<bool>("Status")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("StudentId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("StudentId");
+                    b.HasIndex("StudentTestId");
 
                     b.ToTable("StudentChoice");
                 });
@@ -1117,17 +1098,6 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("WorkSkills");
-                });
-
-            modelBuilder.Entity("Domain.Entity.Account", b =>
-                {
-                    b.HasOne("Domain.Entity.Role", "Role")
-                        .WithMany("Accounts")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("Domain.Entity.AdmissionInformation", b =>
@@ -1451,13 +1421,13 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entity.StudentChoice", b =>
                 {
-                    b.HasOne("Domain.Entity.Student", "Student")
+                    b.HasOne("Domain.Entity.StudentTest", "StudentTest")
                         .WithMany("StudentChoices")
-                        .HasForeignKey("StudentId")
+                        .HasForeignKey("StudentTestId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Student");
+                    b.Navigation("StudentTest");
                 });
 
             modelBuilder.Entity("Domain.Entity.StudentTest", b =>
@@ -1671,18 +1641,16 @@ namespace Infrastructure.Migrations
                     b.Navigation("UniversityLocations");
                 });
 
-            modelBuilder.Entity("Domain.Entity.Role", b =>
-                {
-                    b.Navigation("Accounts");
-                });
-
             modelBuilder.Entity("Domain.Entity.Student", b =>
                 {
                     b.Navigation("Bookings");
 
-                    b.Navigation("StudentChoices");
-
                     b.Navigation("StudentTests");
+                });
+
+            modelBuilder.Entity("Domain.Entity.StudentTest", b =>
+                {
+                    b.Navigation("StudentChoices");
                 });
 
             modelBuilder.Entity("Domain.Entity.TestType", b =>

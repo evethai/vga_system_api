@@ -131,8 +131,8 @@ public class StudentService : IStudentService
                     Message = "No students to import."
                 };
             }
-            var roleId = await _unitOfWork.RoleRepository
-                .SingleOrDefaultAsync(selector: x => x.Id, predicate: x => x.Name.Equals(RoleEnum.Student.ToString()));
+            //var roleId = await _unitOfWork.RoleRepository
+            //    .SingleOrDefaultAsync(selector: x => x.Id, predicate: x => x.Name.Equals(RoleEnum.Student.ToString()));
 
             foreach (var studentImport in students.Data)
             {

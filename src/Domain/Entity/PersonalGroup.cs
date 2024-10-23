@@ -19,7 +19,5 @@ namespace Domain.Entity
         public virtual ICollection<MajorPersonalityMatrix> MajorPersonalMatrixs { get; set; } = null!;
         public virtual ICollection<StudentTest> StudentTests { get; set; } = null!;
 
-
-
     }
 }

@@ -77,8 +77,8 @@ namespace Application.Common.Mapper
             //Wallet
             CreateMap<Wallet, WalletModel>().ReverseMap();
             CreateMap<Wallet, WalletPutModel>().ReverseMap();
-            
-                
+
+
             //Transaction
             CreateMap<Transaction, TransactionModel>().ReverseMap();
             CreateMap<Transaction, TransactionPostModel>().ReverseMap();
@@ -170,7 +170,11 @@ namespace Application.Common.Mapper
             //Notification
             CreateMap<Notification, NotificationModel>().ReverseMap();
             CreateMap<Notification, NotificationPostModel>().ReverseMap();
+
+            //StudentChoice
+            CreateMap<Major, MajorOrOccupationModel>().ReverseMap();
         }
+      
     }
 }
 

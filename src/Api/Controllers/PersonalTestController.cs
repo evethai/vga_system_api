@@ -96,5 +96,19 @@ namespace Api.Controllers
                 return BadRequest(e.Message);
             }
         }
+
+        [HttpGet("student/{id}")]
+        public async Task<IActionResult> GetMajorAndOccupationByPersonalGroupId(Guid id, Guid perId)
+        {
+            try
+            {
+                var response = await _studentTestService.GetMajorsOrOccByPersonalGroupId(perId, id);
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
     }
 }
