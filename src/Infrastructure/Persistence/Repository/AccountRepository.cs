@@ -32,19 +32,19 @@ namespace Infrastructure.Persistence.Repository
                 throw new KeyNotFoundException("Null data");
             }
             registerAccount.Phone = string.Concat("84", registerAccount.Phone.AsSpan(1));
-            Role role = null;
+            //Role role = null;
             Account account = null;
             switch (_role)
             {
                 case RoleEnum.Student:
-                    role = _context.Role.Where(a => a.Name.Equals(RoleEnum.Student.ToString())).FirstOrDefault();
+                   // role = _context.Role.Where(a => a.Name.Equals(RoleEnum.Student.ToString())).FirstOrDefault();
                     account = new Account
                     {
                         Id = Guid.NewGuid(),
                         Email = registerAccount.Email,
                         Phone = registerAccount.Phone,
                         Password = PasswordUtil.HashPassword(registerAccount.Password),
-                        RoleId = role.Id,
+                        Role = _role,
                         Status = AccountStatus.Active,
                         CreateAt = DateTime.UtcNow
                     };
@@ -56,14 +56,14 @@ namespace Infrastructure.Persistence.Repository
                     };
                     break;
                 case RoleEnum.Consultant:
-                    role = _context.Role.Where(a => a.Name.Equals(RoleEnum.Consultant.ToString())).FirstOrDefault();
+                    //role = _context.Role.Where(a => a.Name.Equals(RoleEnum.Consultant.ToString())).FirstOrDefault();
                     account = new Account
                     {
                         Id = Guid.NewGuid(),
                         Email = registerAccount.Email,
                         Phone = registerAccount.Phone,
                         Password = PasswordUtil.HashPassword(registerAccount.Password),
-                        RoleId = role.Id,
+                        Role = _role,
                         Status = AccountStatus.Active,
                         CreateAt = DateTime.UtcNow
                     };
@@ -75,14 +75,14 @@ namespace Infrastructure.Persistence.Repository
                     };
                     break;
                 case RoleEnum.HighSchool:
-                    role = _context.Role.Where(a => a.Name.Equals(RoleEnum.HighSchool.ToString())).FirstOrDefault();
+                    //role = _context.Role.Where(a => a.Name.Equals(RoleEnum.HighSchool.ToString())).FirstOrDefault();
                     account = new Account
                     {
                         Id = Guid.NewGuid(),
                         Email = registerAccount.Email,
                         Phone = registerAccount.Phone,
                         Password = PasswordUtil.HashPassword(registerAccount.Password),
-                        RoleId = role.Id,
+                        Role = _role,
                         Status = AccountStatus.Active,
                         CreateAt = DateTime.UtcNow
                     };
@@ -94,14 +94,14 @@ namespace Infrastructure.Persistence.Repository
                     };
                     break;
                 case RoleEnum.University:
-                    role = _context.Role.Where(a => a.Name.Equals(RoleEnum.University.ToString())).FirstOrDefault();
+                    //role = _context.Role.Where(a => a.Name.Equals(RoleEnum.University.ToString())).FirstOrDefault();
                     account = new Account
                     {
                         Id = Guid.NewGuid(),
                         Email = registerAccount.Email,
                         Phone = registerAccount.Phone,
                         Password = PasswordUtil.HashPassword(registerAccount.Password),
-                        RoleId = role.Id,
+                        Role = _role,
                         Status = AccountStatus.Active,
                         CreateAt = DateTime.UtcNow
                     };

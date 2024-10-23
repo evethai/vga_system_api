@@ -275,6 +275,103 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
         return result;
     }
     #endregion
+
+    public async Task<IEnumerable<Major>> GetMajorsByPersonalGroupId(Guid personalGroupId)
+    {
+        var categoryIds = await _context.MajorPersonalMatrix
+                                        .Where(x => x.PersonalGroupId == personalGroupId)
+                                        .Select(x => x.MajorCategoryId)
+                                        .ToListAsync();
+
+        var majorsByCategories = await _context.Major
+                                               .Where(x => categoryIds.Contains(x.MajorCategoryId))
+                                               .GroupBy(x => x.MajorCategoryId)
+                                               .ToListAsync();
+
+        List<Major> majorChoices = new();
+        Random random = new Random();
+        foreach (var majorGroup in majorsByCategories)
+        {
+            var top5Majors = majorGroup.OrderBy(x => random.Next()).Take(5).ToList();
+            majorChoices.AddRange(top5Majors);
+        }
+
+        return (majorChoices);
+    }
+
+    public async Task<IEnumerable<Occupation>> GetOccupationByMajorId(Guid majorId)
+    {
+        var majorCategory = await _context.Major
+            .Where(m => m.Id == majorId)
+            .Select(m => m.MajorCategoryId)
+            .FirstOrDefaultAsync();
+
+
+        if (majorCategory == Guid.Empty)
+        {
+            return Enumerable.Empty<Occupation>();
+        }
+
+        var occupationGroupIds = await _context.MajorOccupationMatrix
+            .Where(o => o.MajorCategoryId == majorCategory)
+            .Select(o => o.OccupationalGroupId)
+            .ToListAsync();
+
+        var occupations = await _context.Occupation
+            .Where(o => occupationGroupIds.Contains(o.OccupationalGroupId))
+            .ToListAsync();
+
+        var groupedOccupations = occupations.GroupBy(o => o.OccupationalGroupId);
+
+        List<Occupation> randomOccupations = new List<Occupation>();
+        Random random = new Random();
+
+
+        foreach (var group in groupedOccupations)
+        {
+
+            var topOccupations = group.OrderBy(x => random.Next()).Take(5);
+            randomOccupations.AddRange(topOccupations);
+        }
+
+        return randomOccupations;
+    }
+    public async Task<List<Guid>> CreateStudentChoice(StudentChoiceModel StModel, StudentChoiceType type)
+    {
+        List<StudentChoice> studentChoices = new List<StudentChoice>();
+
+        foreach (var m in StModel._models)
+        {
+            StudentChoice studentChoice = new StudentChoice
+            {
+                StudentTestId = StModel.StudentTestId,
+                MajorOrOccupationId = m.Id,
+                MajorOrOccupationName = m.Name,
+                Rating = m.Rating,
+                Type = type
+            };
+
+            studentChoices.Add(studentChoice);
+        }
+        await _context.StudentChoice.AddRangeAsync(studentChoices);
+        await _context.SaveChangesAsync();
+        var maxRating = studentChoices.Max(x => x.Rating);
+
+        var topRatedMajorIds = studentChoices
+                                .Where(x => x.Rating == maxRating)
+                                .Select(x => x.MajorOrOccupationId)
+                                .ToList();
+
+        return topRatedMajorIds;
+    }
+
+
+
+
+
+
+
+
 }
 
 

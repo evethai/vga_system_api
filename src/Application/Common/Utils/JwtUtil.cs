@@ -28,7 +28,7 @@ namespace Application.Common.Utils
             {
                 new Claim(JwtRegisteredClaimNames.Jti, jti),
                 new Claim(JwtRegisteredClaimNames.Email, account.Email),
-                new Claim(ClaimTypes.Role, account.Role.Name),
+                new Claim(ClaimTypes.Role, account.Role.ToString()),
                 new Claim(JwtRegisteredClaimNames.UniqueName, account.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.PhoneNumber, account.Phone)
             };
