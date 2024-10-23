@@ -87,7 +87,7 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    DOET = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -237,6 +237,7 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -360,7 +361,6 @@ namespace Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     AccountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ConsultantLevelId = table.Column<int>(type: "int", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DoB = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Gender = table.Column<bool>(type: "bit", nullable: false)
@@ -389,8 +389,7 @@ namespace Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     RegionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     AccountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LocationDetail = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -462,9 +461,10 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     AccountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EstablishedYear = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -620,7 +620,6 @@ namespace Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     AccountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     HighSchoolId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Gender = table.Column<bool>(type: "bit", nullable: false),
                     DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
                     SchoolYears = table.Column<int>(type: "int", nullable: false)
@@ -651,7 +650,9 @@ namespace Infrastructure.Migrations
                     UniversityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     MajorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     AdmissionMethodId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    MinimumFees = table.Column<double>(type: "float", nullable: false),
+                    TuitionFee = table.Column<double>(type: "float", nullable: false),
+                    Year = table.Column<int>(type: "int", nullable: false),
+                    QuantityTarget = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -696,6 +697,33 @@ namespace Infrastructure.Migrations
                         principalTable: "University",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UniversityLocation",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UniversityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RegionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UniversityLocation", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UniversityLocation_Region_RegionId",
+                        column: x => x.RegionId,
+                        principalTable: "Region",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UniversityLocation_University_UniversityId",
+                        column: x => x.UniversityId,
+                        principalTable: "University",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1063,6 +1091,16 @@ namespace Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_UniversityLocation_RegionId",
+                table: "UniversityLocation",
+                column: "RegionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UniversityLocation_UniversityId",
+                table: "UniversityLocation",
+                column: "UniversityId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Wallet_AccountId",
                 table: "Wallet",
                 column: "AccountId",
@@ -1113,6 +1151,9 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Transaction");
+
+            migrationBuilder.DropTable(
+                name: "UniversityLocation");
 
             migrationBuilder.DropTable(
                 name: "AdmissionMethod");

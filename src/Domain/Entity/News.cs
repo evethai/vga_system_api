@@ -14,5 +14,6 @@ namespace Domain.Entity
         public string Content { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
         public virtual ICollection<ImageNews> ImageNews { get; set; } = null!;
+
     }
 }

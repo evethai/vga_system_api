@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(VgaDbContext))]
-    [Migration("20241019080802__initDb")]
+    [Migration("20241022114021__initDb")]
     partial class _initDb
     {
         /// <inheritdoc />
@@ -39,6 +39,10 @@ namespace Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Image_Url")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
@@ -85,14 +89,20 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("MajorId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<double>("MinimumFees")
-                        .HasColumnType("float");
+                    b.Property<int>("QuantityTarget")
+                        .HasColumnType("int");
 
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
 
+                    b.Property<double>("TuitionFee")
+                        .HasColumnType("float");
+
                     b.Property<Guid>("UniversityId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Year")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -230,10 +240,6 @@ namespace Infrastructure.Migrations
                     b.Property<bool>("Gender")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("AccountId")
@@ -348,11 +354,7 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("AccountId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("LocationDetail")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
+                    b.Property<string>("Address")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -781,7 +783,7 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Description")
+                    b.Property<string>("DOET")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -826,10 +828,6 @@ namespace Infrastructure.Migrations
 
                     b.Property<Guid>("HighSchoolId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SchoolYears")
                         .HasColumnType("int");
@@ -1031,7 +1029,7 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("AccountId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Address")
+                    b.Property<string>("Code")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -1039,9 +1037,12 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("EstablishedYear")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -1049,6 +1050,33 @@ namespace Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("University");
+                });
+
+            modelBuilder.Entity("Domain.Entity.UniversityLocation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("RegionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UniversityId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RegionId");
+
+                    b.HasIndex("UniversityId");
+
+                    b.ToTable("UniversityLocation");
                 });
 
             modelBuilder.Entity("Domain.Entity.Wallet", b =>
@@ -1498,6 +1526,25 @@ namespace Infrastructure.Migrations
                     b.Navigation("Account");
                 });
 
+            modelBuilder.Entity("Domain.Entity.UniversityLocation", b =>
+                {
+                    b.HasOne("Domain.Entity.Region", "Region")
+                        .WithMany("UniversityLocations")
+                        .HasForeignKey("RegionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entity.University", "University")
+                        .WithMany("UniversityLocations")
+                        .HasForeignKey("UniversityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Region");
+
+                    b.Navigation("University");
+                });
+
             modelBuilder.Entity("Domain.Entity.Wallet", b =>
                 {
                     b.HasOne("Domain.Entity.Account", "Account")
@@ -1618,6 +1665,8 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entity.Region", b =>
                 {
                     b.Navigation("HighSchools");
+
+                    b.Navigation("UniversityLocations");
                 });
 
             modelBuilder.Entity("Domain.Entity.Role", b =>
@@ -1653,6 +1702,8 @@ namespace Infrastructure.Migrations
                     b.Navigation("AdmissionInformation");
 
                     b.Navigation("News");
+
+                    b.Navigation("UniversityLocations");
                 });
 
             modelBuilder.Entity("Domain.Entity.Wallet", b =>

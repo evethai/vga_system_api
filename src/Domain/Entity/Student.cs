@@ -16,7 +16,7 @@ namespace Domain.Entity
         public virtual Account Account { get; set; } = null!;
         public Guid HighSchoolId { get; set; }
         public HighSchool HighSchool { get; set; } = null!;
-        public string Name { get; set; } = string.Empty;
+        //public string Name { get; set; } = string.Empty;
         public bool Gender { get; set; }
         public DateTime DateOfBirth { get; set; }
         public int SchoolYears { get; set; }

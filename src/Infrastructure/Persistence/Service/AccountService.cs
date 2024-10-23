@@ -201,41 +201,35 @@ namespace Infrastructure.Persistence.Service
                 case RoleEnum.Student:
                     Guid studentId = await _unitOfWork.StudentRepository
                         .SingleOrDefaultAsync(selector: x => x.Id, predicate: x => x.AccountId.Equals(account.Id));
-                    name = await _unitOfWork.StudentRepository
-                        .SingleOrDefaultAsync(selector: x => x.Name, predicate: x => x.AccountId.Equals(account.Id));
                     guidClaim = new Tuple<string, Guid>("StudentId", studentId);
-                    loginResponseModel = new StudentAccountResponseModel(role,name,studentId);
+                    loginResponseModel = new StudentAccountResponseModel(role,studentId);
                     break;
 
                 case RoleEnum.Consultant:
                     Guid careerExpertId = await _unitOfWork.ConsultantRepository
                         .SingleOrDefaultAsync(selector: x => x.Id, predicate: x => x.AccountId.Equals(account.Id));
-                    name = await _unitOfWork.ConsultantRepository
-                        .SingleOrDefaultAsync(selector: x => x.Name, predicate: x => x.AccountId.Equals(account.Id));
                     guidClaim = new Tuple<string, Guid>("CareerExpertId", careerExpertId);
-                    loginResponseModel = new CareerExpertAccountResponseModel(role,name,careerExpertId);
+                    loginResponseModel = new CareerExpertAccountResponseModel(role,careerExpertId);
                     break;
 
                 case RoleEnum.HighSchool:
                     Guid highSchoolId = await _unitOfWork.HighschoolRepository
                         .SingleOrDefaultAsync(selector: x => x.Id, predicate: x => x.AccountId.Equals(account.Id));
-                    name = await _unitOfWork.HighschoolRepository
-                        .SingleOrDefaultAsync(selector: x => x.Name, predicate: x => x.AccountId.Equals(account.Id));
                     guidClaim = new Tuple<string, Guid>("HighSchoolId", highSchoolId);
-                    loginResponseModel = new HighSchoolAccountResponseModel(role, name, highSchoolId);
+                    loginResponseModel = new HighSchoolAccountResponseModel(role, highSchoolId);
                     break;
 
                 case RoleEnum.University:
                     Guid universityId = await _unitOfWork.UniversityRepository
                         .SingleOrDefaultAsync(selector: x => x.Id, predicate: x => x.AccountId.Equals(account.Id));
-                    name = await _unitOfWork.UniversityRepository
-                        .SingleOrDefaultAsync(selector: x => x.Name, predicate: x => x.AccountId.Equals(account.Id));
+                    //name = await _unitOfWork.UniversityRepository
+                    //    .SingleOrDefaultAsync(selector: x => x.Name, predicate: x => x.AccountId.Equals(account.Id));
                     guidClaim = new Tuple<string, Guid>("UniversityId", universityId);
-                    loginResponseModel = new UniversityAccountResponseModel(role, name, universityId);
+                    loginResponseModel = new UniversityAccountResponseModel(role, universityId);
                     break;
 
                 default:
-                    loginResponseModel = new LoginResponseModel(role,account.Role.Name);
+                    loginResponseModel = new LoginResponseModel(role);
                     break;
             }
 

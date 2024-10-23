@@ -24,11 +24,11 @@ namespace Infrastructure.Persistence.Repository
             Func<IQueryable<University>, IOrderedQueryable<University>> orderBy = null;
             if (!string.IsNullOrEmpty(searchModel.name))
             {
-                filter = filter.And(p => p.Name.Contains(searchModel.name));
+               // filter = filter.And(p => p.Name.Contains(searchModel.name));
             }
             if (!string.IsNullOrEmpty(searchModel.Address))
             {
-                filter = filter.And(p => p.Name.Contains(searchModel.name));
+                //filter = filter.And(p => p.Name.Contains(searchModel.name));
             }
             return (filter, orderBy);
         }

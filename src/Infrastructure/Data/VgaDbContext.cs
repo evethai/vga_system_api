@@ -33,7 +33,7 @@ namespace Infrastructure.Data
         public DbSet<ConsultationTime> ConsultationTime { get; set; }
         public DbSet<ConsultantLevel> ConsultantLevel { get; set; }
         public DbSet<HighSchool> HighSchool { get; set; }
-        public DbSet<ImageNews> ImageNews { get; set; }       
+        public DbSet<ImageNews> ImageNews { get; set; }
         public DbSet<Major> Major { get; set; }
         public DbSet<MajorPersonalityMatrix> MajorPersonalMatrix { get; set; }
         public DbSet<News> News { get; set; }
@@ -59,6 +59,7 @@ namespace Infrastructure.Data
         public DbSet<MajorCategory> MajorCategory { get; set; }
         public DbSet<MajorOccupationMatrix> MajorOccupationMatrix { get; set; }
         public DbSet<StudentChoice> StudentChoice { get; set; }
+        public DbSet<UniversityLocation> UniversityLocation { get; set; }
 
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
