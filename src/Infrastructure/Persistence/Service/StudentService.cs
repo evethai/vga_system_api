@@ -50,7 +50,7 @@ public class StudentService : IStudentService
 
     public async Task<StudentModel> GetStudentByIdAsync(Guid StudentId)
     {
-        var student = await _unitOfWork.StudentRepository.SingleOrDefaultAsync(selector: x=> x.AccountId,predicate: c => c.Id.Equals(StudentId));
+        var student = await _unitOfWork.StudentRepository.SingleOrDefaultAsync(selector: x=> x.Account,predicate: c => c.Id.Equals(StudentId));
         return _mapper.Map<StudentModel>(student);
     }
 
