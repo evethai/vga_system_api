@@ -59,15 +59,15 @@ namespace Infrastructure.Persistence.Service
         {
             try
             {
-                var roleId = await _unitOfWork.RoleRepository
-                    .SingleOrDefaultAsync(selector: x => x.Id, predicate: x => x.Name.Equals(RoleEnum.Consultant.ToString()));
+                //var roleId = await _unitOfWork.RoleRepository
+                //    .SingleOrDefaultAsync(selector: x => x.Id, predicate: x => x.Name.Equals(RoleEnum.Consultant.ToString()));
 
                 var consultantLevel = await _unitOfWork.ConsultantLevelRepository.GetByIdAsync(postModel.ConsultantLevelId)
                     ?? throw new NotExistsException();
 
                 var consultant = _mapper.Map<Consultant>(postModel);
 
-                RegisterAccountModel accountModel = new RegisterAccountModel(postModel.Email
+                RegisterAccountModel accountModel = new RegisterAccountModel(postModel.Name,postModel.Email
                        , postModel.Password
                        , postModel.Phone);
                 var accountId = await _unitOfWork.AccountRepository.CreateAccountAndWallet(accountModel, RoleEnum.Consultant);

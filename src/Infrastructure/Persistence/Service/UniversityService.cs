@@ -30,7 +30,7 @@ namespace Infrastructure.Persistence.Service
         public async Task<ResponseModel> CreateUniversityAsync(UniversityPostModel postModel)
         {
             var university = _mapper.Map<University>(postModel);
-            RegisterAccountModel accountModel = new RegisterAccountModel(postModel.Email
+            RegisterAccountModel accountModel = new RegisterAccountModel(postModel.Name, postModel.Email
                 , postModel.Password
                 , postModel.Phone);
             var AccountId = await _unitOfWork.AccountRepository.CreateAccountAndWallet(accountModel, RoleEnum.University);

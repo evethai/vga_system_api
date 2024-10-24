@@ -24,7 +24,7 @@ public class StudentRepository : GenericRepository<Student>, IStudentRepository
         Func<IQueryable<Student>, IOrderedQueryable<Student>> orderBy = null;
         if (!string.IsNullOrEmpty(searchModel.name))
         {
-            //filter = filter.And(p => p.Name.Contains(searchModel.name));
+            filter = filter.And(p => p.Account.Name.Contains(searchModel.name));
         }
         if (searchModel.SchoolYears.HasValue)
         {

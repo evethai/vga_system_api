@@ -22,7 +22,6 @@ namespace Infrastructure.Data
         }
 
         public DbSet<Account> Account { get; set; }
-        public DbSet<Role> Role { get; set; }
         public DbSet<AdmissionInformation> AdmissionInformation { get; set; }
         public DbSet<AdmissionMethod> AdmissionMethod { get; set; }
         public DbSet<Answer> Answer { get; set; }
@@ -192,7 +191,6 @@ namespace Infrastructure.Data
             modelBuilder.Entity<TimeSlot>(entity => entity.HasKey(ts => ts.Id));
             modelBuilder.Entity<Transaction>(entity => entity.HasKey(t => t.Id));
             modelBuilder.Entity<Wallet>(entity => entity.HasKey(w => w.Id));
-            modelBuilder.Entity<Role>(entity => entity.HasKey(r => r.Id));
             modelBuilder.Entity<Occupation>(entity => entity.HasKey(o => o.Id));
             modelBuilder.Entity<OccupationalGroup>(entity => entity.HasKey(og => og.Id));
             modelBuilder.Entity<EntryLevelEducation>(entity => entity.HasKey(el => el.Id));

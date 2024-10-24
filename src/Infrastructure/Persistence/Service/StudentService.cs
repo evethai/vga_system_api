@@ -50,7 +50,7 @@ public class StudentService : IStudentService
 
     public async Task<StudentModel> GetStudentByIdAsync(Guid StudentId)
     {
-        var student = await _unitOfWork.StudentRepository.GetByIdGuidAsync(StudentId);
+        var student = await _unitOfWork.StudentRepository.SingleOrDefaultAsync(selector: x=> x.AccountId,predicate: c => c.Id.Equals(StudentId));
         return _mapper.Map<StudentModel>(student);
     }
 
@@ -63,13 +63,13 @@ public class StudentService : IStudentService
         }
         exitStudent.DateOfBirth = putModel.DateOfBirth;
         exitStudent.SchoolYears = putModel.SchoolYears;
-        //exitStudent.Name = putModel.Name;
         exitStudent.Gender = putModel.Gender;
         var exitAccount = await _unitOfWork.AccountRepository.GetByIdGuidAsync(exitStudent.AccountId);
         if (exitAccount == null)
         {
             throw new Exception("Student Account Id not found");
         }
+        exitAccount.Name = putModel.Name;
         exitAccount.Phone = putModel.Phone;
         exitAccount.Email = putModel.Email;
         exitAccount.Password = PasswordUtil.HashPassword(putModel.Password);
@@ -87,7 +87,9 @@ public class StudentService : IStudentService
     public async Task<ResponseModel> CreateStudentAsync(StudentPostModel postModel)
     {
         var student = _mapper.Map<Student>(postModel);
-        RegisterAccountModel accountModel = new RegisterAccountModel(postModel.Email
+        RegisterAccountModel accountModel = new RegisterAccountModel(
+            postModel.Name
+            ,postModel.Email
             , postModel.Password
             , postModel.Phone);
         var AccountId = await _unitOfWork.AccountRepository.CreateAccountAndWallet(accountModel, RoleEnum.Student);
@@ -131,12 +133,12 @@ public class StudentService : IStudentService
                     Message = "No students to import."
                 };
             }
-            var roleId = await _unitOfWork.RoleRepository
-                .SingleOrDefaultAsync(selector: x => x.Id, predicate: x => x.Name.Equals(RoleEnum.Student.ToString()));
+            //var roleId = await _unitOfWork.RoleRepository
+            //    .SingleOrDefaultAsync(selector: x => x.Id, predicate: x => x.Name.Equals(RoleEnum.Student.ToString()));
 
             foreach (var studentImport in students.Data)
             {
-                RegisterAccountModel accountModel = new RegisterAccountModel(studentImport.Email
+                RegisterAccountModel accountModel = new RegisterAccountModel(studentImport.Name,studentImport.Email
                        , studentImport.Password
                        , studentImport.Phone);
 

@@ -51,7 +51,7 @@ public class HighschoolService : IHighschoolService
     public async Task<ResponseModel> CreateHighschoolAsync(HighschoolPostModel postModel)
     {
         var highschool = _mapper.Map<HighSchool>(postModel);
-        RegisterAccountModel accountModel = new RegisterAccountModel(postModel.Email
+        RegisterAccountModel accountModel = new RegisterAccountModel(postModel.Name,postModel.Email
             , postModel.Password
             , postModel.Phone);
         var AccountId = await _unitOfWork.AccountRepository.CreateAccountAndWallet(accountModel, RoleEnum.HighSchool);

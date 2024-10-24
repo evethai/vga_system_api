@@ -78,8 +78,8 @@ namespace Application.Common.Mapper
             //Wallet
             CreateMap<Wallet, WalletModel>().ReverseMap();
             CreateMap<Wallet, WalletPutModel>().ReverseMap();
-            
-                
+
+
             //Transaction
             CreateMap<Transaction, TransactionModel>().ReverseMap();
             CreateMap<Transaction, TransactionPostModel>().ReverseMap();
@@ -171,15 +171,11 @@ namespace Application.Common.Mapper
             //Notification
             CreateMap<Notification, NotificationModel>().ReverseMap();
             CreateMap<Notification, NotificationPostModel>().ReverseMap();
-            // News
-            CreateMap<News, NewsModel>().ReverseMap()
-                .ForMember(dest => dest.ImageNews, opt => opt.MapFrom(src => src.ImageNews));
-            CreateMap<News, NewsPostModel>().ReverseMap();
-            CreateMap<News, NewsPutModel>().ReverseMap();
-            // ImageNews
-            CreateMap<ImageNews, ImageNewsModel>().ReverseMap();
 
+            //StudentChoice
+            CreateMap<Major, MajorOrOccupationModel>().ReverseMap();
         }
+      
     }
 }
 

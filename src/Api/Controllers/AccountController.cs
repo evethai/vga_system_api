@@ -43,7 +43,7 @@ namespace Api.Controllers
             var result = await _accountService.LoginByZalo(loginZaloRequest);
             if(result == null)
             {
-                return NotFound();
+                return Unauthorized();
             }
             return Ok(result);
         }
@@ -59,7 +59,7 @@ namespace Api.Controllers
             var result = await _accountService.CreateRefreshToken(refreshTokenRequest);
             if (result == null)
             {
-                return NotFound();
+                return Unauthorized();
             }
             return Ok(result);
         }

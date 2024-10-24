@@ -31,11 +31,11 @@ namespace Infrastructure.Persistence.Service
             x.Password.Equals(PasswordUtil.HashPassword(loginRequest.Password));
 
             Account account = await _unitOfWork.AccountRepository
-                .SingleOrDefaultAsync(predicate: searchFilter, include: x => x.Include(x => x.Role));
+                .SingleOrDefaultAsync(predicate: searchFilter);
 
             if (account == null || account.Status == AccountStatus.Blocked) return null;
 
-            RoleEnum role = EnumUtil.ParseEnum<RoleEnum>(account.Role.Name);
+            RoleEnum role = account.Role;
 
             return await BuildLoginResponse(account, role);
         }
@@ -45,12 +45,12 @@ namespace Infrastructure.Persistence.Service
         public async Task<LoginResponseModel> LoginByZalo(ZaloLoginModel model)
         {
             Account account = await _unitOfWork.AccountRepository
-                .SingleOrDefaultAsync(predicate: x => x.ZaloId.Equals(model.ZaloId), include: x => x.Include(x => x.Role));
+                .SingleOrDefaultAsync(predicate: x => x.ZaloId.Equals(model.ZaloId));
 
             if (account != null && account.Status == AccountStatus.Active)
             {
                 // 1. If ZaloId exists, return login response
-                RoleEnum role = EnumUtil.ParseEnum<RoleEnum>(account.Role.Name);
+                RoleEnum role = account.Role;
                 return await BuildLoginResponse(account, role);
             }
 
@@ -58,7 +58,7 @@ namespace Infrastructure.Persistence.Service
             if (!string.IsNullOrEmpty(model.Phone))
             {
                 account = await _unitOfWork.AccountRepository
-                    .SingleOrDefaultAsync(predicate: x => x.Phone.Equals(model.Phone), include: x => x.Include(x => x.Role));
+                    .SingleOrDefaultAsync(predicate: x => x.Phone.Equals(model.Phone));
 
                 if (account != null && account.Status == AccountStatus.Active)
                 {
@@ -69,7 +69,7 @@ namespace Infrastructure.Persistence.Service
                     await _unitOfWork.AccountRepository.UpdateAsync(account);
                     await _unitOfWork.SaveChangesAsync();
 
-                    RoleEnum role = EnumUtil.ParseEnum<RoleEnum>(account.Role.Name);
+                    RoleEnum role = account.Role;
                     return await BuildLoginResponse(account, role);
                 }
             }
@@ -165,8 +165,7 @@ namespace Infrastructure.Persistence.Service
 
 
             var account = await _unitOfWork.AccountRepository
-                .SingleOrDefaultAsync(predicate: x => x.Id == model.AccountId,
-                                      include: x => x.Include(x => x.Role));
+                .SingleOrDefaultAsync(predicate: x => x.Id == model.AccountId);
 
             if (account == null)
             {
@@ -177,7 +176,7 @@ namespace Infrastructure.Persistence.Service
                 };
             }
 
-            RoleEnum role = EnumUtil.ParseEnum<RoleEnum>(account.Role.Name);
+            RoleEnum role = account.Role;
             var responseModel = await BuildLoginResponse(account, role);
 
             return new ResponseModel

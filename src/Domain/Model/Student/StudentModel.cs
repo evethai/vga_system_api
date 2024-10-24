@@ -11,7 +11,6 @@ namespace Domain.Model.Student;
 public class StudentModel
 {
     public Guid Id { get; set; }
-    public string Name { get; set; } = string.Empty;
     public bool Gender { get; set; }
     public DateTime DateOfBirth { get; set; }
     public int SchoolYears { get; set; }
