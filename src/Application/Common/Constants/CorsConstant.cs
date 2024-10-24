@@ -12,7 +12,8 @@ namespace Application.Common.Constants
         public static readonly string[] AllowedOrigins = new[]
         {
             "http://localhost:3000",
-
+            "http://localhost:3030",
+            "https://zalo.me"
         };
     }
 }

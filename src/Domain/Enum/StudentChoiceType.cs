@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Domain.Entity;
 
-namespace Application.Interface.Repository
+namespace Domain.Enum
 {
-    public interface IRoleRepository : IGenericRepository<Role>
+    public enum StudentChoiceType
     {
+        Major = 1,
+        Occupation = 2
     }
 }

@@ -59,8 +59,8 @@ namespace Infrastructure.Persistence.Service
         {
             try
             {
-                var roleId = await _unitOfWork.RoleRepository
-                    .SingleOrDefaultAsync(selector: x => x.Id, predicate: x => x.Name.Equals(RoleEnum.Consultant.ToString()));
+                //var roleId = await _unitOfWork.RoleRepository
+                //    .SingleOrDefaultAsync(selector: x => x.Id, predicate: x => x.Name.Equals(RoleEnum.Consultant.ToString()));
 
                 var consultantLevel = await _unitOfWork.ConsultantLevelRepository.GetByIdAsync(postModel.ConsultantLevelId)
                     ?? throw new NotExistsException();

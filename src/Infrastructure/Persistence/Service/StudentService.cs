@@ -63,7 +63,7 @@ public class StudentService : IStudentService
         }
         exitStudent.DateOfBirth = putModel.DateOfBirth;
         exitStudent.SchoolYears = putModel.SchoolYears;
-        exitStudent.Name = putModel.Name;
+        //exitStudent.Name = putModel.Name;
         exitStudent.Gender = putModel.Gender;
         var exitAccount = await _unitOfWork.AccountRepository.GetByIdGuidAsync(exitStudent.AccountId);
         if (exitAccount == null)
@@ -131,8 +131,8 @@ public class StudentService : IStudentService
                     Message = "No students to import."
                 };
             }
-            var roleId = await _unitOfWork.RoleRepository
-                .SingleOrDefaultAsync(selector: x => x.Id, predicate: x => x.Name.Equals(RoleEnum.Student.ToString()));
+            //var roleId = await _unitOfWork.RoleRepository
+            //    .SingleOrDefaultAsync(selector: x => x.Id, predicate: x => x.Name.Equals(RoleEnum.Student.ToString()));
 
             foreach (var studentImport in students.Data)
             {

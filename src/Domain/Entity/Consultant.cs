@@ -14,7 +14,7 @@ namespace Domain.Entity
         public virtual Account Account { get; set; } = null!;
         public int ConsultantLevelId { get; set; }
         public virtual ConsultantLevel ConsultantLevel { get; set; } = null!;
-        public string Name { get; set; } = string.Empty;
+        //public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public DateTime DoB { get; set; }
         public bool Gender { get; set; }

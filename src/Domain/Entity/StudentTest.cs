@@ -22,6 +22,7 @@ namespace Domain.Entity
 
         public string JsonResult { get; set; } = string.Empty;
         public DateTime Date { get; set; }
+        public virtual ICollection<StudentChoice> StudentChoices { get; set; } = null!;
     }
 
 }

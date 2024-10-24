@@ -14,5 +14,8 @@ namespace Application.Interface.Repository
         Task<PersonalGroupModel> CalculateResultHollandTest(List<int> listQuestionId);
         Task<TestTypeCode> CheckTestType(Guid personalTestId);
         Task<IEnumerable<HistoryTestModel>> GetHistoryTestByStudentId(Guid studentId);
+        Task<IEnumerable<Major>> GetMajorsByPersonalGroupId(Guid personalGroupId);
+        Task<IEnumerable<Occupation>> GetOccupationByMajorId(Guid majorId);
+        Task<List<Guid>> CreateStudentChoice(StudentChoiceModel StModel, StudentChoiceType type);
     }
 }
