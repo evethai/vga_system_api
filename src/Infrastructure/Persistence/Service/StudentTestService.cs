@@ -46,7 +46,7 @@ namespace Infrastructure.Persistence.Service
                 QuestionIds = result.listQuestionId,
             };
             var jsonResult = Newtonsoft.Json.JsonConvert.SerializeObject(data);
-
+            var stTestId = "";
             StudentTestModel model = new StudentTestModel
             {
                 StudentId = result.StudentId,
@@ -58,8 +58,9 @@ namespace Infrastructure.Persistence.Service
             try
             {
                 var resultTest = _mapper.Map<StudentTest>(model);
-                await _unitOfWork.StudentTestRepository.AddAsync(resultTest);
+                var stTest = await _unitOfWork.StudentTestRepository.AddAsync(resultTest);
                 await _unitOfWork.SaveChangesAsync();
+                stTestId = stTest.Id.ToString();
             }
             catch(Exception e)
             {
@@ -72,6 +73,7 @@ namespace Infrastructure.Persistence.Service
                 IsSuccess = true,
                 Data = new
                 {
+                    stTestId = stTestId,
                     Code = personalGroupModel.Code,
                     Name = personalGroupModel.Name,
                     Des = personalGroupModel.Description,
@@ -83,28 +85,36 @@ namespace Infrastructure.Persistence.Service
         }
         #endregion
 
+        #region get test
         public async Task<PersonalTestModel> GetTestById(Guid id)
         {
             var result = await _unitOfWork.StudentTestRepository.GetTestById(id);
             return result;
 
         }
+        #endregion
 
+        #region get all test
         public async Task<IEnumerable<PersonalTestModel>> GetAllTest()
         {
             var result = await _unitOfWork.PersonalTestRepository.GetAllAsync();
             var testModels = _mapper.Map<IEnumerable<PersonalTestModel>>(result);
             return testModels;
         }
+        #endregion
 
+        #region get history test by student id
         public async Task<IEnumerable<HistoryTestModel?>> GetHistoryTestByStudentId(Guid studentId)
         {
             var tests = await _unitOfWork.StudentTestRepository.GetHistoryTestByStudentId(studentId);
             return tests;
         }
+        #endregion
 
-        public async Task<ResponseModel> GetMajorsOrOccByPersonalGroupId(Guid personalityGroupId, Guid studentId)
+
+        public async Task<ResponseModel> GetMajorsByPersonalGroupId(Guid stTestId)
         {
+            var personalityGroupId = await _unitOfWork.StudentTestRepository.SingleOrDefaultAsync(predicate: x => x.Id == stTestId, selector: x=> x.PersonalGroupId);
             var result = await _unitOfWork.StudentTestRepository.GetMajorsByPersonalGroupId(personalityGroupId);
             if (result == null || !result.Any())
             {
@@ -127,47 +137,21 @@ namespace Infrastructure.Persistence.Service
                 });
             }
             
-
-            var studentTestId = await _unitOfWork.StudentTestRepository.SingleOrDefaultAsync(
-                predicate: x => x.StudentId == studentId,
-                orderBy: x => x.OrderByDescending(x => x.Date),
-                selector: x => x.Id
-            );
-
-            //ok test
-            var occupations = await _unitOfWork.StudentTestRepository.GetOccupationByMajorId(models[0].Id);
-
-
-            if (studentTestId == Guid.Empty)
-            {
-                //return new ResponseModel
-                //{
-                //    IsSuccess = false,
-                //    Message = MessagesConstants.MajorOrOccupationChoice.NoStudentTestFound,
-                //    Data = null
-                //};
-                studentTestId = Guid.NewGuid();
-            }
-
             return new ResponseModel
             {
                 IsSuccess = true,
                 Message = MessagesConstants.MajorOrOccupationChoice.MajorChoice, 
-                Data = new 
-                {
-                    studentTestId = studentTestId,
-                    models = models
-                }
+                Data = models
             };
         }
 
         public async Task<ResponseModel> FilterMajorAndUniversity(FilterMajorAndUniversityModel model)
         {
-            var listMajorId = await _unitOfWork.StudentTestRepository.CreateStudentChoice(model.studentChoiceModel, StudentChoiceType.Major);
-            var pre = _unitOfWork.AdmissionInformationRepository.BuildFilterAndOrderBy(model.filterInfor, listMajorId);
-            var listUniversity = await _unitOfWork.AdmissionInformationRepository.GetByConditionAsync(pre.filter, pre.orderBy);
+            var stChoices = await _unitOfWork.StudentTestRepository.CreateStudentChoice(model.studentChoiceModel, StudentChoiceType.Major);
+            var condition = _unitOfWork.AdmissionInformationRepository.BuildFilterAndOrderBy(model.filterInfor, stChoices);
+            var listUniversity = await _unitOfWork.AdmissionInformationRepository.GetByConditionAsync(condition.filter, condition.orderBy);
 
-            var occupations = await _unitOfWork.StudentTestRepository.GetOccupationByMajorId(listMajorId[0]);
+            var occupations = await _unitOfWork.StudentTestRepository.GetOccupationByMajorId(stChoices[0].MajorOrOccupationId);
 
             return new ResponseModel
             {
@@ -175,8 +159,9 @@ namespace Infrastructure.Persistence.Service
                 Message = MessagesConstants.MajorOrOccupationChoice.FilterUniversity,
                 Data = new
                 {
+                    Major = stChoices,
                     universities = listUniversity,
-                    occupations = occupations
+                    occupations = occupations,
                 }
             };
         }

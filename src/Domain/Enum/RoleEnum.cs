@@ -8,10 +8,11 @@ namespace Domain.Enum
 {
     public enum RoleEnum
     {
-        Admin ,
-        University,
-        HighSchool,
-        Consultant,
-        Student
+        Admin = 1 ,
+        Student = 2,
+        HighSchool = 3,
+        Consultant = 4,
+        University = 5,
+
     }
 }
