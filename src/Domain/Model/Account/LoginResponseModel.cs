@@ -24,43 +24,43 @@ namespace Domain.Model.Account
 
     public class StudentAccountResponseModel : LoginResponseModel
     {
-        public Guid StudentId { get; set; }
+        public Guid UserId { get; set; }
 
         public StudentAccountResponseModel(RoleEnum role, Guid studentId)
             : base(role) 
         {
-            StudentId = studentId;
+            UserId = studentId;
         }
     }
 
     public class CareerExpertAccountResponseModel : LoginResponseModel
     {
-        public Guid CareerExpertId { get; set; }
+        public Guid UserId { get; set; }
 
         public CareerExpertAccountResponseModel(RoleEnum role, Guid careerExpertId)
             : base(role) 
         {
-            CareerExpertId = careerExpertId;
+            UserId = careerExpertId;
         }
     }
 
     public class HighSchoolAccountResponseModel : LoginResponseModel
     {
-        public Guid HighSchoolId { get; set; }
+        public Guid UserId { get; set; }
 
         public HighSchoolAccountResponseModel(RoleEnum role, Guid highSchoolId) : base(role) 
         {
-            HighSchoolId = highSchoolId;
+            UserId = highSchoolId;
         }
     }
 
     public class UniversityAccountResponseModel : LoginResponseModel
     {
-        public Guid UniversityId { get; set; }
+        public Guid UserId { get; set; }
 
         public UniversityAccountResponseModel(RoleEnum role, Guid universityId) : base(role) 
         {
-            UniversityId = universityId;
+            UserId = universityId;
         }
     }
 
