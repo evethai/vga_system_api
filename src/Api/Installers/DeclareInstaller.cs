@@ -39,6 +39,7 @@ namespace Api.Installers
            
             services.AddScoped<IAdminService, AdminService>();
             services.AddScoped<INotificationService, NotificationService>();
+            services.AddScoped<IEntryLevelEducationService, EntryLevelEducationService>();
 
         }
     }

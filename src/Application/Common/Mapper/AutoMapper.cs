@@ -27,6 +27,7 @@ using Domain.Model.Booking;
 using Domain.Model.ConsultantLevel;
 using Domain.Model.University;
 using Domain.Model.Notification;
+using Domain.Model.EntryLevelEducation;
 
 
 namespace Application.Common.Mapper
@@ -173,6 +174,11 @@ namespace Application.Common.Mapper
 
             //StudentChoice
             CreateMap<Major, MajorOrOccupationModel>().ReverseMap();
+
+            //EntryLevelEducation
+            CreateMap<EntryLevelEducation, EntryLevelEducationViewModel>().ReverseMap();
+            CreateMap<EntryLevelEducation, EntryLevelEducationPostModel>().ReverseMap();
+            CreateMap<EntryLevelEducation, EntryLevelEducationPutModel>().ReverseMap();
         }
       
     }

@@ -35,6 +35,7 @@ namespace Infrastructure.Persistence
         private IRefreshTokenRepository _refreshTokenRepository;
         private INotificationRepository _notificationRepository;
         private IAdmissionInformationRepository _admissionInformationRepository;
+        private IEntryLevelEducationRepository _entryLevelEducationRepository;
 
         public UnitOfWork(VgaDbContext context)
         {
@@ -63,6 +64,7 @@ namespace Infrastructure.Persistence
         public INotificationRepository NotificationRepository => _notificationRepository ??= new NotificationRepository(_context);
 
         public IAdmissionInformationRepository AdmissionInformationRepository => _admissionInformationRepository ??= new AdmissionInformationRepository(_context);
+        public IEntryLevelEducationRepository EntryLevelEducationRepository => _entryLevelEducationRepository ??= new EntryLevelEducationRepository(_context);
 
         public async Task SaveChangesAsync()
         {

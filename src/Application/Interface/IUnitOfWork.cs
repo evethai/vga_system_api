@@ -29,6 +29,7 @@ namespace Application.Interface
         IRefreshTokenRepository RefreshTokenRepository { get; }
         INotificationRepository NotificationRepository { get; }
         IAdmissionInformationRepository AdmissionInformationRepository { get; }
+        IEntryLevelEducationRepository EntryLevelEducationRepository { get; }
         Task SaveChangesAsync();
     }
 }
