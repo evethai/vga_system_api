@@ -39,7 +39,8 @@ namespace Infrastructure.Persistence.Service
 
         public async Task<Wallet> GetWalletByIdAsync(Guid Id)
         {
-            var wallet = await _unitOfWork.WalletRepository.GetByIdGuidAsync(Id);
+            var wallet = await _unitOfWork.WalletRepository.SingleOrDefaultAsync(predicate: c => c.Id.Equals(Id),
+                include: a => a.Include(a => a.Account));
             return _mapper.Map<Wallet>(wallet);
         }
 

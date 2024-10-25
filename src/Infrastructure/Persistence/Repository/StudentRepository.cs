@@ -30,6 +30,10 @@ public class StudentRepository : GenericRepository<Student>, IStudentRepository
         {
             filter = filter.And(p => p.SchoolYears.Equals(searchModel.SchoolYears));
         }
+        if (searchModel.Status.HasValue)
+        {
+            filter = filter.And(p => p.Account.Status.Equals(searchModel.Status));
+        }
         if (searchModel.highschoolId.HasValue)
         {
             filter = filter.And(p => p.HighSchoolId == searchModel.highschoolId.Value);
