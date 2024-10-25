@@ -13,7 +13,9 @@ namespace Application.Common.Constants
         {
             "http://localhost:3000",
             "http://localhost:3030",
-            "https://zalo.me"
+            "https://zalo.me",
+            "https://h5.zdn.vn",
+            "zbrowser://h5.zdn.vn"
         };
     }
 }

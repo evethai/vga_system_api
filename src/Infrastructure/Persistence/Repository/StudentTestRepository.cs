@@ -276,6 +276,7 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
     }
     #endregion
 
+    #region Major by personal
     public async Task<IEnumerable<Major>> GetMajorsByPersonalGroupId(Guid personalGroupId)
     {
         var categoryIds = await _context.MajorPersonalMatrix
@@ -298,7 +299,9 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
 
         return (majorChoices);
     }
+    #endregion
 
+    #region Occupation by major
     public async Task<IEnumerable<Occupation>> GetOccupationByMajorId(Guid majorId)
     {
         var majorCategory = await _context.Major
@@ -336,11 +339,14 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
 
         return randomOccupations;
     }
-    public async Task<List<Guid>> CreateStudentChoice(StudentChoiceModel StModel, StudentChoiceType type)
+    #endregion
+
+    #region Create Student Choice, Get top selected 
+    public async Task<List<StudentChoice>> CreateStudentChoice(StudentChoiceModel StModel, StudentChoiceType type)
     {
         List<StudentChoice> studentChoices = new List<StudentChoice>();
 
-        foreach (var m in StModel._models)
+        foreach (var m in StModel.models)
         {
             StudentChoice studentChoice = new StudentChoice
             {
@@ -359,12 +365,11 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
 
         var topRatedMajorIds = studentChoices
                                 .Where(x => x.Rating == maxRating)
-                                .Select(x => x.MajorOrOccupationId)
                                 .ToList();
 
         return topRatedMajorIds;
     }
-
+    #endregion
 
 
 

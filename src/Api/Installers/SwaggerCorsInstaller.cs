@@ -58,6 +58,7 @@ namespace Api.Installers
                         policy =>
                         {
                             policy.WithOrigins(CorsConstant.AllowedOrigins)
+                            //policy.WithOrigins("*")
                                   .AllowAnyHeader()
                                   .AllowAnyMethod()
                                   .AllowCredentials();

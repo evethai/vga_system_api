@@ -13,6 +13,8 @@ namespace Application.Interface.Repository
     public interface IUniversityRepository : IGenericRepository<University>
     {
         (Expression<Func<University, bool>> filter, Func<IQueryable<University>, IOrderedQueryable<University>> orderBy) BuildFilterAndOrderBy(UniversitySearchModel searchModel);
-
+        Task<int> CreateUniversityLocation(Guid IdUniversity, List<UniversityLocationModel> universityLocations); 
+        Task<Boolean> UpdateUniversityLocation(Guid UniversityLocationId , UniversityLocationPutModel universityLocationPutModel);
+        Task<Boolean> DeleteUniversityLocation(Guid Id);
     }
 }

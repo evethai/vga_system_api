@@ -12,6 +12,8 @@ namespace Domain.Entity
     {
         public Guid AccountId { get; set; }
         public virtual Account Account { get; set; } = null!;
+        public Guid UniversityId { get; set; }
+        public virtual University University { get; set; } = null!;
         public int ConsultantLevelId { get; set; }
         public virtual ConsultantLevel ConsultantLevel { get; set; } = null!;
         //public string Name { get; set; } = string.Empty;

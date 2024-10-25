@@ -11,7 +11,7 @@ namespace Application.Interface.Repository
 {
     public interface IAdmissionInformationRepository : IGenericRepository<AdmissionInformation> 
     {
-        (Expression<Func<AdmissionInformation, bool>> filter, Func<IQueryable<AdmissionInformation>, IOrderedQueryable<AdmissionInformation>> orderBy) BuildFilterAndOrderBy(AdmissionInformationModel model, List<Guid> majorIds);
+        (Expression<Func<AdmissionInformation, bool>> filter, Func<IQueryable<AdmissionInformation>, IOrderedQueryable<AdmissionInformation>> orderBy) BuildFilterAndOrderBy(AdmissionInformationModel model, List<StudentChoice> stChoices);
     }
     
 }

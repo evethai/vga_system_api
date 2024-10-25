@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,7 +13,7 @@ namespace Domain.Model.Test
     {
         public Guid StudentTestId { get; set; }
 
-        public IEnumerable<MajorOrOccupationModel> _models ;
+        public List<MajorOrOccupationModel> models { get; set; } = new List<MajorOrOccupationModel>();
     }
 
     public class MajorOrOccupationModel

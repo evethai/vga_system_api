@@ -36,7 +36,7 @@ namespace Api.Installers
             services.AddScoped<IWalletService, WalletService>();
             services.AddScoped<ITransactionService, TransactionService>();
             services.AddScoped<IUniversityService, UniversityService>();
-           
+            services.AddScoped<INewsService, NewsService>();
             services.AddScoped<IAdminService, AdminService>();
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<IEntryLevelEducationService, EntryLevelEducationService>();

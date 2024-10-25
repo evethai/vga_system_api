@@ -67,7 +67,7 @@ namespace Infrastructure.Persistence.Service
 
                 var consultant = _mapper.Map<Consultant>(postModel);
 
-                RegisterAccountModel accountModel = new RegisterAccountModel(postModel.Email
+                RegisterAccountModel accountModel = new RegisterAccountModel(postModel.Name,postModel.Email
                        , postModel.Password
                        , postModel.Phone);
                 var accountId = await _unitOfWork.AccountRepository.CreateAccountAndWallet(accountModel, RoleEnum.Consultant);
@@ -140,7 +140,7 @@ namespace Infrastructure.Persistence.Service
                 var exAccountConsultant = await _unitOfWork.AccountRepository.GetByIdGuidAsync(consultant.AccountId)
                     ?? throw new NotExistsException();
                 exAccountConsultant.Status = AccountStatus.Blocked;
-                await _unitOfWork.ConsultantRepository.UpdateAsync(consultant);
+                //await _unitOfWork.ConsultantRepository.UpdateAsync(consultant);
                 await _unitOfWork.AccountRepository.UpdateAsync(exAccountConsultant);
                 await _unitOfWork.SaveChangesAsync();
 

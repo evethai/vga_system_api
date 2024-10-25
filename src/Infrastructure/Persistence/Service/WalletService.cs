@@ -39,7 +39,8 @@ namespace Infrastructure.Persistence.Service
 
         public async Task<Wallet> GetWalletByIdAsync(Guid Id)
         {
-            var wallet = await _unitOfWork.WalletRepository.GetByIdGuidAsync(Id);
+            var wallet = await _unitOfWork.WalletRepository.SingleOrDefaultAsync(predicate: c => c.Id.Equals(Id),
+                include: a => a.Include(a => a.Account));
             return _mapper.Map<Wallet>(wallet);
         }
 
@@ -110,6 +111,15 @@ namespace Infrastructure.Persistence.Service
         public async Task<ResponseModel> UpdateWalletUsingByTestAsync(Guid WalletStudentId, int goldUsingTest)
         {
             var walletStudent = await _unitOfWork.WalletRepository.GetByIdGuidAsync(WalletStudentId);
+            if (walletStudent==null)
+            {
+                return new ResponseModel
+                {
+                    Message = "WalletId is not found",
+                    IsSuccess = false,
+                    Data = WalletStudentId,
+                };
+            } 
             walletStudent.GoldBalance -= goldUsingTest;
             TransactionPostModel  transaction = new TransactionPostModel(WalletStudentId, goldUsingTest);
             var TransactionInfor = _unitOfWork.TransactionRepository.
