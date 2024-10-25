@@ -9,8 +9,6 @@ using Domain.Model.Account;
 namespace Domain.Model.Student;
 public class StudentPutModel : AccountPostModel
 {
-    [Required(ErrorMessage = "Name is required.")]
-    public string Name { get; set; } = string.Empty;
     [Required(ErrorMessage = "Gender is required.")]
     public bool Gender { get; set; }
     [Required(ErrorMessage = "DateOfBirth is required.")]

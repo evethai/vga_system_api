@@ -9,9 +9,8 @@ using Domain.Model.AccountWallet;
 namespace Domain.Model.Highschool;
 public class HighschoolModel
 {
-    public Guid Id { get; set; }
-    public string Name { get; set; }   
-    public string LocationDetail { get; set; }
+    public Guid Id { get; set; } 
+    public string Address { get; set; }
     public Guid RegionId { get; set; }
     public AccountWalletModel Account { get; set; }
 

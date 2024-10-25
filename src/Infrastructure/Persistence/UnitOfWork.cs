@@ -35,6 +35,7 @@ namespace Infrastructure.Persistence
         private IRefreshTokenRepository _refreshTokenRepository;
         private INotificationRepository _notificationRepository;
         private IAdmissionInformationRepository _admissionInformationRepository;
+        private INewsRepository _newsRepository;
 
         public UnitOfWork(VgaDbContext context)
         {
@@ -59,8 +60,8 @@ namespace Infrastructure.Persistence
         public IConsultationTimeRepository ConsultationTimeRepository => _consultationTimeRepository ??= new ConsultationTimeRepository(_context);
         public IBookingRepository BookingRepository => _bookingRepository ??= new BookingRepository(_context);
         public IRefreshTokenRepository RefreshTokenRepository => _refreshTokenRepository ??= new RefreshTokenRepository(_context);
-
         public INotificationRepository NotificationRepository => _notificationRepository ??= new NotificationRepository(_context);
+        public INewsRepository NewsRepository => _newsRepository ??= new NewsRepository(_context);
 
         public IAdmissionInformationRepository AdmissionInformationRepository => _admissionInformationRepository ??= new AdmissionInformationRepository(_context);
 

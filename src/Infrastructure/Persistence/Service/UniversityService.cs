@@ -30,7 +30,8 @@ namespace Infrastructure.Persistence.Service
         public async Task<ResponseModel> CreateUniversityAsync(UniversityPostModel postModel)
         {
             var university = _mapper.Map<University>(postModel);
-            RegisterAccountModel accountModel = new RegisterAccountModel(postModel.Email
+            RegisterAccountModel accountModel = new RegisterAccountModel(postModel.Name
+                , postModel.Email
                 , postModel.Password
                 , postModel.Phone);
             var AccountId = await _unitOfWork.AccountRepository.CreateAccountAndWallet(accountModel, RoleEnum.University);
@@ -39,7 +40,7 @@ namespace Infrastructure.Persistence.Service
             await _unitOfWork.SaveChangesAsync();
             return new ResponseModel
             {
-                Message = " University Created Successfully",
+                Message = "University Created Successfully",
                 IsSuccess = true,
                 Data = postModel,
             };
@@ -73,7 +74,7 @@ namespace Infrastructure.Persistence.Service
             {
                 Message = "Delete University is Successfully",
                 IsSuccess = true,
-                Data = exAccount
+                Data = Id
             };
         }
 
@@ -83,7 +84,8 @@ namespace Infrastructure.Persistence.Service
             var universities = await _unitOfWork.UniversityRepository
                 .GetBySearchAsync(filter, orderBy,
                 q => q.Include(s => s.Account)
-                       .ThenInclude(a => a.Wallet),
+                       .ThenInclude(a => a.Wallet)
+                       .Include(a=>a.UniversityLocations),
                 pageIndex: searchModel.currentPage,
                 pageSize: searchModel.pageSize);
             var total = await _unitOfWork.UniversityRepository.CountAsync(filter);
@@ -98,7 +100,9 @@ namespace Infrastructure.Persistence.Service
 
         public async Task<UniversityModel> GetUniversityByIdAsync(Guid Id)
         {
-            var university = await _unitOfWork.UniversityRepository.GetByIdGuidAsync(Id);
+            var university = await _unitOfWork.UniversityRepository.
+                SingleOrDefaultAsync(predicate: c => c.Id.Equals(Id), 
+                include: a => a.Include(a => a.Account).ThenInclude(a => a.Wallet).Include(a=>a.UniversityLocations));
             return _mapper.Map<UniversityModel>(university);
         }
 
@@ -114,8 +118,8 @@ namespace Infrastructure.Persistence.Service
                 };
             }
             exitUniversity.Description = putModel.Description;
-            //exitUniversity.Name = putModel.Name;
-            //exitUniversity.Address = putModel.Address;
+            exitUniversity.Code = putModel.Code;
+            exitUniversity.EstablishedYear = putModel.EstablishedYear;           
             var exitAccount = await _unitOfWork.AccountRepository.GetByIdGuidAsync(exitUniversity.AccountId);
             if (exitAccount == null)
             {
@@ -124,7 +128,8 @@ namespace Infrastructure.Persistence.Service
                     Message = "University Account Id is not found",
                     IsSuccess = false,
                 };
-            } 
+            }
+            exitAccount.Name = putModel.Name;
             exitAccount.Phone = putModel.Phone;
             exitAccount.Email = putModel.Email;
             exitAccount.Password = PasswordUtil.HashPassword(putModel.Password);
@@ -134,9 +139,58 @@ namespace Infrastructure.Persistence.Service
             await _unitOfWork.SaveChangesAsync();
             return new ResponseModel
             {
-                Message = " University Updated Successfully",
+                Message = "University Updated Successfully",
                 IsSuccess = true,
-                Data = result,
+                Data = putModel,
+            };
+        }
+
+        public async Task<ResponseModel> CreateUniversityLocationAsync(Guid Id, List<UniversityLocationModel> universityLocationModels)
+        {
+            var exitUniversity = await _unitOfWork.UniversityRepository.CreateUniversityLocation(Id, universityLocationModels);
+            return new ResponseModel
+            {
+                Message = "Create University Location Successfully",
+                IsSuccess = true,
+                Data = "Number location create is " + exitUniversity
+            };
+        }
+
+        public async Task<ResponseModel> UpdateUniversityLocationAsync(Guid Id, UniversityLocationPutModel universityLocationModels)
+        {
+            var updateLocation = await _unitOfWork.UniversityRepository.UpdateUniversityLocation(Id, universityLocationModels);
+            if(updateLocation == false)
+            {
+                return new ResponseModel
+                {
+                    Message = "Update University Location is fails",
+                    IsSuccess = false
+                };
+            }
+            return new ResponseModel
+            {
+                Message = "Update University Location Successfully",
+                IsSuccess = true,
+                Data = "University location update is " + Id
+            };
+        }
+
+        public async Task<ResponseModel> DeleteUniversityLocationAsync(Guid Id)
+        {
+            var deleteLocation = await _unitOfWork.UniversityRepository.DeleteUniversityLocation(Id);
+            if (deleteLocation == false)
+            {
+                return new ResponseModel
+                {
+                    Message = "Delete University Location is fails",
+                    IsSuccess = false
+                };
+            }
+            return new ResponseModel
+            {
+                Message = "Delete University Location Successfully",
+                IsSuccess = true,
+                Data = "University location Delete is " + Id
             };
         }
     }
