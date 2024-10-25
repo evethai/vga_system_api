@@ -26,7 +26,8 @@ public class HighschoolService : IHighschoolService
     }
     public async Task<HighschoolModel> GetHighschoolByIdAsync(Guid HighschoolId)
     {
-        var highschool = await _unitOfWork.HighschoolRepository.GetByIdGuidAsync(HighschoolId);
+        var highschool = await _unitOfWork.HighschoolRepository.
+            SingleOrDefaultAsync(predicate: c => c.Id.Equals(HighschoolId), include: a => a.Include(a => a.Account).ThenInclude(a=>a.Wallet));
         return _mapper.Map<HighschoolModel>(highschool);
     }
 
@@ -51,7 +52,9 @@ public class HighschoolService : IHighschoolService
     public async Task<ResponseModel> CreateHighschoolAsync(HighschoolPostModel postModel)
     {
         var highschool = _mapper.Map<HighSchool>(postModel);
-        RegisterAccountModel accountModel = new RegisterAccountModel(postModel.Email
+        RegisterAccountModel accountModel = new RegisterAccountModel(
+            postModel.Name
+            ,postModel.Email
             , postModel.Password
             , postModel.Phone);
         var AccountId = await _unitOfWork.AccountRepository.CreateAccountAndWallet(accountModel, RoleEnum.HighSchool);
@@ -77,9 +80,7 @@ public class HighschoolService : IHighschoolService
                 IsSuccess = true,
             };
         }
-        //exitHighschool.LocationDetail = putModel.LocationDetail;
-        //exitHighschool.Name = putModel.Name;
-        exitHighschool.RegionId = putModel.RegionId;
+        exitHighschool.Address = putModel.Address;             
         var exitAccount = await _unitOfWork.AccountRepository.GetByIdGuidAsync(exitHighschool.AccountId);
         if (exitAccount == null)
         {
@@ -89,6 +90,7 @@ public class HighschoolService : IHighschoolService
                 IsSuccess = true,
             };
         }
+        exitAccount.Name = putModel.Name;
         exitAccount.Phone = putModel.Phone;
         exitAccount.Email = putModel.Email;
         exitAccount.Password = PasswordUtil.HashPassword(putModel.Password);
@@ -99,7 +101,7 @@ public class HighschoolService : IHighschoolService
         {
             Message = " Highschool Updated Successfully",
             IsSuccess = true,
-            Data = exitHighschool,
+            Data = putModel,
         };
     }
 
@@ -130,8 +132,7 @@ public class HighschoolService : IHighschoolService
         {
 
             Message = " Highschool Delete Successfully",
-            IsSuccess = true,
-            Data = exHighschool
+            IsSuccess = true
         };
     }
 }
