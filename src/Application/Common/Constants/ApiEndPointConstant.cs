@@ -26,6 +26,8 @@
             public const string PersonalTestEndpoint = ApiEndpoint + "/personal-test/{id}";
             public const string GetHistoryUserTestEndpoint = ApiEndpoint + "/history-user/{id}";
             public const string GetResultPersonalTestEndpoint = ApiEndpoint + "/personal-test-result";
+            public const string GetMajorsByPersonalGroupIdEndpoint = ApiEndpoint + "/majors-by-personality/{id}";
+            public const string FilterMajorAndUniversityEndpoint = ApiEndpoint + "/filter-major-university";
         }
 
         public static class PersonalGroup
@@ -73,6 +75,7 @@
             public const string StudentDeleteEndpoint = ApiEndpoint + "/student/{id}";
             public const string ImportStudentEndpoint = StudentGetListEndpoint + "/import";
         }
+        //Wallet
         public static class Wallet
         {
             public const string WalletsEndpoint = ApiEndpoint + "/wallet";
@@ -81,9 +84,12 @@
             public const string WalletTest = ApiEndpoint + "/wallet/do-the-test";
             public const string WalletBook = ApiEndpoint + "/wallet/book-conslutant";
         }
+        //Transaction
+        public static class Transaction
+        {
+            public const string TransactionEndPoint = ApiEndpoint + "/transactions";
+        }
 
-
-  
         //consultant
         public static class Consultant
         {
@@ -141,6 +147,19 @@
         {
             public const string NotificationsEndpoint = ApiEndpoint + "/notifications";
             public const string NotificationEndpoint = ApiEndpoint + "/notification/account/{id}";
+        }
+        //News
+        public static class News
+        {
+            public const string NewsEndpoint = ApiEndpoint + "/news";
+            public const string NewEndpoint = ApiEndpoint + "/news/{id}";
+        }
+        // Image News
+        public static class ImageNews
+        {
+            public const string ImageNewsEndpoint = ApiEndpoint + "/image-news";
+            public const string ImageNewsDeleteEndpoint = ApiEndpoint + "/image-news/{id}";
+            public const string ImageNewsUpdateEndpoint = ApiEndpoint + "/image-news/{id}";
         }
     }
 }

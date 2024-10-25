@@ -67,7 +67,7 @@ namespace Infrastructure.Persistence.Service
 
                 var consultant = _mapper.Map<Consultant>(postModel);
 
-                RegisterAccountModel accountModel = new RegisterAccountModel(postModel.Email
+                RegisterAccountModel accountModel = new RegisterAccountModel(postModel.Name,postModel.Email
                        , postModel.Password
                        , postModel.Phone);
                 var accountId = await _unitOfWork.AccountRepository.CreateAccountAndWallet(accountModel, RoleEnum.Consultant);

@@ -97,12 +97,26 @@ namespace Api.Controllers
             }
         }
 
-        [HttpGet("student/{id}")]
-        public async Task<IActionResult> GetMajorAndOccupationByPersonalGroupId(Guid id, Guid perId)
+        [HttpGet(ApiEndPointConstant.PersonalTest.GetMajorsByPersonalGroupIdEndpoint)]
+        public async Task<IActionResult> GetMajorAndOccupationByPersonalGroupId(Guid id)
         {
             try
             {
-                var response = await _studentTestService.GetMajorsOrOccByPersonalGroupId(perId, id);
+                var response = await _studentTestService.GetMajorsByPersonalGroupId(id);
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPost(ApiEndPointConstant.PersonalTest.FilterMajorAndUniversityEndpoint)]
+        public async Task<IActionResult> FilterMajorAndUniversity(FilterMajorAndUniversityModel model)
+        {
+            try
+            {
+                var response = await _studentTestService.FilterMajorAndUniversity(model);
                 return Ok(response);
             }
             catch (Exception e)
