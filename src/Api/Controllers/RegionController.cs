@@ -20,7 +20,7 @@ public class RegionController : ControllerBase
         return Ok(result);
     }
     [HttpGet(ApiEndPointConstant.Region.RegionEndpoint)]
-    public async Task<IActionResult> GetRegionById(int id)
+    public async Task<IActionResult> GetRegionById(Guid id)
     {
         var result = await _regionService.GetRegionById(id);
         return Ok(result);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.Enum;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Domain.Model.Highschool;
@@ -16,6 +17,8 @@ public class HighschoolSearchModel
     public string? name { get; set; }
     [FromQuery(Name = "region-id")]
     public Guid? regionId  { get; set; }
+    [FromQuery(Name = "status")]
+    public AccountStatus? Status { get; set; }
     [FromQuery(Name = "descending")]
     public bool? descending { get; set; } = false;
 }

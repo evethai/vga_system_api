@@ -9,6 +9,7 @@ using Domain.Enum;
 using Domain.Model.Highschool;
 using Domain.Model.Response;
 using Domain.Model.Transaction;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Interface.Service
 {
@@ -25,7 +26,11 @@ namespace Application.Interface.Service
         public async Task<ResponseTransactionModel> GetListTransactionAsync(TransactionSearchModel searchModel)
         {
             var (filter, orderBy) = _unitOfWork.TransactionRepository.BuildFilterAndOrderBy(searchModel);
-            var transaction = await _unitOfWork.TransactionRepository.GetByConditionAsync(filter, orderBy, pageIndex: searchModel.currentPage, pageSize: searchModel.pageSize);
+            var transaction = await _unitOfWork.TransactionRepository.GetBySearchAsync(filter, orderBy,
+            q => q.Include(s => s.Wallet)
+                   .ThenInclude(a => a.Account),
+            pageIndex: searchModel.currentPage,
+            pageSize: searchModel.pageSize);
             var total = await _unitOfWork.TransactionRepository.CountAsync(filter);
             var listTransaction = _mapper.Map<List<TransactionModel>>(transaction);
             return new ResponseTransactionModel

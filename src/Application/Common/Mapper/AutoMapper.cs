@@ -27,6 +27,7 @@ using Domain.Model.Booking;
 using Domain.Model.ConsultantLevel;
 using Domain.Model.University;
 using Domain.Model.Notification;
+using Domain.Model.News;
 
 
 namespace Application.Common.Mapper

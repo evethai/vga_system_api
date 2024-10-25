@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.Enum;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Domain.Model.Student;
@@ -19,6 +20,8 @@ public class StudentSearchModel
     public Guid? highschoolId { get; set; }
     [FromQuery(Name = "school-years")]
     public int? SchoolYears { get; set; }
+    [FromQuery(Name = "status")]
+    public AccountStatus? Status { get; set; }
     [FromQuery(Name = "descending")]
     public bool? descending { get; set; } = false;
 }
