@@ -140,7 +140,7 @@ namespace Infrastructure.Persistence.Service
                 var exAccountConsultant = await _unitOfWork.AccountRepository.GetByIdGuidAsync(consultant.AccountId)
                     ?? throw new NotExistsException();
                 exAccountConsultant.Status = AccountStatus.Blocked;
-                await _unitOfWork.ConsultantRepository.UpdateAsync(consultant);
+                //await _unitOfWork.ConsultantRepository.UpdateAsync(consultant);
                 await _unitOfWork.AccountRepository.UpdateAsync(exAccountConsultant);
                 await _unitOfWork.SaveChangesAsync();
 
