@@ -141,6 +141,14 @@
             public const string UniversityDeleteEndpoint = ApiEndpoint + "/university/{id}";
             public const string UniversityPostEndpoint = ApiEndpoint + "/university";
         }
+        //University
+        public static class UniversityLocation
+        {
+            public const string UniversityLocationPutEndpoint = ApiEndpoint + "/university-location/{id}";
+            public const string UniversityLocationDeleteEndpoint = ApiEndpoint + "/university-location/{id}";
+            public const string UniversityLocationPostEndpoint = ApiEndpoint + "/university-location/{UniversityId}";
+        }
+
 
         //Notification
         public static class Notification

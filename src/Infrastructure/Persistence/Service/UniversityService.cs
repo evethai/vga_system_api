@@ -102,7 +102,8 @@ namespace Infrastructure.Persistence.Service
         {
             var university = await _unitOfWork.UniversityRepository.
                 SingleOrDefaultAsync(predicate: c => c.Id.Equals(Id), 
-                include: a => a.Include(a => a.Account).ThenInclude(a => a.Wallet).Include(a=>a.UniversityLocations));
+                include: a => a.Include(a => a.Account).ThenInclude(a => a.Wallet)
+                .Include(a=>a.UniversityLocations));
             return _mapper.Map<UniversityModel>(university);
         }
 
@@ -156,7 +157,7 @@ namespace Infrastructure.Persistence.Service
             };
         }
 
-        public async Task<ResponseModel> UpdateUniversityLocationAsync(Guid Id, UniversityLocationPutModel universityLocationModels)
+        public async Task<ResponseModel> UpdateUniversityLocationAsync(int Id, UniversityLocationPutModel universityLocationModels)
         {
             var updateLocation = await _unitOfWork.UniversityRepository.UpdateUniversityLocation(Id, universityLocationModels);
             if(updateLocation == false)
@@ -175,7 +176,7 @@ namespace Infrastructure.Persistence.Service
             };
         }
 
-        public async Task<ResponseModel> DeleteUniversityLocationAsync(Guid Id)
+        public async Task<ResponseModel> DeleteUniversityLocationAsync(int Id)
         {
             var deleteLocation = await _unitOfWork.UniversityRepository.DeleteUniversityLocation(Id);
             if (deleteLocation == false)

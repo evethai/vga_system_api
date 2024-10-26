@@ -54,31 +54,31 @@ namespace Infrastructure.Persistence.Repository
         public Task<int> CreateUniversityLocation(Guid IdUniversity, List<UniversityLocationModel> universityLocations)
         {
             var exitUnversity = _context.University.Where(a=>a.Id.Equals(IdUniversity)).FirstOrDefault();
-            if (exitUnversity != null)
+            if (exitUnversity == null)
             {
                 throw new Exception("University Id not found");
             }
             foreach (var location in universityLocations)
             {
                 var exitRegion = _context.Region.Where(a => a.Id.Equals(location.RegionId)).FirstOrDefault();
-                if (exitRegion != null)
+                if (exitRegion == null)
                 {
-                    UniversityLocation locations = new UniversityLocation
-                    {
-                        UniversityId = IdUniversity,
-                        RegionId = location.RegionId,
-                        Address = location.Address
-                    };
-                    _context.UniversityLocation.Add(locations);
+                    throw new Exception("Region Id not found");
                 }
-                throw new Exception("Region Id not found");
+                UniversityLocation locations = new UniversityLocation
+                {
+                    UniversityId = IdUniversity,
+                    RegionId = location.RegionId,
+                    Address = location.Address
+                };
+                _context.UniversityLocation.Add(locations);
             }
             int numberLocation = universityLocations.Count();
             _context.SaveChanges();
             return Task.FromResult(numberLocation);
         }
 
-        public Task<bool> DeleteUniversityLocation(Guid Id)
+        public Task<bool> DeleteUniversityLocation(int Id)
         {
             var exitlocation = _context.UniversityLocation.Where(a => a.Id.Equals(Id)).FirstOrDefault();
             if (exitlocation == null)
@@ -90,7 +90,7 @@ namespace Infrastructure.Persistence.Repository
             return Task.FromResult(true);
         }
 
-        public Task<bool> UpdateUniversityLocation(Guid UniversityLocationId, UniversityLocationPutModel universityLocationPutModel)
+        public Task<bool> UpdateUniversityLocation(int UniversityLocationId, UniversityLocationPutModel universityLocationPutModel)
         {
             var exitlocation  = _context.UniversityLocation.Where(a=>a.Id.Equals(UniversityLocationId)).FirstOrDefault();
             if (exitlocation == null)
