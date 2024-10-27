@@ -20,6 +20,14 @@ namespace Api.Controllers
             _consultationDayService = consultationDayService;
         }
 
+        //[CustomAuthorize(RoleEnum.Consultant, RoleEnum.Student)]
+        [HttpGet(ApiEndPointConstant.ConsultationDay.ConsultationDaysEndpoint)]
+        public async Task<IActionResult> GetListConsultationDaysWithPaginateAsync(ConsultationDaySearchModel searchModel)
+        {
+            var result = await _consultationDayService.GetListConsultationDaysWithPaginateAsync(searchModel);
+            return Ok(result);
+        }
+
         //[CustomAuthorize(RoleEnum.Admin, RoleEnum.Student, RoleEnum.Consultant)]
         [HttpGet(ApiEndPointConstant.ConsultationDay.ConsultationDayEndpoint)]
         public async Task<IActionResult> GetConsultationDayByIdAsync(Guid id)
@@ -65,14 +73,6 @@ namespace Api.Controllers
             {
                 return BadRequest(ex.Message);
             }
-        }
-
-        //[CustomAuthorize(RoleEnum.Consultant, RoleEnum.Student)]
-        [HttpGet(ApiEndPointConstant.ConsultationDay.ConsultationDaysEndpoint)]
-        public async Task<IActionResult> GetListConsultationDaysWithPaginateAsync( ConsultationDaySearchModel searchModel)
-        {
-            var result = await _consultationDayService.GetListConsultationDaysWithPaginateAsync(searchModel);
-            return Ok(result);
         }
     }
 }

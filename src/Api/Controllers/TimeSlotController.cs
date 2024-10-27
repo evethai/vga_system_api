@@ -20,6 +20,14 @@ namespace Api.Controllers
         }
 
         //[CustomAuthorize(RoleEnum.Admin, RoleEnum.Consultant)]
+        [HttpGet(ApiEndPointConstant.TimeSlot.TimeSlotsEndpoint)]
+        public async Task<IActionResult> GetListTimeSlotsWithPaginateAsync(TimeSlotSearchModel searchModel)
+        {
+            var result = await _timeSlotService.GetListTimeSlotsWithPaginateAsync(searchModel);
+            return Ok(result);
+        }
+
+        //[CustomAuthorize(RoleEnum.Admin, RoleEnum.Consultant)]
         [HttpGet(ApiEndPointConstant.TimeSlot.TimeSlotEndpoint)]
         public async Task<IActionResult> GetTimeSlotByIdAsync(int id)
         {
@@ -94,14 +102,5 @@ namespace Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
-        //[CustomAuthorize(RoleEnum.Admin, RoleEnum.Consultant)]
-        [HttpGet(ApiEndPointConstant.TimeSlot.TimeSlotsEndpoint)]
-        public async Task<IActionResult> GetListTimeSlotsWithPaginateAsync(TimeSlotSearchModel searchModel)
-        {
-            var result = await _timeSlotService.GetListTimeSlotsWithPaginateAsync(searchModel);
-            return Ok(result);
-        }
-
     }
 }
