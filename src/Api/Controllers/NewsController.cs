@@ -115,7 +115,7 @@ namespace Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPut(ApiEndPointConstant.ImageNews.ImageNewsUpdateEndpoint)]
+        [HttpPut(ApiEndPointConstant.ImageNews.ImageNewsPutEndpoint)]
         public async Task<IActionResult> UpdateNewsImageAsync(ImageNewsPutModel imageNewsModel, int id)
         {
             if (!ModelState.IsValid)

@@ -42,6 +42,7 @@ namespace Infrastructure.Persistence
         private IOccupationalGroupRepository _occupationalGroupRepository;
         private IOccupationRepository _occupationRepository;
         private IWorkSkillsRepository _workSkillsRepository;
+        private IAdmissionMethodRepository _admissionMethodRepository;
 
         public UnitOfWork(VgaDbContext context)
         {
@@ -76,6 +77,7 @@ namespace Infrastructure.Persistence
         public IOccupationalGroupRepository OccupationalGroupRepository => _occupationalGroupRepository ??= new OccupationalGroupRepository(_context);
         public IOccupationRepository OccupationRepository => _occupationRepository ??= new OccupationRepository(_context);
         public IWorkSkillsRepository WorkSkillsRepository => _workSkillsRepository ??= new WorkSkillsRepository(_context);
+        public IAdmissionMethodRepository AdmissionMethodRepository => _admissionMethodRepository ??= new AdmissionMethodRepository(_context);
 
         public async Task SaveChangesAsync()
         {

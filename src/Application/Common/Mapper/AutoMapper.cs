@@ -34,6 +34,7 @@ using Domain.Model.Occupation;
 using Domain.Model.OccupationalSkills;
 using Domain.Model.WorkSkills;
 using Domain.Model.OccupationalGroup;
+using Domain.Model.AdmissionInformation;
 
 
 
@@ -230,6 +231,14 @@ namespace Application.Common.Mapper
             CreateMap<WorkSkills, WorkSkillsViewModel>().ReverseMap();
             CreateMap<WorkSkills, WorkSkillsPostModel>().ReverseMap();
             CreateMap<WorkSkills, WorkSkillsPutModel>().ReverseMap();
+            //AdmissionInformation
+            CreateMap<AdmissionInformation, AdmissionInformationModel>().ReverseMap();
+            CreateMap<AdmissionInformation, AdmissionInformationPostModel>().ReverseMap();
+            CreateMap<AdmissionInformation, AdmissionInformationPutModel>().ReverseMap();
+            //AdmissionMethod
+            CreateMap<AdmissionMethod, AdmissionMethodModel>().ReverseMap();
+            CreateMap<AdmissionMethod, AdmissionMethodPostModel>().ReverseMap();
+            CreateMap<AdmissionMethod, AdmissionMethodPutModel>().ReverseMap();
         }
 
     }

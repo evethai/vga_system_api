@@ -36,6 +36,7 @@ namespace Application.Interface
         IOccupationalGroupRepository OccupationalGroupRepository { get; }
         IOccupationRepository OccupationRepository { get; }
         IWorkSkillsRepository WorkSkillsRepository { get; }
+        IAdmissionMethodRepository AdmissionMethodRepository { get; }
         Task SaveChangesAsync();
     }
 }
