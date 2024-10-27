@@ -94,14 +94,14 @@
         public static class Consultant
         {
             public const string ConsultantsEndpoint = ApiEndpoint + "/consultants";
-            public const string ConsultantEndpoint = ConsultantsEndpoint + "/{id}";
+            public const string ConsultantEndpoint = ApiEndpoint + "/consultant/{id}";
         }
 
         //time slot
         public static class TimeSlot
         {
             public const string TimeSlotsEndpoint = ApiEndpoint + "/timeslots";
-            public const string TimeSlotEndpoint = TimeSlotsEndpoint + "/{id}";
+            public const string TimeSlotEndpoint = ApiEndpoint + "/timeslot/{id}";
             public const string TimeSlotsGetAllEndpoint = TimeSlotsEndpoint + "/all";
         }
 
@@ -109,28 +109,28 @@
         public static class ConsultantLevel
         {
             public const string ConsultantLevelsEndpoint = ApiEndpoint + "/consultant-levels";
-            public const string ConsultantLevelEndpoint = ConsultantLevelsEndpoint + "/{id}";
+            public const string ConsultantLevelEndpoint = ApiEndpoint + "/consultant-level/{id}";
         }
 
         //consultation day
         public static class ConsultationDay
         {
             public const string ConsultationDaysEndpoint = ApiEndpoint + "/consultation-days";
-            public const string ConsultationDayEndpoint = ConsultationDaysEndpoint + "/{id}";
+            public const string ConsultationDayEndpoint = ApiEndpoint + "/consultation-day/{id}";
         }
 
         //consultation time
         public static class ConsultationTime
         {
             public const string ConsultationTimesEndpoint = ApiEndpoint + "/consultation-times";
-            public const string ConsultationTimeEndpoint = ConsultationTimesEndpoint + "/{id}";
+            public const string ConsultationTimeEndpoint = ApiEndpoint + "/consultation-time/{id}";
         }
 
         //Booking
         public static class Booking
         {
             public const string BookingsEndpoint = ApiEndpoint + "/bookings";
-            public const string BookingEndpoint = BookingsEndpoint + "/{id}";
+            public const string BookingEndpoint = ApiEndpoint + "/booking/{id}";
         }
         //University
         public static class University
@@ -179,11 +179,53 @@
         }
         public static class AdmisstionMethod
         {
-            public const string AdmisstionMethodListEndpoint = ApiEndpoint + "/admission-method";
+            public const string AdmisstionMethodListEndpoint = ApiEndpoint + "/admission-methods";
             public const string AdmisstionMethodEndpoint = ApiEndpoint + "/admission-method/{id}";
             public const string AdmisstionMethodPostEndpoint = ApiEndpoint + "/admission-method";
             public const string AdmisstionMethodPutEndpoint = ApiEndpoint + "/admission-method/{id}";
             public const string AdmisstionMethodDeleteEndpoint = ApiEndpoint + "/admission-method/{id}";
+        }
+
+        //EntryLevelEducation
+        public static class EntryLevelEducation
+        {
+            public const string EntryLevelEducationsEndpoint = ApiEndpoint + "/entry-level-educations";
+            public const string EntryLevelEducationEndpoint = ApiEndpoint + "/entry-level-education/{id}";
+        }
+
+        //Major
+        public static class Major
+        {
+            public const string MajorsEndpoint = ApiEndpoint + "/majors";
+            public const string MajorEndpoint = ApiEndpoint + "/major/{id}";
+        }
+
+        //MajorCategory
+        public static class MajorCategory
+        {
+            public const string MajorCategoriesEndpoint = ApiEndpoint + "/major-categories";
+            public const string MajorCategoryEndpoint = ApiEndpoint + "/major-category/{id}";
+        }
+
+        //Occupation
+        public static class Occupation
+        {
+            public const string OccupationsEndpoint = ApiEndpoint + "/occupations";
+            public const string OccupationEndpoint = ApiEndpoint + "/occupation/{id}";
+        }
+
+        //OccupationalGroup
+        public static class OccupationalGroup
+        {
+            public const string OccupationalGroupsEndpoint = ApiEndpoint + "/occupational-groups";
+            public const string OccupationalGroupEndpoint = ApiEndpoint + "/occupational-group/{id}";
+        }
+
+        //WorkSkill
+        public static class WorkSkill
+        {
+            public const string WorkSkillsEndpoint = ApiEndpoint + "/work-skills";
+            public const string WorkSkillEndpoint = ApiEndpoint + "/work-skill/{id}";
         }
     }
 }

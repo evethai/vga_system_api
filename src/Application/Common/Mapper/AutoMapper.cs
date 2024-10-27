@@ -27,8 +27,15 @@ using Domain.Model.Booking;
 using Domain.Model.ConsultantLevel;
 using Domain.Model.University;
 using Domain.Model.Notification;
+using Domain.Model.EntryLevelEducation;
 using Domain.Model.News;
+using Domain.Model.MajorCategory;
+using Domain.Model.Occupation;
+using Domain.Model.OccupationalSkills;
+using Domain.Model.WorkSkills;
+using Domain.Model.OccupationalGroup;
 using Domain.Model.AdmissionInformation;
+
 
 
 namespace Application.Common.Mapper
@@ -105,6 +112,7 @@ namespace Application.Common.Mapper
                 .ForMember(dest => dest.AccountId, opt => opt.MapFrom(src => src.AccountId))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Account.Name))
                 .ForMember(dest => dest.ConsultantLevel, opt => opt.MapFrom(src => src.ConsultantLevel))
+                .ForMember(dest => dest.University, opt => opt.MapFrom(src => src.University))
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Account.Email))
                 .ForMember(dest => dest.Phone, opt => opt.MapFrom(src => src.Account.Phone))
                 .ForMember(dest => dest.Image_Url, opt => opt.MapFrom(src => src.Account.Image_Url))
@@ -116,6 +124,7 @@ namespace Application.Common.Mapper
             CreateMap<Consultant, ConsultantPostModel>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Account.Name))
                 .ForMember(dest => dest.ConsultantLevelId, opt => opt.MapFrom(src => src.ConsultantLevelId))
+                .ForMember(dest => dest.UniversityId, opt => opt.MapFrom(src => src.UniversityId))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
                 .ForMember(dest => dest.DoB, opt => opt.MapFrom(src => src.DoB))
                 .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender))
@@ -123,6 +132,7 @@ namespace Application.Common.Mapper
             CreateMap<Consultant, ConsultantPutModel>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Account.Name))
                 .ForMember(dest => dest.ConsultantLevelId, opt => opt.MapFrom(src => src.ConsultantLevelId))
+                .ForMember(dest => dest.UniversityId, opt => opt.MapFrom(src => src.UniversityId))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Account.Email))
                 .ForMember(dest => dest.Phone, opt => opt.MapFrom(src => src.Account.Phone))
@@ -178,6 +188,49 @@ namespace Application.Common.Mapper
 
             //StudentChoice
             CreateMap<Major, MajorOrOccupationModel>().ReverseMap();
+
+            //EntryLevelEducation
+            CreateMap<EntryLevelEducation, EntryLevelEducationViewModel>().ReverseMap();
+            CreateMap<EntryLevelEducation, EntryLevelEducationPostModel>().ReverseMap();
+            CreateMap<EntryLevelEducation, EntryLevelEducationPutModel>().ReverseMap();
+
+            //Major
+            CreateMap<Major, MajorViewModel>()
+                .ForMember(dest => dest.MajorCategoryName, opt => opt.MapFrom(src => src.MajorCategory.Name))
+                .ReverseMap();
+            CreateMap<Major, MajorPostModel>().ReverseMap();
+            CreateMap<Major, MajorPutModel>().ReverseMap();
+
+            //MajorCategory
+            CreateMap<MajorCategory, MajorCategoryViewModel>().ReverseMap();
+            CreateMap<MajorCategory, MajorCategoryPostModel>().ReverseMap();
+            CreateMap<MajorCategory, MajorCategoryPutModel>().ReverseMap();
+
+            //Occupation
+            CreateMap<Occupation, OccupationViewModel>()
+                .ForMember(dest => dest.EntryLevelEducation, opt => opt.MapFrom(src => src.EntryLevelEducation))
+                .ForMember(dest => dest.OccupationalGroup, opt => opt.MapFrom(src => src.OccupationalGroup))
+                .ForMember(dest => dest.OccupationalSkills, opt => opt.MapFrom(src => src.OccupationalSKills))
+                .ReverseMap();
+            CreateMap<Occupation, OccupationPostModel>().ReverseMap();
+            CreateMap<Occupation, OccupationPutModel>()
+                .ReverseMap()
+                .ForMember(dest => dest.OccupationalSKills, opt => opt.Ignore());
+
+            //OccupationalGroup
+            CreateMap<OccupationalGroup, OccupationalGroupViewModel>().ReverseMap();
+            CreateMap<OccupationalGroup, OccupationalGroupPostModel>().ReverseMap();
+            CreateMap<OccupationalGroup, OccupationalGroupPutModel>().ReverseMap();
+
+            //OccupationSkill
+            CreateMap<OccupationalSKills, OccupationalSkillsViewModel>().ReverseMap();
+            CreateMap<OccupationalSKills, OccupationalSkillsPostModel>().ReverseMap();
+            CreateMap<OccupationalSKills, OccupationalSkillsPutModel>().ReverseMap();
+
+            //WorkSkill
+            CreateMap<WorkSkills, WorkSkillsViewModel>().ReverseMap();
+            CreateMap<WorkSkills, WorkSkillsPostModel>().ReverseMap();
+            CreateMap<WorkSkills, WorkSkillsPutModel>().ReverseMap();
             //AdmissionInformation
             CreateMap<AdmissionInformation, AdmissionInformationModel>().ReverseMap();
             CreateMap<AdmissionInformation, AdmissionInformationPostModel>().ReverseMap();
@@ -187,7 +240,7 @@ namespace Application.Common.Mapper
             CreateMap<AdmissionMethod, AdmissionMethodPostModel>().ReverseMap();
             CreateMap<AdmissionMethod, AdmissionMethodPutModel>().ReverseMap();
         }
-      
+
     }
 }
 

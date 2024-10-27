@@ -36,6 +36,12 @@ namespace Infrastructure.Persistence
         private INotificationRepository _notificationRepository;
         private IAdmissionInformationRepository _admissionInformationRepository;
         private INewsRepository _newsRepository;
+        private IEntryLevelEducationRepository _entryLevelEducationRepository;
+        private IMajorCategoryRepository _majorCategoryRepository;
+        private IMajorRepository _majorRepository;
+        private IOccupationalGroupRepository _occupationalGroupRepository;
+        private IOccupationRepository _occupationRepository;
+        private IWorkSkillsRepository _workSkillsRepository;
         private IAdmissionMethodRepository _admissionMethodRepository;
 
         public UnitOfWork(VgaDbContext context)
@@ -65,6 +71,12 @@ namespace Infrastructure.Persistence
         public INewsRepository NewsRepository => _newsRepository ??= new NewsRepository(_context);
 
         public IAdmissionInformationRepository AdmissionInformationRepository => _admissionInformationRepository ??= new AdmissionInformationRepository(_context);
+        public IEntryLevelEducationRepository EntryLevelEducationRepository => _entryLevelEducationRepository ??= new EntryLevelEducationRepository(_context);
+        public IMajorCategoryRepository MajorCategoryRepository => _majorCategoryRepository ??= new MajorCategoryRepository(_context);
+        public IMajorRepository MajorRepository => _majorRepository ??= new MajorRepository(_context);
+        public IOccupationalGroupRepository OccupationalGroupRepository => _occupationalGroupRepository ??= new OccupationalGroupRepository(_context);
+        public IOccupationRepository OccupationRepository => _occupationRepository ??= new OccupationRepository(_context);
+        public IWorkSkillsRepository WorkSkillsRepository => _workSkillsRepository ??= new WorkSkillsRepository(_context);
         public IAdmissionMethodRepository AdmissionMethodRepository => _admissionMethodRepository ??= new AdmissionMethodRepository(_context);
 
         public async Task SaveChangesAsync()
