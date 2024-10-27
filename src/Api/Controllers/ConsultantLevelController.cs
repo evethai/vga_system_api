@@ -20,6 +20,14 @@ namespace Api.Controllers
             _consultantLevelService = consultantLevelService;
         }
 
+        //[CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
+        [HttpGet(ApiEndPointConstant.ConsultantLevel.ConsultantLevelsEndpoint)]
+        public async Task<IActionResult> GetListConsultantLevelWithPaginateAsync(ConsultantLevelSearchModel searchModel)
+        {
+            var result = await _consultantLevelService.GetListConsultantLevelWithPaginateAsync(searchModel);
+            return Ok(result);
+        }
+
         //[CustomAuthorize(RoleEnum.Admin)]
         [HttpGet(ApiEndPointConstant.ConsultantLevel.ConsultantLevelEndpoint)]
         public async Task<IActionResult> GetConsultantLevelByIdAsync(int id)
@@ -97,13 +105,5 @@ namespace Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        //[CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
-        [HttpGet(ApiEndPointConstant.ConsultantLevel.ConsultantLevelsEndpoint)]
-        public async Task<IActionResult> GetListConsultantLevelWithPaginateAsync(ConsultantLevelSearchModel searchModel)
-        {
-            var result = await _consultantLevelService.GetListConsultantLevelWithPaginateAsync(searchModel);
-            return Ok(result);
-        }
-
     }
 }
