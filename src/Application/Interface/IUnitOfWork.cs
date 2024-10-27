@@ -31,6 +31,11 @@ namespace Application.Interface
         IAdmissionInformationRepository AdmissionInformationRepository { get; }
         INewsRepository NewsRepository { get; }
         IEntryLevelEducationRepository EntryLevelEducationRepository { get; }
+        IMajorCategoryRepository MajorCategoryRepository { get; }
+        IMajorRepository MajorRepository { get; }
+        IOccupationalGroupRepository OccupationalGroupRepository { get; }
+        IOccupationRepository OccupationRepository { get; }
+        IWorkSkillsRepository WorkSkillsRepository { get; }
         Task SaveChangesAsync();
     }
 }

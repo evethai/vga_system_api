@@ -169,5 +169,39 @@
             public const string EntryLevelEducationEndpoint = ApiEndpoint + "/entry-level-education/{id}";
         }
 
+        //Major
+        public static class Major
+        {
+            public const string MajorsEndpoint = ApiEndpoint + "/majors";
+            public const string MajorEndpoint = ApiEndpoint + "/major/{id}";
+        }
+
+        //MajorCategory
+        public static class MajorCategory
+        {
+            public const string MajorCategoriesEndpoint = ApiEndpoint + "/major-categories";
+            public const string MajorCategoryEndpoint = ApiEndpoint + "/major-category/{id}";
+        }
+
+        //Occupation
+        public static class Occupation
+        {
+            public const string OccupationsEndpoint = ApiEndpoint + "/occupations";
+            public const string OccupationEndpoint = ApiEndpoint + "/occupation/{id}";
+        }
+
+        //OccupationalGroup
+        public static class OccupationalGroup
+        {
+            public const string OccupationalGroupsEndpoint = ApiEndpoint + "/occupational-groups";
+            public const string OccupationalGroupEndpoint = ApiEndpoint + "/occupational-group/{id}";
+        }
+
+        //WorkSkill
+        public static class WorkSkill
+        {
+            public const string WorkSkillsEndpoint = ApiEndpoint + "/work-skills";
+            public const string WorkSkillEndpoint = ApiEndpoint + "/work-skill/{id}";
+        }
     }
 }

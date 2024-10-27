@@ -27,8 +27,14 @@ using Domain.Model.Booking;
 using Domain.Model.ConsultantLevel;
 using Domain.Model.University;
 using Domain.Model.Notification;
-using Domain.Model.News;
 using Domain.Model.EntryLevelEducation;
+using Domain.Model.News;
+using Domain.Model.MajorCategory;
+using Domain.Model.Occupation;
+using Domain.Model.OccupationalSkills;
+using Domain.Model.WorkSkills;
+using Domain.Model.OccupationalGroup;
+
 
 
 namespace Application.Common.Mapper
@@ -180,8 +186,46 @@ namespace Application.Common.Mapper
             CreateMap<EntryLevelEducation, EntryLevelEducationViewModel>().ReverseMap();
             CreateMap<EntryLevelEducation, EntryLevelEducationPostModel>().ReverseMap();
             CreateMap<EntryLevelEducation, EntryLevelEducationPutModel>().ReverseMap();
+
+            //Major
+            CreateMap<Major, MajorViewModel>()
+                .ForMember(dest => dest.MajorCategoryName, opt => opt.MapFrom(src => src.MajorCategory.Name))
+                .ReverseMap();
+            CreateMap<Major, MajorPostModel>().ReverseMap();
+            CreateMap<Major, MajorPutModel>().ReverseMap();
+
+            //MajorCategory
+            CreateMap<MajorCategory, MajorCategoryViewModel>().ReverseMap();
+            CreateMap<MajorCategory, MajorCategoryPostModel>().ReverseMap();
+            CreateMap<MajorCategory, MajorCategoryPutModel>().ReverseMap();
+
+            //Occupation
+            CreateMap<Occupation, OccupationViewModel>()
+                .ForMember(dest => dest.EntryLevelEducation, opt => opt.MapFrom(src => src.EntryLevelEducation))
+                .ForMember(dest => dest.OccupationalGroup, opt => opt.MapFrom(src => src.OccupationalGroup))
+                .ForMember(dest => dest.OccupationalSkills, opt => opt.MapFrom(src => src.OccupationalSKills))
+                .ReverseMap();
+            CreateMap<Occupation, OccupationPostModel>().ReverseMap();
+            CreateMap<Occupation, OccupationPutModel>()
+                .ReverseMap()
+                .ForMember(dest => dest.OccupationalSKills, opt => opt.Ignore());
+
+            //OccupationalGroup
+            CreateMap<OccupationalGroup, OccupationalGroupViewModel>().ReverseMap();
+            CreateMap<OccupationalGroup, OccupationalGroupPostModel>().ReverseMap();
+            CreateMap<OccupationalGroup, OccupationalGroupPutModel>().ReverseMap();
+
+            //OccupationSkill
+            CreateMap<OccupationalSKills, OccupationalSkillsViewModel>().ReverseMap();
+            CreateMap<OccupationalSKills, OccupationalSkillsPostModel>().ReverseMap();
+            CreateMap<OccupationalSKills, OccupationalSkillsPutModel>().ReverseMap();
+
+            //WorkSkill
+            CreateMap<WorkSkills, WorkSkillsViewModel>().ReverseMap();
+            CreateMap<WorkSkills, WorkSkillsPostModel>().ReverseMap();
+            CreateMap<WorkSkills, WorkSkillsPutModel>().ReverseMap();
         }
-      
+
     }
 }
 

@@ -84,11 +84,13 @@ namespace Infrastructure.Persistence.Service
                 var entryLevel = _mapper.Map<EntryLevelEducation>(postModel);
                 await _unitOfWork.EntryLevelEducationRepository.AddAsync(entryLevel);
                 await _unitOfWork.SaveChangesAsync();
+
+                var result = _mapper.Map<EntryLevelEducationViewModel>(entryLevel);
                 return new ResponseModel
                 {
                     Message = "Cấp độ đầu vào được tạo thành công",
                     IsSuccess = true,
-                    Data = entryLevel,
+                    Data = result,
                 };
             }
             catch (Exception ex)
@@ -110,7 +112,7 @@ namespace Infrastructure.Persistence.Service
                 var entryLevel = await _unitOfWork.EntryLevelEducationRepository.GetByIdGuidAsync(entryLevelId)
                         ?? throw new NotExistsException();
                 _mapper.Map(putModel, entryLevel);
-                await _unitOfWork.EntryLevelEducationRepository.GetByIdGuidAsync(entryLevelId);
+                await _unitOfWork.EntryLevelEducationRepository.UpdateAsync(entryLevel);
                 await _unitOfWork.SaveChangesAsync();
 
                 var result = _mapper.Map<EntryLevelEducationViewModel>(entryLevel);

@@ -1,38 +1,35 @@
 ﻿using Api.Constants;
 using Application.Interface.Service;
-using Domain.Model.EntryLevelEducation;
-using Domain.Model.TimeSlot;
-using Infrastructure.Persistence.Service;
+using Domain.Model.WorkSkills;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
-
     [ApiController]
-    public class EntryLevelEducationController : ControllerBase
+    public class WorkSkillsController : ControllerBase
     {
-        private readonly IEntryLevelEducationService _entryLevelEducationService;
-        public EntryLevelEducationController(IEntryLevelEducationService entryLevelEducationService)
+        private readonly IWorkSkillsService _workSkillsService;
+        public WorkSkillsController(IWorkSkillsService workSkillsService)
         {
-            _entryLevelEducationService = entryLevelEducationService;
+            _workSkillsService = workSkillsService;
         }
 
 
         //[CustomAuthorize(RoleEnum.Admin)]
-        [HttpGet(ApiEndPointConstant.EntryLevelEducation.EntryLevelEducationsEndpoint)]
-        public async Task<IActionResult> GetListEntryLevelsWithPaginateAsync(EntryLevelEducationSearchModel searchModel)
+        [HttpGet(ApiEndPointConstant.WorkSkill.WorkSkillsEndpoint)]
+        public async Task<IActionResult> GetListWorkSkillsWithPaginateAsync(WorkSkillsSearchModel searchModel)
         {
-            var result = await _entryLevelEducationService.GetListEntryLevelsWithPaginateAsync(searchModel);
+            var result = await _workSkillsService.GetListWorkSkillsWithPaginateAsync(searchModel);
             return Ok(result);
         }
 
         //[CustomAuthorize(RoleEnum.Admin)]
-        [HttpGet(ApiEndPointConstant.EntryLevelEducation.EntryLevelEducationEndpoint)]
-        public async Task<IActionResult> GetEntryLevelByIdAsync(Guid id)
+        [HttpGet(ApiEndPointConstant.WorkSkill.WorkSkillEndpoint)]
+        public async Task<IActionResult> GetWorkSkillByIdAsync(Guid id)
         {
             try
             {
-                var result = await _entryLevelEducationService.GetEntryLevelByIdAsync(id);
+                var result = await _workSkillsService.GetWorkSkillByIdAsync(id);
                 return (result.IsSuccess == false)
                     ? BadRequest(result)
                     : Ok(result);
@@ -44,8 +41,8 @@ namespace Api.Controllers
         }
 
         //[CustomAuthorize(RoleEnum.Admin)]
-        [HttpPost(ApiEndPointConstant.EntryLevelEducation.EntryLevelEducationsEndpoint)]
-        public async Task<IActionResult> CreateEntryLevelAsync(EntryLevelEducationPostModel postModel)
+        [HttpPost(ApiEndPointConstant.WorkSkill.WorkSkillsEndpoint)]
+        public async Task<IActionResult> CreateWorkSkillAsync(WorkSkillsPostModel postModel)
         {
             if (!ModelState.IsValid)
             {
@@ -53,7 +50,7 @@ namespace Api.Controllers
             }
             try
             {
-                var result = await _entryLevelEducationService.CreateEntryLevelAsync(postModel);
+                var result = await _workSkillsService.CreateWorkSkillAsync(postModel);
                 return (result.IsSuccess == false)
                     ? BadRequest(result)
                     : Ok(result);
@@ -65,8 +62,8 @@ namespace Api.Controllers
         }
 
         //[CustomAuthorize(RoleEnum.Admin)]
-        [HttpPut(ApiEndPointConstant.EntryLevelEducation.EntryLevelEducationEndpoint)]
-        public async Task<IActionResult> UpdateEntryLevelAsync(EntryLevelEducationPutModel putModel, Guid id)
+        [HttpPut(ApiEndPointConstant.WorkSkill.WorkSkillEndpoint)]
+        public async Task<IActionResult> UpdateWorkSkillAsync(WorkSkillsPutModel putModel, Guid id)
         {
             if (!ModelState.IsValid)
             {
@@ -74,7 +71,7 @@ namespace Api.Controllers
             }
             try
             {
-                var result = await _entryLevelEducationService.UpdateEntryLevelAsync(putModel, id);
+                var result = await _workSkillsService.UpdateWorkSkillAsync(putModel, id);
                 return (result.IsSuccess == false)
                     ? BadRequest(result)
                     : Ok(result);
@@ -86,12 +83,12 @@ namespace Api.Controllers
         }
 
         //[CustomAuthorize(RoleEnum.Admin)]
-        [HttpDelete(ApiEndPointConstant.EntryLevelEducation.EntryLevelEducationEndpoint)]
-        public async Task<IActionResult> DeleteEntryLevelAsync(Guid id)
+        [HttpDelete(ApiEndPointConstant.WorkSkill.WorkSkillEndpoint)]
+        public async Task<IActionResult> DeleteWorkSkillAsync(Guid id)
         {
             try
             {
-                var result = await _entryLevelEducationService.DeleteEntryLevelAsync(id);
+                var result = await _workSkillsService.DeleteWorkSkillAsync(id);
                 return (result.IsSuccess == false)
                     ? BadRequest(result)
                     : Ok(result);
