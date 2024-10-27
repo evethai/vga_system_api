@@ -174,6 +174,9 @@ namespace Application.Common.Mapper
             CreateMap<University, UniversityModel>().ReverseMap();
             CreateMap<University, UniversityPostModel>().ReverseMap();
             CreateMap<University, UniversityPutModel>().ReverseMap();
+            // University
+            CreateMap<UniversityLocation, UniversityLocationModel>().ReverseMap();            
+            CreateMap<UniversityLocation, UniversityLocationPutModel>().ReverseMap();
 
             //Notification
             CreateMap<Notification, NotificationModel>().ReverseMap();

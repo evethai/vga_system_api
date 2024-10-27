@@ -17,7 +17,7 @@ namespace Domain.Model.University
         public string EstablishedYear { get; set; } = string.Empty;
         public UniversityType Type { get; set; }
         public AccountWalletModel Account { get; set; }
-        public List<UniversityLocationModel> LocationUniversity { get; set; }
+        public List<UniversityLocationModel> UniversityLocations { get; set; }
     }
     public class ResponseUniversityModel
     {
