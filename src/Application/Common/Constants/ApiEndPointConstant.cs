@@ -167,7 +167,23 @@
         {
             public const string ImageNewsEndpoint = ApiEndpoint + "/image-news";
             public const string ImageNewsDeleteEndpoint = ApiEndpoint + "/image-news/{id}";
-            public const string ImageNewsUpdateEndpoint = ApiEndpoint + "/image-news/{id}";
+            public const string ImageNewsPutEndpoint = ApiEndpoint + "/image-news/{id}";
+        }
+        public static class AdmisstionInformation
+        {
+            public const string AdmisstionInformationListEndpoint = ApiEndpoint + "/admission-informations";
+            public const string AdmisstionInformationEndpoint = ApiEndpoint + "/admission-information/{id}";
+            public const string AdmisstionInformationPostEndpoint = ApiEndpoint + "/admission-information/{UniversityId}";
+            public const string AdmisstionInformationPutEndpoint = ApiEndpoint + "/admission-informations/{id}";
+            public const string AdmisstionInformationDeleteEndpoint = ApiEndpoint + "/admission-information/{id}";
+        }
+        public static class AdmisstionMethod
+        {
+            public const string AdmisstionMethodListEndpoint = ApiEndpoint + "/admission-method";
+            public const string AdmisstionMethodEndpoint = ApiEndpoint + "/admission-method/{id}";
+            public const string AdmisstionMethodPostEndpoint = ApiEndpoint + "/admission-method";
+            public const string AdmisstionMethodPutEndpoint = ApiEndpoint + "/admission-method/{id}";
+            public const string AdmisstionMethodDeleteEndpoint = ApiEndpoint + "/admission-method/{id}";
         }
     }
 }

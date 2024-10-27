@@ -28,6 +28,7 @@ using Domain.Model.ConsultantLevel;
 using Domain.Model.University;
 using Domain.Model.Notification;
 using Domain.Model.News;
+using Domain.Model.AdmissionInformation;
 
 
 namespace Application.Common.Mapper
@@ -177,6 +178,14 @@ namespace Application.Common.Mapper
 
             //StudentChoice
             CreateMap<Major, MajorOrOccupationModel>().ReverseMap();
+            //AdmissionInformation
+            CreateMap<AdmissionInformation, AdmissionInformationModel>().ReverseMap();
+            CreateMap<AdmissionInformation, AdmissionInformationPostModel>().ReverseMap();
+            CreateMap<AdmissionInformation, AdmissionInformationPutModel>().ReverseMap();
+            //AdmissionMethod
+            CreateMap<AdmissionMethod, AdmissionMethodModel>().ReverseMap();
+            CreateMap<AdmissionMethod, AdmissionMethodPostModel>().ReverseMap();
+            CreateMap<AdmissionMethod, AdmissionMethodPutModel>().ReverseMap();
         }
       
     }

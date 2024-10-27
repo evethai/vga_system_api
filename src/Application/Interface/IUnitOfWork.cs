@@ -30,6 +30,7 @@ namespace Application.Interface
         INotificationRepository NotificationRepository { get; }
         IAdmissionInformationRepository AdmissionInformationRepository { get; }
         INewsRepository NewsRepository { get; }
+        IAdmissionMethodRepository AdmissionMethodRepository { get; }
         Task SaveChangesAsync();
     }
 }
