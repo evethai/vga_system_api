@@ -39,6 +39,12 @@ namespace Api.Installers
             services.AddScoped<INewsService, NewsService>();
             services.AddScoped<IAdminService, AdminService>();
             services.AddScoped<INotificationService, NotificationService>();
+            services.AddScoped<IEntryLevelEducationService, EntryLevelEducationService>();
+            services.AddScoped<IMajorCategoryService, MajorCategoryService>();
+            services.AddScoped<IMajorService, MajorService>();
+            services.AddScoped<IOccupationalGroupService, OccupationalGroupService>();
+            services.AddScoped<IOccupationService, OccupationService>();
+            services.AddScoped<IWorkSkillsService, WorkSkillsService>();
 
         }
     }
