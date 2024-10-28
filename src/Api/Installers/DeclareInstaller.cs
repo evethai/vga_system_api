@@ -45,6 +45,8 @@ namespace Api.Installers
             services.AddScoped<IOccupationalGroupService, OccupationalGroupService>();
             services.AddScoped<IOccupationService, OccupationService>();
             services.AddScoped<IWorkSkillsService, WorkSkillsService>();
+            services.AddScoped<IAdmissionInformationService, AdmissionInformationService>();
+            services.AddScoped<IAdmissionMethodService, AdmissionMethodService>();
 
         }
     }
