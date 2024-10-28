@@ -15,6 +15,8 @@ namespace Domain.Model.Consultant
         public string Name { get; set; } = string.Empty;
         [Required(ErrorMessage = "Consultant level id is required.")]
         public int ConsultantLevelId { get; set; }
+        [Required(ErrorMessage = "University Id level id is required.")]
+        public Guid UniversityId { get; set; }
         [Required(ErrorMessage = "Description is required.")]
         public string Description { get; set; } = string.Empty;
         [Required(ErrorMessage = "DateOfBirth is required.")]

@@ -28,11 +28,15 @@ namespace Infrastructure.Persistence.Repository
             Func<IQueryable<Consultant>, IOrderedQueryable<Consultant>> orderBy = null;
             if (!string.IsNullOrEmpty(searchModel.name))
             {
-                //filter = filter.And(p => p.Name.Contains(searchModel.name));
+                filter = filter.And(p => p.Account.Name.Contains(searchModel.name));
             }
             if (searchModel.consultantLevelId!=0)
             {
                 filter = filter.And(p => p.ConsultantLevelId.Equals(searchModel.consultantLevelId));
+            }
+            if (searchModel.universityId.HasValue)
+            {
+                filter = filter.And(p => p.UniversityId.Equals(searchModel.universityId));
             }
             return (filter, orderBy);
         }

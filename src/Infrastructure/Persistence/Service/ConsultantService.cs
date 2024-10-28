@@ -33,8 +33,14 @@ namespace Infrastructure.Persistence.Service
         {
             try
             {
-                var consultant = await _unitOfWork.ConsultantRepository.GetConsultantByIdAsync(consultantId)
-                     ?? throw new($"Người tư vấn không thể tìm thấy với id: {consultantId}");
+                var consultant = await _unitOfWork.ConsultantRepository
+                    .SingleOrDefaultAsync(
+                    predicate: o => o.Id.Equals(consultantId),
+                    include: q => q.Include(c => c.Account).ThenInclude(a => a.Wallet)
+                                    .Include(c => c.University)
+                                    .Include(c => c.ConsultantLevel)
+                    ) ?? throw new NotExistsException();
+
                 var result = _mapper.Map<ConsultantViewModel>(consultant);
                 return new ResponseModel
                 {
@@ -64,10 +70,12 @@ namespace Infrastructure.Persistence.Service
 
                 var consultantLevel = await _unitOfWork.ConsultantLevelRepository.GetByIdAsync(postModel.ConsultantLevelId)
                     ?? throw new NotExistsException();
+                var university = await _unitOfWork.UniversityRepository.GetByIdGuidAsync(postModel.UniversityId)
+                    ?? throw new NotExistsException();
 
                 var consultant = _mapper.Map<Consultant>(postModel);
 
-                RegisterAccountModel accountModel = new RegisterAccountModel(postModel.Name,postModel.Email
+                RegisterAccountModel accountModel = new RegisterAccountModel(postModel.Name, postModel.Email
                        , postModel.Password
                        , postModel.Phone);
                 var accountId = await _unitOfWork.AccountRepository.CreateAccountAndWallet(accountModel, RoleEnum.Consultant);
@@ -140,7 +148,7 @@ namespace Infrastructure.Persistence.Service
                 var exAccountConsultant = await _unitOfWork.AccountRepository.GetByIdGuidAsync(consultant.AccountId)
                     ?? throw new NotExistsException();
                 exAccountConsultant.Status = AccountStatus.Blocked;
-                await _unitOfWork.ConsultantRepository.UpdateAsync(consultant);
+                //await _unitOfWork.ConsultantRepository.UpdateAsync(consultant);
                 await _unitOfWork.AccountRepository.UpdateAsync(exAccountConsultant);
                 await _unitOfWork.SaveChangesAsync();
 
@@ -171,7 +179,10 @@ namespace Infrastructure.Persistence.Service
                 .GetBySearchAsync(
                     filter,
                     orderBy,
-                    include: q => q.Include(s => s.Account).ThenInclude(a => a.Wallet).Include(s => s.ConsultantLevel),
+                    include: q => q.Include(s => s.Account)
+                                        .ThenInclude(a => a.Wallet)
+                                    .Include(s => s.ConsultantLevel)
+                                    .Include(s => s.University),
                     pageIndex: searchModel.currentPage,
                     pageSize: searchModel.pageSize
                 );

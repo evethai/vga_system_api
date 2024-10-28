@@ -17,5 +17,7 @@ namespace Domain.Model.Consultant
         public string? name { get; set; }
         [FromQuery(Name = "consultant-level-id")]
         public int consultantLevelId { get; set; }
+        [FromQuery(Name = "university-id")]
+        public Guid? universityId { get; set; }
     }
 }
