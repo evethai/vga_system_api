@@ -19,6 +19,22 @@ namespace Api.Controllers
         }
 
         //[CustomAuthorize(RoleEnum.Consultant,RoleEnum.Student)]
+        [HttpGet(ApiEndPointConstant.Booking.BookingsEndpoint)]
+        public async Task<IActionResult> GetListBookingsWithPaginateAsync(BookingSearchModel searchModel)
+        {
+            try
+            {
+                var result = await _bookingService.GetListBookingsWithPaginateAsync(searchModel);
+                return Ok(result);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        //[CustomAuthorize(RoleEnum.Consultant,RoleEnum.Student)]
         [HttpGet(ApiEndPointConstant.Booking.BookingEndpoint)]
         public async Task<IActionResult> GetBookingByIdAsync(Guid id)
         {
@@ -50,22 +66,6 @@ namespace Api.Controllers
                 return (result.IsSuccess == false)
                     ? BadRequest(result)
                     : Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        //[CustomAuthorize(RoleEnum.Consultant,RoleEnum.Student)]
-        [HttpGet(ApiEndPointConstant.Booking.BookingsEndpoint)]
-        public async Task<IActionResult> GetListBookingsWithPaginateAsync(BookingSearchModel searchModel)
-        {
-            try
-            {
-                var result = await _bookingService.GetListBookingsWithPaginateAsync(searchModel);
-                return Ok(result);
-
             }
             catch (Exception ex)
             {

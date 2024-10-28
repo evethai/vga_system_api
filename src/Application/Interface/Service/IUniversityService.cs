@@ -17,8 +17,7 @@ namespace Application.Interface.Service
         Task<ResponseModel> CreateUniversityAsync(UniversityPostModel postModel);
         Task<ResponseModel> UpdateUniversityAsync(UniversityPutModel putModel, Guid Id);
         Task<ResponseModel> CreateUniversityLocationAsync(Guid Id, List<UniversityLocationModel> universityLocationModels); 
-        Task<ResponseModel> UpdateUniversityLocationAsync(Guid Id, UniversityLocationPutModel universityLocationModels); 
-        Task<ResponseModel> DeleteUniversityLocationAsync(Guid Id);
-        
+        Task<ResponseModel> UpdateUniversityLocationAsync(int Id, UniversityLocationPutModel universityLocationModels); 
+        Task<ResponseModel> DeleteUniversityLocationAsync(int Id);    
     }
 }

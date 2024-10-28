@@ -12,6 +12,7 @@ using Domain.Entity;
 using Domain.Enum;
 using Domain.Model.Booking;
 using Domain.Model.Consultant;
+using Domain.Model.Notification;
 using Domain.Model.Response;
 using Domain.Model.Transaction;
 using Microsoft.EntityFrameworkCore;
@@ -114,7 +115,7 @@ namespace Infrastructure.Persistence.Service
                     Id = Guid.NewGuid(),
                     WalletId = studentWallet.Id,
                     TransactionType = TransactionType.Using,
-                    Description = $"Bạn đã sử dụng {priceOnSlot} Gold để đặt tư vấn",
+                    Description = $"Bạn đã sử dụng {priceOnSlot} điểm để đặt tư vấn",
                     GoldAmount = (int)priceOnSlot,
                     TransactionDateTime = DateTime.UtcNow
                 };
@@ -124,7 +125,7 @@ namespace Infrastructure.Persistence.Service
                     Id = Guid.NewGuid(),
                     WalletId = consultantWallet.Id,
                     TransactionType = TransactionType.Receiving,
-                    Description = $"Bạn đã nhận {priceOnSlot} Gold từ buổi tư vấn",
+                    Description = $"Bạn đã nhận {priceOnSlot} điểm từ buổi tư vấn",
                     GoldAmount = (int)priceOnSlot,
                     TransactionDateTime = DateTime.UtcNow
                 };
@@ -138,6 +139,13 @@ namespace Infrastructure.Persistence.Service
                     studentTransaction,
                     consultantTransaction
                 );
+
+                NotificationPostModel notiPostModel = new NotificationPostModel();
+                notiPostModel.AccountId = consultationTime.Day.Consultant.AccountId;
+                notiPostModel.Title = "Lịch tư vấn đã được đặt";
+                notiPostModel.Message = $"Lịch tư vấn của bạn vào slot từ {consultationTime.SlotTime.StartTime} đến {consultationTime.SlotTime.EndTime} vào ngày {consultationTime.Day.Day} đã được đặt thành công bởi {student.Account.Name}.";
+
+                await _unitOfWork.NotificationRepository.CreateNotification(notiPostModel);
 
                 var result = _mapper.Map<BookingViewModel>(booking);
                 return new ResponseModel

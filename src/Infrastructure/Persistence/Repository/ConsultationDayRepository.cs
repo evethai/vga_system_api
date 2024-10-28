@@ -37,7 +37,7 @@ namespace Infrastructure.Persistence.Repository
 
             if (!string.IsNullOrEmpty(searchModel.name))
             {
-                //filter = filter.And(p => p.Consultant.Name.Contains(searchModel.name));
+                filter = filter.And(p => p.Consultant.Account.Name.Contains(searchModel.name));
             }
             if (searchModel.Day.HasValue)
             {

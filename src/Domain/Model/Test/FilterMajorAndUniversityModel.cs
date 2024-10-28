@@ -10,11 +10,11 @@ namespace Domain.Model.Test
     public class FilterMajorAndUniversityModel
     {
         public StudentChoiceModel studentChoiceModel { get; set; }
-        public AdmissionInformationModel filterInfor { get; set; }
+        public AdmissionInformationRattingModel filterInfor { get; set; }
 
     }
 
-    public class AdmissionInformationModel
+    public class AdmissionInformationRattingModel
     {
 
         public Guid AdmissionMethodId { get; set; }

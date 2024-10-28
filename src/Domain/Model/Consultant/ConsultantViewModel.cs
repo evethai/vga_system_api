@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Domain.Model.ConsultantLevel;
+using Domain.Model.University;
 
 namespace Domain.Model.Consultant
 {
@@ -13,6 +14,7 @@ namespace Domain.Model.Consultant
         public Guid AccountId { get; set; }
         public string Name { get; set; } = string.Empty;
         public ConsultantLevelViewModel ConsultantLevel { get; set; }
+        public UniversityModel University { get; set; }
         public string Email { get; set; } = string.Empty;
         public string Phone { get; set; } = string.Empty;
         public string? Image_Url { get; set; }
