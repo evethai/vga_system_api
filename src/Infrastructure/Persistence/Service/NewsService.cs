@@ -45,7 +45,7 @@ namespace Infrastructure.Persistence.Service
             {
                 Message = "Create News is Successfully",
                 IsSuccess = true,
-                Data = result
+                Data = postModel
             };
         }
 
@@ -66,8 +66,7 @@ namespace Infrastructure.Persistence.Service
             return new ResponseModel
             {
                 Message = "Delete News is Successfully",
-                IsSuccess = true,
-                Data = exitNews
+                IsSuccess = true
             };
         }
 
@@ -117,7 +116,7 @@ namespace Infrastructure.Persistence.Service
             {
                 Message = "Update news is Successfully",
                 IsSuccess = true,
-                Data = exit
+                Data = putModel
             }; 
         }
 
@@ -136,6 +135,7 @@ namespace Infrastructure.Persistence.Service
             {
                 Message = "Create Image news is Successfully",
                 IsSuccess = true,
+                Data = imageNews
             };
         }
 
