@@ -239,6 +239,15 @@ namespace Application.Common.Mapper
             CreateMap<AdmissionMethod, AdmissionMethodModel>().ReverseMap();
             CreateMap<AdmissionMethod, AdmissionMethodPostModel>().ReverseMap();
             CreateMap<AdmissionMethod, AdmissionMethodPutModel>().ReverseMap();
+            //News
+            CreateMap<News, NewsModel>().ReverseMap();
+            CreateMap<News, NewsPostModel>().ReverseMap();
+            CreateMap<News, NewsPutModel>().ReverseMap();
+            //NewsImage
+            CreateMap<ImageNews, ImageNewsModel>().ReverseMap();
+            CreateMap<ImageNews, ImageNewsPostModel>().ReverseMap();
+            CreateMap<ImageNews, ImageNewsPutModel>().ReverseMap();
+
         }
 
     }
