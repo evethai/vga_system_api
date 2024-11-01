@@ -1,40 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Domain.Entity;
-using Domain.Enum;
 using Domain.Model.AccountWallet;
+using Domain.Model.AdmissionInformation;
+using Domain.Model.Booking;
+using Domain.Model.Consultant;
+using Domain.Model.ConsultantLevel;
+using Domain.Model.ConsultationDay;
+using Domain.Model.ConsultationTime;
+using Domain.Model.EntryLevelEducation;
 using Domain.Model.Highschool;
 using Domain.Model.Major;
+using Domain.Model.MajorCategory;
+using Domain.Model.News;
+using Domain.Model.Notification;
+using Domain.Model.Occupation;
+using Domain.Model.OccupationalGroup;
+using Domain.Model.OccupationalSkills;
 using Domain.Model.PersonalGroup;
 using Domain.Model.Question;
 using Domain.Model.Region;
 using Domain.Model.Student;
 using Domain.Model.Test;
+using Domain.Model.TestType;
 using Domain.Model.TimeSlot;
 using Domain.Model.Transaction;
-using Domain.Model.Wallet;
-
-using Domain.Model.TestType;
-using Domain.Model.Consultant;
-using Domain.Model.ConsultationDay;
-using Domain.Model.ConsultationTime;
-using Domain.Model.Booking;
-using Domain.Model.ConsultantLevel;
 using Domain.Model.University;
-using Domain.Model.Notification;
-using Domain.Model.EntryLevelEducation;
-using Domain.Model.News;
-using Domain.Model.MajorCategory;
-using Domain.Model.Occupation;
-using Domain.Model.OccupationalSkills;
+using Domain.Model.Wallet;
 using Domain.Model.WorkSkills;
-using Domain.Model.OccupationalGroup;
-using Domain.Model.AdmissionInformation;
 
 
 
@@ -122,21 +114,21 @@ namespace Application.Common.Mapper
                 .ForMember(dest => dest.CreateAt, opt => opt.MapFrom(src => src.Account.CreateAt))
                 .ReverseMap();
             CreateMap<Consultant, ConsultantPostModel>()
-                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Account.Name))
-                .ForMember(dest => dest.ConsultantLevelId, opt => opt.MapFrom(src => src.ConsultantLevelId))
-                .ForMember(dest => dest.UniversityId, opt => opt.MapFrom(src => src.UniversityId))
-                .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
-                .ForMember(dest => dest.DoB, opt => opt.MapFrom(src => src.DoB))
-                .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender))
+                //.ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Account.Name))
+                //.ForMember(dest => dest.ConsultantLevelId, opt => opt.MapFrom(src => src.ConsultantLevelId))
+                //.ForMember(dest => dest.UniversityId, opt => opt.MapFrom(src => src.UniversityId))
+                //.ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
+                //.ForMember(dest => dest.DoB, opt => opt.MapFrom(src => src.DoB))
+                //.ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender))
                 .ReverseMap();
             CreateMap<Consultant, ConsultantPutModel>()
-                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Account.Name))
-                .ForMember(dest => dest.ConsultantLevelId, opt => opt.MapFrom(src => src.ConsultantLevelId))
-                .ForMember(dest => dest.UniversityId, opt => opt.MapFrom(src => src.UniversityId))
-                .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
-                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Account.Email))
-                .ForMember(dest => dest.Phone, opt => opt.MapFrom(src => src.Account.Phone))
-                .ForMember(dest => dest.Image_Url, opt => opt.MapFrom(src => src.Account.Image_Url))
+                //.ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Account.Name))
+                //.ForMember(dest => dest.ConsultantLevelId, opt => opt.MapFrom(src => src.ConsultantLevelId))
+                //.ForMember(dest => dest.UniversityId, opt => opt.MapFrom(src => src.UniversityId))
+                //.ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
+                //.ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Account.Email))
+                //.ForMember(dest => dest.Phone, opt => opt.MapFrom(src => src.Account.Phone))
+                //.ForMember(dest => dest.Image_Url, opt => opt.MapFrom(src => src.Account.Image_Url))
                 .ReverseMap();
 
             //Consultation Day
@@ -239,6 +231,15 @@ namespace Application.Common.Mapper
             CreateMap<AdmissionMethod, AdmissionMethodModel>().ReverseMap();
             CreateMap<AdmissionMethod, AdmissionMethodPostModel>().ReverseMap();
             CreateMap<AdmissionMethod, AdmissionMethodPutModel>().ReverseMap();
+            //News
+            CreateMap<News, NewsModel>().ReverseMap();
+            CreateMap<News, NewsPostModel>().ReverseMap();
+            CreateMap<News, NewsPutModel>().ReverseMap();
+            //NewsImage
+            CreateMap<ImageNews, ImageNewsModel>().ReverseMap();
+            CreateMap<ImageNews, ImageNewsPostModel>().ReverseMap();
+            CreateMap<ImageNews, ImageNewsPutModel>().ReverseMap();
+
         }
 
     }
