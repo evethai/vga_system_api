@@ -21,5 +21,8 @@ namespace Domain.Model.Booking
         public Guid? studentId { get; set; }
         [FromQuery(Name = "consultant-id")]
         public Guid? consultantId { get; set; }
+
+        [FromQuery(Name = "day")]
+        public DateOnly? Day { get; set; }
     }
 }
