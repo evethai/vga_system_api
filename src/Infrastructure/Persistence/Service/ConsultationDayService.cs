@@ -12,6 +12,7 @@ using Domain.Entity;
 using Domain.Enum;
 using Domain.Model.Consultant;
 using Domain.Model.ConsultationDay;
+using Domain.Model.ConsultationTime;
 using Domain.Model.Response;
 using Microsoft.EntityFrameworkCore;
 
@@ -77,7 +78,8 @@ namespace Infrastructure.Persistence.Service
                 }
                 Expression<Func<ConsultationDay, bool>> exsitingDayFilter = x =>
                 x.ConsultantId.Equals(postModel.ConsultantId) &&
-                x.Day.Equals(postModel.Day);
+                x.Day.Equals(postModel.Day) &&
+                x.Status == (int)ConsultationDayStatusEnum.Available;
                 var existingDay = await _unitOfWork.ConsultationDayRepository
                     .SingleOrDefaultAsync(
                     predicate: exsitingDayFilter,
@@ -87,7 +89,9 @@ namespace Infrastructure.Persistence.Service
                 if (existingDay != null)
                 {
                     var newConsultationTimes = postModel.ConsultationTimes
-                        .Where(ct => !existingDay.ConsultationTimes.Any(existingCt => existingCt.TimeSlotId == ct.TimeSlotId))
+                        .Where(ct => !existingDay.ConsultationTimes.Any(existingCt =>
+                            existingCt.TimeSlotId == ct.TimeSlotId &&
+                            existingCt.Status == (int)ConsultationTimeStatusEnum.Available))
                         .Select(ct => new ConsultationTime
                         {
                             Id = Guid.NewGuid(),
@@ -103,7 +107,8 @@ namespace Infrastructure.Persistence.Service
                         await _unitOfWork.SaveChangesAsync();
                     }
 
-                    var resultDayExisted = _mapper.Map<ConsultationDayViewModel>(existingDay);
+                    //var resultDayExisted = _mapper.Map<ConsultationDayViewModel>(existingDay);
+                    var resultNewTime = _mapper.Map<List<ConsultationTimeViewModel>>(newConsultationTimes);
                     return new ResponseModel
                     {
                         IsSuccess = newConsultationTimes.Any()
@@ -113,7 +118,7 @@ namespace Infrastructure.Persistence.Service
                                   ? $"Khoảng thời gian tư vấn mới đã được thêm cho ngày tư vấn: '{existingDay.Day}'"
                                   : "Không có khoảng thời gian tư vấn mới để thêm",
                         Data = newConsultationTimes.Any()
-                                  ? resultDayExisted
+                                  ? resultNewTime
                                   : null,
                     };
                 }
