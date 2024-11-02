@@ -15,5 +15,8 @@ namespace Domain.Model.ConsultantLevel
         public int? pageSize { get; set; }
         [FromQuery(Name = "name")]
         public string? name { get; set; }
+
+        [FromQuery(Name = "status")]
+        public bool? status { get; set; }
     }
 }

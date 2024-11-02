@@ -20,5 +20,7 @@ namespace Domain.Model.TimeSlot
         public TimeOnly? StartTime { get; set; }
         [FromQuery(Name = "end-time")]
         public TimeOnly? EndTime { get; set; }
+        [FromQuery(Name = "status")]
+        public bool? status { get; set; }
     }
 }
