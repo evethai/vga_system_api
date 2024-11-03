@@ -38,6 +38,7 @@ namespace Infrastructure.Persistence.Service
                 };
             }
             await _unitOfWork.AdmissionInformationRepository.CreateListAdmissionInformation(UniversityId, postModel);
+            await _unitOfWork.SaveChangesAsync();
             return new ResponseModel
             {
                 Message = "Create Admission Information is successfully",
@@ -50,7 +51,7 @@ namespace Infrastructure.Persistence.Service
         {
             var info = await _unitOfWork.AdmissionInformationRepository.
                 SingleOrDefaultAsync(predicate: c => c.Id == Id,
-                include: a => a.Include(a => a.University).Include(a=>a.Major).Include(a=>a.AdmissionMethod));
+                include: a => a.Include(a => a.University).ThenInclude(s=>s.Account).Include(a=>a.Major).Include(a=>a.AdmissionMethod));
             if (info == null)
             {
                 return new ResponseModel
@@ -67,13 +68,14 @@ namespace Infrastructure.Persistence.Service
                 Data = result
             };
         }
-
         public async Task<ResponseAdmissionInformationModel> GetListAdmissionInformationAsync(AdmissionInformationSearchModel searchModel)
         {
             var (filter, orderBy) = _unitOfWork.AdmissionInformationRepository.BuildFilterAndOrderByAdmissionInformation(searchModel);
             var admissionInfo = await _unitOfWork.AdmissionInformationRepository
                 .GetBySearchAsync(filter, orderBy,
-                q => q.Include(s => s.AdmissionMethod).Include(a=>a.Major),
+                s=>s.Include(s=>s.AdmissionMethod)
+                .Include(s=>s.University).ThenInclude(s=>s.Account)
+                .Include(s=>s.Major),
                 pageIndex: searchModel.currentPage,
                 pageSize: searchModel.pageSize);
             var total = await _unitOfWork.AdmissionInformationRepository.CountAsync(filter);
@@ -82,7 +84,7 @@ namespace Infrastructure.Persistence.Service
             {
                 total = total,
                 currentPage = searchModel.currentPage,
-                _admissionInformationModels = listInfo,
+                _admissionInformationModel = listInfo
             };
         }
 

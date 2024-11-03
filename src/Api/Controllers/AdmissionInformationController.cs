@@ -31,7 +31,7 @@ namespace Api.Controllers
             return Ok(result);
         }
         [HttpPost(ApiEndPointConstant.AdmisstionInformation.AdmisstionInformationPostEndpoint)]
-        public async Task<IActionResult> CreateAdmissionInformationAsync(Guid UnversityId, List<AdmissionInformationPostModel> postModel)
+        public async Task<IActionResult> CreateAdmissionInformationAsync(Guid UniversityId, List<AdmissionInformationPostModel> postModel)
         {
             if (!ModelState.IsValid)
             {
@@ -39,7 +39,7 @@ namespace Api.Controllers
             }
             try
             {
-                var result = await _admissionInformationService.CreateAdmissionInformationAsync(UnversityId,postModel);
+                var result = await _admissionInformationService.CreateAdmissionInformationAsync(UniversityId, postModel);
                 return Ok(result);
             }
             catch (Exception ex)

@@ -12,8 +12,11 @@ namespace Domain.Model.AdmissionInformation
     {
         public int Id { get; set; }
         public Guid UniversityId { get; set; }
+        public string UniversityName { get; set; }
         public Guid MajorId { get; set; }
+        public string MajorName { get; set; }
         public Guid AdmissionMethodId { get; set; }
+        public string AdmissionMethodName { get; set; }
         public double TuitionFee { get; set; }
         public int Year { get; set; }
         public int QuantityTarget { get; set; }
@@ -23,6 +26,6 @@ namespace Domain.Model.AdmissionInformation
     {
         public int? total { get; set; }
         public int? currentPage { get; set; }
-        public List<AdmissionInformationModel> _admissionInformationModels { get; set; }
+        public List<AdmissionInformationModel> _admissionInformationModel { get; set; }
     }
 }
