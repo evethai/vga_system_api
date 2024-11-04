@@ -6,6 +6,7 @@ using Azure.Messaging;
 using Domain.Entity;
 using Domain.Enum;
 using Domain.Model;
+using Domain.Model.Major;
 using Domain.Model.PersonalGroup;
 using Domain.Model.Question;
 using Domain.Model.Response;
@@ -104,7 +105,7 @@ namespace Infrastructure.Persistence.Service
         #endregion
 
         #region get history test by student id
-        public async Task<IEnumerable<HistoryTestModel?>> GetHistoryTestByStudentId(Guid studentId)
+        public async Task<StudentHistoryModel> GetHistoryTestByStudentId(Guid studentId)
         {
             var tests = await _unitOfWork.StudentTestRepository.GetHistoryTestByStudentId(studentId);
             return tests;
@@ -148,26 +149,38 @@ namespace Infrastructure.Persistence.Service
         public async Task<ResponseModel> FilterMajorAndUniversity(FilterMajorAndUniversityModel model)
         {
             var stChoices = await _unitOfWork.StudentTestRepository.CreateStudentChoice(model.studentChoiceModel, StudentChoiceType.Major);
-            var condition = _unitOfWork.AdmissionInformationRepository.BuildFilterAndOrderBy(model.filterInfor, stChoices);
-            var listUniversity = await _unitOfWork.AdmissionInformationRepository.GetByConditionAsync(condition.filter, condition.orderBy);
-
-            var occupations = await _unitOfWork.StudentTestRepository.GetOccupationByMajorId(stChoices[0].MajorOrOccupationId);
+            if(stChoices == null || !stChoices.Any())
+            {
+                return new ResponseModel
+                {
+                    IsSuccess = false,
+                    Message = MessagesConstants.MajorOrOccupationChoice.NoMajorsFound,
+                    Data = null
+                };
+            }
+            List<ResultAfterRatingModel> result = new();
+            foreach (var choices in stChoices)
+            {
+                var occupations = await _unitOfWork.StudentTestRepository.GetOccupationByMajorId(choices.MajorOrOccupationId);
+                var condition = _unitOfWork.AdmissionInformationRepository.BuildFilterAndOrderBy(model.filterInfor, choices);
+                var universities = await _unitOfWork.AdmissionInformationRepository.GetByConditionAsync(condition.filter, condition.orderBy);
+                result.Add(new ResultAfterRatingModel
+                {
+                    MajorId = choices.MajorOrOccupationId,
+                    MajorName = choices.MajorOrOccupationName,
+                    _occupations = _mapper.Map<List<OccupationByMajorIdModel>>(occupations),
+                    _universities = _mapper.Map<List<UniversityByMajorIdModel>>(universities)
+                });
+            }
+            
 
             return new ResponseModel
             {
                 IsSuccess = true,
                 Message = MessagesConstants.MajorOrOccupationChoice.FilterUniversity,
-                Data = new
-                {
-                    Major = stChoices,
-                    universities = listUniversity,
-                    occupations = occupations,
-                }
+                Data = result
             };
         }
-
-
-
 
 
     }

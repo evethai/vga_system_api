@@ -97,5 +97,21 @@ namespace Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        //[CustomAuthorize(RoleEnum.Student)]
+        [HttpGet(ApiEndPointConstant.Major.MajorAndRelationEndpoint)]
+        public async Task<IActionResult> OccupationAndUniversityByMajorId(Guid id)
+        {
+            try
+            {
+                var result = await _majorService.OccupationAndUniversityByMajorId(id);
+                return (result.IsSuccess == false)
+                    ? BadRequest(result)
+                    : Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

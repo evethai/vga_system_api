@@ -170,5 +170,44 @@ namespace Infrastructure.Persistence.Service
         }
         #endregion
 
+        #region get detail and list occupation and university by major id
+        public async Task<ResponseModel> OccupationAndUniversityByMajorId(Guid majorId)
+        {
+            try
+            {
+                var major = await _unitOfWork.MajorRepository
+                    .SingleOrDefaultAsync(
+                        predicate: m => m.Id.Equals(majorId),
+                        include: query => query.Include(m => m.MajorCategory)
+                    ) ?? throw new NotExistsException();
+
+                var result = _mapper.Map<MajorViewModel>(major);
+
+                var occupations = await _unitOfWork.OccupationRepository.GetOccupationByMajorId(majorId);
+                var universities = await _unitOfWork.UniversityRepository.GetListUniversityByMajorId(majorId);
+                var oc_model = _mapper.Map<List<OccupationByMajorIdModel>>(occupations);
+                var un_model = _mapper.Map<List<UniversityByMajorIdModel>>(universities);
+
+                result.Occupations = oc_model;
+                result.Universities = un_model;
+                return new ResponseModel
+                {
+                    Message = $"Lấy ngành với id '{major}' thành công",
+                    IsSuccess = true,
+                    Data = result,
+                };
+
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    IsSuccess = false,
+                    Message = $"An error occurred while get major by id: {ex.Message}"
+                };
+            }
+        }
+        #endregion
+
     }
 }

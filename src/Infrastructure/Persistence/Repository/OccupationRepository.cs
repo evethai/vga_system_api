@@ -9,6 +9,7 @@ using Application.Interface.Repository;
 using Domain.Entity;
 using Domain.Model.Occupation;
 using Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Repository
 {
@@ -42,6 +43,16 @@ namespace Infrastructure.Persistence.Repository
                 filter = filter.And(o => o.Status.Equals(searchModel.status));
             }
             return (filter, orderBy);
+        }
+
+        public async Task<IEnumerable<Occupation>> GetOccupationByMajorId(Guid majorId)
+        {
+            var occupations = await _context.Major
+                .Where(m => m.Id == majorId)
+                .SelectMany(m => m.MajorCategory.MajorOccupationMatrix)
+                .SelectMany(mo => mo.OccupationalGroup.Occupations)
+                .ToListAsync();
+            return occupations;
         }
     }
 }

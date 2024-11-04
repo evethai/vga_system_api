@@ -96,6 +96,8 @@ namespace Infrastructure.Data
             {
                 entity.HasKey(a => a.Id);
                 entity.HasMany(a => a.Notifications).WithOne(n => n.Account).HasForeignKey(n => n.AccountId).OnDelete(DeleteBehavior.Restrict);
+                entity.HasIndex(a => a.Email).IsUnique();
+                entity.HasIndex(a => a.Phone).IsUnique();
             });
 
             // expert

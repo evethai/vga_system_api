@@ -18,4 +18,16 @@ namespace Domain.Model.Test
         public DateTime Date { get; set; }
 
     }
+
+    public class StudentHistoryModel
+    {
+        public List<HistoryTestModel> HistoryTests { get; set; } = new List<HistoryTestModel>();
+        public List<HistoryMajorModel> HistoryMajor { get; set; } = new List<HistoryMajorModel>();
+    }
+    public class HistoryMajorModel
+    {
+        public Guid MajorId { get; set; }
+        public string MajorName { get; set; } = string.Empty;
+        public int Rating { get; set; }
+    }
 }

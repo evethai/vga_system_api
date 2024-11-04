@@ -9,6 +9,7 @@ using Application.Interface.Repository;
 using Domain.Entity;
 using Domain.Model.University;
 using Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Repository
 {
@@ -108,5 +109,18 @@ namespace Infrastructure.Persistence.Repository
             _context.SaveChanges();
             return Task.FromResult(true);
         }
+
+        public async Task<IEnumerable<University>> GetListUniversityByMajorId(Guid majorId)
+        {
+            var universities = await _context.Major
+                .Where(m => m.Id == majorId)
+                .SelectMany(m => m.AdmissionInformation)
+                .Select(ai => ai.University)
+                .Distinct()
+                .ToListAsync();
+
+            return universities;
+        }
+
     }
 }
