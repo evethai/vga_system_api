@@ -18,13 +18,18 @@ namespace Infrastructure.Persistence.Repository
         {
         }
 
-        public (Expression<Func<ConsultantLevel, bool>> filter, Func<IQueryable<ConsultantLevel>, IOrderedQueryable<ConsultantLevel>> orderBy) BuildFilterAndOrderBy(ConsultantLevelSearchModel searchModel)
+        public (Expression<Func<ConsultantLevel, bool>> filter, Func<IQueryable<ConsultantLevel>, IOrderedQueryable<ConsultantLevel>> orderBy) 
+            BuildFilterAndOrderBy(ConsultantLevelSearchModel searchModel)
         {
             Expression<Func<ConsultantLevel, bool>> filter = p => true;
             Func<IQueryable<ConsultantLevel>, IOrderedQueryable<ConsultantLevel>> orderBy = null;
             if (!string.IsNullOrEmpty(searchModel.name))
             {
-                filter = filter.And(p => p.Name.Contains(searchModel.name));
+                filter = filter.And(cl => cl.Name.Contains(searchModel.name));
+            }
+            if (searchModel.status.HasValue)
+            {
+                filter = filter.And(cl => cl.Status.Equals(searchModel.status));
             }
             return (filter, orderBy);
         }

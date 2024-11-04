@@ -25,15 +25,19 @@ namespace Infrastructure.Persistence.Repository
             Func<IQueryable<TimeSlot>, IOrderedQueryable<TimeSlot>> orderBy = null;
             if (!string.IsNullOrEmpty(searchModel.name))
             {
-                filter = filter.And(p => p.Name.Contains(searchModel.name));
+                filter = filter.And(t => t.Name.Contains(searchModel.name));
             }
             if (searchModel.StartTime.HasValue)
             {
-                filter = filter.And(p => p.StartTime >= searchModel.StartTime.Value);
+                filter = filter.And(t => t.StartTime >= searchModel.StartTime.Value);
             }
             if (searchModel.EndTime.HasValue)
             {
-                filter = filter.And(p => p.EndTime <= searchModel.EndTime.Value);
+                filter = filter.And(t => t.EndTime <= searchModel.EndTime.Value);
+            }
+            if (searchModel.status.HasValue)
+            {
+                filter = filter.And(t => t.Status.Equals(searchModel.status));
             }
             return (filter, orderBy);
         }

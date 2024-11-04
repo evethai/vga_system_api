@@ -82,7 +82,8 @@ namespace Infrastructure.Persistence.Service
                 Expression<Func<Booking, bool>> exsitingTimeSlotFilter = x =>
                     x.StudentId.Equals(studentId) &&
                     x.ConsultationTime.TimeSlotId.Equals(consultationTime.TimeSlotId) &&
-                    x.ConsultationTime.Day.Day.Equals(consultationTime.Day.Day);
+                    x.ConsultationTime.Day.Day.Equals(consultationTime.Day.Day) &&
+                    x.Status.Equals(true);
 
                 var existingBookingWithSameTimeSlot = await _unitOfWork.BookingRepository
                     .SingleOrDefaultAsync(predicate: exsitingTimeSlotFilter);
