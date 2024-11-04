@@ -227,7 +227,11 @@ namespace Application.Common.Mapper
             CreateMap<WorkSkills, WorkSkillsPostModel>().ReverseMap();
             CreateMap<WorkSkills, WorkSkillsPutModel>().ReverseMap();
             //AdmissionInformation
-            CreateMap<AdmissionInformation, AdmissionInformationModel>().ReverseMap();
+            CreateMap<AdmissionInformation, AdmissionInformationModel>()
+                .ForMember(dest => dest.UniversityName, opt => opt.MapFrom(src => src.University.Account.Name))
+                .ForMember(dest => dest.AdmissionMethodName, opt => opt.MapFrom(src => src.AdmissionMethod.Name))
+                .ForMember(dest => dest.MajorName, opt => opt.MapFrom(src => src.Major.Name))
+                .ReverseMap();
             CreateMap<AdmissionInformation, AdmissionInformationPostModel>().ReverseMap();
             CreateMap<AdmissionInformation, AdmissionInformationPutModel>().ReverseMap();
             //AdmissionMethod

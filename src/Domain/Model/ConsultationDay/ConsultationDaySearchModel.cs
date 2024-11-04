@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.Enum;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Domain.Model.ConsultationDay
@@ -14,11 +15,16 @@ namespace Domain.Model.ConsultationDay
         [FromQuery(Name = "page-size")]
         public int? pageSize { get; set; }
         [FromQuery(Name = "name")]
-        public string? name { get; set; } 
+        public string? name { get; set; }
         [FromQuery(Name = "day")]
         public DateOnly? Day { get; set; }
         [FromQuery(Name = "consultant-id")]
         public Guid? ConsultantId { get; set; }
+
+        [FromQuery(Name = "day-status")]
+        public ConsultationDayStatusEnum? consultationDayStatus { get; set; }
+        [FromQuery(Name = "time-status")]
+        public ConsultationTimeStatusEnum? consultationTimeStatus { get; set; }
 
 
     }

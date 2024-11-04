@@ -56,38 +56,38 @@ namespace Infrastructure.Persistence.Repository
         }
         public (Expression<Func<AdmissionInformation, bool>> filter, Func<IQueryable<AdmissionInformation>, IOrderedQueryable<AdmissionInformation>> orderBy) BuildFilterAndOrderByAdmissionInformation(AdmissionInformationSearchModel searchModel)
         {
-            Expression<Func<AdmissionInformation, bool>> predicate = p => true;
+            Expression<Func<AdmissionInformation, bool>> filter = p => true;
             Func<IQueryable<AdmissionInformation>, IOrderedQueryable<AdmissionInformation>> orderBy = null;
 
-            if (searchModel.AdmissionMethodId != Guid.Empty)
+            if (searchModel.AdmissionMethodId.HasValue)
             {
-                predicate = predicate.And(x => x.AdmissionMethodId == searchModel.AdmissionMethodId);
+                filter = filter.And(x => x.AdmissionMethodId == searchModel.AdmissionMethodId);
             }
-            if (searchModel.MajorId != Guid.Empty)
+            if (searchModel.MajorId.HasValue)
             {
-                predicate = predicate.And(x => x.MajorId == searchModel.MajorId);
+                filter = filter.And(x => x.MajorId == searchModel.MajorId);
             }
-            if (searchModel.UniversityId != Guid.Empty)
+            if (searchModel.UniversityId.HasValue)
             {
-                predicate = predicate.And(x => x.UniversityId == searchModel.UniversityId);
+                filter = filter.And(x => x.UniversityId == searchModel.UniversityId);
             }
             if (searchModel.TuitionFee.HasValue)
             {
-                predicate = predicate.And(x => x.TuitionFee <= searchModel.TuitionFee);
+                filter = filter.And(x => x.TuitionFee == searchModel.TuitionFee);
             }
             if (searchModel.Year.HasValue)
             {
-                predicate = predicate.And(x => x.Year == searchModel.Year);
-            }
+                filter = filter.And(x => x.Year == searchModel.Year);
+            }  
             if (searchModel.Status.HasValue)
             {
-                predicate = predicate.And(x => x.Status == searchModel.Status);
+                    filter = filter.And(x => x.Status == searchModel.Status);
             }
             if (searchModel.QuantityTarget.HasValue)
             {
-                predicate = predicate.And(x => x.QuantityTarget == searchModel.QuantityTarget);
+                    filter = filter.And(x => x.QuantityTarget == searchModel.QuantityTarget);
             }
-            return (predicate, orderBy);
+            return (filter, orderBy);
         }
         public Task<bool> CheckAdmissionInformation(AdmissionInformationPutModel putModel)
         {

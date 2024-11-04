@@ -21,22 +21,26 @@ namespace Infrastructure.Persistence.Repository
             _context = context;
         }
 
-        public (Expression<Func<Consultant, bool>> filter, Func<IQueryable<Consultant>, IOrderedQueryable<Consultant>> orderBy) 
+        public (Expression<Func<Consultant, bool>> filter, Func<IQueryable<Consultant>, IOrderedQueryable<Consultant>> orderBy)
             BuildFilterAndOrderBy(ConsultantSearchModel searchModel)
         {
             Expression<Func<Consultant, bool>> filter = p => true;
             Func<IQueryable<Consultant>, IOrderedQueryable<Consultant>> orderBy = null;
             if (!string.IsNullOrEmpty(searchModel.name))
             {
-                filter = filter.And(p => p.Account.Name.Contains(searchModel.name));
+                filter = filter.And(c => c.Account.Name.Contains(searchModel.name));
             }
-            if (searchModel.consultantLevelId!=0)
+            if (searchModel.consultantLevelId != 0)
             {
-                filter = filter.And(p => p.ConsultantLevelId.Equals(searchModel.consultantLevelId));
+                filter = filter.And(c => c.ConsultantLevelId.Equals(searchModel.consultantLevelId));
             }
             if (searchModel.universityId.HasValue)
             {
-                filter = filter.And(p => p.UniversityId.Equals(searchModel.universityId));
+                filter = filter.And(c => c.UniversityId.Equals(searchModel.universityId));
+            }
+            if (searchModel.status.HasValue)
+            {
+                filter = filter.And(c => c.Account.Status.Equals((int)searchModel.status.Value));
             }
             return (filter, orderBy);
         }

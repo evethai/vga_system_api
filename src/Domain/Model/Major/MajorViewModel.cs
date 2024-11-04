@@ -12,6 +12,7 @@ namespace Domain.Model.Major
         public string Code { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
+        public string AdmissionGroup { get; set; } = string.Empty;
         public bool Status { get; set; }
         public Guid MajorCategoryId { get; set; }
         public string MajorCategoryName { get; set; } = string.Empty;

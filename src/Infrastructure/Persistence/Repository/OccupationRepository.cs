@@ -21,7 +21,8 @@ namespace Infrastructure.Persistence.Repository
             _context = context;
         }
 
-        public (Expression<Func<Occupation, bool>> filter, Func<IQueryable<Occupation>, IOrderedQueryable<Occupation>> orderBy) BuildFilterAndOrderBy(OccupationSearchModel searchModel)
+        public (Expression<Func<Occupation, bool>> filter, Func<IQueryable<Occupation>, IOrderedQueryable<Occupation>> orderBy)
+            BuildFilterAndOrderBy(OccupationSearchModel searchModel)
         {
             Expression<Func<Occupation, bool>> filter = p => true;
             Func<IQueryable<Occupation>, IOrderedQueryable<Occupation>> orderBy = null;
