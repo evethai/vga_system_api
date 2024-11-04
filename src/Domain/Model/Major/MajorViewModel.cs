@@ -16,5 +16,19 @@ namespace Domain.Model.Major
         public bool Status { get; set; }
         public Guid MajorCategoryId { get; set; }
         public string MajorCategoryName { get; set; } = string.Empty;
+
+        public List<OccupationByMajorIdModel>? Occupations { get; set; } = new List<OccupationByMajorIdModel>();
+        public List<UniversityByMajorIdModel>? Universities { get; set; } = new List<UniversityByMajorIdModel>();
+    }
+
+    public class OccupationByMajorIdModel
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+    }
+    public class UniversityByMajorIdModel
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; } = string.Empty;
     }
 }

@@ -21,7 +21,7 @@ namespace Infrastructure.Persistence.Repository
         {
             _context = context;
         }
-        public (Expression<Func<AdmissionInformation, bool>> filter, Func<IQueryable<AdmissionInformation>, IOrderedQueryable<AdmissionInformation>> orderBy) BuildFilterAndOrderBy(AdmissionInformationRattingModel model, List<StudentChoice> stChoices)
+        public (Expression<Func<AdmissionInformation, bool>> filter, Func<IQueryable<AdmissionInformation>, IOrderedQueryable<AdmissionInformation>> orderBy) BuildFilterAndOrderBy(AdmissionInformationRattingModel model, StudentChoice stChoice)
         {
             Expression<Func<AdmissionInformation, bool>> predicate = p => true;
             Func<IQueryable<AdmissionInformation>, IOrderedQueryable<AdmissionInformation>> orderBy = null;
@@ -47,9 +47,9 @@ namespace Infrastructure.Persistence.Repository
                 predicate = predicate.And(x => x.University.UniversityLocations.Any(l => l.RegionId == model.Region));
             }
 
-            if (stChoices != null && stChoices.Any())
+            if (stChoice != null )
             {
-                predicate = predicate.And(x => x.MajorId == stChoices[0].MajorOrOccupationId);
+                predicate = predicate.And(x => x.MajorId == stChoice.MajorOrOccupationId);
             }
 
             return (predicate, orderBy);

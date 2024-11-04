@@ -13,5 +13,6 @@ namespace Application.Interface.Repository
     {
         (Expression<Func<Occupation, bool>> filter, Func<IQueryable<Occupation>, IOrderedQueryable<Occupation>> orderBy)
             BuildFilterAndOrderBy(OccupationSearchModel searchModel);
+        Task<IEnumerable<Occupation>> GetOccupationByMajorId(Guid majorId);
     }
 }
