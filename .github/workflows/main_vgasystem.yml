@@ -1,9 +1,6 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
 name: Build and deploy ASP.Net Core app to Azure Web App - vgasystem
 
 on:
@@ -24,20 +21,17 @@ jobs:
         with:
           dotnet-version: '8.x'
 
-      - name: Restore dependencies
-        run: dotnet restore ./src/vga_system_api.sln
-
       - name: Build with dotnet
-        run: dotnet build ./src/vga_system_api.sln --configuration Release
+        run: dotnet build --configuration Release
 
-      - name: Publish with dotnet
-        run: dotnet publish ./src/vga_system_api.sln -c Release -o ${{ github.workspace }}/publish
+      - name: dotnet publish
+        run: dotnet publish -c Release -o "${{env.DOTNET_ROOT}}/vga_system_api.sln"
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: ${{ github.workspace }}/publish
+          path: ${{env.DOTNET_ROOT}}/vga_system_api.sln
 
   deploy:
     runs-on: windows-latest
@@ -58,5 +52,5 @@ jobs:
         with:
           app-name: 'vgasystem'
           slot-name: 'Production'
-          package: ${{ github.workspace }}/publish
+          package: .
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_8154EBDAB94F4E79A47074E860A698A0 }}
