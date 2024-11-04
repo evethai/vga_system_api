@@ -193,6 +193,9 @@ namespace Application.Common.Mapper
             CreateMap<Major, MajorPostModel>().ReverseMap();
             CreateMap<Major, MajorPutModel>().ReverseMap();
 
+            CreateMap<OccupationByMajorIdModel, Occupation>().ReverseMap();
+            CreateMap<UniversityByMajorIdModel, University>().ReverseMap();
+
             //MajorCategory
             CreateMap<MajorCategory, MajorCategoryViewModel>().ReverseMap();
             CreateMap<MajorCategory, MajorCategoryPostModel>().ReverseMap();

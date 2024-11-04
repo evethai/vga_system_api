@@ -16,5 +16,6 @@ namespace Application.Interface.Repository
         Task<int> CreateUniversityLocation(Guid IdUniversity, List<UniversityLocationModel> universityLocations); 
         Task<Boolean> UpdateUniversityLocation(int UniversityLocationId , UniversityLocationPutModel universityLocationPutModel);
         Task<Boolean> DeleteUniversityLocation(int Id);
+        Task<IEnumerable<University>> GetListUniversityByMajorId(Guid majorId);
     }
 }
