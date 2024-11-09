@@ -43,14 +43,17 @@ namespace Infrastructure.Persistence.Service
 
         public async Task<ResponseModel> AddNotification(NotificationPostModel model)
         {
-            var noti = _unitOfWork.NotificationRepository.CreateNotification(model);
+
+            var noti = await _unitOfWork.NotificationRepository.CreateNotification(model);
+
             return new ResponseModel
             {
                 IsSuccess = true,
                 Message = "Notification created successfully",
-                Data = noti
+                Data = noti 
             };
         }
+
 
 
     }

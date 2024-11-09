@@ -257,7 +257,7 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
                           .FirstOrDefault())
             .ToListAsync();
 
-        if (tests == null)
+        if (tests.Count == 0)
         {
             return new StudentHistoryModel
             {

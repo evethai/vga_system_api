@@ -11,14 +11,15 @@ namespace Domain.Model.Account
     {
         public string AccessToken { get; set; }
         public string RefreshToken { get; set; } 
-        //public string Name { get; set; }
+        public string Name { get; set; }
         public RoleEnum Role { get; set; }
 
 
-        public LoginResponseModel( RoleEnum role)
+        public LoginResponseModel( RoleEnum role, string name)
         {
             Role = role;
-            //Name = name;
+            Name = name;
+
         }
     }
 
@@ -26,8 +27,8 @@ namespace Domain.Model.Account
     {
         public Guid UserId { get; set; }
 
-        public StudentAccountResponseModel(RoleEnum role, Guid studentId)
-            : base(role) 
+        public StudentAccountResponseModel(RoleEnum role,string name, Guid studentId)
+            : base(role,name) 
         {
             UserId = studentId;
         }
@@ -37,8 +38,8 @@ namespace Domain.Model.Account
     {
         public Guid UserId { get; set; }
 
-        public CareerExpertAccountResponseModel(RoleEnum role, Guid careerExpertId)
-            : base(role) 
+        public CareerExpertAccountResponseModel(RoleEnum role, string name, Guid careerExpertId)
+            : base(role, name) 
         {
             UserId = careerExpertId;
         }
@@ -48,7 +49,7 @@ namespace Domain.Model.Account
     {
         public Guid UserId { get; set; }
 
-        public HighSchoolAccountResponseModel(RoleEnum role, Guid highSchoolId) : base(role) 
+        public HighSchoolAccountResponseModel(RoleEnum role, string name, Guid highSchoolId) : base(role, name) 
         {
             UserId = highSchoolId;
         }
@@ -58,7 +59,7 @@ namespace Domain.Model.Account
     {
         public Guid UserId { get; set; }
 
-        public UniversityAccountResponseModel(RoleEnum role, Guid universityId) : base(role) 
+        public UniversityAccountResponseModel(RoleEnum role, string name, Guid universityId) : base(role, name) 
         {
             UserId = universityId;
         }
