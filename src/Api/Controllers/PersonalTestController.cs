@@ -1,10 +1,12 @@
 ﻿using Api.Constants;
+using Api.Services;
 using Api.Validators;
 using Application.Interface.Service;
 using Domain.Enum;
 using Domain.Model.Test;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Api.Controllers
 {
@@ -13,25 +15,17 @@ namespace Api.Controllers
     public class PersonalTestController : ControllerBase
     {
         private readonly IStudentTestService _studentTestService;
-        //private readonly ICacheService _cacheService;
+        private readonly ICacheService _cacheService;
 
-        public PersonalTestController(IStudentTestService studentTestService)
+        public PersonalTestController(IStudentTestService studentTestService, ICacheService cacheService)
         {
             _studentTestService = studentTestService;
-            //_cacheService = cacheService;
+            _cacheService = cacheService;
         }
 
         [HttpPost(ApiEndPointConstant.PersonalTest.GetResultPersonalTestEndpoint)]
         public async Task<IActionResult> CreateResultMBTITest(StudentTestResultModel result)
         {
-            //var cacheKey = RedisConstants.AnswerMBTIKey+ result.TestId;
-            //var cacheResponse = await _cacheService.GetCacheResponseAsync<string>(cacheKey);
-            //if (cacheResponse != null)
-            //{
-            //    listAnswer = JsonConvert.DeserializeObject<List<AnswerModel>>(cacheResponse);
-            //}
-            //var listAnswers = await _resultBMTITestService.GetListAnswerToRedis(result.TestId);
-            //await _cacheService.SetCacheResponseAsync(cacheKey, listAnswers, TimeSpan.FromMinutes(16));
 
             try
             {
@@ -49,14 +43,24 @@ namespace Api.Controllers
         [HttpGet(ApiEndPointConstant.PersonalTest.PersonalTestEndpoint)]
         public async Task<IActionResult> GetPersonalTestById(Guid id)
         {
-            //var cacheKey = RedisConstants.AnswerMBTIKey + id;
-            //var listAnswer = await _resultBMTITestService.GetListAnswerToRedis(id);
-            //await _cacheService.SetCacheResponseAsync(cacheKey, listAnswer, TimeSpan.FromMinutes(16));
-
             try
             {
-                var response = await _studentTestService.GetTestById(id);
-                return Ok(response);
+
+                var cacheKey = RedisConstants.PersonalTestId + id;
+                var cacheResponse = await _cacheService.GetCacheResponseAsync<string>(cacheKey);
+                var response = new PersonalTestModel();
+                if (cacheResponse != null)
+                {
+                    response = JsonConvert.DeserializeObject<PersonalTestModel>(cacheResponse);
+                    return Ok(response);
+                }
+                else
+                {
+                    response = await _studentTestService.GetTestById(id);
+                    await _cacheService.SetCacheResponseAsync(cacheKey, response, TimeSpan.FromMinutes(16));
+                    return Ok(response);
+                }
+
             }catch (Exception e)
             {
                 return BadRequest(e.Message);

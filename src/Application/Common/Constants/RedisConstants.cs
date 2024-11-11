@@ -2,6 +2,6 @@
 {
     public static class RedisConstants
     {
-        public const string AnswerMBTIKey = "MBTI_TEST/";
+        public const string PersonalTestId = "PERSONAL_TEST/";
     }
 }
