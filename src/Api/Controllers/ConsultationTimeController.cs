@@ -19,6 +19,14 @@ namespace Api.Controllers
             _consultationTimeService = consultationTimeService;
         }
 
+        //[CustomAuthorize(RoleEnum.Student, RoleEnum.Consultant)]
+        [HttpGet(ApiEndPointConstant.ConsultationTime.ConsultationTimeEndpoint)]
+        public async Task<IActionResult> GetConsultationTimeByIdAsync(Guid id)
+        {
+            var result = await _consultationTimeService.GetConsultationTimeByIdAsync(id);
+            return Ok(result);
+        }
+
         //[CustomAuthorize(RoleEnum.Consultant, RoleEnum.Student)]
         [HttpPost(ApiEndPointConstant.ConsultationTime.ConsultationTimesEndpoint)]
         public async Task<IActionResult> CreateConsultationTimeAsync(ConsultationTimePostModel postModel, Guid consultationDayId)
