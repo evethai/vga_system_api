@@ -12,5 +12,6 @@ namespace Application.Interface.Service
     {
         Task<ResponseModel> CreateConsultationTimeAsync(ConsultationTimePostModel postModel, Guid consultationDayId);
         Task<ResponseModel> DeleteConsultationTimeAsync(Guid consultationTimeId);
+        Task<ResponseModel> GetConsultationTimeByIdAsync(Guid id);
     }
 }
