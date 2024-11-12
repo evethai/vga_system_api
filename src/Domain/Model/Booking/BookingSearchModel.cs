@@ -24,5 +24,7 @@ namespace Domain.Model.Booking
 
         [FromQuery(Name = "day")]
         public DateOnly? Day { get; set; }
+        [FromQuery(Name = "day-in-week")]
+        public DateOnly? dayInWeek { get; set; }
     }
 }
