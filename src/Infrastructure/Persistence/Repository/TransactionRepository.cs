@@ -124,7 +124,7 @@ namespace Infrastructure.Persistence.Repository
             exitAccount.Wallet.GoldBalance -= GoldUsing;
             TransactionPostModel transaction = new TransactionPostModel(exitAccount.Wallet.Id, GoldUsing);
             await CreateTransactionWhenUsingGold(TransactionType.Using, transaction);
-            _context.Wallet.Update(exitAccount.Wallet);
+            _context.Wallet.Update(exitWallet);
             _context.SaveChanges();
             return true;
         }
