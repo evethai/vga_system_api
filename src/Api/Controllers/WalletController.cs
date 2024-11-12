@@ -70,7 +70,7 @@ namespace Api.Controllers
             }
         }
         [HttpPut(ApiEndPointConstant.Wallet.WalletTest)]
-        public async Task<IActionResult> UpdateWalletUsingByTestAsync(Guid WalletStudentId, int goldUsingTest)
+        public async Task<IActionResult> UpdateWalletUsingByTestAsync(Guid AccountId, int goldUsingTest)
         {
             if (!ModelState.IsValid)
             {
@@ -78,7 +78,7 @@ namespace Api.Controllers
             }
             try
             {
-                var result = await _walletService.UpdateWalletUsingByTestAsync(WalletStudentId, goldUsingTest);
+                var result = await _walletService.UpdateWalletUsingByTestAsync(AccountId, goldUsingTest);
                 return Ok(result);
             }
             catch (Exception ex)

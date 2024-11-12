@@ -15,5 +15,6 @@ namespace Application.Interface.Repository
     {
         (Expression<Func<Transaction, bool>> filter, Func<IQueryable<Transaction>, IOrderedQueryable<Transaction>> orderBy) BuildFilterAndOrderBy(TransactionSearchModel searchModel);
         Task<Transaction> CreateTransactionWhenUsingGold(TransactionType transactionType, TransactionPostModel transactionModel);
+        Task<Boolean> UpdateWalletUsingByTestAsync(Guid AccountId, int GoldUsing);
     }
 }
