@@ -25,7 +25,7 @@ namespace Domain.Model.ConsultationDay
         public ConsultationDayStatusEnum? consultationDayStatus { get; set; }
         [FromQuery(Name = "time-status")]
         public ConsultationTimeStatusEnum? consultationTimeStatus { get; set; }
-
-
+        [FromQuery(Name = "day-in-week")]
+        public DateOnly? dayInWeek { get; set; }
     }
 }

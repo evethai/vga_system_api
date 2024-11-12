@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Common.Exceptions;
 using Application.Interface;
 using Application.Interface.Service;
 using AutoMapper;
 using Domain.Entity;
 using Domain.Enum;
+using Domain.Model.ConsultationDay;
 using Domain.Model.ConsultationTime;
 using Domain.Model.Response;
 using Microsoft.EntityFrameworkCore;
@@ -103,6 +105,36 @@ namespace Infrastructure.Persistence.Service
                 {
                     IsSuccess = false,
                     Message = $"An error occurred while delete consultation time: {ex.Message}"
+                };
+            }
+        }
+        #endregion
+
+        #region Get by id
+        public async Task<ResponseModel> GetConsultationTimeByIdAsync(Guid id)
+        {
+            try
+            {
+                var consultationTime = await _unitOfWork.ConsultationTimeRepository
+                    .SingleOrDefaultAsync(
+                        predicate: ct => ct.Id.Equals(id),
+                        include: ct => ct.Include(ct =>ct.SlotTime)
+                    ) ?? throw new NotExistsException();
+
+                var result = _mapper.Map<ConsultationTimeViewModel>(consultationTime);
+                return new ResponseModel
+                {
+                    IsSuccess = true,
+                    Message = $"Lấy khoảng thời gian tư vấn với id '{id}' thành công",
+                    Data = result
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    IsSuccess = false,
+                    Message = $"An error occurred while get consultation time by id: {ex.Message}"
                 };
             }
         }
