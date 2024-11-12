@@ -5,10 +5,12 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Application.Common.Extensions;
+using Application.Interface;
 using Application.Interface.Repository;
 using Domain.Entity;
 using Domain.Enum;
 using Domain.Model.Transaction;
+using Domain.Model.Wallet;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -105,6 +107,26 @@ namespace Infrastructure.Persistence.Repository
             var result = await _context.Transaction.AddAsync(transaction);
             _context.SaveChanges();
             return transaction;
+        }
+        public async Task<Boolean> UpdateWalletUsingByTestAsync(Guid AccountId, int GoldUsing)
+        {
+            var exitAccount = _context.Account.Where(s => s.Id.Equals(AccountId)).FirstOrDefault();
+            if (exitAccount == null)
+            {
+                throw new InvalidOperationException("Account Id is not found");
+            }
+            var exitWallet = _context.Wallet.Where(s => s.AccountId.Equals(exitAccount.Id)).FirstOrDefault() 
+                ?? throw new Exception("Wallet is not found");
+            if(exitWallet.GoldBalance < GoldUsing)
+            {
+                throw new Exception("User is not enought gold");
+            }
+            exitAccount.Wallet.GoldBalance -= GoldUsing;
+            TransactionPostModel transaction = new TransactionPostModel(exitAccount.Wallet.Id, GoldUsing);
+            await CreateTransactionWhenUsingGold(TransactionType.Using, transaction);
+            _context.Wallet.Update(exitAccount.Wallet);
+            _context.SaveChanges();
+            return true;
         }
     }
 }
