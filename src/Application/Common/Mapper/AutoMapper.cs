@@ -1,40 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Domain.Entity;
-using Domain.Enum;
 using Domain.Model.AccountWallet;
+using Domain.Model.AdmissionInformation;
+using Domain.Model.Booking;
+using Domain.Model.Consultant;
+using Domain.Model.ConsultantLevel;
+using Domain.Model.ConsultationDay;
+using Domain.Model.ConsultationTime;
+using Domain.Model.EntryLevelEducation;
 using Domain.Model.Highschool;
 using Domain.Model.Major;
+using Domain.Model.MajorCategory;
+using Domain.Model.News;
+using Domain.Model.Notification;
+using Domain.Model.Occupation;
+using Domain.Model.OccupationalGroup;
+using Domain.Model.OccupationalSkills;
 using Domain.Model.PersonalGroup;
 using Domain.Model.Question;
 using Domain.Model.Region;
 using Domain.Model.Student;
 using Domain.Model.Test;
+using Domain.Model.TestType;
 using Domain.Model.TimeSlot;
 using Domain.Model.Transaction;
-using Domain.Model.Wallet;
-
-using Domain.Model.TestType;
-using Domain.Model.Consultant;
-using Domain.Model.ConsultationDay;
-using Domain.Model.ConsultationTime;
-using Domain.Model.Booking;
-using Domain.Model.ConsultantLevel;
 using Domain.Model.University;
-using Domain.Model.Notification;
-using Domain.Model.EntryLevelEducation;
-using Domain.Model.News;
-using Domain.Model.MajorCategory;
-using Domain.Model.Occupation;
-using Domain.Model.OccupationalSkills;
+using Domain.Model.Wallet;
 using Domain.Model.WorkSkills;
-using Domain.Model.OccupationalGroup;
-using Domain.Model.AdmissionInformation;
 
 
 
@@ -200,6 +192,9 @@ namespace Application.Common.Mapper
                 .ReverseMap();
             CreateMap<Major, MajorPostModel>().ReverseMap();
             CreateMap<Major, MajorPutModel>().ReverseMap();
+
+            CreateMap<OccupationByMajorIdModel, Occupation>().ReverseMap();
+            CreateMap<UniversityByMajorIdModel, University>().ReverseMap();
 
             //MajorCategory
             CreateMap<MajorCategory, MajorCategoryViewModel>().ReverseMap();

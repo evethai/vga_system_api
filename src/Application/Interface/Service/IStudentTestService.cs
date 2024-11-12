@@ -13,7 +13,7 @@ namespace Application.Interface.Service
         Task<ResponseModel> CreateResultForTest(StudentTestResultModel result);
         Task<PersonalTestModel> GetTestById(Guid id);
         Task<IEnumerable<PersonalTestModel>> GetAllTest();
-        Task<IEnumerable<HistoryTestModel?>> GetHistoryTestByStudentId(Guid studentId);
+        Task<StudentHistoryModel> GetHistoryTestByStudentId(Guid studentId);
         Task<ResponseModel> GetMajorsByPersonalGroupId(Guid stTestId);
         Task<ResponseModel> FilterMajorAndUniversity(FilterMajorAndUniversityModel model);
 

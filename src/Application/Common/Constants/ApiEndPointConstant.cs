@@ -198,6 +198,7 @@
         {
             public const string MajorsEndpoint = ApiEndpoint + "/majors";
             public const string MajorEndpoint = ApiEndpoint + "/major/{id}";
+            public const string MajorAndRelationEndpoint = ApiEndpoint + "/major-and-relation/{id}";
         }
 
         //MajorCategory
