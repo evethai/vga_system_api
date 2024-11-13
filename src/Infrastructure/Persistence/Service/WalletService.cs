@@ -108,29 +108,30 @@ namespace Infrastructure.Persistence.Service
                 Data = transaction_Transferring + " - "+ transaction_Receiving,
             };
         }
-        public async Task<ResponseModel> UpdateWalletUsingByTestAsync(Guid WalletStudentId, int goldUsingTest)
+        public async Task<ResponseModel> UpdateWalletUsingByTestAsync(Guid AccountId, int goldUsingTest)
         {
-            var walletStudent = await _unitOfWork.WalletRepository.GetByIdGuidAsync(WalletStudentId);
-            if (walletStudent==null)
+            if(goldUsingTest <= 0)
             {
                 return new ResponseModel
                 {
-                    Message = "WalletId is not found",
-                    IsSuccess = false,
-                    Data = WalletStudentId,
+                    IsSuccess = true,
+                    Message = "This free.",
                 };
-            } 
-            walletStudent.GoldBalance -= goldUsingTest;
-            TransactionPostModel  transaction = new TransactionPostModel(WalletStudentId, goldUsingTest);
-            var TransactionInfor = _unitOfWork.TransactionRepository.
-                CreateTransactionWhenUsingGold(TransactionType.Using, transaction);
-            await _unitOfWork.WalletRepository.UpdateAsync(walletStudent);
-            await _unitOfWork.SaveChangesAsync();
+            }
+
+            var TransactionInfor =  await _unitOfWork.TransactionRepository.UpdateWalletUsingByTestAsync(AccountId, goldUsingTest);
+            if(TransactionInfor == false)
+            {
+                return new ResponseModel
+                {
+                    IsSuccess = false
+                };
+            }
             return new ResponseModel
             {
                 Message = "Wallet using by test Successfully",
                 IsSuccess = true,
-                Data = TransactionInfor,
+                Data = TransactionInfor
             };
         }
     }

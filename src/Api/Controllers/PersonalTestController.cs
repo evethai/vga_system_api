@@ -15,11 +15,13 @@ namespace Api.Controllers
     public class PersonalTestController : ControllerBase
     {
         private readonly IStudentTestService _studentTestService;
+        private readonly IWalletService _walletService;
         //private readonly ICacheService _cacheService;
 
-        public PersonalTestController(IStudentTestService studentTestService)
+        public PersonalTestController(IStudentTestService studentTestService, IWalletService walletService)
         {
             _studentTestService = studentTestService;
+            _walletService = walletService;
             //_cacheService = cacheService;
         }
 
@@ -41,7 +43,7 @@ namespace Api.Controllers
 
         //[CustomAuthorize(RoleEnum.Admin,RoleEnum.Student)]
         [HttpGet(ApiEndPointConstant.PersonalTest.PersonalTestEndpoint)]
-        public async Task<IActionResult> GetPersonalTestById(Guid id)
+        public async Task<IActionResult> GetPersonalTestById(Guid id, Guid accountId)
         {
             try
             {
@@ -57,7 +59,12 @@ namespace Api.Controllers
                 //else
                 //{
                     response = await _studentTestService.GetTestById(id);
+                    var transaction = await _walletService.UpdateWalletUsingByTestAsync(accountId, response.Point);
                 //    await _cacheService.SetCacheResponseAsync(cacheKey, response, TimeSpan.FromMinutes(16));
+                    if(transaction.IsSuccess == false)
+                    {
+                        return Ok("Error transaction with point!");
+                    }
                     return Ok(response);
                 //}
 

@@ -9,14 +9,16 @@ namespace Domain.Model.Account
 {
     public class LoginResponseModel
     {
+        public Guid AccountId { get; set; }
         public string AccessToken { get; set; }
         public string RefreshToken { get; set; } 
         public string Name { get; set; }
         public RoleEnum Role { get; set; }
 
 
-        public LoginResponseModel( RoleEnum role, string name)
+        public LoginResponseModel(Guid accountId, RoleEnum role, string name)
         {
+            AccountId = accountId;
             Role = role;
             Name = name;
 
@@ -27,8 +29,8 @@ namespace Domain.Model.Account
     {
         public Guid UserId { get; set; }
 
-        public StudentAccountResponseModel(RoleEnum role,string name, Guid studentId)
-            : base(role,name) 
+        public StudentAccountResponseModel(Guid accountId, RoleEnum role,string name, Guid studentId)
+            : base(accountId,role,name) 
         {
             UserId = studentId;
         }
@@ -38,8 +40,8 @@ namespace Domain.Model.Account
     {
         public Guid UserId { get; set; }
 
-        public CareerExpertAccountResponseModel(RoleEnum role, string name, Guid careerExpertId)
-            : base(role, name) 
+        public CareerExpertAccountResponseModel(Guid accountId, RoleEnum role, string name, Guid careerExpertId)
+            : base(accountId, role, name) 
         {
             UserId = careerExpertId;
         }
@@ -49,7 +51,7 @@ namespace Domain.Model.Account
     {
         public Guid UserId { get; set; }
 
-        public HighSchoolAccountResponseModel(RoleEnum role, string name, Guid highSchoolId) : base(role, name) 
+        public HighSchoolAccountResponseModel(Guid accountId, RoleEnum role, string name, Guid highSchoolId) : base(accountId, role, name) 
         {
             UserId = highSchoolId;
         }
@@ -59,7 +61,7 @@ namespace Domain.Model.Account
     {
         public Guid UserId { get; set; }
 
-        public UniversityAccountResponseModel(RoleEnum role, string name, Guid universityId) : base(role, name) 
+        public UniversityAccountResponseModel(Guid accountId, RoleEnum role, string name, Guid universityId) : base(accountId, role, name) 
         {
             UserId = universityId;
         }

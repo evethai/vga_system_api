@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Application.Common.Utils;
@@ -80,7 +81,17 @@ public class HighschoolService : IHighschoolService
                 IsSuccess = true,
             };
         }
-        exitHighschool.Address = putModel.Address;             
+        exitHighschool.Address = putModel.Address;
+        var exitRegion = await _unitOfWork.RegionRepository.GetByIdGuidAsync(Id);
+        if (exitRegion == null)
+        {
+            return new ResponseModel
+            {
+                Message = "Region Id is not found",
+                IsSuccess = true,
+            };
+        }
+        exitHighschool.RegionId = putModel.RegionId;
         var exitAccount = await _unitOfWork.AccountRepository.GetByIdGuidAsync(exitHighschool.AccountId);
         if (exitAccount == null)
         {

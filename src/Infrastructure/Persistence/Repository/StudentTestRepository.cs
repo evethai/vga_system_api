@@ -91,6 +91,7 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
                 p.TestTypeId,
                 p.Name,
                 p.Description,
+                p.TestType.Point,
                 Questions = p.TestQuestions.Select(tq => new
                 {
                     tq.Question.Id,
@@ -118,6 +119,7 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
             TestTypeId = test.TestTypeId,
             Name = test.Name,
             Description = test.Description,
+            Point = test.Point,
             QuestionModels = test.Questions.Select(q => new QuestionModel
             {
                 Id = q.Id,

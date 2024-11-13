@@ -51,7 +51,8 @@ namespace Infrastructure.Persistence.Repository
                     DescriptionTitle = image.DescriptionTitle,
                     ImageUrl = image.ImageUrl,                   
                 };
-                _context.ImageNews.Add(img);             
+                _context.ImageNews.Add(img);
+                _context.SaveChanges();
             }
             return Task.FromResult(true);
         }
