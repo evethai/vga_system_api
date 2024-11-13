@@ -37,17 +37,17 @@ namespace Infrastructure.Persistence.Service
             };
         }
 
-        public async Task<Wallet> GetWalletByIdAsync(Guid Id)
+        public async Task<WalletModel> GetWalletByIdAsync(Guid Id)
         {
             var wallet = await _unitOfWork.WalletRepository.SingleOrDefaultAsync
                 (predicate: c => c.AccountId.Equals(Id));
-            return _mapper.Map<Wallet>(wallet);
+            return _mapper.Map<WalletModel>(wallet);
         }
 
-        public async Task<ResponseModel> UpdateWalletUsingGoldDistributionAsync(Guid WalletHigchoolId, int goldDistribution)
+        public async Task<ResponseModel> UpdateWalletUsingGoldDistributionAsync(Guid WalletHigchoolId, int goldDistribution, int years)
         {
             var walletTransferring = await _unitOfWork.WalletRepository.GetByIdGuidAsync(WalletHigchoolId);
-            var receivingWallets = await _unitOfWork.WalletRepository.GetInforStudentHasWalletReceiving(walletTransferring.AccountId);
+            var receivingWallets = await _unitOfWork.WalletRepository.GetInforStudentHasWalletReceiving(walletTransferring.AccountId, years);
             var totalgoldDistribution = goldDistribution * receivingWallets.Count();           
             if (walletTransferring.GoldBalance < totalgoldDistribution)
             {
