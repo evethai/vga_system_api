@@ -50,7 +50,7 @@ public class StudentService : IStudentService
 
     public async Task<StudentModel> GetStudentByIdAsync(Guid StudentId)
     {
-        var student = await _unitOfWork.StudentRepository.GetByIdGuidAsync(StudentId);
+        var student = await _unitOfWork.StudentRepository.SingleOrDefaultAsync(predicate: c=>c.Id.Equals(StudentId),include:a=>a.Include(a=>a.Account).ThenInclude(a => a.Wallet));
         return _mapper.Map<StudentModel>(student);
     }
 
@@ -63,34 +63,37 @@ public class StudentService : IStudentService
         }
         exitStudent.DateOfBirth = putModel.DateOfBirth;
         exitStudent.SchoolYears = putModel.SchoolYears;
-        exitStudent.Name = putModel.Name;
         exitStudent.Gender = putModel.Gender;
         var exitAccount = await _unitOfWork.AccountRepository.GetByIdGuidAsync(exitStudent.AccountId);
         if (exitAccount == null)
         {
             throw new Exception("Student Account Id not found");
         }
+        exitAccount.Name = putModel.Name;
         exitAccount.Phone = putModel.Phone;
         exitAccount.Email = putModel.Email;
         exitAccount.Password = PasswordUtil.HashPassword(putModel.Password);
         await _unitOfWork.AccountRepository.UpdateAsync(exitAccount);
         var result = await _unitOfWork.StudentRepository.UpdateAsync(exitStudent);
-        _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.SaveChangesAsync();
         return new ResponseModel
         {
             Message = "Student Updated Successfully",
             IsSuccess = true,
-            Data = result,
+            Data = putModel,
         };
 
     }
     public async Task<ResponseModel> CreateStudentAsync(StudentPostModel postModel)
     {
-        var student = _mapper.Map<Student>(postModel);
-        RegisterAccountModel accountModel = new RegisterAccountModel(postModel.Email
+        
+        RegisterAccountModel accountModel = new RegisterAccountModel(
+            postModel.Name
+            ,postModel.Email
             , postModel.Password
             , postModel.Phone);
         var AccountId = await _unitOfWork.AccountRepository.CreateAccountAndWallet(accountModel, RoleEnum.Student);
+        var student = _mapper.Map<Student>(postModel);
         student.AccountId = AccountId;
         var result = await _unitOfWork.StudentRepository.AddAsync(student);
         await _unitOfWork.SaveChangesAsync();
@@ -98,7 +101,7 @@ public class StudentService : IStudentService
         {
             Message = "Student Created Successfully",
             IsSuccess = true,
-            Data = student,
+            Data = postModel,
         };
     }
 
@@ -112,8 +115,7 @@ public class StudentService : IStudentService
         return new ResponseModel
         {
             Message = "Delete Student is Successfully",
-            IsSuccess = true,
-            Data = exStudent,
+            IsSuccess = true
         };
     }
     #region Import Students From Json Async
@@ -131,12 +133,12 @@ public class StudentService : IStudentService
                     Message = "No students to import."
                 };
             }
-            var roleId = await _unitOfWork.RoleRepository
-                .SingleOrDefaultAsync(selector: x => x.Id, predicate: x => x.Name.Equals(RoleEnum.Student.ToString()));
+            //var roleId = await _unitOfWork.RoleRepository
+            //    .SingleOrDefaultAsync(selector: x => x.Id, predicate: x => x.Name.Equals(RoleEnum.Student.ToString()));
 
             foreach (var studentImport in students.Data)
             {
-                RegisterAccountModel accountModel = new RegisterAccountModel(studentImport.Email
+                RegisterAccountModel accountModel = new RegisterAccountModel(studentImport.Name,studentImport.Email
                        , studentImport.Password
                        , studentImport.Phone);
 

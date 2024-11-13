@@ -22,7 +22,6 @@ namespace Infrastructure.Data
         }
 
         public DbSet<Account> Account { get; set; }
-        public DbSet<Role> Role { get; set; }
         public DbSet<AdmissionInformation> AdmissionInformation { get; set; }
         public DbSet<AdmissionMethod> AdmissionMethod { get; set; }
         public DbSet<Answer> Answer { get; set; }
@@ -34,9 +33,8 @@ namespace Infrastructure.Data
         public DbSet<ConsultantLevel> ConsultantLevel { get; set; }
         public DbSet<HighSchool> HighSchool { get; set; }
         public DbSet<ImageNews> ImageNews { get; set; }
-        public DbSet<Like> Like { get; set; }
         public DbSet<Major> Major { get; set; }
-        public DbSet<MajorType> MajorType { get; set; }
+        public DbSet<MajorPersonalityMatrix> MajorPersonalMatrix { get; set; }
         public DbSet<News> News { get; set; }
         public DbSet<Notification> Notification { get; set; }
         public DbSet<PersonalGroup> PersonalGroup { get; set; }
@@ -58,6 +56,9 @@ namespace Infrastructure.Data
         public DbSet<WorkSkills> WorkSkills { get; set; }
         public DbSet<OccupationalSKills> OccupationalSKills { get; set; }
         public DbSet<MajorCategory> MajorCategory { get; set; }
+        public DbSet<MajorOccupationMatrix> MajorOccupationMatrix { get; set; }
+        public DbSet<StudentChoice> StudentChoice { get; set; }
+        public DbSet<UniversityLocation> UniversityLocation { get; set; }
 
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
@@ -95,7 +96,8 @@ namespace Infrastructure.Data
             {
                 entity.HasKey(a => a.Id);
                 entity.HasMany(a => a.Notifications).WithOne(n => n.Account).HasForeignKey(n => n.AccountId).OnDelete(DeleteBehavior.Restrict);
-                entity.HasMany(a => a.Likes).WithOne(l => l.Account).HasForeignKey(l => l.AccountId).OnDelete(DeleteBehavior.Restrict);
+                entity.HasIndex(a => a.Email).IsUnique();
+                entity.HasIndex(a => a.Phone).IsUnique();
             });
 
             // expert
@@ -132,6 +134,7 @@ namespace Infrastructure.Data
                 entity.HasOne(u => u.Account).WithOne(a => a.University).HasForeignKey<University>(u => u.AccountId);
                 entity.HasMany(u => u.AdmissionInformation).WithOne(u => u.University).HasForeignKey(u => u.UniversityId).OnDelete(DeleteBehavior.Restrict);
                 entity.HasMany(u => u.News).WithOne(u => u.University).HasForeignKey(u => u.UniversityId).OnDelete(DeleteBehavior.Restrict);
+                entity.HasMany(u => u.Consultants).WithOne(u => u.University).HasForeignKey(u => u.UniversityId).OnDelete(DeleteBehavior.Restrict);
             });
 
             // personal test
@@ -164,11 +167,11 @@ namespace Infrastructure.Data
             });
 
             //major type
-            modelBuilder.Entity<MajorType>(entity =>
+            modelBuilder.Entity<MajorPersonalityMatrix>(entity =>
             {
                 entity.HasKey(mt => mt.Id);
-                entity.HasOne(mt => mt.Major).WithMany(m => m.MajorTypes).HasForeignKey(m => m.MajorId).OnDelete(DeleteBehavior.Restrict);
-                entity.HasOne(mt => mt.PersonalGroup).WithMany(m => m.MajorTypes).HasForeignKey(m => m.PersonalGroupId).OnDelete(DeleteBehavior.Restrict);
+                entity.HasOne(mt => mt.MajorCategory).WithMany(m => m.MajorPersonalMatrixs).HasForeignKey(m => m.MajorCategoryId).OnDelete(DeleteBehavior.Restrict);
+                entity.HasOne(mt => mt.PersonalGroup).WithMany(m => m.MajorPersonalMatrixs).HasForeignKey(m => m.PersonalGroupId).OnDelete(DeleteBehavior.Restrict);
             });
 
             // other entities
@@ -180,7 +183,6 @@ namespace Infrastructure.Data
             modelBuilder.Entity<ConsultationTime>(entity => entity.HasKey(ct => ct.Id));
             modelBuilder.Entity<ConsultantLevel>(entity => entity.HasKey(el => el.Id));
             modelBuilder.Entity<ImageNews>(entity => entity.HasKey(im => im.Id));
-            modelBuilder.Entity<Like>(entity => entity.HasKey(l => l.Id));
             modelBuilder.Entity<Major>(entity => entity.HasKey(m => m.Id));
             modelBuilder.Entity<News>(entity => entity.HasKey(n => n.Id));
             modelBuilder.Entity<Notification>(entity => entity.HasKey(n => n.Id));
@@ -192,13 +194,14 @@ namespace Infrastructure.Data
             modelBuilder.Entity<TimeSlot>(entity => entity.HasKey(ts => ts.Id));
             modelBuilder.Entity<Transaction>(entity => entity.HasKey(t => t.Id));
             modelBuilder.Entity<Wallet>(entity => entity.HasKey(w => w.Id));
-            modelBuilder.Entity<Role>(entity => entity.HasKey(r => r.Id));
             modelBuilder.Entity<Occupation>(entity => entity.HasKey(o => o.Id));
             modelBuilder.Entity<OccupationalGroup>(entity => entity.HasKey(og => og.Id));
             modelBuilder.Entity<EntryLevelEducation>(entity => entity.HasKey(el => el.Id));
             modelBuilder.Entity<WorkSkills>(entity => entity.HasKey(ws => ws.Id));
             modelBuilder.Entity<OccupationalSKills>(entity => entity.HasKey(os => os.Id));
             modelBuilder.Entity<MajorCategory>(entity => entity.HasKey(mc => mc.Id));
+            modelBuilder.Entity<MajorOccupationMatrix>(entity => entity.HasKey(moc => moc.Id));
+            modelBuilder.Entity<StudentChoice>(entity => entity.HasKey(sc => sc.Id));
 
 
             base.OnModelCreating(modelBuilder);

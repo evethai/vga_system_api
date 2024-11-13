@@ -29,7 +29,7 @@ namespace Infrastructure.Persistence.Repository
                 .FirstOrDefaultAsync(cd => cd.Id == id);
         }
 
-        public (Expression<Func<ConsultationDay, bool>> filter, Func<IQueryable<ConsultationDay>, IOrderedQueryable<ConsultationDay>> orderBy) 
+        public (Expression<Func<ConsultationDay, bool>> filter, Func<IQueryable<ConsultationDay>, IOrderedQueryable<ConsultationDay>> orderBy)
             BuildFilterAndOrderBy(ConsultationDaySearchModel searchModel)
         {
             Expression<Func<ConsultationDay, bool>> filter = p => true;
@@ -37,15 +37,31 @@ namespace Infrastructure.Persistence.Repository
 
             if (!string.IsNullOrEmpty(searchModel.name))
             {
-                filter = filter.And(p => p.Consultant.Name.Contains(searchModel.name));
+                filter = filter.And(cd => cd.Consultant.Account.Name.Contains(searchModel.name));
             }
             if (searchModel.Day.HasValue)
             {
-                filter = filter.And(p => p.Day.Equals(searchModel.Day.Value));
+                filter = filter.And(cd => cd.Day.Equals(searchModel.Day.Value));
             }
             if (searchModel.ConsultantId.HasValue)
             {
-                filter = filter.And(p => p.ConsultantId.Equals(searchModel.ConsultantId.Value));
+                filter = filter.And(cd => cd.ConsultantId.Equals(searchModel.ConsultantId.Value));
+            }
+            if (searchModel.consultationDayStatus.HasValue)
+            {
+                filter = filter.And(cd => cd.Status.Equals((int)searchModel.consultationDayStatus.Value));
+            }
+            if (searchModel.consultationTimeStatus.HasValue)
+            {
+                filter = filter.And(cd => cd.ConsultationTimes.Any(ct => ct.Status.Equals((int)searchModel.consultationTimeStatus.Value)));
+            }
+            if (searchModel.dayInWeek.HasValue)
+            {
+                DateOnly inputDate = searchModel.dayInWeek.Value;
+                DateOnly startOfWeek = inputDate.AddDays(-(int)inputDate.DayOfWeek + (int)DayOfWeek.Monday);
+                DateOnly endOfWeek = startOfWeek.AddDays(6);
+
+                filter = filter.And(cd => cd.Day >= startOfWeek && cd.Day <= endOfWeek);
             }
             return (filter, orderBy);
         }

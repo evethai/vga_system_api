@@ -9,6 +9,8 @@ namespace Domain.Model.Account
 {
     public class AccountPostModel
     {
+        [Required(ErrorMessage = "Name is required.")]
+        public string Name { get; set; }
         [DataType(DataType.EmailAddress)]
         [Required(ErrorMessage = "Email is required.")]
         [RegularExpression(@"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$", ErrorMessage = "Email is not valid")]

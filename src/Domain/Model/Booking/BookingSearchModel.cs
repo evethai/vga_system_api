@@ -17,5 +17,14 @@ namespace Domain.Model.Booking
         public string? studentName { get; set; }
         [FromQuery(Name = "consultant-name")]
         public string? consultantName { get; set; }
+        [FromQuery(Name = "student-id")]
+        public Guid? studentId { get; set; }
+        [FromQuery(Name = "consultant-id")]
+        public Guid? consultantId { get; set; }
+
+        [FromQuery(Name = "day")]
+        public DateOnly? Day { get; set; }
+        [FromQuery(Name = "day-in-week")]
+        public DateOnly? dayInWeek { get; set; }
     }
 }

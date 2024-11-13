@@ -9,7 +9,6 @@ namespace Domain.Enum
     public enum AccountStatus
     {
         Active = 1,
-        InActive = 2,
-        Blocked = 3,
+        Blocked = 2,
     }
 }

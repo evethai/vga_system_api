@@ -26,7 +26,7 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
     {
         _context = context;
     }
-
+    #region MBTI Test
     public async Task<PersonalGroupModel> CalculateResultMBTITest(List<int> listAnswerId)
     {
         var answerValueCounts = new Dictionary<AnswerValue, int>
@@ -76,9 +76,9 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
 
         return result;
     }
+    #endregion
 
-
-
+    #region Get Test
     public async Task<PersonalTestModel> GetTestById(Guid personalTestId)
     {
 
@@ -129,9 +129,9 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
 
         return model;
     }
+    #endregion
 
-
-
+    #region Holland Test
     public async Task<PersonalGroupModel> CalculateResultHollandTest(List<int> listQuestionId)
     {
 
@@ -181,17 +181,20 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
             throw new KeyNotFoundException("Personality type not found");
         }
 
-        var majors = await _context.MajorType.Where(m => m.PersonalGroupId == h_type.Id)
-            .Select(m => new MajorModel
+         var majors = _context.MajorPersonalMatrix
+        .Where(p => p.PersonalGroupId == h_type.Id)
+        .Select(p => new MajorCategoryModel
+        {
+            Id = p.MajorCategory.Id,
+            Name = p.MajorCategory.Name,
+            Majors = p.MajorCategory.Majors.Select(m => new MajorModel
             {
-                Id = m.Major.Id,
-                Code = m.Major.Code,
-                Name = m.Major.Name,
-                Description = m.Major.Description
-            })
-            .ToListAsync();
-
-
+                Id = m.Id,
+                Name = m.Name,
+                Code = m.Code
+            }).ToList()
+        })
+        .ToList();
 
         var result = new PersonalGroupModel
         {
@@ -205,7 +208,9 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
 
         return result;
     }
+    #endregion
 
+    #region Get By Id
     public async Task<IEnumerable<Question>> GetAllQuestionByTestId(Guid personalTestId)
     {
         var result = await _context.TestQuestion.Where(q => q.PersonalTestId == personalTestId).Select(p => p.Question).ToListAsync();
@@ -217,7 +222,9 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
         var result = await _context.Answer.Where(a => a.QuestionId == questionId).ToListAsync();
         return result;
     }
+    #endregion
 
+    #region Check Type
     public async Task<TestTypeCode> CheckTestType(Guid personalTestId)
     {
         var testType = await _context.PersonalTest
@@ -227,15 +234,20 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
 
         return testType;
     }
+    #endregion
 
-    public async Task<IEnumerable<HistoryTestModel>> GetHistoryTestByStudentId(Guid studentId)
+    #region History Test
+    public async Task<StudentHistoryModel> GetHistoryTestByStudentId(Guid studentId)
     {
         var tests = await _context.StudentTest
             .Where(s => s.StudentId == studentId)
-            .GroupBy(s => s.PersonalTest)
+            .Include(s => s.PersonalTest)               
+            .ThenInclude(pt => pt.TestType)              
+            .GroupBy(s => s.PersonalTestId)
             .Select(g => g.OrderByDescending(s => s.Date)
                           .Select(s => new StudentTest
                           {
+                              Id = s.Id,
                               PersonalTestId = s.PersonalTestId,
                               PersonalTest = s.PersonalTest,
                               PersonalGroupId = s.PersonalGroupId,
@@ -244,27 +256,187 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
                           })
                           .FirstOrDefault())
             .ToListAsync();
-        if(tests.Count() <= 0)
+
+        if (tests == null)
         {
-            return null;
-        }
-        List<HistoryTestModel> result = new();
-        foreach (var test in tests)
-        {
-            result.Add(new HistoryTestModel
+            return new StudentHistoryModel
             {
-                PersonalTestId = test.Id,
-                PersonalTestName = test.PersonalTest.Name,
-                PersonalGroupId = test.PersonalGroupId,
-                PersonalGroupCode = test.PersonalGroup.Code,
-                PersonalGroupName = test.PersonalGroup.Name,
-                PersonalGroupDescription = test.PersonalGroup.Description,
-                Date = test.Date
-            });
+                HistoryTests = new List<HistoryTestModel>(),
+                HistoryMajor = new List<HistoryMajorModel>()
+            };
         }
 
-        return result;
+        var stTestId = tests.FirstOrDefault(t => t.PersonalTest?.TestType.TypeCode == TestTypeCode.Holland);
+
+
+        var majorSelected = await _context.StudentChoice
+            .Where(s => s.StudentTestId == stTestId.Id )
+            .OrderByDescending(s => s.Rating)
+            .Select(s => new HistoryMajorModel
+            {
+                MajorId = s.MajorOrOccupationId,
+                MajorName = s.MajorOrOccupationName,
+                Rating = s.Rating
+            })
+            .ToListAsync();
+        var result = tests.Select(test => new HistoryTestModel
+        {
+            PersonalTestId = test.Id,
+            PersonalTestName = test.PersonalTest?.Name ?? "N/A",
+            PersonalGroupId = test.PersonalGroupId,
+            PersonalGroupCode = test.PersonalGroup?.Code ?? "N/A",
+            PersonalGroupName = test.PersonalGroup?.Name ?? "N/A",
+            PersonalGroupDescription = test.PersonalGroup?.Description ?? "N/A",
+            Date = test.Date
+        }).ToList();
+
+        return new StudentHistoryModel
+        {
+            HistoryTests = result,
+            HistoryMajor = majorSelected
+        };
     }
+
+    #endregion
+
+    #region Major by personal
+    public async Task<IEnumerable<Major>> GetMajorsByPersonalGroupId(Guid personalGroupId)
+    {
+        var categoryIds = await _context.MajorPersonalMatrix
+                                        .Where(x => x.PersonalGroupId == personalGroupId)
+                                        .Select(x => x.MajorCategoryId)
+                                        .ToListAsync();
+
+        var majorsByCategories = await _context.Major
+                                               .Where(x => categoryIds.Contains(x.MajorCategoryId))
+                                               .GroupBy(x => x.MajorCategoryId)
+                                               .ToListAsync();
+
+        List<Major> majorChoices = new();
+        Random random = new Random();
+        foreach (var majorGroup in majorsByCategories)
+        {
+            var top5Majors = majorGroup.OrderBy(x => random.Next()).Take(5).ToList();
+            majorChoices.AddRange(top5Majors);
+        }
+
+        return (majorChoices);
+    }
+    #endregion
+
+    #region Occupation by major
+    public async Task<IEnumerable<Occupation>> GetOccupationByMajorId(Guid majorId)
+    {
+        //var majorCategory = await _context.Major
+        //    .Where(m => m.Id == majorId)
+        //    .Select(m => m.MajorCategoryId)
+        //    .FirstOrDefaultAsync();
+
+
+        //if (majorCategory == Guid.Empty)
+        //{
+        //    return Enumerable.Empty<Occupation>();
+        //}
+
+        //var occupationGroupIds = await _context.MajorOccupationMatrix
+        //    .Where(o => o.MajorCategoryId == majorCategory)
+        //    .Select(o => o.OccupationalGroupId)
+        //    .ToListAsync();
+
+        //var occupations = await _context.Occupation
+        //    .Where(o => occupationGroupIds.Contains(o.OccupationalGroupId))
+        //    .ToListAsync();
+
+        //var groupedOccupations = occupations.GroupBy(o => o.OccupationalGroupId);
+
+        //List<Occupation> randomOccupations = new List<Occupation>();
+        //Random random = new Random();
+
+
+        //foreach (var group in groupedOccupations)
+        //{
+
+        //    var topOccupations = group.OrderBy(x => random.Next()).Take(5);
+        //    randomOccupations.AddRange(topOccupations);
+        //}
+
+        //return randomOccupations;
+        var occupations = await _context.Major
+                .Where(m => m.Id == majorId)
+                .SelectMany(m => m.MajorCategory.MajorOccupationMatrix)
+                .SelectMany(mo => mo.OccupationalGroup.Occupations)
+                .ToListAsync();
+        return occupations;
+    }
+    #endregion
+
+    #region Create Student Choice, Get top selected 
+    public async Task<List<StudentChoice>> CreateStudentChoice(StudentChoiceModel StModel, StudentChoiceType type)
+    {
+
+        var studentChoices = StModel.models.Select(m => new StudentChoice
+        {
+            StudentTestId = StModel.StudentTestId,
+            MajorOrOccupationId = m.Id,
+            MajorOrOccupationName = m.Name,
+            Rating = m.Rating,
+            Type = type
+        }).ToList();
+
+        await _context.StudentChoice.AddRangeAsync(studentChoices);
+        await _context.SaveChangesAsync();
+
+
+        var maxRating = studentChoices.Max(x => x.Rating);
+
+        var topRatedChoices = studentChoices
+            .Where(x => x.Rating == maxRating)
+            .ToList();
+
+        var majorIds = topRatedChoices.Select(x => x.MajorOrOccupationId).ToList();
+
+
+
+        var groupedMajorsFromDb = await _context.Major
+             .Where(m => majorIds.Contains(m.Id))
+             .GroupBy(m => m.MajorCategoryId)
+             .Select(g => new
+             {
+                 MajorCategoryId = g.Key,
+                 MajorIds = g.Select(m => m.Id).ToList(),
+                 MajorNames = g.Select(m => m.Name).ToList()
+             })
+             .ToListAsync();
+
+
+        var groupedMajors = groupedMajorsFromDb.Select(g => new
+        {
+            MajorCategoryId = g.MajorCategoryId,
+            MajorOrOccupationId = g.MajorIds.First(),
+            MajorOrOccupationName = string.Join(", ", g.MajorNames.Distinct())
+        }).ToList();
+
+
+        var distinctTopRatedChoices = topRatedChoices
+            .Where(x => groupedMajors.Select(g => g.MajorOrOccupationId).Contains(x.MajorOrOccupationId))
+            .GroupBy(x => x.MajorOrOccupationId)
+            .Select(g => new StudentChoice
+            {
+                MajorOrOccupationId = g.Key,
+                MajorOrOccupationName = groupedMajors
+                    .FirstOrDefault(m => m.MajorOrOccupationId == g.Key)?.MajorOrOccupationName ?? string.Empty,
+                StudentTestId = g.First().StudentTestId,
+                Type = g.First().Type
+            })
+            .ToList();
+
+        return distinctTopRatedChoices;
+
+    }
+
+
+    #endregion
+
 
 }
 

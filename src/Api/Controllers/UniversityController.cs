@@ -82,5 +82,58 @@ namespace Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpPost(ApiEndPointConstant.UniversityLocation.UniversityLocationPostEndpoint)]
+        public async Task<IActionResult> CreateUniversityLocationAsync(Guid UniversityId ,List<UniversityLocationModel> postModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var result = await _universityService.CreateUniversityLocationAsync(UniversityId, postModel);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPut(ApiEndPointConstant.UniversityLocation.UniversityLocationPutEndpoint)]
+        public async Task<IActionResult> UpdateUniversityLocationAsync(int id,UniversityLocationPutModel putModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+
+                var result = await _universityService.UpdateUniversityLocationAsync(id,putModel);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpDelete(ApiEndPointConstant.UniversityLocation.UniversityLocationDeleteEndpoint)]
+        public async Task<IActionResult> DeleteUniversityLocationAsync(int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var result = await _universityService.DeleteUniversityLocationAsync(id);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }

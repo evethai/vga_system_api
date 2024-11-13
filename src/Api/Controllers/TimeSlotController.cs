@@ -20,6 +20,14 @@ namespace Api.Controllers
         }
 
         //[CustomAuthorize(RoleEnum.Admin, RoleEnum.Consultant)]
+        [HttpGet(ApiEndPointConstant.TimeSlot.TimeSlotsEndpoint)]
+        public async Task<IActionResult> GetListTimeSlotsWithPaginateAsync(TimeSlotSearchModel searchModel)
+        {
+            var result = await _timeSlotService.GetListTimeSlotsWithPaginateAsync(searchModel);
+            return Ok(result);
+        }
+
+        //[CustomAuthorize(RoleEnum.Admin, RoleEnum.Consultant)]
         [HttpGet(ApiEndPointConstant.TimeSlot.TimeSlotEndpoint)]
         public async Task<IActionResult> GetTimeSlotByIdAsync(int id)
         {
@@ -59,7 +67,7 @@ namespace Api.Controllers
 
         //[CustomAuthorize(RoleEnum.Admin)]
         [HttpPut(ApiEndPointConstant.TimeSlot.TimeSlotsEndpoint)]
-        public async Task<IActionResult> UpdateTimeSlotAsync(TimeSlotPutModel putModel, int timeSlotId)
+        public async Task<IActionResult> UpdateTimeSlotAsync(TimeSlotPutModel putModel, int id)
         {
             if (!ModelState.IsValid)
             {
@@ -67,7 +75,7 @@ namespace Api.Controllers
             }
             try
             {
-                var result = await _timeSlotService.UpdateTimeSlotAsync(putModel, timeSlotId);
+                var result = await _timeSlotService.UpdateTimeSlotAsync(putModel, id);
                 return (result.IsSuccess == false)
                     ? BadRequest(result)
                     : Ok(result);
@@ -94,14 +102,5 @@ namespace Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
-        //[CustomAuthorize(RoleEnum.Admin, RoleEnum.Consultant)]
-        [HttpGet(ApiEndPointConstant.TimeSlot.TimeSlotsEndpoint)]
-        public async Task<IActionResult> GetListTimeSlotsWithPaginateAsync(TimeSlotSearchModel searchModel)
-        {
-            var result = await _timeSlotService.GetListTimeSlotsWithPaginateAsync(searchModel);
-            return Ok(result);
-        }
-
     }
 }

@@ -23,7 +23,6 @@ namespace Infrastructure.Persistence
         private IAccountRepository _accountRepository;
         private IWalletRepository _walletRepository;
         private ITransactionRepository _transactionRepository;
-        private IRoleRepository _roleRepository;
         private ITestTypeRepository _testTypeRepository;
         private IQuestionRepository _questionRepository;
         private IUniversityRepository _universityRepository;
@@ -35,6 +34,15 @@ namespace Infrastructure.Persistence
         private IBookingRepository _bookingRepository;
         private IRefreshTokenRepository _refreshTokenRepository;
         private INotificationRepository _notificationRepository;
+        private IAdmissionInformationRepository _admissionInformationRepository;
+        private INewsRepository _newsRepository;
+        private IEntryLevelEducationRepository _entryLevelEducationRepository;
+        private IMajorCategoryRepository _majorCategoryRepository;
+        private IMajorRepository _majorRepository;
+        private IOccupationalGroupRepository _occupationalGroupRepository;
+        private IOccupationRepository _occupationRepository;
+        private IWorkSkillsRepository _workSkillsRepository;
+        private IAdmissionMethodRepository _admissionMethodRepository;
 
         public UnitOfWork(VgaDbContext context)
         {
@@ -49,7 +57,6 @@ namespace Infrastructure.Persistence
         public IAccountRepository AccountRepository => _accountRepository ??= new AccountRepository(_context);
         public IWalletRepository WalletRepository => _walletRepository ??= new WalletRepository(_context);
         public ITransactionRepository TransactionRepository => _transactionRepository ??= new TransactionRepository(_context);
-        public IRoleRepository RoleRepository => _roleRepository ??= new RoleRepository(_context);
         public ITestTypeRepository TestTypeRepository => _testTypeRepository ??= new TestTypeRepository(_context);
         public IQuestionRepository QuestionRepository => _questionRepository ??= new QuestionRepository(_context);
         public IUniversityRepository UniversityRepository => _universityRepository ??= new UniversityRepository(_context);
@@ -60,8 +67,17 @@ namespace Infrastructure.Persistence
         public IConsultationTimeRepository ConsultationTimeRepository => _consultationTimeRepository ??= new ConsultationTimeRepository(_context);
         public IBookingRepository BookingRepository => _bookingRepository ??= new BookingRepository(_context);
         public IRefreshTokenRepository RefreshTokenRepository => _refreshTokenRepository ??= new RefreshTokenRepository(_context);
-
         public INotificationRepository NotificationRepository => _notificationRepository ??= new NotificationRepository(_context);
+        public INewsRepository NewsRepository => _newsRepository ??= new NewsRepository(_context);
+
+        public IAdmissionInformationRepository AdmissionInformationRepository => _admissionInformationRepository ??= new AdmissionInformationRepository(_context);
+        public IEntryLevelEducationRepository EntryLevelEducationRepository => _entryLevelEducationRepository ??= new EntryLevelEducationRepository(_context);
+        public IMajorCategoryRepository MajorCategoryRepository => _majorCategoryRepository ??= new MajorCategoryRepository(_context);
+        public IMajorRepository MajorRepository => _majorRepository ??= new MajorRepository(_context);
+        public IOccupationalGroupRepository OccupationalGroupRepository => _occupationalGroupRepository ??= new OccupationalGroupRepository(_context);
+        public IOccupationRepository OccupationRepository => _occupationRepository ??= new OccupationRepository(_context);
+        public IWorkSkillsRepository WorkSkillsRepository => _workSkillsRepository ??= new WorkSkillsRepository(_context);
+        public IAdmissionMethodRepository AdmissionMethodRepository => _admissionMethodRepository ??= new AdmissionMethodRepository(_context);
 
         public async Task SaveChangesAsync()
         {

@@ -28,11 +28,31 @@ namespace Infrastructure.Persistence.Repository
             Func<IQueryable<Booking>, IOrderedQueryable<Booking>> orderBy = null;
             if (!string.IsNullOrEmpty(searchModel.consultantName))
             {
-                filter = filter.And(p => p.ConsultationTime.Day.Consultant.Name.Contains(searchModel.consultantName));
+                filter = filter.And(p => p.ConsultationTime.Day.Consultant.Account.Name.Contains(searchModel.consultantName));
             }
             if (!string.IsNullOrEmpty(searchModel.studentName))
             {
-                filter = filter.And(p => p.Student.Name.Contains(searchModel.studentName));
+                filter = filter.And(p => p.Student.Account.Name.Contains(searchModel.studentName));
+            }
+            if (searchModel.studentId.HasValue)
+            {
+                filter = filter.And(p => p.StudentId.Equals(searchModel.studentId.Value));
+            }
+            if (searchModel.consultantId.HasValue)
+            {
+                filter = filter.And(p => p.ConsultationTime.Day.ConsultantId.Equals(searchModel.consultantId.Value));
+            }
+            if (searchModel.Day.HasValue)
+            {
+                filter = filter.And(p => p.ConsultationTime.Day.Day.Equals(searchModel.Day.Value));
+            }
+            if (searchModel.dayInWeek.HasValue)
+            {
+                DateOnly inputDate = searchModel.dayInWeek.Value;
+                DateOnly startOfWeek = inputDate.AddDays(-(int)inputDate.DayOfWeek + (int)DayOfWeek.Monday);
+                DateOnly endOfWeek = startOfWeek.AddDays(6);
+
+                filter = filter.And(cd => cd.ConsultationTime.Day.Day >= startOfWeek && cd.ConsultationTime.Day.Day <= endOfWeek);
             }
             return (filter, orderBy);
         }

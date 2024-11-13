@@ -15,7 +15,6 @@ namespace Application.Interface
         IStudentTestRepository StudentTestRepository { get; }
         IPersonalTestRepository PersonalTestRepository { get; }
         IAccountRepository AccountRepository { get; }
-        IRoleRepository RoleRepository { get; }
         ITestTypeRepository TestTypeRepository { get; }
         IQuestionRepository QuestionRepository { get; }
         IUniversityRepository UniversityRepository { get; }
@@ -29,6 +28,15 @@ namespace Application.Interface
         IBookingRepository BookingRepository { get; }
         IRefreshTokenRepository RefreshTokenRepository { get; }
         INotificationRepository NotificationRepository { get; }
+        IAdmissionInformationRepository AdmissionInformationRepository { get; }
+        INewsRepository NewsRepository { get; }
+        IEntryLevelEducationRepository EntryLevelEducationRepository { get; }
+        IMajorCategoryRepository MajorCategoryRepository { get; }
+        IMajorRepository MajorRepository { get; }
+        IOccupationalGroupRepository OccupationalGroupRepository { get; }
+        IOccupationRepository OccupationRepository { get; }
+        IWorkSkillsRepository WorkSkillsRepository { get; }
+        IAdmissionMethodRepository AdmissionMethodRepository { get; }
         Task SaveChangesAsync();
     }
 }

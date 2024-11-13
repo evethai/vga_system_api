@@ -31,9 +31,9 @@ public class RegionService : IRegionService
         };
     }
 
-    public async Task<RegionModel> GetRegionById(int id)
+    public async Task<RegionModel> GetRegionById(Guid id)
     {
-        var region = await _unitOfWork.RegionRepository.GetByIdAsync(id);
+        var region = await _unitOfWork.RegionRepository.GetByIdGuidAsync(id);
         return _mapper.Map<RegionModel>(region);
     }
 }

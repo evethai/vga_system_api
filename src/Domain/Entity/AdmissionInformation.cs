@@ -14,7 +14,9 @@ namespace Domain.Entity
         public Major Major { get; set; } = null!;
         public Guid AdmissionMethodId { get; set; }
         public AdmissionMethod AdmissionMethod { get; set; } = null!;
-        public double MinimumFees { get; set; }
+        public double TuitionFee { get; set; }
+        public int Year { get; set; }
+        public int QuantityTarget { get; set; }
         public bool Status { get; set; }
     }
 }

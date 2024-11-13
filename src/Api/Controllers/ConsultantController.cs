@@ -19,7 +19,23 @@ namespace Api.Controllers
             _consultantService = consultantService;
         }
 
-        //[CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
+        //[CustomAuthorize(RoleEnum.Admin,RoleEnum.Student,RoleEnum.University)]
+        [HttpGet(ApiEndPointConstant.Consultant.ConsultantsEndpoint)]
+        public async Task<IActionResult> GetListConsultantsWithPaginateAsync(ConsultantSearchModel searchModel)
+        {
+            try
+            {
+                var result = await _consultantService.GetListConsultantsWithPaginateAsync(searchModel);
+                return Ok(result);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        //[CustomAuthorize(RoleEnum.Admin, RoleEnum.Student,RoleEnum.University)]
         [HttpGet(ApiEndPointConstant.Consultant.ConsultantEndpoint)]
         public async Task<IActionResult> GetConsultantByIdAsync(Guid id)
         {
@@ -37,23 +53,7 @@ namespace Api.Controllers
             }
         }
 
-        //[CustomAuthorize(RoleEnum.Admin,RoleEnum.Student)]
-        [HttpGet(ApiEndPointConstant.Consultant.ConsultantsEndpoint)]
-        public async Task<IActionResult> GetListConsultantsWithPaginateAsync(ConsultantSearchModel searchModel)
-        {
-            try
-            {
-                var result = await _consultantService.GetListConsultantsWithPaginateAsync(searchModel);
-                return Ok(result);
-
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        //[CustomAuthorize(RoleEnum.Admin)]
+        //[CustomAuthorize(RoleEnum.Admin),RoleEnum.University]
         [HttpPost(ApiEndPointConstant.Consultant.ConsultantsEndpoint)]
         public async Task<IActionResult> CreateConsultantAsyns(ConsultantPostModel postModel)
         {
@@ -74,7 +74,7 @@ namespace Api.Controllers
             }
         }
 
-        //[CustomAuthorize(RoleEnum.Admin)]
+        //[CustomAuthorize(RoleEnum.Admin,RoleEnum.University)]
         [HttpPut(ApiEndPointConstant.Consultant.ConsultantEndpoint)]
         public async Task<IActionResult> UpdateConsultantAsync(ConsultantPutModel putModel, Guid id)
         {
@@ -95,7 +95,7 @@ namespace Api.Controllers
             }
         }
 
-        //[CustomAuthorize(RoleEnum.Admin)]
+        //[CustomAuthorize(RoleEnum.Admin,RoleEnum.University)]
         [HttpDelete(ApiEndPointConstant.Consultant.ConsultantEndpoint)]
         public async Task<IActionResult> DeleteConsultantAsync(Guid id)
         {

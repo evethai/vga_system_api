@@ -45,7 +45,7 @@ namespace Api.Controllers
 
         }
 
-        [CustomAuthorize(RoleEnum.Admin,RoleEnum.Student)]
+        //[CustomAuthorize(RoleEnum.Admin,RoleEnum.Student)]
         [HttpGet(ApiEndPointConstant.PersonalTest.PersonalTestEndpoint)]
         public async Task<IActionResult> GetPersonalTestById(Guid id)
         {
@@ -64,7 +64,7 @@ namespace Api.Controllers
         }
 
 
-        [CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
+        //[CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
         [HttpGet(ApiEndPointConstant.PersonalTest.PersonalTestsEndpoint)]
         public async Task<IActionResult> GetAllTest()
         {
@@ -78,7 +78,7 @@ namespace Api.Controllers
                 return BadRequest(e.Message);
             }
         }
-        [CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
+        //[CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
         [HttpGet(ApiEndPointConstant.PersonalTest.GetHistoryUserTestEndpoint)]
         public async Task<IActionResult> GetHistoryTestByStudentId(Guid id)
         {
@@ -96,5 +96,35 @@ namespace Api.Controllers
                 return BadRequest(e.Message);
             }
         }
+
+        [HttpGet(ApiEndPointConstant.PersonalTest.GetMajorsByPersonalGroupIdEndpoint)]
+        public async Task<IActionResult> GetMajorAndOccupationByPersonalGroupId(Guid id)
+        {
+            try
+            {
+                var response = await _studentTestService.GetMajorsByPersonalGroupId(id);
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPost(ApiEndPointConstant.PersonalTest.FilterMajorAndUniversityEndpoint)]
+        public async Task<IActionResult> FilterMajorAndUniversity(FilterMajorAndUniversityModel model)
+        {
+            try
+            {
+                var response = await _studentTestService.FilterMajorAndUniversity(model);
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+
     }
 }

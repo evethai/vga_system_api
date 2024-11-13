@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.Enum;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Domain.Model.Consultant
@@ -17,5 +18,10 @@ namespace Domain.Model.Consultant
         public string? name { get; set; }
         [FromQuery(Name = "consultant-level-id")]
         public int consultantLevelId { get; set; }
+        [FromQuery(Name = "university-id")]
+        public Guid? universityId { get; set; }
+
+        [FromQuery(Name = "status")]
+        public AccountStatus? status { get; set; }
     }
 }

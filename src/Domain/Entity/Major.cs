@@ -13,12 +13,10 @@ namespace Domain.Entity
         public string Code { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
+        public string AdmissionGroup { get; set;} = string.Empty;
         public bool Status { get; set; }
-        public Guid OccupationalGroupId { get; set; }
-        public virtual OccupationalGroup OccupationalGroup { get; set; } = null!;
         public Guid MajorCategoryId { get; set; }
         public virtual MajorCategory MajorCategory { get; set; } = null!;
-        public virtual ICollection<MajorType> MajorTypes { get; set; } = null!;
         public virtual ICollection<AdmissionInformation> AdmissionInformation { get; set; } = null!;
 
     }

@@ -8,7 +8,7 @@ namespace Domain.Model.ConsultationTime
 {
     public class ConsultationTimeViewModel
     {
-        public Guid Id;
+        public Guid Id { get; set; }
         public int TimeSlotId { get; set; }
         public TimeOnly StartTime { get; set; }
         public TimeOnly EndTime { get; set; }

@@ -43,7 +43,7 @@ namespace Api.Controllers
             var result = await _accountService.LoginByZalo(loginZaloRequest);
             if(result == null)
             {
-                return NotFound();
+                return Unauthorized();
             }
             return Ok(result);
         }
@@ -59,7 +59,7 @@ namespace Api.Controllers
             var result = await _accountService.CreateRefreshToken(refreshTokenRequest);
             if (result == null)
             {
-                return NotFound();
+                return Unauthorized();
             }
             return Ok(result);
         }
@@ -70,6 +70,18 @@ namespace Api.Controllers
         public async Task<IActionResult> Logout(Guid id)
         {
             var result = await _accountService.Logout(id);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+        }
+
+        [HttpPut(ApiEndPointConstant.Account.AccountEndpoint)]
+        //[CustomAuthorize(RoleEnum.Admin)]
+        public async Task<IActionResult> UpdateStatusAccount(Guid id, AccountStatus status)
+        {
+            var result = await _accountService.UpdateStatusAccount(id, status);
             if (result == null)
             {
                 return NotFound();

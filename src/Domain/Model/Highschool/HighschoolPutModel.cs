@@ -9,10 +9,7 @@ using Domain.Model.Account;
 namespace Domain.Model.Highschool;
 public class HighschoolPutModel : AccountPostModel
 {
-    [Required(ErrorMessage = "Name is required.")]
-    public string Name { get; set; }
-    [Required(ErrorMessage = "LocationDetail is required.")]
-    public string LocationDetail { get; set; }
-    [Required(ErrorMessage = "RegionId is required.")]
+    [Required(ErrorMessage = "Address is required.")]
+    public string Address { get; set; }
     public Guid RegionId { get; set; }
 }

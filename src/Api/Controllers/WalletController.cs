@@ -30,13 +30,13 @@ namespace Api.Controllers
         }
 
         [HttpGet(ApiEndPointConstant.Wallet.WalletEndpoint)]
-        public async Task<IActionResult> GetWalletByIdAsync(Guid id)
+        public async Task<IActionResult> GetWalletByIdAsync(Guid AcccountId)
         {
-            var result = await _walletService.GetWalletByIdAsync(id);
+            var result = await _walletService.GetWalletByIdAsync(AcccountId);
             return Ok(result);
         }
-        [HttpPut(ApiEndPointConstant.Wallet.WalletBook)]
-        public async Task<IActionResult> UpdateWalletUsingGoldBookConsultantAsync([FromForm] WalletPutModel putModel, int GoldBookConsultant)
+        [HttpPut(ApiEndPointConstant.Wallet.WalletTransferringAndReceiving)]
+        public async Task<IActionResult> UpdateWalletUsingGoldBookConsultantAsync([FromForm] WalletPutModel putModel, int gold)
         {
             if (!ModelState.IsValid)
             {
@@ -44,7 +44,7 @@ namespace Api.Controllers
             }
             try
             {
-                var result = await _walletService.UpdateWalletUsingGoldBookConsultantAsync(putModel, GoldBookConsultant);
+                var result = await _walletService.UpdateWalletByTransferringAndReceivingAsync(putModel, gold);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -70,7 +70,7 @@ namespace Api.Controllers
             }
         }
         [HttpPut(ApiEndPointConstant.Wallet.WalletTest)]
-        public async Task<IActionResult> UpdateWalletUsingByTestAsync(Guid WalletStudentId, int goldUsingTest)
+        public async Task<IActionResult> UpdateWalletUsingByTestAsync(Guid AccountId, int goldUsingTest)
         {
             if (!ModelState.IsValid)
             {
@@ -78,7 +78,7 @@ namespace Api.Controllers
             }
             try
             {
-                var result = await _walletService.UpdateWalletUsingByTestAsync(WalletStudentId, goldUsingTest);
+                var result = await _walletService.UpdateWalletUsingByTestAsync(AccountId, goldUsingTest);
                 return Ok(result);
             }
             catch (Exception ex)

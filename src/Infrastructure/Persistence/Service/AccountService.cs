@@ -31,11 +31,11 @@ namespace Infrastructure.Persistence.Service
             x.Password.Equals(PasswordUtil.HashPassword(loginRequest.Password));
 
             Account account = await _unitOfWork.AccountRepository
-                .SingleOrDefaultAsync(predicate: searchFilter, include: x => x.Include(x => x.Role));
+                .SingleOrDefaultAsync(predicate: searchFilter);
 
-            if (account == null) return null;
+            if (account == null || account.Status == AccountStatus.Blocked) return null;
 
-            RoleEnum role = EnumUtil.ParseEnum<RoleEnum>(account.Role.Name);
+            RoleEnum role = account.Role;
 
             return await BuildLoginResponse(account, role);
         }
@@ -45,12 +45,12 @@ namespace Infrastructure.Persistence.Service
         public async Task<LoginResponseModel> LoginByZalo(ZaloLoginModel model)
         {
             Account account = await _unitOfWork.AccountRepository
-                .SingleOrDefaultAsync(predicate: x => x.ZaloId.Equals(model.ZaloId), include: x => x.Include(x => x.Role));
+                .SingleOrDefaultAsync(predicate: x => x.ZaloId.Equals(model.ZaloId));
 
-            if (account != null)
+            if (account != null && account.Status == AccountStatus.Active)
             {
                 // 1. If ZaloId exists, return login response
-                RoleEnum role = EnumUtil.ParseEnum<RoleEnum>(account.Role.Name);
+                RoleEnum role = account.Role;
                 return await BuildLoginResponse(account, role);
             }
 
@@ -58,9 +58,9 @@ namespace Infrastructure.Persistence.Service
             if (!string.IsNullOrEmpty(model.Phone))
             {
                 account = await _unitOfWork.AccountRepository
-                    .SingleOrDefaultAsync(predicate: x => x.Phone.Equals(model.Phone), include: x => x.Include(x => x.Role));
+                    .SingleOrDefaultAsync(predicate: x => x.Phone.Equals(model.Phone));
 
-                if (account != null)
+                if (account != null && account.Status == AccountStatus.Active)
                 {
 
                     // If account with phone exists, update ZaloId, image
@@ -69,7 +69,7 @@ namespace Infrastructure.Persistence.Service
                     await _unitOfWork.AccountRepository.UpdateAsync(account);
                     await _unitOfWork.SaveChangesAsync();
 
-                    RoleEnum role = EnumUtil.ParseEnum<RoleEnum>(account.Role.Name);
+                    RoleEnum role = account.Role;
                     return await BuildLoginResponse(account, role);
                 }
             }
@@ -165,8 +165,7 @@ namespace Infrastructure.Persistence.Service
 
 
             var account = await _unitOfWork.AccountRepository
-                .SingleOrDefaultAsync(predicate: x => x.Id == model.AccountId,
-                                      include: x => x.Include(x => x.Role));
+                .SingleOrDefaultAsync(predicate: x => x.Id == model.AccountId);
 
             if (account == null)
             {
@@ -177,7 +176,7 @@ namespace Infrastructure.Persistence.Service
                 };
             }
 
-            RoleEnum role = EnumUtil.ParseEnum<RoleEnum>(account.Role.Name);
+            RoleEnum role = account.Role;
             var responseModel = await BuildLoginResponse(account, role);
 
             return new ResponseModel
@@ -201,41 +200,35 @@ namespace Infrastructure.Persistence.Service
                 case RoleEnum.Student:
                     Guid studentId = await _unitOfWork.StudentRepository
                         .SingleOrDefaultAsync(selector: x => x.Id, predicate: x => x.AccountId.Equals(account.Id));
-                    name = await _unitOfWork.StudentRepository
-                        .SingleOrDefaultAsync(selector: x => x.Name, predicate: x => x.AccountId.Equals(account.Id));
                     guidClaim = new Tuple<string, Guid>("StudentId", studentId);
-                    loginResponseModel = new StudentAccountResponseModel(role,name,studentId);
+                    loginResponseModel = new StudentAccountResponseModel(role,studentId);
                     break;
 
                 case RoleEnum.Consultant:
                     Guid careerExpertId = await _unitOfWork.ConsultantRepository
                         .SingleOrDefaultAsync(selector: x => x.Id, predicate: x => x.AccountId.Equals(account.Id));
-                    name = await _unitOfWork.ConsultantRepository
-                        .SingleOrDefaultAsync(selector: x => x.Name, predicate: x => x.AccountId.Equals(account.Id));
                     guidClaim = new Tuple<string, Guid>("CareerExpertId", careerExpertId);
-                    loginResponseModel = new CareerExpertAccountResponseModel(role,name,careerExpertId);
+                    loginResponseModel = new CareerExpertAccountResponseModel(role,careerExpertId);
                     break;
 
                 case RoleEnum.HighSchool:
                     Guid highSchoolId = await _unitOfWork.HighschoolRepository
                         .SingleOrDefaultAsync(selector: x => x.Id, predicate: x => x.AccountId.Equals(account.Id));
-                    name = await _unitOfWork.HighschoolRepository
-                        .SingleOrDefaultAsync(selector: x => x.Name, predicate: x => x.AccountId.Equals(account.Id));
                     guidClaim = new Tuple<string, Guid>("HighSchoolId", highSchoolId);
-                    loginResponseModel = new HighSchoolAccountResponseModel(role, name, highSchoolId);
+                    loginResponseModel = new HighSchoolAccountResponseModel(role, highSchoolId);
                     break;
 
                 case RoleEnum.University:
                     Guid universityId = await _unitOfWork.UniversityRepository
                         .SingleOrDefaultAsync(selector: x => x.Id, predicate: x => x.AccountId.Equals(account.Id));
-                    name = await _unitOfWork.UniversityRepository
-                        .SingleOrDefaultAsync(selector: x => x.Name, predicate: x => x.AccountId.Equals(account.Id));
+                    //name = await _unitOfWork.UniversityRepository
+                    //    .SingleOrDefaultAsync(selector: x => x.Name, predicate: x => x.AccountId.Equals(account.Id));
                     guidClaim = new Tuple<string, Guid>("UniversityId", universityId);
-                    loginResponseModel = new UniversityAccountResponseModel(role, name, universityId);
+                    loginResponseModel = new UniversityAccountResponseModel(role, universityId);
                     break;
 
                 default:
-                    loginResponseModel = new LoginResponseModel(role,account.Role.Name);
+                    loginResponseModel = new LoginResponseModel(role);
                     break;
             }
 
@@ -289,8 +282,39 @@ namespace Infrastructure.Persistence.Service
             return Convert.ToBase64String(randomNumber);
         }
 
-
-
+        #region update status account
+        public async Task<ResponseModel> UpdateStatusAccount(Guid accountId, AccountStatus status)
+        {
+            try
+            {
+                var account = await _unitOfWork.AccountRepository.SingleOrDefaultAsync(predicate: x => x.Id == accountId);
+                if (account == null)
+                {
+                    return new ResponseModel
+                    {
+                        IsSuccess = false,
+                        Message = "Account not found"
+                    };
+                }
+                account.Status = status;
+                await _unitOfWork.AccountRepository.UpdateAsync(account);
+                await _unitOfWork.SaveChangesAsync();
+                return new ResponseModel
+                {
+                    IsSuccess = true,
+                    Message = "Update status account success"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    IsSuccess = false,
+                    Message = "An error occurred while updating status account"
+                };
+            }
+        }
+        #endregion
 
     }
 }

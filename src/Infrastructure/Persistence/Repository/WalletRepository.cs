@@ -42,6 +42,5 @@ namespace Infrastructure.Persistence.Repository
             }).ToList();
             return responseWallets;
         }
-        
     }
 }
