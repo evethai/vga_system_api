@@ -82,7 +82,7 @@
             public const string WalletEndpoint = ApiEndpoint + "/wallet/{id}";
             public const string WalletDistribution = ApiEndpoint + "/wallet/distribution";
             public const string WalletTest = ApiEndpoint + "/wallet/do-the-test";
-            public const string WalletBook = ApiEndpoint + "/wallet/book-conslutant";
+            public const string WalletTransferringAndReceiving = ApiEndpoint + "/wallet/tranferring-gold";
         }
         //Transaction
         public static class Transaction
