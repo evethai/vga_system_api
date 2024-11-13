@@ -15,7 +15,7 @@ namespace Application.Interface.Service
     public interface IWalletService
     {       
         Task<Wallet> GetWalletByIdAsync(Guid Id);       
-        Task<ResponseModel> UpdateWalletUsingGoldBookConsultantAsync(WalletPutModel putModel, int goldTransaction);
+        Task<ResponseModel> UpdateWalletByTransferringAndReceivingAsync(WalletPutModel putModel, int goldTransaction);
         Task<ResponseWalletModel> GetAllWallet();
         Task<ResponseModel> UpdateWalletUsingGoldDistributionAsync(Guid WalletHigchoolId, int goldTransaction);
         Task<ResponseModel> UpdateWalletUsingByTestAsync(Guid accountId, int goldUsingTest);

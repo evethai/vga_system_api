@@ -9,6 +9,7 @@ using Application.Interface;
 using Application.Interface.Repository;
 using Domain.Entity;
 using Domain.Enum;
+using Domain.Model.Response;
 using Domain.Model.Transaction;
 using Domain.Model.Wallet;
 using Infrastructure.Data;
@@ -60,11 +61,12 @@ namespace Infrastructure.Persistence.Repository
         }
 
         public async Task<Transaction> CreateTransactionWhenUsingGold(TransactionType transactionType, TransactionPostModel transactionModel)
-        {
+        {         
             if (transactionModel == null)
             {
                 throw new KeyNotFoundException("Null data");
             }
+            var AcccountName = _context.Account.Where(s => s.Wallet.Id.Equals(transactionModel.WalletId)).FirstOrDefault() ?? throw new Exception("Null Account");
             Transaction transaction = null;
             switch (transactionType)
             {
@@ -74,7 +76,7 @@ namespace Infrastructure.Persistence.Repository
                         Id = Guid.NewGuid(),
                         WalletId = transactionModel.WalletId,
                         TransactionType = transactionType,
-                        Description = "Bạn đã chuyển " + transactionModel.GoldAmount + " Gold",
+                        Description = "Bạn đã chuyển " + transactionModel.GoldAmount + " Gold by " + AcccountName.Name,
                         GoldAmount = transactionModel.GoldAmount,
                         TransactionDateTime = DateTime.UtcNow,
                     };
@@ -85,7 +87,7 @@ namespace Infrastructure.Persistence.Repository
                         Id = Guid.NewGuid(),
                         WalletId = transactionModel.WalletId,
                         TransactionType = transactionType,
-                        Description = "Bạn đã nhận " + transactionModel.GoldAmount + " Gold",
+                        Description = "Bạn đã nhận " + transactionModel.GoldAmount + " Gold by " + AcccountName.Name,
                         GoldAmount = transactionModel.GoldAmount,
                         TransactionDateTime = DateTime.UtcNow,
                     };
@@ -101,10 +103,21 @@ namespace Infrastructure.Persistence.Repository
                         TransactionDateTime = DateTime.UtcNow,
                     };
                     break;
+                case TransactionType.Request:
+                    transaction = new Transaction
+                    {
+                        Id = Guid.NewGuid(),
+                        WalletId = transactionModel.WalletId,
+                        TransactionType = transactionType,
+                        Description = "Bạn yêu cầu rút " + transactionModel.GoldAmount + " Gold",
+                        GoldAmount = transactionModel.GoldAmount,
+                        TransactionDateTime = DateTime.UtcNow,
+                    };
+                    break;
                 default:
                     break;
             }
-            var result = await _context.Transaction.AddAsync(transaction);
+            await _context.Transaction.AddAsync(transaction);
             _context.SaveChanges();
             return transaction;
         }
@@ -127,6 +140,72 @@ namespace Infrastructure.Persistence.Repository
             _context.Wallet.Update(exitWallet);
             _context.SaveChanges();
             return true;
+        }
+        public async Task<ResponseModel> UpdateWalletByTransferringAndReceivingAsync(WalletPutModel putModel, int gold)
+        {
+            var walletTransferring = _context.Wallet.Where(s=>s.Id.Equals(putModel.wallet_id_tranferring)).FirstOrDefault();
+            var walletReceiving = _context.Wallet.Where(s=>s.Id.Equals(putModel.wallet_id_tranferring)).FirstOrDefault();         
+            if (walletTransferring == null || walletReceiving == null)
+            {
+                throw new InvalidOperationException("Wallet Id Tranffering or Receiving is not found");
+            }
+            var RoleTransferring = _context.Account.Where(s => s.Id.Equals(walletTransferring.AccountId)).FirstOrDefault() ?? throw new Exception("Not found Account");
+            if(RoleTransferring.Role == RoleEnum.Admin)
+            {
+                TransactionPostModel transaction_Transferring =
+               new TransactionPostModel(walletTransferring.Id, gold);
+                await CreateTransactionWhenUsingGold(TransactionType.Transferring, transaction_Transferring);
+
+                walletReceiving.GoldBalance = walletReceiving.GoldBalance + gold;
+                TransactionPostModel transaction_Receiving =
+                  new TransactionPostModel(walletReceiving.Id, gold);
+                await CreateTransactionWhenUsingGold(TransactionType.Receiving, transaction_Receiving);
+                _context.Wallet.Update(walletReceiving);
+                _context.SaveChanges();
+                return new ResponseModel
+                {
+                    Message = "Admin transferring is Successfully",
+                    IsSuccess = true,
+                    Data = transaction_Receiving,
+                };
+            }else
+            {
+                if(walletTransferring.GoldBalance < gold)
+                {
+                    throw new Exception("Not enought gold to transferring");
+                }
+                walletTransferring.GoldBalance -= gold;
+                TransactionPostModel transaction_Transferring =
+                new TransactionPostModel(walletTransferring.Id, gold);
+                await CreateTransactionWhenUsingGold(TransactionType.Transferring, transaction_Transferring);
+                _context.Wallet.Update(walletTransferring);
+                //-------------------------------------------
+                walletReceiving.GoldBalance += gold;
+                TransactionPostModel transaction_Receiving =
+                  new TransactionPostModel(walletReceiving.Id, gold);
+                await CreateTransactionWhenUsingGold(TransactionType.Receiving, transaction_Receiving);
+                _context.Wallet.Update(walletReceiving);
+                _context.SaveChanges();
+                return new ResponseModel
+                {
+                    Message = "Update wallet is Successfully",
+                    IsSuccess = true,
+                    Data = transaction_Receiving,
+                };
+            }           
+        }
+        public async Task<ResponseModel> CreateTransactionRequest(Guid WalletId, int gold)
+        {
+            var exitWallet = _context.Wallet.Where(s=>s.Id.Equals(WalletId)).FirstOrDefault() ?? throw new Exception("Wallet is not found");
+            TransactionPostModel transaction_request =
+                 new TransactionPostModel(exitWallet.Id, gold);
+            await CreateTransactionWhenUsingGold(TransactionType.Request, transaction_request);
+            return new ResponseModel
+            {
+                Message = "Create Request Transaction is Successfully",
+                IsSuccess = true,
+                Data = transaction_request,
+            };
         }
     }
 }
