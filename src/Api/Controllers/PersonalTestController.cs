@@ -15,16 +15,16 @@ namespace Api.Controllers
     public class PersonalTestController : ControllerBase
     {
         private readonly IStudentTestService _studentTestService;
-        private readonly ICacheService _cacheService;
+        //private readonly ICacheService _cacheService;
 
-        public PersonalTestController(IStudentTestService studentTestService, ICacheService cacheService)
+        public PersonalTestController(IStudentTestService studentTestService)
         {
             _studentTestService = studentTestService;
-            _cacheService = cacheService;
+            //_cacheService = cacheService;
         }
 
         [HttpPost(ApiEndPointConstant.PersonalTest.GetResultPersonalTestEndpoint)]
-        public async Task<IActionResult> CreateResultMBTITest(StudentTestResultModel result)
+        public async Task<IActionResult> CreateResultTest(StudentTestResultModel result)
         {
 
             try
@@ -46,20 +46,20 @@ namespace Api.Controllers
             try
             {
 
-                var cacheKey = RedisConstants.PersonalTestId + id;
-                var cacheResponse = await _cacheService.GetCacheResponseAsync<string>(cacheKey);
+                //var cacheKey = RedisConstants.PersonalTestId + id;
+                //var cacheResponse = await _cacheService.GetCacheResponseAsync<string>(cacheKey);
                 var response = new PersonalTestModel();
-                if (cacheResponse != null)
-                {
-                    response = JsonConvert.DeserializeObject<PersonalTestModel>(cacheResponse);
-                    return Ok(response);
-                }
-                else
-                {
+                //if (cacheResponse != null)
+                //{
+                //    response = JsonConvert.DeserializeObject<PersonalTestModel>(cacheResponse);
+                //    return Ok(response);
+                //}
+                //else
+                //{
                     response = await _studentTestService.GetTestById(id);
-                    await _cacheService.SetCacheResponseAsync(cacheKey, response, TimeSpan.FromMinutes(16));
+                //    await _cacheService.SetCacheResponseAsync(cacheKey, response, TimeSpan.FromMinutes(16));
                     return Ok(response);
-                }
+                //}
 
             }catch (Exception e)
             {
