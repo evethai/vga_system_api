@@ -76,9 +76,9 @@ namespace Infrastructure.Persistence.Service
                 var consultant = _mapper.Map<Consultant>(postModel);
 
                 RegisterAccountModel accountModel = new RegisterAccountModel(
-                    postModel.Name, 
-                    postModel.Email, 
-                    postModel.Password, 
+                    postModel.Name,
+                    postModel.Email,
+                    postModel.Password,
                     postModel.Phone);
                 var accountId = await _unitOfWork.AccountRepository.CreateAccountAndWallet(accountModel, RoleEnum.Consultant);
 
@@ -197,6 +197,33 @@ namespace Infrastructure.Persistence.Service
                 currentPage = searchModel.currentPage,
                 consultants = listConsultants,
             };
+        }
+        #endregion
+
+        #region Create withdraw
+        public async Task<ResponseModel> CreateWithdraw(Guid consultantId)
+        {
+            try
+            {
+                var consultant = await _unitOfWork.ConsultantRepository.SingleOrDefaultAsync(
+                        predicate: o => o.Id.Equals(consultantId),
+                        include: q => q.Include(c => c.Account).ThenInclude(a => a.Wallet)
+                    ) ?? throw new NotExistsException();
+
+                return new ResponseModel
+                {
+                    Message = $"Yêu cầu rút tiền đã được tạo thành công",
+                    IsSuccess = true,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    IsSuccess = false,
+                    Message = $"An error occurred while create withdraw: {ex.Message}"
+                };
+            }
         }
         #endregion
     }

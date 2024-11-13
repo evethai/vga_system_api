@@ -15,5 +15,6 @@ namespace Application.Interface.Service
         Task<ResponseModel> UpdateConsultantAsync(Guid consultantId, ConsultantPutModel putModel);
         Task<ResponseModel> DeleteConsultantAsync(Guid consultantId);
         Task<ResponseConsultantModel> GetListConsultantsWithPaginateAsync(ConsultantSearchModel searchModel);
+        Task<ResponseModel> CreateWithdraw(Guid consultantId);
     }
 }
