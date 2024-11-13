@@ -11,4 +11,5 @@ public class HighschoolPutModel : AccountPostModel
 {
     [Required(ErrorMessage = "Address is required.")]
     public string Address { get; set; }
+    public Guid RegionId { get; set; }
 }

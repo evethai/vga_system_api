@@ -19,13 +19,13 @@ jobs:
           dotnet-version: '8.x'
 
       - name: Restore dependencies
-        run: dotnet restore ./src/vga_system_api.sln
+        run: dotnet restore ./src/Api/Api.csproj
 
       - name: Build with dotnet
-        run: dotnet build ./src/vga_system_api.sln --configuration Release
+        run: dotnet build ./src/Api/Api.csproj --configuration Release
 
       - name: Publish with dotnet
-        run: dotnet publish ./src/vga_system_api.sln -c Release -o ${{ github.workspace }}/publish
+        run: dotnet publish ./src/Api/Api.csproj -c Release -o ${{ github.workspace }}/publish
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
