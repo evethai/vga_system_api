@@ -14,10 +14,10 @@ namespace Application.Interface.Service
 {
     public interface IWalletService
     {       
-        Task<Wallet> GetWalletByIdAsync(Guid Id);       
+        Task<WalletModel> GetWalletByIdAsync(Guid Id);       
         Task<ResponseModel> UpdateWalletByTransferringAndReceivingAsync(WalletPutModel putModel, int goldTransaction);
         Task<ResponseWalletModel> GetAllWallet();
-        Task<ResponseModel> UpdateWalletUsingGoldDistributionAsync(Guid WalletHigchoolId, int goldTransaction);
-        Task<ResponseModel> UpdateWalletUsingByTestAsync(Guid accountId, int goldUsingTest);
+        Task<ResponseModel> UpdateWalletUsingGoldDistributionAsync(Guid WalletHigchoolId, int goldTransaction, int Years);
+        Task<ResponseModel> UpdateWalletUsingByTestAsync(Guid WalletStudentId, int goldUsingTest);       
     }
 }
