@@ -30,9 +30,9 @@ namespace Api.Controllers
         }
 
         [HttpGet(ApiEndPointConstant.Wallet.WalletEndpoint)]
-        public async Task<IActionResult> GetWalletByIdAsync(Guid AccountId)
+        public async Task<IActionResult> GetWalletByIdAsync(Guid id)
         {
-            var result = await _walletService.GetWalletByIdAsync(AccountId);
+            var result = await _walletService.GetWalletByIdAsync(id);
             return Ok(result);
         }
         [HttpPut(ApiEndPointConstant.Wallet.WalletTransferringAndReceiving)]

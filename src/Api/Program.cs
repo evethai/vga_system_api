@@ -22,14 +22,7 @@ builder.Services.AddSignalR(options =>
 {
     options.EnableDetailedErrors = true;
 });
-builder.Services.AddSingleton<UserConnectionManager>();
-builder.Services.AddSingleton(x =>
-    new PayOSService(
-        builder.Configuration["payOS:clientId"],
-        builder.Configuration["payOS:apiKey"],
-        builder.Configuration["payOS:checksumKey"]
-    )
-);
+
 var app = builder.Build();
 
 //Configure the HTTP request pipeline.

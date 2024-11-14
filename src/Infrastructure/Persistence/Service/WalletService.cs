@@ -94,7 +94,23 @@ namespace Infrastructure.Persistence.Service
         }
         public async Task<ResponseModel> UpdateWalletUsingByTestAsync(Guid AccountId, int goldUsingTest)
         {
+            if(goldUsingTest <= 0)
+            {
+                return new ResponseModel
+                {
+                    IsSuccess = true,
+                    Message = "This free.",
+                };
+            }
+
             var TransactionInfor =  await _unitOfWork.TransactionRepository.UpdateWalletUsingByTestAsync(AccountId, goldUsingTest);
+            if(TransactionInfor == false)
+            {
+                return new ResponseModel
+                {
+                    IsSuccess = false
+                };
+            }
             return new ResponseModel
             {
                 Message = "Wallet using by test Successfully",

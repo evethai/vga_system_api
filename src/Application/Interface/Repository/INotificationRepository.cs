@@ -10,6 +10,6 @@ namespace Application.Interface.Repository
 {
     public interface INotificationRepository : IGenericRepository<Notification>
     {
-        Task CreateNotification(NotificationPostModel model);
+        Task<Notification> CreateNotification(NotificationPostModel model);
     }
 }

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Application.Common.Extensions;
 using Application.Interface.Repository;
 using Domain.Entity;
+using Domain.Model.Major;
 using Domain.Model.University;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -110,14 +111,20 @@ namespace Infrastructure.Persistence.Repository
             return Task.FromResult(true);
         }
 
-        public async Task<IEnumerable<University>> GetListUniversityByMajorId(Guid majorId)
+        public async Task<IEnumerable<UniversityByMajorIdModel>> GetListUniversityByMajorId(Guid majorId)
         {
             var universities = await _context.Major
                 .Where(m => m.Id == majorId)
                 .SelectMany(m => m.AdmissionInformation)
-                .Select(ai => ai.University)
+                .Select(ai => new UniversityByMajorIdModel
+                {
+                    Id = ai.UniversityId,
+                    Name = ai.University.Account.Name
+                }
+                )
                 .Distinct()
                 .ToListAsync();
+
 
             return universities;
         }

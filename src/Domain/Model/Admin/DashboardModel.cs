@@ -8,6 +8,7 @@ namespace Domain.Model.Admin
 {
     public  class DashboardModel
     {
+        public int NumberAccount { get; set; }
         public int TotalStudents { get; set; }
         public int TotalHighSchools { get; set; }
         public int TotalUniversities { get; set; }
