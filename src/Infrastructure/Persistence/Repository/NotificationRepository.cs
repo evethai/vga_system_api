@@ -18,7 +18,7 @@ namespace Infrastructure.Persistence.Repository
             _context = context;
         }
 
-        public async Task CreateNotification(NotificationPostModel model)
+        public async Task<Notification> CreateNotification(NotificationPostModel model)
         {
             Notification notification = new Notification
             {
@@ -28,8 +28,10 @@ namespace Infrastructure.Persistence.Repository
                 CreatedAt = DateTime.UtcNow,
                 Status = Domain.Enum.NotiStatus.Unread
             };
+
             await AddAsync(notification);
             await _context.SaveChangesAsync();
+            return notification; 
         }
     }
 }

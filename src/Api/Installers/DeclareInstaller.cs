@@ -5,6 +5,8 @@ using Infrastructure.Persistence.Repository;
 using Infrastructure.Persistence;
 using Application.Interface.Service;
 using Infrastructure.Persistence.Service;
+using Application.Common.Hubs;
+using Application.Library;
 
 namespace Api.Installers
 {
@@ -48,6 +50,17 @@ namespace Api.Installers
             services.AddScoped<IAdmissionInformationService, AdmissionInformationService>();
             services.AddScoped<IAdmissionMethodService, AdmissionMethodService>();
 
+            //declare hub
+            services.AddSingleton<UserConnectionManager>();
+
+            //declare payOS
+            services.AddSingleton(x =>
+                new PayOSService(
+                    configuration["payOS:clientId"],
+                    configuration["payOS:apiKey"],
+                    configuration["payOS:checksumKey"]
+                )
+            );
         }
     }
 }

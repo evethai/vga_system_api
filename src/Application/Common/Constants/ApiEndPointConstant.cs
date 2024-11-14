@@ -80,14 +80,16 @@
         {
             public const string WalletsEndpoint = ApiEndpoint + "/wallet";
             public const string WalletEndpoint = ApiEndpoint + "/wallet/{id}";
-            public const string WalletDistribution = ApiEndpoint + "/wallet/distribution";
+            public const string WalletDistributionEndpoint = ApiEndpoint + "/wallet/distribution";
             public const string WalletTest = ApiEndpoint + "/wallet/do-the-test";
-            public const string WalletBook = ApiEndpoint + "/wallet/book-conslutant";
+            public const string WalletTransferringAndReceiving = ApiEndpoint + "/wallet/tranferring-gold";
         }
         //Transaction
         public static class Transaction
         {
             public const string TransactionEndPoint = ApiEndpoint + "/transactions";
+            public const string TransactionWithdrawRequest = ApiEndpoint + "/transaction/withdraw/{id}";
+            public const string TransactionProcessRequest = ApiEndpoint + "/transaction/process/{id}";
         }
 
         //consultant

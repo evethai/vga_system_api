@@ -21,5 +21,6 @@ namespace Api.Controllers
             var result = await _adminService.GetDashboard();
             return Ok(result);
         }
+
     }
 }

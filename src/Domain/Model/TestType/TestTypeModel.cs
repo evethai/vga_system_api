@@ -13,6 +13,7 @@ namespace Domain.Model.TestType
         public TestTypeCode TypeCode { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
+        public int Point { get; set; }
         public bool Status { get; set; }
         public DateTime CreateAt { get; set; }
     }

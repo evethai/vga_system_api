@@ -22,14 +22,14 @@ namespace Infrastructure.Persistence.Repository
         {
             _context = context;
         }
-        public async Task<List<WalletModel>> GetInforStudentHasWalletReceiving(Guid id)
+        public async Task<List<WalletModel>> GetInforStudentHasWalletReceiving(Guid id , int years)
         {
 
             var idHighschool = _context.HighSchool
                 .Where(a => a.AccountId.Equals(id))
-                .FirstOrDefault(); 
+                .FirstOrDefault() ?? throw new Exception("Not found Highschool Id"); 
             var listStudent = await _context.Student
-                .Where(a => a.HighSchoolId.Equals(idHighschool.Id)).AsNoTracking()        
+                .Where(a => a.HighSchoolId.Equals(idHighschool.Id) && a.SchoolYears.Equals(years)).AsNoTracking()
                 .ToListAsync();            
             var wallets = await _context.Wallet
                 .Where(w => listStudent.Select(s => s.AccountId).Contains(w.AccountId)).AsNoTracking()
@@ -42,6 +42,5 @@ namespace Infrastructure.Persistence.Repository
             }).ToList();
             return responseWallets;
         }
-        
     }
 }
