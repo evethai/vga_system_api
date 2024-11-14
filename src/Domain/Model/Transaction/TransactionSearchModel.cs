@@ -23,8 +23,8 @@ namespace Domain.Model.Transaction
         [FromQuery(Name = "transaction-date-time")]
         public DateTime? transaction_date_time { get; set; }
         
-        [FromQuery(Name = "wallet-id")]
-        public Guid? wallet_id { get; set; }
+        [FromQuery(Name = "account_id")]
+        public Guid? account_id { get; set; }
 
         [FromQuery(Name = "transaction-type")]
         public TransactionType? transaction_type { get; set; }

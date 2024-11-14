@@ -34,10 +34,10 @@ namespace Infrastructure.Persistence.Repository
             {
                 filter = filter.And(p => p.Description.Contains(searchModel.description));
             }
-
-            if (searchModel.wallet_id.HasValue)
+           
+            if (searchModel.account_id.HasValue)
             {
-                filter = filter.And(p => p.WalletId == searchModel.wallet_id.Value);
+                filter = filter.And(p => p.Wallet.AccountId == searchModel.account_id.Value);
             }
 
             if (searchModel.UniversityId.HasValue)
@@ -73,7 +73,6 @@ namespace Infrastructure.Persistence.Repository
             {
                 throw new KeyNotFoundException("Null data");
             }
-            var AcccountName = _context.Account.Where(s => s.Wallet.Id.Equals(transactionModel.WalletId)).FirstOrDefault() ?? throw new Exception("Null Account");
             Transaction transaction = null;
             switch (transactionType)
             {
@@ -83,7 +82,7 @@ namespace Infrastructure.Persistence.Repository
                         Id = Guid.NewGuid(),
                         WalletId = transactionModel.WalletId,
                         TransactionType = transactionType,
-                        Description = "Bạn đã chuyển " + transactionModel.GoldAmount + " Gold by " + AcccountName.Name,
+                        Description = "Bạn đã chuyển " + transactionModel.GoldAmount + " Gold",
                         GoldAmount = transactionModel.GoldAmount,
                         TransactionDateTime = DateTime.UtcNow,
                     };
@@ -94,7 +93,7 @@ namespace Infrastructure.Persistence.Repository
                         Id = Guid.NewGuid(),
                         WalletId = transactionModel.WalletId,
                         TransactionType = transactionType,
-                        Description = "Bạn đã nhận " + transactionModel.GoldAmount + " Gold by " + AcccountName.Name,
+                        Description = "Bạn đã nhận " + transactionModel.GoldAmount + " Gold",
                         GoldAmount = transactionModel.GoldAmount,
                         TransactionDateTime = DateTime.UtcNow,
                     };
@@ -150,8 +149,8 @@ namespace Infrastructure.Persistence.Repository
         }
         public async Task<ResponseModel> UpdateWalletByTransferringAndReceivingAsync(WalletPutModel putModel, int gold)
         {
-            var walletTransferring = _context.Wallet.Where(s => s.Id.Equals(putModel.wallet_id_tranferring)).FirstOrDefault();
-            var walletReceiving = _context.Wallet.Where(s => s.Id.Equals(putModel.wallet_id_tranferring)).FirstOrDefault();
+            var walletTransferring = _context.Wallet.Where(s=>s.AccountId.Equals(putModel.account_id_tranferring)).FirstOrDefault();
+            var walletReceiving = _context.Wallet.Where(s=>s.AccountId.Equals(putModel.account_id_receiving)).FirstOrDefault();         
             if (walletTransferring == null || walletReceiving == null)
             {
                 throw new InvalidOperationException("Wallet Id Tranffering or Receiving is not found");
