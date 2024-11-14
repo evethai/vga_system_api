@@ -28,6 +28,8 @@ namespace Domain.Model.Transaction
 
         [FromQuery(Name = "transaction-type")]
         public TransactionType? transaction_type { get; set; }
+        [FromQuery(Name = "university-id")]
+        public Guid? UniversityId { get; set; }
 
         [FromQuery(Name = "sort-by-gold-amount")]
         public bool? sort_by_gold_amount { get; set; } = false;
