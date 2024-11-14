@@ -20,5 +20,6 @@ namespace Application.Interface.Repository
         Task<Boolean> UpdateWalletUsingByTestAsync(Guid AccountId, int GoldUsing);
         Task<ResponseModel> UpdateWalletByTransferringAndReceivingAsync(WalletPutModel putModel, int gold);
         Task<ResponseModel> CreateTransactionRequest(Guid WalletId, int gold);
+        Task<ResponseModel> ProcessWithdrawRequest(Guid transactionId, TransactionType type);
     }
 }
