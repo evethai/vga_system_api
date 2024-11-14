@@ -4,9 +4,11 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Common.Exceptions;
 using Application.Common.Extensions;
 using Application.Interface;
 using Application.Interface.Repository;
+using AutoMapper;
 using Domain.Entity;
 using Domain.Enum;
 using Domain.Model.Response;
@@ -32,10 +34,15 @@ namespace Infrastructure.Persistence.Repository
             {
                 filter = filter.And(p => p.Description.Contains(searchModel.description));
             }
-           
+
             if (searchModel.wallet_id.HasValue)
             {
                 filter = filter.And(p => p.WalletId == searchModel.wallet_id.Value);
+            }
+
+            if (searchModel.UniversityId.HasValue)
+            {
+                filter = filter.And(p => p.Wallet.Account.University.Id.Equals(searchModel.UniversityId));
             }
 
             if (searchModel.transaction_type.HasValue)
@@ -61,7 +68,7 @@ namespace Infrastructure.Persistence.Repository
         }
 
         public async Task<Transaction> CreateTransactionWhenUsingGold(TransactionType transactionType, TransactionPostModel transactionModel)
-        {         
+        {
             if (transactionModel == null)
             {
                 throw new KeyNotFoundException("Null data");
@@ -128,9 +135,9 @@ namespace Infrastructure.Persistence.Repository
             {
                 throw new InvalidOperationException("Account Id is not found");
             }
-            var exitWallet = _context.Wallet.Where(s => s.AccountId.Equals(exitAccount.Id)).FirstOrDefault() 
+            var exitWallet = _context.Wallet.Where(s => s.AccountId.Equals(exitAccount.Id)).FirstOrDefault()
                 ?? throw new Exception("Wallet is not found");
-            if(exitWallet.GoldBalance < GoldUsing)
+            if (exitWallet.GoldBalance < GoldUsing)
             {
                 throw new Exception("User is not enought gold");
             }
@@ -143,14 +150,14 @@ namespace Infrastructure.Persistence.Repository
         }
         public async Task<ResponseModel> UpdateWalletByTransferringAndReceivingAsync(WalletPutModel putModel, int gold)
         {
-            var walletTransferring = _context.Wallet.Where(s=>s.Id.Equals(putModel.wallet_id_tranferring)).FirstOrDefault();
-            var walletReceiving = _context.Wallet.Where(s=>s.Id.Equals(putModel.wallet_id_tranferring)).FirstOrDefault();         
+            var walletTransferring = _context.Wallet.Where(s => s.Id.Equals(putModel.wallet_id_tranferring)).FirstOrDefault();
+            var walletReceiving = _context.Wallet.Where(s => s.Id.Equals(putModel.wallet_id_tranferring)).FirstOrDefault();
             if (walletTransferring == null || walletReceiving == null)
             {
                 throw new InvalidOperationException("Wallet Id Tranffering or Receiving is not found");
             }
             var RoleTransferring = _context.Account.Where(s => s.Id.Equals(walletTransferring.AccountId)).FirstOrDefault() ?? throw new Exception("Not found Account");
-            if(RoleTransferring.Role == RoleEnum.Admin)
+            if (RoleTransferring.Role == RoleEnum.Admin)
             {
                 TransactionPostModel transaction_Transferring =
                new TransactionPostModel(walletTransferring.Id, gold);
@@ -168,9 +175,10 @@ namespace Infrastructure.Persistence.Repository
                     IsSuccess = true,
                     Data = transaction_Receiving,
                 };
-            }else
+            }
+            else
             {
-                if(walletTransferring.GoldBalance < gold)
+                if (walletTransferring.GoldBalance < gold)
                 {
                     throw new Exception("Not enought gold to transferring");
                 }
@@ -192,14 +200,23 @@ namespace Infrastructure.Persistence.Repository
                     IsSuccess = true,
                     Data = transaction_Receiving,
                 };
-            }           
+            }
         }
         public async Task<ResponseModel> CreateTransactionRequest(Guid WalletId, int gold)
         {
-            var exitWallet = _context.Wallet.Where(s=>s.Id.Equals(WalletId)).FirstOrDefault() ?? throw new Exception("Wallet is not found");
+            var existedWallet = _context.Wallet
+                .Where(s => s.Id.Equals(WalletId))
+                .FirstOrDefault() ?? throw new NotExistsException();
+
             TransactionPostModel transaction_request =
-                 new TransactionPostModel(exitWallet.Id, gold);
+                 new TransactionPostModel(existedWallet.Id, gold);
             await CreateTransactionWhenUsingGold(TransactionType.Request, transaction_request);
+
+            //hold point to process request
+            existedWallet.GoldBalance -= gold;
+            _context.Wallet.Update(existedWallet);
+            await _context.SaveChangesAsync();
+
             return new ResponseModel
             {
                 Message = "Create Request Transaction is Successfully",
@@ -207,5 +224,64 @@ namespace Infrastructure.Persistence.Repository
                 Data = transaction_request,
             };
         }
+        public async Task<ResponseModel> ProcessWithdrawRequest(Guid transactionId, TransactionType type)
+        {
+            var existedTransaction = _context.Transaction
+                .Where(t => t.Id.Equals(transactionId))
+                .FirstOrDefault() ?? throw new NotExistsException();
+
+            var wallet = _context.Wallet
+                .Where(w => w.Id.Equals(existedTransaction.WalletId))
+                .FirstOrDefault() ?? throw new NotExistsException();
+
+            Notification notiPostModel = new Notification
+            {
+                AccountId = wallet.AccountId,
+                CreatedAt = DateTime.UtcNow,
+                Status = Domain.Enum.NotiStatus.Unread
+            };
+
+            switch (type)
+            {
+                case TransactionType.Withdraw:
+                    //update transaction type and description
+                    existedTransaction.TransactionType = TransactionType.Withdraw;
+                    existedTransaction.Description = "Yêu cầu rút " + existedTransaction.GoldAmount + " điểm đã xử lý thành công";
+                    existedTransaction.TransactionDateTime = DateTime.UtcNow;
+
+                    //create notification 
+                    notiPostModel.Title = "Yêu cầu rút điểm đã xử lý thành công";
+                    notiPostModel.Message = "Yêu cầu rút " + existedTransaction.GoldAmount + " điểm được xử lý thành công";
+                    break;
+                case TransactionType.Reject:
+                    //update transaction type and description
+                    existedTransaction.TransactionType = TransactionType.Reject;
+                    existedTransaction.Description = "Yêu cầu rút " + existedTransaction.GoldAmount + " điểm đã bị từ chối";
+                    existedTransaction.TransactionDateTime = DateTime.UtcNow;
+
+                    //update wallet
+                    wallet.GoldBalance += existedTransaction.GoldAmount;
+                    _context.Wallet.Update(wallet);
+
+                    //create notification 
+                    notiPostModel.Title = "Yêu cầu rút điểm đã bị từ chối";
+                    notiPostModel.Message = "Yêu cầu rút " + existedTransaction.GoldAmount + " điểm đã bị từ chối";
+                    break;
+                default:
+                    throw new Exception("Appcepted type is Withdraw or Reject only");
+            }
+            _context.Transaction.Update(existedTransaction);
+            await _context.Notification.AddAsync(notiPostModel);
+            await _context.SaveChangesAsync();
+                             
+            return new ResponseModel
+            {
+                Message = "Process withdraw request is successfully",
+                IsSuccess = true,
+                Data = existedTransaction
+            };
+        }
+
+
     }
 }

@@ -200,31 +200,5 @@ namespace Infrastructure.Persistence.Service
         }
         #endregion
 
-        #region Create withdraw
-        public async Task<ResponseModel> CreateWithdraw(Guid consultantId)
-        {
-            try
-            {
-                var consultant = await _unitOfWork.ConsultantRepository.SingleOrDefaultAsync(
-                        predicate: o => o.Id.Equals(consultantId),
-                        include: q => q.Include(c => c.Account).ThenInclude(a => a.Wallet)
-                    ) ?? throw new NotExistsException();
-
-                return new ResponseModel
-                {
-                    Message = $"Yêu cầu rút tiền đã được tạo thành công",
-                    IsSuccess = true,
-                };
-            }
-            catch (Exception ex)
-            {
-                return new ResponseModel
-                {
-                    IsSuccess = false,
-                    Message = $"An error occurred while create withdraw: {ex.Message}"
-                };
-            }
-        }
-        #endregion
     }
 }
