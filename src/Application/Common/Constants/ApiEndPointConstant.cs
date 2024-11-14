@@ -88,6 +88,8 @@
         public static class Transaction
         {
             public const string TransactionEndPoint = ApiEndpoint + "/transactions";
+            public const string TransactionWithdrawRequest = ApiEndpoint + "/transaction/withdraw/{id}";
+            public const string TransactionProcessRequest = ApiEndpoint + "/transaction/process/{id}";
         }
 
         //consultant
