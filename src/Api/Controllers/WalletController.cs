@@ -36,7 +36,7 @@ namespace Api.Controllers
             return Ok(result);
         }
         [HttpPut(ApiEndPointConstant.Wallet.WalletTransferringAndReceiving)]
-        public async Task<IActionResult> UpdateWalletTransferringAndReceivingAsync([FromForm] WalletPutModel putModel, int gold)
+        public async Task<IActionResult> UpdateWalletTransferringAndReceivingAsync(WalletPutModel putModel, int gold)
         {
             if (!ModelState.IsValid)
             {
@@ -53,7 +53,7 @@ namespace Api.Controllers
             }
         }
         [HttpPut(ApiEndPointConstant.Wallet.WalletDistributionEndpoint)]
-        public async Task<IActionResult> UpdateWalletUsingGoldDistributionAsync([FromForm] Guid WalletHighschoolId, int GoldDistribution, int years)
+        public async Task<IActionResult> UpdateWalletUsingGoldDistributionAsync(TransactionPutWalletModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -61,7 +61,7 @@ namespace Api.Controllers
             }
             try
             {
-                var result = await _walletService.UpdateWalletUsingGoldDistributionAsync(WalletHighschoolId, GoldDistribution, years);
+                var result = await _walletService.UpdateWalletUsingGoldDistributionAsync(model.WalletHighSchoolId, model.Gold, model.Years);
                 return Ok(result);
             }
             catch (Exception ex)
