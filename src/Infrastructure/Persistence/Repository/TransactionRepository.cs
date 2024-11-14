@@ -120,6 +120,17 @@ namespace Infrastructure.Persistence.Repository
                         TransactionDateTime = DateTime.UtcNow,
                     };
                     break;
+                case TransactionType.Recharge:
+                    transaction = new Transaction
+                    {
+                        Id = Guid.NewGuid(),
+                        WalletId = transactionModel.WalletId,
+                        TransactionType = transactionType,
+                        Description = "Bạn đã nạp " + transactionModel.GoldAmount + " Gold",
+                        GoldAmount = transactionModel.GoldAmount,
+                        TransactionDateTime = DateTime.UtcNow,
+                    };
+                    break;
                 default:
                     break;
             }

@@ -13,6 +13,7 @@ namespace Domain.Enum
         Using = 3,
         Request = 4,
         Reject = 5,
-        Withdraw =6
+        Withdraw =6,
+        Recharge = 7
     }
 }
