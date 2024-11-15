@@ -34,7 +34,7 @@ namespace Infrastructure.Persistence.Repository
             {
                 filter = filter.And(p => p.Description.Contains(searchModel.description));
             }
-           
+
             if (searchModel.account_id.HasValue)
             {
                 filter = filter.And(p => p.Wallet.AccountId == searchModel.account_id.Value);
@@ -149,8 +149,8 @@ namespace Infrastructure.Persistence.Repository
         }
         public async Task<ResponseModel> UpdateWalletByTransferringAndReceivingAsync(WalletPutModel putModel, int gold)
         {
-            var walletTransferring = _context.Wallet.Where(s=>s.AccountId.Equals(putModel.account_id_tranferring)).FirstOrDefault();
-            var walletReceiving = _context.Wallet.Where(s=>s.AccountId.Equals(putModel.account_id_receiving)).FirstOrDefault();         
+            var walletTransferring = _context.Wallet.Where(s => s.AccountId.Equals(putModel.account_id_tranferring)).FirstOrDefault();
+            var walletReceiving = _context.Wallet.Where(s => s.AccountId.Equals(putModel.account_id_receiving)).FirstOrDefault();
             if (walletTransferring == null || walletReceiving == null)
             {
                 throw new InvalidOperationException("Wallet Id Tranffering or Receiving is not found");
@@ -245,17 +245,17 @@ namespace Infrastructure.Persistence.Repository
                 case TransactionType.Withdraw:
                     //update transaction type and description
                     existedTransaction.TransactionType = TransactionType.Withdraw;
-                    existedTransaction.Description = "Yêu cầu rút " + existedTransaction.GoldAmount + " điểm đã xử lý thành công";
+                    existedTransaction.Description = $"Yêu cầu rút {existedTransaction.GoldAmount} điểm đã xử lý thành công";
                     existedTransaction.TransactionDateTime = DateTime.UtcNow;
 
                     //create notification 
                     notiPostModel.Title = "Yêu cầu rút điểm đã xử lý thành công";
-                    notiPostModel.Message = "Yêu cầu rút " + existedTransaction.GoldAmount + " điểm được xử lý thành công";
+                    notiPostModel.Message = $"Yêu cầu rút {existedTransaction.GoldAmount} điểm được xử lý thành công vào ngày {DateTime.UtcNow}";
                     break;
                 case TransactionType.Reject:
                     //update transaction type and description
                     existedTransaction.TransactionType = TransactionType.Reject;
-                    existedTransaction.Description = "Yêu cầu rút " + existedTransaction.GoldAmount + " điểm đã bị từ chối";
+                    existedTransaction.Description = $"Yêu cầu rút {existedTransaction.GoldAmount} điểm đã bị từ chối";
                     existedTransaction.TransactionDateTime = DateTime.UtcNow;
 
                     //update wallet
@@ -264,7 +264,7 @@ namespace Infrastructure.Persistence.Repository
 
                     //create notification 
                     notiPostModel.Title = "Yêu cầu rút điểm đã bị từ chối";
-                    notiPostModel.Message = "Yêu cầu rút " + existedTransaction.GoldAmount + " điểm đã bị từ chối";
+                    notiPostModel.Message = $"Yêu cầu rút {existedTransaction.GoldAmount} điểm đã bị từ chối vào ngày {DateTime.UtcNow}";
                     break;
                 default:
                     throw new Exception("Appcepted type is Withdraw or Reject only");
@@ -272,7 +272,7 @@ namespace Infrastructure.Persistence.Repository
             _context.Transaction.Update(existedTransaction);
             await _context.Notification.AddAsync(notiPostModel);
             await _context.SaveChangesAsync();
-                             
+
             return new ResponseModel
             {
                 Message = "Process withdraw request is successfully",

@@ -51,7 +51,9 @@ namespace Application.Interface.Service
             {
                 var consultant = await _unitOfWork.ConsultantRepository.SingleOrDefaultAsync(
                         predicate: o => o.Id.Equals(consultantId),
-                        include: q => q.Include(c => c.Account).ThenInclude(a => a.Wallet)
+                        include: q => q.Include(c => c.Account)
+                                            .ThenInclude(a => a.Wallet)
+                                        .Include(c => c.University)
                     ) ?? throw new NotExistsException();
 
                 if (goldAmount > consultant.Account.Wallet.GoldBalance)
@@ -64,7 +66,7 @@ namespace Application.Interface.Service
                 var responseModel = await _unitOfWork.TransactionRepository.CreateTransactionRequest(consultant.Account.Wallet.Id, goldAmount);
 
                 NotificationPostModel notiPostModel = new NotificationPostModel();
-                notiPostModel.AccountId = consultant.AccountId;
+                notiPostModel.AccountId = consultant.University.AccountId;
                 notiPostModel.Title = "Yêu cầu rút tiền";
                 notiPostModel.Message = $"Tư vấn viên {consultant.Account.Name} đã yêu cầu rút {goldAmount} điểm vào ngày {DateTime.UtcNow}";
                 await _unitOfWork.NotificationRepository.CreateNotification(notiPostModel);
@@ -92,6 +94,9 @@ namespace Application.Interface.Service
                         predicate: o => o.Id.Equals(transactionId),
                         include: q => q.Include(c => c.Wallet).ThenInclude(a => a.Account)
                     ) ?? throw new NotExistsException();
+
+                if (transaction.TransactionType != TransactionType.Request)
+                    throw new Exception("Transaction is not Request");
 
                 var responseModel = await _unitOfWork.TransactionRepository.ProcessWithdrawRequest(transactionId, type);
 
