@@ -49,11 +49,11 @@ namespace Infrastructure.Persistence.Service
             return _mapper.Map<WalletModel>(wallet);
         }
 
-        public async Task<ResponseModel> UpdateWalletUsingGoldDistributionAsync(Guid WalletHigchoolId, int goldDistribution, int years)
+        public async Task<ResponseModel> UpdateWalletUsingGoldDistributionAsync(TransactionPutWalletModel model)
         {
-            var walletTransferring = await _unitOfWork.WalletRepository.GetByIdGuidAsync(WalletHigchoolId);
-            var receivingWallets = await _unitOfWork.WalletRepository.GetInforStudentHasWalletReceiving(walletTransferring.AccountId, years);
-            var totalgoldDistribution = goldDistribution * receivingWallets.Count();           
+            var walletTransferring = await _unitOfWork.WalletRepository.GetByIdGuidAsync(model.WalletHighSchoolId);
+            var receivingWallets = await _unitOfWork.WalletRepository.GetInforStudentHasWalletReceiving(walletTransferring.AccountId, model.Years);
+            var totalgoldDistribution = model.Gold * receivingWallets.Count();           
             if (walletTransferring.GoldBalance < totalgoldDistribution)
             {
                 return new ResponseModel
@@ -71,8 +71,8 @@ namespace Infrastructure.Persistence.Service
             await _unitOfWork.WalletRepository.UpdateAsync(walletTransferring);
             foreach (var receivingWallet in receivingWallets)
             {
-                receivingWallet.GoldBalance = receivingWallet.GoldBalance + goldDistribution;
-                TransactionPostModel transaction = new TransactionPostModel(receivingWallet.Id, goldDistribution);
+                receivingWallet.GoldBalance = receivingWallet.GoldBalance + model.Gold;
+                TransactionPostModel transaction = new TransactionPostModel(receivingWallet.Id, model.Gold);
                 await _unitOfWork.TransactionRepository.
                     CreateTransactionWhenUsingGold(TransactionType.Receiving, transaction);
                 var result = _mapper.Map<Wallet>(receivingWallet);
@@ -85,7 +85,6 @@ namespace Infrastructure.Persistence.Service
                 Message = "Distribution gold is Successfully",
                 Data = walletTransferring
             };
-
         }
         public async Task<ResponseModel> UpdateWalletByTransferringAndReceivingAsync(WalletPutModel putModel , int gold)
         {

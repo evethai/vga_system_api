@@ -61,7 +61,7 @@ namespace Api.Controllers
             }
             try
             {
-                var result = await _walletService.UpdateWalletUsingGoldDistributionAsync(model.WalletHighSchoolId, model.Gold, model.Years);
+                var result = await _walletService.UpdateWalletUsingGoldDistributionAsync(model);
                 return Ok(result);
             }
             catch (Exception ex)

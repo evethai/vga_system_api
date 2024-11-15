@@ -10,7 +10,6 @@ namespace Domain.Model.Wallet
     public class WalletPutModel
     {
         public Guid account_id_tranferring { get; set; }
-        public Guid account_id_receiving { get; set; }
-        
+        public Guid account_id_receiving { get; set; }       
     }
 }
