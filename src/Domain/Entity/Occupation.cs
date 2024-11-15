@@ -20,6 +20,7 @@ namespace Domain.Entity
         public string? PayScale { get; set; }
         public string? JobOutlook { get; set; }
         public bool Status { get; set; }
+        public string Image { get; set; } = string.Empty;
         public virtual ICollection<OccupationalSKills> OccupationalSKills { get; set; } = null!;
     }
 }
