@@ -14,7 +14,7 @@ namespace Api.Controllers
         {
             _testTypeService = testTypeService;
         }
-        [CustomAuthorize()]
+        //[CustomAuthorize()]
         [HttpGet(ApiEndPointConstant.TestType.TestTypesEndpoint)]
         public async Task<IActionResult> GetAllTestTypes()
         {

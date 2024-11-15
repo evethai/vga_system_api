@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Domain.Entity;
 using Domain.Model.Highschool;
+using Domain.Model.Major;
 using Domain.Model.University;
 
 namespace Application.Interface.Repository
@@ -16,6 +17,6 @@ namespace Application.Interface.Repository
         Task<int> CreateUniversityLocation(Guid IdUniversity, List<UniversityLocationModel> universityLocations); 
         Task<Boolean> UpdateUniversityLocation(int UniversityLocationId , UniversityLocationPutModel universityLocationPutModel);
         Task<Boolean> DeleteUniversityLocation(int Id);
-        Task<IEnumerable<University>> GetListUniversityByMajorId(Guid majorId);
+        Task<IEnumerable<UniversityByMajorIdModel>> GetListUniversityByMajorId(Guid majorId);
     }
 }

@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Application.Common.Extensions;
+using Application.Interface;
 using Application.Interface.Repository;
 using Domain.Entity;
 using Domain.Model.News;
@@ -51,8 +52,7 @@ namespace Infrastructure.Persistence.Repository
                     DescriptionTitle = image.DescriptionTitle,
                     ImageUrl = image.ImageUrl,                   
                 };
-                _context.ImageNews.Add(img);
-                _context.SaveChanges();
+                _context.ImageNews.Add(img);                
             }
             return Task.FromResult(true);
         }

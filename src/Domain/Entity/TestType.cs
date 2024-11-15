@@ -14,6 +14,7 @@ namespace Domain.Entity
         public TestTypeCode TypeCode { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
+        public int Point { get; set; }
         public bool Status { get; set; }
         public DateTime CreateAt { get; set; }
         public virtual ICollection<PersonalTest> PersonalTests { get; set; } = null!;
