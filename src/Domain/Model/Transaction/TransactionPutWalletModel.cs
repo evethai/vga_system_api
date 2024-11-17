@@ -11,9 +11,9 @@ namespace Domain.Model.Transaction
     {
         [Required(ErrorMessage = "WalletHighSchoolId is required.")]
         public Guid  WalletHighSchoolId { get; set; }
-        [Range(0, int.MaxValue, ErrorMessage = "Gold must be a non-negative value.")]
+        [Range(1, int.MaxValue, ErrorMessage = "Gold must be a non-negative value.")]
         public int Gold { get; set; }
-        [Range(0, int.MaxValue, ErrorMessage = "Years must be a non-negative value.")]
+        [Range(2000, int.MaxValue, ErrorMessage = "Years must be a non-negative value.")]
         public int Years { get; set; }
     }
 }
