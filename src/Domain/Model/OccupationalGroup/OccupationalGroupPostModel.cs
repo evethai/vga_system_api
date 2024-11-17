@@ -16,5 +16,8 @@ namespace Domain.Model.OccupationalGroup
         public string Description { get; set; } = string.Empty;
         [JsonIgnore]
         public bool Status { get; set; }
+
+        [Required(ErrorMessage = "Image is required.")]
+        public string Image { get; set; } = string.Empty;
     }
 }
