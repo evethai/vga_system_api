@@ -17,6 +17,7 @@ namespace Domain.Model.Occupation
         public string? PayScale { get; set; }
         public string? JobOutlook { get; set; }
         public bool Status { get; set; }
+        public string? Image { get; set; } = string.Empty;
         public Guid? EntryLevelEducationId { get; set; }
         public Guid? OccupationalGroupId { get; set; }
         public List<OccupationalSkillsPutModel>? Skills { get; set; }

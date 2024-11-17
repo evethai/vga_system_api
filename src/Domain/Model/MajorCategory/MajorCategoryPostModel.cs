@@ -14,5 +14,7 @@ namespace Domain.Model.MajorCategory
         public string Name { get; set; } = string.Empty;
         [JsonIgnore]
         public bool Status { get; set; } = true;
+        [Required(ErrorMessage = "Image is required.")]
+        public string Image { get; set; } = string.Empty;
     }
 }

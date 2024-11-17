@@ -9,5 +9,6 @@ namespace Domain.Model.MajorCategory
     public class MajorCategoryPutModel
     {
         public string? Name { get; set; }
+        public string? Image { get; set; } = string.Empty;
     }
 }
