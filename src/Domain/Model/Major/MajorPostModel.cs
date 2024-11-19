@@ -20,5 +20,8 @@ namespace Domain.Model.Major
         public bool Status { get; set; } = true;
         [Required(ErrorMessage = "MajorCategoryId is required.")]
         public Guid MajorCategoryId { get; set; }
+
+        [Required(ErrorMessage = "Image is required.")]
+        public string Image { get; set; } = string.Empty;
     }
 }

@@ -12,5 +12,6 @@ namespace Domain.Model.OccupationalGroup
         public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }
         public bool Status { get; set; }
+        public string Image { get; set; } = string.Empty;
     }
 }
