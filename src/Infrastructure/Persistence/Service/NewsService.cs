@@ -35,11 +35,7 @@ namespace Infrastructure.Persistence.Service
             var img = await _unitOfWork.NewsRepository.CreateImageNews(news.Id, postModel.ImageNews);
             if(img == false)
             {
-                return new ResponseModel
-                {
-                    Message = "Create News is fail",
-                    IsSuccess = false
-                };
+                throw new Exception("Create image is error");
             } 
             return new ResponseModel
             {
@@ -51,15 +47,7 @@ namespace Infrastructure.Persistence.Service
 
         public async Task<ResponseModel> DeleteNewsAsync(Guid Id)
         {
-           var exitNews = await _unitOfWork.NewsRepository.GetByIdGuidAsync(Id);
-            if (exitNews == null)
-            {
-                return new ResponseModel
-                {
-                    Message = "New Id is not found",
-                    IsSuccess = false,
-                };
-            }
+           var exitNews = await _unitOfWork.NewsRepository.GetByIdGuidAsync(Id) ?? throw new Exception("Id is not found");
             await _unitOfWork.NewsRepository.DeleteAllImageNews(exitNews.Id);
             await _unitOfWork.NewsRepository.DeleteAsync(exitNews);
             await _unitOfWork.SaveChangesAsync();
@@ -93,21 +81,14 @@ namespace Infrastructure.Persistence.Service
 
             var news = await _unitOfWork.NewsRepository.
                 SingleOrDefaultAsync(predicate: c => c.Id.Equals(NewsId), include: c => c.Include(c => c.ImageNews))
-                ?? throw new NotExistsException();
+                ?? throw new Exception("Id is not found");
             return _mapper.Map<NewsModel>(news);
         }
 
         public async Task<ResponseModel> UpdateNewsAsync(NewsPutModel putModel, Guid Id)
         {
-            var exit = await _unitOfWork.NewsRepository.SingleOrDefaultAsync(predicate: c => c.Id.Equals(Id), include: c => c.Include(c => c.ImageNews));
-            if (exit ==null)
-            {
-                return new ResponseModel
-                {
-                    Message = "NewsId is not found",
-                    IsSuccess = false
-                };
-            }
+            var exit = await _unitOfWork.NewsRepository.SingleOrDefaultAsync(predicate: c => c.Id.Equals(Id), include: c => c.Include(c => c.ImageNews))
+                ?? throw new Exception("Id is not found");
             exit.Title = putModel.Title;
             exit.Content = putModel.Content;
             await _unitOfWork.NewsRepository.UpdateAsync(exit);
@@ -122,14 +103,10 @@ namespace Infrastructure.Persistence.Service
 
         public async Task<ResponseModel> CreateImageNewsAsync(Guid NewsId, List<ImageNewsPostModel> imageNews)
         {
-            var result = await _unitOfWork.NewsRepository.CreateImageNews(NewsId, imageNews);
+            var result = await _unitOfWork.NewsRepository.CreateImageNews(NewsId, imageNews) ;
             if (result == false)
             {
-                return new ResponseModel
-                {
-                    Message = "News Id is not found",
-                    IsSuccess = false
-                };
+                throw new Exception("Id is not found");
             }
             return new ResponseModel
             {
@@ -144,11 +121,7 @@ namespace Infrastructure.Persistence.Service
             var result = await _unitOfWork.NewsRepository.DeleteOneImageNews(Id);
             if (result == false)
             {
-                return new ResponseModel
-                {
-                    Message = "ImageNews Id is not found",
-                    IsSuccess = false
-                };
+                throw new Exception("Id is not found");
             }
             return new ResponseModel
             {
@@ -162,11 +135,7 @@ namespace Infrastructure.Persistence.Service
             var result = await _unitOfWork.NewsRepository.UpdateImageNews(imageNewsModel, id);
             if (result == false)
             {
-                return new ResponseModel
-                {
-                    Message = "ImageNews Id is not found",
-                    IsSuccess = false
-                };
+                throw new Exception("Id is not found");
             }
             return new ResponseModel
             {

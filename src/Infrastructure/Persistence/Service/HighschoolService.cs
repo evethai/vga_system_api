@@ -28,7 +28,7 @@ public class HighschoolService : IHighschoolService
     public async Task<HighschoolModel> GetHighschoolByIdAsync(Guid HighschoolId)
     {
         var highschool = await _unitOfWork.HighschoolRepository.
-            SingleOrDefaultAsync(predicate: c => c.Id.Equals(HighschoolId), include: a => a.Include(a => a.Account).ThenInclude(a=>a.Wallet));
+            SingleOrDefaultAsync(predicate: c => c.Id.Equals(HighschoolId), include: a => a.Include(a => a.Account).ThenInclude(a=>a.Wallet)) ?? throw new Exception("Id is not found");
         return _mapper.Map<HighschoolModel>(highschool);
     }
 
@@ -52,6 +52,7 @@ public class HighschoolService : IHighschoolService
     }
     public async Task<ResponseModel> CreateHighschoolAsync(HighschoolPostModel postModel)
     {
+        var checkIdRegion = _unitOfWork.RegionRepository.GetByIdGuidAsync(postModel.RegionId) ?? throw new Exception("Region id is not found");
         var highschool = _mapper.Map<HighSchool>(postModel);
         RegisterAccountModel accountModel = new RegisterAccountModel(
             postModel.Name
@@ -72,35 +73,11 @@ public class HighschoolService : IHighschoolService
 
     public async Task<ResponseModel> UpdateHighschoolAsync(HighschoolPutModel putModel, Guid Id)
     {
-        var exitHighschool = await _unitOfWork.HighschoolRepository.GetByIdGuidAsync(Id);
-        if (exitHighschool == null)
-        {
-            return new ResponseModel
-            {
-                Message = "Highschool Id is not found",
-                IsSuccess = true,
-            };
-        }
+        var exitHighschool = await _unitOfWork.HighschoolRepository.GetByIdGuidAsync(Id) ?? throw new Exception("Id is not found");
         exitHighschool.Address = putModel.Address;
-        var exitRegion = await _unitOfWork.RegionRepository.GetByIdGuidAsync(Id);
-        if (exitRegion == null)
-        {
-            return new ResponseModel
-            {
-                Message = "Region Id is not found",
-                IsSuccess = true,
-            };
-        }
+        var exitRegion = await _unitOfWork.RegionRepository.GetByIdGuidAsync(Id) ?? throw new Exception("Region id is not found");
         exitHighschool.RegionId = putModel.RegionId;
-        var exitAccount = await _unitOfWork.AccountRepository.GetByIdGuidAsync(exitHighschool.AccountId);
-        if (exitAccount == null)
-        {
-            return new ResponseModel
-            {
-                Message = "Highschool Account Id is not found",
-                IsSuccess = true,
-            };
-        }
+        var exitAccount = await _unitOfWork.AccountRepository.GetByIdGuidAsync(exitHighschool.AccountId) ?? throw new Exception("Highschool Account Id is not found");
         exitAccount.Name = putModel.Name;
         exitAccount.Phone = putModel.Phone;
         exitAccount.Email = putModel.Email;
@@ -118,24 +95,8 @@ public class HighschoolService : IHighschoolService
 
     public async Task<ResponseModel> DeleteHighschoolAsync(Guid Id)
     {
-        var exHighschool = await _unitOfWork.HighschoolRepository.GetByIdGuidAsync(Id);
-        if (exHighschool == null)
-        {
-            return new ResponseModel
-            {
-                Message = "Highschool Id is not found",
-                IsSuccess = true,
-            };
-        }
-        var exAccount = await _unitOfWork.AccountRepository.GetByIdGuidAsync(exHighschool.AccountId);
-        if (exAccount == null)
-        {
-            return new ResponseModel
-            {
-                Message = "Highschool Acccount Id is not found",
-                IsSuccess = true,
-            };
-        }
+        var exHighschool = await _unitOfWork.HighschoolRepository.GetByIdGuidAsync(Id) ?? throw new Exception("Id is not found");
+        var exAccount = await _unitOfWork.AccountRepository.GetByIdGuidAsync(exHighschool.AccountId) ?? throw new Exception("Highschool Acccount Id is not found");
         exAccount.Status = AccountStatus.Blocked;
         await _unitOfWork.AccountRepository.UpdateAsync(exAccount);
         await _unitOfWork.SaveChangesAsync();

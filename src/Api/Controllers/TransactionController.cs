@@ -4,6 +4,7 @@ using Application.Interface.Service;
 using Domain.Enum;
 using Domain.Model.Transaction;
 using Infrastructure.Persistence.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,7 +20,7 @@ namespace Api.Controllers
         {
             _transactionService = transactionService;
         }
-
+        [Authorize]
         [HttpGet(ApiEndPointConstant.Transaction.TransactionEndPoint)]
         public async Task<IActionResult> GetListTransactionAsync([FromQuery] TransactionSearchModel searchModel)
         {
