@@ -28,7 +28,7 @@ namespace Api.Controllers
             return Ok(result);
         }
 
-        //[CustomAuthorize(RoleEnum.Consultant)]
+        [CustomAuthorize(RoleEnum.Consultant)]
         [HttpPost(ApiEndPointConstant.Transaction.TransactionWithdrawRequest)]
         public async Task<IActionResult> CreateWithdrawAsync(Guid id, int goldAmount)
         {
@@ -49,7 +49,7 @@ namespace Api.Controllers
             }
         }
 
-        //[CustomAuthorize(RoleEnum.University)]
+        [CustomAuthorize(RoleEnum.University)]
         [HttpPut(ApiEndPointConstant.Transaction.TransactionProcessRequest)]
         public async Task<IActionResult> ProcessWithdrawRequestAsync(Guid id, TransactionType type)
         {
