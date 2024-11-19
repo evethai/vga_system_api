@@ -176,7 +176,7 @@
             public const string AdmisstionInformationListEndpoint = ApiEndpoint + "/admission-informations";
             public const string AdmisstionInformationEndpoint = ApiEndpoint + "/admission-information/{id}";
             public const string AdmisstionInformationPostEndpoint = ApiEndpoint + "/admission-information/{UniversityId}";
-            public const string AdmisstionInformationPutEndpoint = ApiEndpoint + "/admission-informations/{id}";
+            public const string AdmisstionInformationPutEndpoint = ApiEndpoint + "/admission-informations";
             public const string AdmisstionInformationDeleteEndpoint = ApiEndpoint + "/admission-information/{id}";
         }
         public static class AdmisstionMethod
