@@ -1,6 +1,9 @@
 ﻿using Api.Constants;
+using Api.Validators;
 using Application.Interface.Service;
+using Domain.Enum;
 using Domain.Model.MajorCategory;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
@@ -15,7 +18,7 @@ namespace Api.Controllers
         }
 
 
-        //[CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
+        [Authorize]
         [HttpGet(ApiEndPointConstant.MajorCategory.MajorCategoriesEndpoint)]
         public async Task<IActionResult> GetListMajorCategorysWithPaginateAsync(MajorCategorySearchModel searchModel)
         {
@@ -23,7 +26,7 @@ namespace Api.Controllers
             return Ok(result);
         }
 
-        //[CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
+        [Authorize]
         [HttpGet(ApiEndPointConstant.MajorCategory.MajorCategoryEndpoint)]
         public async Task<IActionResult> GetMajorCategoryByIdAsync(Guid id)
         {
@@ -40,7 +43,7 @@ namespace Api.Controllers
             }
         }
 
-        //[CustomAuthorize(RoleEnum.Admin)]
+        [CustomAuthorize(RoleEnum.Admin)]
         [HttpPost(ApiEndPointConstant.MajorCategory.MajorCategoriesEndpoint)]
         public async Task<IActionResult> CreateMajorCategoryAsync(MajorCategoryPostModel postModel)
         {
@@ -61,7 +64,7 @@ namespace Api.Controllers
             }
         }
 
-        //[CustomAuthorize(RoleEnum.Admin)]
+        [CustomAuthorize(RoleEnum.Admin)]
         [HttpPut(ApiEndPointConstant.MajorCategory.MajorCategoryEndpoint)]
         public async Task<IActionResult> UpdateMajorCategoryAsync(MajorCategoryPutModel putModel, Guid id)
         {
@@ -82,7 +85,7 @@ namespace Api.Controllers
             }
         }
 
-        //[CustomAuthorize(RoleEnum.Admin)]
+        [CustomAuthorize(RoleEnum.Admin)]
         [HttpDelete(ApiEndPointConstant.MajorCategory.MajorCategoryEndpoint)]
         public async Task<IActionResult> DeleteMajorCategoryAsync(Guid id)
         {
