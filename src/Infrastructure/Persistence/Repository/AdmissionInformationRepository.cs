@@ -89,16 +89,25 @@ namespace Infrastructure.Persistence.Repository
             }
             return (filter, orderBy);
         }
-        public Task<bool> CheckAdmissionInformation(AdmissionInformationPutModel putModel)
+        public async Task<bool> CheckAdmissionInformation(List<AdmissionInformationPutModel> putModel)
         {
-           var checkMajor = _context.Major.Where(a=>a.Id.Equals(putModel.MajorId)).FirstOrDefault();
-           var checkMethod = _context.AdmissionMethod.Where(a => a.Id.Equals(putModel.AdmissionMethodId)).FirstOrDefault();
-           if (checkMajor == null || checkMethod == null)
-           {
-                return Task.FromResult(false);
-                
-           }
-           return Task.FromResult(true);         
+           
+        if (putModel == null) { throw new ArgumentNullException(nameof(putModel)); }
+            foreach (var item in putModel)
+            {
+                var checkId = _context.AdmissionInformation.Where(a => a.Id.Equals(item.Id)).FirstOrDefault() ?? throw new Exception("Id is not found");
+                var checkMajor = _context.Major.Where(a => a.Id.Equals(item.MajorId)).FirstOrDefault() ?? throw new Exception("Major Id is not found");
+                var checkMethod = _context.AdmissionMethod.Where(a => a.Id.Equals(item.AdmissionMethodId)).FirstOrDefault() ?? throw new Exception("Method Id is not found");
+                checkId.MajorId = checkMajor.Id;
+                checkId.AdmissionMethodId = checkMethod.Id;
+                checkId.TuitionFee =item.TuitionFee;
+                checkId.QuantityTarget = item.QuantityTarget;
+                checkId.Year = item.Year;
+                _context.AdmissionInformation.Update(checkId);
+            }
+            await _context.SaveChangesAsync();
+            return true;
+
         }
         public Task<bool> CreateListAdmissionInformation(Guid UniversityId, List<AdmissionInformationPostModel> postModels)
         {

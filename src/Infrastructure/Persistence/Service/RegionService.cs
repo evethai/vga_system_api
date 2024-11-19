@@ -33,7 +33,7 @@ public class RegionService : IRegionService
 
     public async Task<RegionModel> GetRegionById(Guid id)
     {
-        var region = await _unitOfWork.RegionRepository.GetByIdGuidAsync(id);
+        var region = await _unitOfWork.RegionRepository.GetByIdGuidAsync(id) ?? throw new Exception("Id is not found");
         return _mapper.Map<RegionModel>(region);
     }
 }
