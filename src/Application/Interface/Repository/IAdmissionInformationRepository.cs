@@ -15,7 +15,7 @@ namespace Application.Interface.Repository
         (Expression<Func<AdmissionInformation, bool>> filter, Func<IQueryable<AdmissionInformation>, IOrderedQueryable<AdmissionInformation>> orderBy) BuildFilterAndOrderBy(AdmissionInformationRattingModel model, StudentChoice stChoice);
         (Expression<Func<AdmissionInformation, bool>> filter, Func<IQueryable<AdmissionInformation>, IOrderedQueryable<AdmissionInformation>> orderBy) BuildFilterAndOrderByAdmissionInformation(AdmissionInformationSearchModel searchModel);
         Task<Boolean> CreateListAdmissionInformation(Guid UniversityId, List<AdmissionInformationPostModel> postModels);
-        Task<Boolean> CheckAdmissionInformation(AdmissionInformationPutModel putModel);
+        Task<Boolean> CheckAdmissionInformation(List<AdmissionInformationPutModel> putModel);
     }
 
 }

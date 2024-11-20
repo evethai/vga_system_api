@@ -10,6 +10,8 @@ using Domain.Model.AdmissionInformation;
 using Domain.Model.Response;
 using Microsoft.EntityFrameworkCore;
 using Domain.Entity;
+using System.Threading.Tasks.Dataflow;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Infrastructure.Persistence.Service
 {
@@ -39,15 +41,7 @@ namespace Infrastructure.Persistence.Service
 
         public async Task<ResponseModel> DeleteAdmissionMethodAsync(Guid Id)
         {
-            var exit = await _unitOfWork.AdmissionMethodRepository.GetByIdGuidAsync(Id);
-            if (exit == null) 
-            {
-                return new ResponseModel
-                {
-                    Message = "Admission Method Id is not found",
-                    IsSuccess = false
-                };
-            }
+            var exit = await _unitOfWork.AdmissionMethodRepository.GetByIdGuidAsync(Id) ?? throw new Exception("Admission Method Id is not found");            
             exit.Status = false;
             await _unitOfWork.AdmissionMethodRepository.UpdateAsync(exit);
             await _unitOfWork.SaveChangesAsync();
@@ -60,15 +54,7 @@ namespace Infrastructure.Persistence.Service
 
         public async Task<ResponseModel> GetAdmissionMethodById(Guid Id)
         {
-            var exitMethod = await _unitOfWork.AdmissionMethodRepository.GetByIdGuidAsync(Id);
-            if (exitMethod == null)
-            {
-                return new ResponseModel
-                {
-                    Message = "Id is not found",
-                    IsSuccess = false
-                };
-            }
+            var exitMethod = await _unitOfWork.AdmissionMethodRepository.GetByIdGuidAsync(Id) ??  throw new Exception("Id is not found");           
             var result = _mapper.Map<AdmissionMethodModel>(exitMethod);
             return new ResponseModel
             {
@@ -97,15 +83,7 @@ namespace Infrastructure.Persistence.Service
 
         public async Task<ResponseModel> UpdateAdmissionMethodAsync(Guid Id, AdmissionMethodPutModel putModel)
         {
-            var exitMethod = await _unitOfWork.AdmissionMethodRepository.GetByIdGuidAsync(Id);
-            if (exitMethod == null)
-            {
-                return new ResponseModel
-                {
-                    Message = "Admisson Method Id is not found",
-                    IsSuccess = false
-                };
-            }
+            var exitMethod = await _unitOfWork.AdmissionMethodRepository.GetByIdGuidAsync(Id) ?? throw new Exception("Admisson Method Id is not found");           
             exitMethod.Description = putModel.Description;
             exitMethod.Name = putModel.Name;
             await _unitOfWork.AdmissionMethodRepository.UpdateAsync(exitMethod);

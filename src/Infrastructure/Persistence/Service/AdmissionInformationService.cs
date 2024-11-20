@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using Application.Interface;
@@ -28,15 +29,8 @@ namespace Infrastructure.Persistence.Service
 
         public async Task<ResponseModel> CreateAdmissionInformationAsync(Guid UniversityId, List<AdmissionInformationPostModel> postModel)
         {
-            var exitUniversity = await _unitOfWork.UniversityRepository.GetByIdGuidAsync(UniversityId);
-            if (exitUniversity == null)
-            {
-                return new ResponseModel
-                {
-                    Message = "University Id is not found",
-                    IsSuccess = false
-                };
-            }
+            var exitUniversity = await _unitOfWork.UniversityRepository.GetByIdGuidAsync(UniversityId) 
+                ?? throw new Exception("University Id is not found");            
             await _unitOfWork.AdmissionInformationRepository.CreateListAdmissionInformation(UniversityId, postModel);
             await _unitOfWork.SaveChangesAsync();
             return new ResponseModel
@@ -51,15 +45,8 @@ namespace Infrastructure.Persistence.Service
         {
             var info = await _unitOfWork.AdmissionInformationRepository.
                 SingleOrDefaultAsync(predicate: c => c.Id == Id,
-                include: a => a.Include(a => a.University).ThenInclude(s=>s.Account).Include(a=>a.Major).Include(a=>a.AdmissionMethod));
-            if (info == null)
-            {
-                return new ResponseModel
-                {
-                    Message = "Id is not found",
-                    IsSuccess = false
-                };
-            }
+                include: a => a.Include(a => a.University).ThenInclude(s=>s.Account).Include(a=>a.Major).Include(a=>a.AdmissionMethod)) 
+                ?? throw new Exception("Id is not found");
             var result = _mapper.Map<AdmissionInformationModel>(info);
             return new ResponseModel
             {
@@ -90,15 +77,8 @@ namespace Infrastructure.Persistence.Service
 
         public async Task<ResponseModel> DeleteAdmissionInformationAsync(int Id)
         {
-            var exitAdmissionInfo = await _unitOfWork.AdmissionInformationRepository.GetByIdAsync(Id);
-            if (exitAdmissionInfo == null)
-            {
-                return new ResponseModel
-                {
-                    Message = "Admission Information Id is not found",
-                    IsSuccess = false
-                };
-            }
+            var exitAdmissionInfo = await _unitOfWork.AdmissionInformationRepository.GetByIdAsync(Id) 
+                ?? throw new Exception("Admission Information Id is not found") ;
             await _unitOfWork.AdmissionInformationRepository.DeleteAsync(exitAdmissionInfo);
             await _unitOfWork.SaveChangesAsync();
             return new ResponseModel
@@ -108,33 +88,13 @@ namespace Infrastructure.Persistence.Service
             };
         }
 
-        public async Task<ResponseModel> UpdateAdmissionInformationAsync(int Id, AdmissionInformationPutModel putModel)
+        public async Task<ResponseModel> UpdateAdmissionInformationAsync(List<AdmissionInformationPutModel> putModel)
         {
-            var exitInfor =  await _unitOfWork.AdmissionInformationRepository.GetByIdAsync(Id);
-            if (exitInfor == null)
+            var result = await _unitOfWork.AdmissionInformationRepository.CheckAdmissionInformation(putModel);
+            if(result  == false)
             {
-                return new ResponseModel
-                {
-                    Message = "Id is not found",
-                    IsSuccess = false,
-                };
+                throw new Exception("Error");
             }
-            var checkInfo = await _unitOfWork.AdmissionInformationRepository.CheckAdmissionInformation(putModel);
-            if (checkInfo == false)
-            {
-                return new ResponseModel
-                {
-                    Message = "Major Id or Method Id is not found",
-                    IsSuccess = false,
-                };
-            }
-            exitInfor.AdmissionMethodId = putModel.AdmissionMethodId;
-            exitInfor.MajorId = putModel.MajorId;
-            exitInfor.QuantityTarget = putModel.QuantityTarget;
-            exitInfor.TuitionFee = putModel.TuitionFee;
-            exitInfor.Year = putModel.Year;
-            await _unitOfWork.AdmissionInformationRepository.UpdateAsync(exitInfor);
-            await _unitOfWork.SaveChangesAsync();
             return new ResponseModel
             {
                 Message = "Update Admission Information is successfully",

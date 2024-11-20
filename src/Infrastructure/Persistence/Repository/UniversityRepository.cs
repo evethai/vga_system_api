@@ -55,18 +55,11 @@ namespace Infrastructure.Persistence.Repository
 
         public Task<int> CreateUniversityLocation(Guid IdUniversity, List<UniversityLocationModel> universityLocations)
         {
-            var exitUnversity = _context.University.Where(a=>a.Id.Equals(IdUniversity)).FirstOrDefault();
-            if (exitUnversity == null)
-            {
-                throw new Exception("University Id not found");
-            }
+            var exitUnversity = _context.University.Where(a=>a.Id.Equals(IdUniversity)).FirstOrDefault() ?? throw new Exception("University Id is not found");          
             foreach (var location in universityLocations)
             {
-                var exitRegion = _context.Region.Where(a => a.Id.Equals(location.RegionId)).FirstOrDefault();
-                if (exitRegion == null)
-                {
-                    throw new Exception("Region Id not found");
-                }
+                var exitRegion = _context.Region.Where(a => a.Id.Equals(location.RegionId)).FirstOrDefault() 
+                    ?? throw new Exception("Region Id is not found");                
                 UniversityLocation locations = new UniversityLocation
                 {
                     UniversityId = IdUniversity,
@@ -82,11 +75,7 @@ namespace Infrastructure.Persistence.Repository
 
         public Task<bool> DeleteUniversityLocation(int Id)
         {
-            var exitlocation = _context.UniversityLocation.Where(a => a.Id.Equals(Id)).FirstOrDefault();
-            if (exitlocation == null)
-            {
-                return Task.FromResult(false);
-            }
+            var exitlocation = _context.UniversityLocation.Where(a => a.Id.Equals(Id)).FirstOrDefault() ?? throw new Exception("Id is not found");           
             _context.UniversityLocation.Remove(exitlocation);
             _context.SaveChanges();
             return Task.FromResult(true);
@@ -94,16 +83,13 @@ namespace Infrastructure.Persistence.Repository
 
         public Task<bool> UpdateUniversityLocation(int UniversityLocationId, UniversityLocationPutModel universityLocationPutModel)
         {
-            var exitlocation  = _context.UniversityLocation.Where(a=>a.Id.Equals(UniversityLocationId)).FirstOrDefault();
-            if (exitlocation == null)
-            {
-                return Task.FromResult(false);
-            }
-            var exitRegion = _context.Region.Where(a => a.Id.Equals(universityLocationPutModel.RegionId)).FirstOrDefault();
-            if (exitRegion == null)
-            {
-                return Task.FromResult(false);
-            }
+            var exitlocation  = _context.UniversityLocation
+                .Where(a=>a.Id.Equals(UniversityLocationId)).FirstOrDefault() 
+                ?? throw new Exception("Id is not found");
+
+            var exitRegion = _context.Region
+                .Where(a => a.Id.Equals(universityLocationPutModel.RegionId)).FirstOrDefault()
+                ?? throw new Exception("Region Id is not found");
             exitlocation.RegionId = universityLocationPutModel.RegionId;
             exitlocation.Address = universityLocationPutModel.Address;
             _context.UniversityLocation.Update(exitlocation);

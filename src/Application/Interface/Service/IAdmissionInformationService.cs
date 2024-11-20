@@ -15,6 +15,6 @@ namespace Application.Interface.Service
         Task<ResponseModel> GetAdmissionInformationByIdAsync(int Id);
         Task<ResponseModel> DeleteAdmissionInformationAsync(int Id);
         Task<ResponseModel> CreateAdmissionInformationAsync(Guid UniversityId,List<AdmissionInformationPostModel> postModel);
-        Task<ResponseModel> UpdateAdmissionInformationAsync(int Id, AdmissionInformationPutModel putModel);        
+        Task<ResponseModel> UpdateAdmissionInformationAsync(List<AdmissionInformationPutModel> putModel);        
     }
 }

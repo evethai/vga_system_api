@@ -5,6 +5,7 @@ using Domain.Enum;
 using Domain.Model.Consultant;
 using Domain.Model.Student;
 using Infrastructure.Persistence.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
@@ -19,7 +20,7 @@ namespace Api.Controllers
             _consultantService = consultantService;
         }
 
-        //[CustomAuthorize(RoleEnum.Admin,RoleEnum.Student,RoleEnum.University)]
+        [Authorize]
         [HttpGet(ApiEndPointConstant.Consultant.ConsultantsEndpoint)]
         public async Task<IActionResult> GetListConsultantsWithPaginateAsync(ConsultantSearchModel searchModel)
         {
@@ -35,7 +36,7 @@ namespace Api.Controllers
             }
         }
 
-        //[CustomAuthorize(RoleEnum.Admin, RoleEnum.Student,RoleEnum.University)]
+        [Authorize]
         [HttpGet(ApiEndPointConstant.Consultant.ConsultantEndpoint)]
         public async Task<IActionResult> GetConsultantByIdAsync(Guid id)
         {
@@ -53,7 +54,7 @@ namespace Api.Controllers
             }
         }
 
-        //[CustomAuthorize(RoleEnum.Admin),RoleEnum.University]
+        [CustomAuthorize(RoleEnum.University)]
         [HttpPost(ApiEndPointConstant.Consultant.ConsultantsEndpoint)]
         public async Task<IActionResult> CreateConsultantAsyns(ConsultantPostModel postModel)
         {
@@ -74,7 +75,7 @@ namespace Api.Controllers
             }
         }
 
-        //[CustomAuthorize(RoleEnum.Admin,RoleEnum.University)]
+        [CustomAuthorize(RoleEnum.University)]
         [HttpPut(ApiEndPointConstant.Consultant.ConsultantEndpoint)]
         public async Task<IActionResult> UpdateConsultantAsync(ConsultantPutModel putModel, Guid id)
         {
@@ -95,7 +96,7 @@ namespace Api.Controllers
             }
         }
 
-        //[CustomAuthorize(RoleEnum.Admin,RoleEnum.University)]
+        [CustomAuthorize(RoleEnum.University)]
         [HttpDelete(ApiEndPointConstant.Consultant.ConsultantEndpoint)]
         public async Task<IActionResult> DeleteConsultantAsync(Guid id)
         {

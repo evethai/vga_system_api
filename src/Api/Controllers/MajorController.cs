@@ -1,12 +1,15 @@
 ﻿using Api.Constants;
+using Api.Validators;
 using Application.Interface.Service;
+using Domain.Enum;
 using Domain.Model.Major;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
     [ApiController]
-    public class MajorController  : ControllerBase
+    public class MajorController : ControllerBase
     {
         private readonly IMajorService _majorService;
         public MajorController(IMajorService majorService)
@@ -14,7 +17,7 @@ namespace Api.Controllers
             _majorService = majorService;
         }
 
-        //[CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
+        [Authorize]
         [HttpGet(ApiEndPointConstant.Major.MajorsEndpoint)]
         public async Task<IActionResult> GetListMajorsWithPaginateAsync(MajorSearchModel searchModel)
         {
@@ -22,7 +25,7 @@ namespace Api.Controllers
             return Ok(result);
         }
 
-        //[CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
+        [Authorize]
         [HttpGet(ApiEndPointConstant.Major.MajorEndpoint)]
         public async Task<IActionResult> GetMajorByIdAsync(Guid id)
         {
@@ -39,7 +42,7 @@ namespace Api.Controllers
             }
         }
 
-        //[CustomAuthorize(RoleEnum.Admin)]
+        [CustomAuthorize(RoleEnum.Admin)]
         [HttpPost(ApiEndPointConstant.Major.MajorsEndpoint)]
         public async Task<IActionResult> CreateMajorAsync(MajorPostModel postModel)
         {
@@ -60,7 +63,7 @@ namespace Api.Controllers
             }
         }
 
-        //[CustomAuthorize(RoleEnum.Admin)]
+        [CustomAuthorize(RoleEnum.Admin)]
         [HttpPut(ApiEndPointConstant.Major.MajorEndpoint)]
         public async Task<IActionResult> UpdateMajorAsync(MajorPutModel putModel, Guid id)
         {
@@ -81,7 +84,7 @@ namespace Api.Controllers
             }
         }
 
-        //[CustomAuthorize(RoleEnum.Admin)]
+        [CustomAuthorize(RoleEnum.Admin)]
         [HttpDelete(ApiEndPointConstant.Major.MajorEndpoint)]
         public async Task<IActionResult> DeleteMajorAsync(Guid id)
         {
@@ -97,7 +100,8 @@ namespace Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        //[CustomAuthorize(RoleEnum.Student)]
+
+        [CustomAuthorize(RoleEnum.Student)]
         [HttpGet(ApiEndPointConstant.Major.MajorAndRelationEndpoint)]
         public async Task<IActionResult> OccupationAndUniversityByMajorId(Guid id)
         {

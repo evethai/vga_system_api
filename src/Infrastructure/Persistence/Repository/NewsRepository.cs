@@ -39,11 +39,7 @@ namespace Infrastructure.Persistence.Repository
 
         public Task<Boolean> CreateImageNews(Guid NewsId, List<ImageNewsPostModel> imageNews)
         {
-            var _newsId =  _context.News.Where(s=> s.Id.Equals(NewsId)).FirstOrDefault();
-            if (_newsId == null)
-            {
-                return Task.FromResult(false);
-            }
+            var _newsId =  _context.News.Where(s=> s.Id.Equals(NewsId)).FirstOrDefault() ?? throw new Exception("Id is not found");           
             foreach (var image in imageNews)
             {
                 ImageNews img = new ImageNews
@@ -59,11 +55,7 @@ namespace Infrastructure.Persistence.Repository
 
         public Task<bool> DeleteAllImageNews(Guid NewId)
         {
-            var exitNewsImageId = _context.ImageNews.Where(s => s.NewsId.Equals(NewId)).FirstOrDefault();
-            if (exitNewsImageId == null)
-            {
-                return Task.FromResult(false);
-            }
+            var exitNewsImageId = _context.ImageNews.Where(s => s.NewsId.Equals(NewId)).FirstOrDefault() ??  throw new Exception("Id is not found");
             _context.ImageNews.Remove(exitNewsImageId);
             _context.SaveChanges();
             return Task.FromResult(true);
@@ -71,11 +63,7 @@ namespace Infrastructure.Persistence.Repository
 
         public Task<bool> DeleteOneImageNews(int id)
         {
-            var exitNewsImageId = _context.ImageNews.Where(s => s.Id.Equals(id)).FirstOrDefault();
-            if (exitNewsImageId == null)
-            {
-                return Task.FromResult(false);
-            }
+            var exitNewsImageId = _context.ImageNews.Where(s => s.Id.Equals(id)).FirstOrDefault() ?? throw new Exception("Id is not found");           
             _context.ImageNews.Remove(exitNewsImageId);
             _context.SaveChanges();
             return Task.FromResult(true);
@@ -83,11 +71,7 @@ namespace Infrastructure.Persistence.Repository
 
         public Task<bool> UpdateImageNews(ImageNewsPutModel imageNews, int id)
         {
-            var _imgNews = _context.ImageNews.Where(s => s.Id == id).FirstOrDefault();
-            if (_imgNews == null)
-            {
-                return Task.FromResult(false);
-            }
+            var _imgNews = _context.ImageNews.Where(s => s.Id == id).FirstOrDefault() ?? throw new Exception("Id is not found");          
             _imgNews.DescriptionTitle = imageNews.DescriptionTitle;
             _imgNews.ImageUrl = imageNews.ImageUrl;
             _context.ImageNews.Update(_imgNews);
