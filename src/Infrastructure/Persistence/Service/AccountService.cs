@@ -95,7 +95,7 @@ namespace Infrastructure.Persistence.Service
                     return new ResponseModel
                     {
                         IsSuccess = true,
-                        Message = "Token has been revoked"
+                        Message = "Logout successful, Token has been revoked"
                     };
                 }
 
@@ -228,6 +228,7 @@ namespace Infrastructure.Persistence.Service
                     break;
 
                 default:
+                    guidClaim = new Tuple<string, Guid>("Admin", account.Id);
                     loginResponseModel = new LoginResponseModel(account.Id,role,name);
                     break;
             }

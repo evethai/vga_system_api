@@ -140,11 +140,8 @@ namespace Infrastructure.Persistence.Repository
         }
         public async Task<Boolean> UpdateWalletUsingByTestAsync(Guid AccountId, int GoldUsing)
         {
-            var exitAccount = _context.Account.Where(s => s.Id.Equals(AccountId)).FirstOrDefault();
-            if (exitAccount == null)
-            {
-                throw new InvalidOperationException("Account Id is not found");
-            }
+            var exitAccount = _context.Account.Where(s => s.Id.Equals(AccountId)).FirstOrDefault()
+                ?? throw new InvalidOperationException("Account Id is not found");   
             var exitWallet = _context.Wallet.Where(s => s.AccountId.Equals(exitAccount.Id)).FirstOrDefault()
                 ?? throw new Exception("Wallet is not found");
             if (exitWallet.GoldBalance < GoldUsing)
@@ -160,12 +157,10 @@ namespace Infrastructure.Persistence.Repository
         }
         public async Task<ResponseModel> UpdateWalletByTransferringAndReceivingAsync(WalletPutModel putModel, int gold)
         {
-            var walletTransferring = _context.Wallet.Where(s => s.AccountId.Equals(putModel.account_id_tranferring)).FirstOrDefault();
-            var walletReceiving = _context.Wallet.Where(s => s.AccountId.Equals(putModel.account_id_receiving)).FirstOrDefault();
-            if (walletTransferring == null || walletReceiving == null)
-            {
-                throw new InvalidOperationException("Wallet Id Tranffering or Receiving is not found");
-            }
+            var walletTransferring = _context.Wallet.Where(s => s.AccountId.Equals(putModel.account_id_tranferring)).FirstOrDefault() 
+                ?? throw new InvalidOperationException("Account Id Tranffering is not found"); ;
+            var walletReceiving = _context.Wallet.Where(s => s.AccountId.Equals(putModel.account_id_receiving)).FirstOrDefault()
+               ?? throw new InvalidOperationException("Account Id Receiving is not found");
             var RoleTransferring = _context.Account.Where(s => s.Id.Equals(walletTransferring.AccountId)).FirstOrDefault() ?? throw new Exception("Not found Account");
             if (RoleTransferring.Role == RoleEnum.Admin)
             {

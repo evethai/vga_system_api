@@ -20,6 +20,11 @@
             public const string LogoutEndpoint = ApiEndpoint + "/logout/{id}";
         }
 
+        public static class Admin
+        {
+            public const string Dashboard = ApiEndpoint + "/dashboard";
+        }
+
         public static class PersonalTest
         {
             public const string PersonalTestsEndpoint = ApiEndpoint + "/personal-tests";
@@ -176,7 +181,7 @@
             public const string AdmisstionInformationListEndpoint = ApiEndpoint + "/admission-informations";
             public const string AdmisstionInformationEndpoint = ApiEndpoint + "/admission-information/{id}";
             public const string AdmisstionInformationPostEndpoint = ApiEndpoint + "/admission-information/{UniversityId}";
-            public const string AdmisstionInformationPutEndpoint = ApiEndpoint + "/admission-informations/{id}";
+            public const string AdmisstionInformationPutEndpoint = ApiEndpoint + "/admission-informations";
             public const string AdmisstionInformationDeleteEndpoint = ApiEndpoint + "/admission-information/{id}";
         }
         public static class AdmisstionMethod

@@ -1,6 +1,9 @@
 ﻿using Api.Constants;
+using Api.Validators;
 using Application.Interface.Service;
+using Domain.Enum;
 using Domain.Model.OccupationalGroup;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
@@ -14,7 +17,7 @@ namespace Api.Controllers
             _occupationalGroupService = occupationalGroupService;
         }
 
-        //[CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
+        [Authorize]
         [HttpGet(ApiEndPointConstant.OccupationalGroup.OccupationalGroupsEndpoint)]
         public async Task<IActionResult> GetListOccupationalGroupsWithPaginateAsync(OccupationalGroupSearchModel searchModel)
         {
@@ -22,7 +25,7 @@ namespace Api.Controllers
             return Ok(result);
         }
 
-        //[CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
+        [Authorize]
         [HttpGet(ApiEndPointConstant.OccupationalGroup.OccupationalGroupEndpoint)]
         public async Task<IActionResult> GetOccupationalGroupByIdAsync(Guid id)
         {
@@ -39,7 +42,7 @@ namespace Api.Controllers
             }
         }
 
-        //[CustomAuthorize(RoleEnum.Admin)]
+        [CustomAuthorize(RoleEnum.Admin)]
         [HttpPost(ApiEndPointConstant.OccupationalGroup.OccupationalGroupsEndpoint)]
         public async Task<IActionResult> CreateOccupationalGroupAsync(OccupationalGroupPostModel postModel)
         {
@@ -60,7 +63,7 @@ namespace Api.Controllers
             }
         }
 
-        //[CustomAuthorize(RoleEnum.Admin)]
+        [CustomAuthorize(RoleEnum.Admin)]
         [HttpPut(ApiEndPointConstant.OccupationalGroup.OccupationalGroupEndpoint)]
         public async Task<IActionResult> UpdateOccupationalGroupAsync(OccupationalGroupPutModel putModel, Guid id)
         {
@@ -81,7 +84,7 @@ namespace Api.Controllers
             }
         }
 
-        //[CustomAuthorize(RoleEnum.Admin)]
+        [CustomAuthorize(RoleEnum.Admin)]
         [HttpDelete(ApiEndPointConstant.OccupationalGroup.OccupationalGroupEndpoint)]
         public async Task<IActionResult> DeleteOccupationalGroupAsync(Guid id)
         {

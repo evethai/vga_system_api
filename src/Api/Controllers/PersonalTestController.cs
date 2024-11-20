@@ -12,6 +12,7 @@ namespace Api.Controllers
 {
     [Route("/personal-test")]
     [ApiController]
+    [CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
     public class PersonalTestController : ControllerBase
     {
         private readonly IStudentTestService _studentTestService;
@@ -26,6 +27,7 @@ namespace Api.Controllers
         }
 
         [HttpPost(ApiEndPointConstant.PersonalTest.GetResultPersonalTestEndpoint)]
+        
         public async Task<IActionResult> CreateResultTest(StudentTestResultModel result)
         {
 
@@ -41,7 +43,7 @@ namespace Api.Controllers
 
         }
 
-        //[CustomAuthorize(RoleEnum.Admin,RoleEnum.Student)]
+
         [HttpGet(ApiEndPointConstant.PersonalTest.PersonalTestEndpoint)]
         public async Task<IActionResult> GetPersonalTestById(Guid id, Guid accountId)
         {
@@ -75,7 +77,7 @@ namespace Api.Controllers
         }
 
 
-        //[CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
+
         [HttpGet(ApiEndPointConstant.PersonalTest.PersonalTestsEndpoint)]
         public async Task<IActionResult> GetAllTest()
         {
@@ -89,7 +91,7 @@ namespace Api.Controllers
                 return BadRequest(e.Message);
             }
         }
-        //[CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
+
         [HttpGet(ApiEndPointConstant.PersonalTest.GetHistoryUserTestEndpoint)]
         public async Task<IActionResult> GetHistoryTestByStudentId(Guid id)
         {
@@ -109,6 +111,7 @@ namespace Api.Controllers
         }
 
         [HttpGet(ApiEndPointConstant.PersonalTest.GetMajorsByPersonalGroupIdEndpoint)]
+
         public async Task<IActionResult> GetMajorAndOccupationByPersonalGroupId(Guid id)
         {
             try
@@ -123,8 +126,13 @@ namespace Api.Controllers
         }
 
         [HttpPost(ApiEndPointConstant.PersonalTest.FilterMajorAndUniversityEndpoint)]
+
         public async Task<IActionResult> FilterMajorAndUniversity(FilterMajorAndUniversityModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             try
             {
                 var response = await _studentTestService.FilterMajorAndUniversity(model);

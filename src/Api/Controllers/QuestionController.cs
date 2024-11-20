@@ -1,5 +1,7 @@
 ﻿using Api.Constants;
+using Api.Validators;
 using Application.Interface.Service;
+using Domain.Enum;
 using Domain.Model.Question;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Api.Controllers
 {
     [ApiController]
+    [CustomAuthorize(RoleEnum.Admin)]
     public class QuestionController : ControllerBase
     {
         private readonly IQuestionService _questionService;
@@ -14,6 +17,7 @@ namespace Api.Controllers
         {
             _questionService = questionService;
         }
+
         [HttpGet(ApiEndPointConstant.Question.QuestionsEndpoint)]
         public async Task<IActionResult> GetAllQuestionsByType(Guid id)
         {

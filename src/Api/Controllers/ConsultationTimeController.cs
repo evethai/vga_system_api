@@ -5,6 +5,7 @@ using Domain.Enum;
 using Domain.Model.ConsultationTime;
 using Domain.Model.TimeSlot;
 using Infrastructure.Persistence.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
@@ -19,7 +20,7 @@ namespace Api.Controllers
             _consultationTimeService = consultationTimeService;
         }
 
-        //[CustomAuthorize(RoleEnum.Student, RoleEnum.Consultant)]
+        [Authorize]
         [HttpGet(ApiEndPointConstant.ConsultationTime.ConsultationTimeEndpoint)]
         public async Task<IActionResult> GetConsultationTimeByIdAsync(Guid id)
         {
@@ -27,7 +28,7 @@ namespace Api.Controllers
             return Ok(result);
         }
 
-        //[CustomAuthorize(RoleEnum.Consultant, RoleEnum.Student)]
+        [CustomAuthorize(RoleEnum.Consultant)]
         [HttpPost(ApiEndPointConstant.ConsultationTime.ConsultationTimesEndpoint)]
         public async Task<IActionResult> CreateConsultationTimeAsync(ConsultationTimePostModel postModel, Guid consultationDayId)
         {
@@ -48,7 +49,7 @@ namespace Api.Controllers
             }
         }
 
-        //[CustomAuthorize(RoleEnum.Consultant)]
+        [CustomAuthorize(RoleEnum.Consultant)]
         [HttpDelete(ApiEndPointConstant.ConsultationTime.ConsultationTimeEndpoint)]
         public async Task<IActionResult> DeleteTimeSlotAsync(Guid id)
         {

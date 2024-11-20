@@ -1,12 +1,14 @@
 ﻿using Api.Constants;
 using Api.Validators;
 using Application.Interface.Service;
+using Domain.Enum;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
     [ApiController]
+    [CustomAuthorize(RoleEnum.Admin)]
     public class TestTypeController : ControllerBase
     {
         private readonly ITestTypeService _testTypeService;
@@ -14,7 +16,6 @@ namespace Api.Controllers
         {
             _testTypeService = testTypeService;
         }
-        //[CustomAuthorize()]
         [HttpGet(ApiEndPointConstant.TestType.TestTypesEndpoint)]
         public async Task<IActionResult> GetAllTestTypes()
         {

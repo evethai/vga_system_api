@@ -6,6 +6,7 @@ using Domain.Model.ConsultantLevel;
 using Domain.Model.Student;
 using Domain.Model.TimeSlot;
 using Infrastructure.Persistence.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
@@ -20,7 +21,7 @@ namespace Api.Controllers
             _consultantLevelService = consultantLevelService;
         }
 
-        //[CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
+        [Authorize]
         [HttpGet(ApiEndPointConstant.ConsultantLevel.ConsultantLevelsEndpoint)]
         public async Task<IActionResult> GetListConsultantLevelWithPaginateAsync(ConsultantLevelSearchModel searchModel)
         {
@@ -28,7 +29,7 @@ namespace Api.Controllers
             return Ok(result);
         }
 
-        //[CustomAuthorize(RoleEnum.Admin)]
+        [Authorize]
         [HttpGet(ApiEndPointConstant.ConsultantLevel.ConsultantLevelEndpoint)]
         public async Task<IActionResult> GetConsultantLevelByIdAsync(int id)
         {
@@ -46,7 +47,7 @@ namespace Api.Controllers
             }
         }
 
-        //[CustomAuthorize(RoleEnum.Admin)]
+        [CustomAuthorize(RoleEnum.Admin)]
         [HttpPost(ApiEndPointConstant.ConsultantLevel.ConsultantLevelsEndpoint)]
         public async Task<IActionResult> CreateConsultantLevelAsync(ConsultantLevelPostModel postModel)
         {
@@ -67,7 +68,7 @@ namespace Api.Controllers
             }
         }
 
-        //[CustomAuthorize(RoleEnum.Admin)]
+        [CustomAuthorize(RoleEnum.Admin)]
         [HttpPut(ApiEndPointConstant.ConsultantLevel.ConsultantLevelEndpoint)]
         public async Task<IActionResult> UpdateConsultantLevelAsync(ConsultantLevelPutModel putModel, int id)
         {
@@ -88,7 +89,7 @@ namespace Api.Controllers
             }
         }
 
-        //[CustomAuthorize(RoleEnum.Admin)]
+        [CustomAuthorize(RoleEnum.Admin)]
         [HttpDelete(ApiEndPointConstant.ConsultantLevel.ConsultantLevelEndpoint)]
         public async Task<IActionResult> DeleteConsultantLevelAsync(int id)
         {

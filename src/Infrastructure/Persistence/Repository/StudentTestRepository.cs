@@ -373,67 +373,77 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
     #endregion
 
     #region Create Student Choice, Get top selected 
-    public async Task<List<StudentChoice>> CreateStudentChoice(StudentChoiceModel StModel, StudentChoiceType type)
+    public async Task<List<stChoiceModel>> CreateStudentChoice(StudentChoiceModel StModel, StudentChoiceType type)
     {
 
-        var studentChoices = StModel.models.Select(m => new StudentChoice
+        try
         {
-            StudentTestId = StModel.StudentTestId,
-            MajorOrOccupationId = m.Id,
-            MajorOrOccupationName = m.Name,
-            Rating = m.Rating,
-            Type = type
-        }).ToList();
-
-        await _context.StudentChoice.AddRangeAsync(studentChoices);
-        await _context.SaveChangesAsync();
-
-
-        var maxRating = studentChoices.Max(x => x.Rating);
-
-        var topRatedChoices = studentChoices
-            .Where(x => x.Rating == maxRating)
-            .ToList();
-
-        var majorIds = topRatedChoices.Select(x => x.MajorOrOccupationId).ToList();
-
-
-
-        var groupedMajorsFromDb = await _context.Major
-             .Where(m => majorIds.Contains(m.Id))
-             .GroupBy(m => m.MajorCategoryId)
-             .Select(g => new
-             {
-                 MajorCategoryId = g.Key,
-                 MajorIds = g.Select(m => m.Id).ToList(),
-                 MajorNames = g.Select(m => m.Name).ToList()
-             })
-             .ToListAsync();
-
-
-        var groupedMajors = groupedMajorsFromDb.Select(g => new
-        {
-            MajorCategoryId = g.MajorCategoryId,
-            MajorOrOccupationId = g.MajorIds.First(),
-            MajorOrOccupationName = string.Join(", ", g.MajorNames.Distinct())
-        }).ToList();
-
-
-        var distinctTopRatedChoices = topRatedChoices
-            .Where(x => groupedMajors.Select(g => g.MajorOrOccupationId).Contains(x.MajorOrOccupationId))
-            .GroupBy(x => x.MajorOrOccupationId)
-            .Select(g => new StudentChoice
+            var studentChoices = StModel.models.Select(m => new StudentChoice
             {
-                MajorOrOccupationId = g.Key,
-                MajorOrOccupationName = groupedMajors
-                    .FirstOrDefault(m => m.MajorOrOccupationId == g.Key)?.MajorOrOccupationName ?? string.Empty,
-                StudentTestId = g.First().StudentTestId,
-                Type = g.First().Type
-            })
-            .ToList();
+                StudentTestId = StModel.StudentTestId,
+                MajorOrOccupationId = m.Id,
+                MajorOrOccupationName = m.Name,
+                Rating = m.Rating,
+                Type = type
+            }).ToList();
 
-        return distinctTopRatedChoices;
+            await _context.StudentChoice.AddRangeAsync(studentChoices);
+            await _context.SaveChangesAsync();
 
+
+            var maxRating = studentChoices.Max(x => x.Rating);
+
+            var topRatedChoices = studentChoices
+                .Where(x => x.Rating == maxRating)
+                .ToList();
+
+            var majorIds = topRatedChoices.Select(x => x.MajorOrOccupationId).ToList();
+
+
+
+            var groupedMajorsFromDb = await _context.Major
+                 .Where(m => majorIds.Contains(m.Id))
+                 .GroupBy(m => m.MajorCategoryId)
+                 .Select(g => new
+                 {
+                     MajorCategoryId = g.Key,
+                     MajorIds = g.Select(m => m.Id).ToList(),
+                     MajorNames = g.Select(m => m.Name).ToList(),
+                     MajorImage = g.Select(m => m.Image).ToList()
+                 })
+                 .ToListAsync();
+
+
+            var groupedMajors = groupedMajorsFromDb.Select(g => new
+            {
+                MajorCategoryId = g.MajorCategoryId,
+                MajorOrOccupationId = g.MajorIds.First(),
+                MajorOrOccupationName = string.Join(", ", g.MajorNames.Distinct()),
+                MajorOrOccupationImage = g.MajorImage.First()
+            }).ToList();
+
+
+            var distinctTopRatedChoices = topRatedChoices
+                .Where(x => groupedMajors.Select(g => g.MajorOrOccupationId).Contains(x.MajorOrOccupationId))
+                .GroupBy(x => x.MajorOrOccupationId)
+                .Select(g => new stChoiceModel
+                {
+                    MajorOrOccupationId = g.Key,
+                    MajorOrOccupationName = groupedMajors
+                        .FirstOrDefault(m => m.MajorOrOccupationId == g.Key)?.MajorOrOccupationName ?? string.Empty,
+                    StudentTestId = g.First().StudentTestId,
+                    Type = g.First().Type,
+                    Image = groupedMajors
+                        .FirstOrDefault(m => m.MajorOrOccupationId == g.Key)?.MajorOrOccupationImage ?? string.Empty,
+                })
+                .ToList();
+
+            return distinctTopRatedChoices;
+        }
+        catch (Exception e)
+        {
+            throw new Exception(e.Message);
+        }
     }
 
 

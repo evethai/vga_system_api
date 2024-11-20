@@ -1,7 +1,10 @@
 ﻿using Api.Constants;
+using Api.Validators;
 using Application.Interface.Service;
+using Domain.Enum;
 using Domain.Model.Response;
 using Domain.Model.Student;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,19 +17,21 @@ public class StudentController : ControllerBase
     {
         _studentService = studentService;
     }
+    [CustomAuthorize(RoleEnum.Admin, RoleEnum.HighSchool)]
     [HttpGet(ApiEndPointConstant.Student.StudentGetListEndpoint)]
     public async Task<IActionResult> GetListStudentAsync([FromQuery] StudentSearchModel searchModel)
     {
         var result = await _studentService.GetListStudentAsync(searchModel);
         return Ok(result);
     }
-
+    [CustomAuthorize(RoleEnum.Admin, RoleEnum.HighSchool)]
     [HttpGet(ApiEndPointConstant.Student.StudentEndpoint)]
     public async Task<IActionResult> GetStudentByIdAsync(Guid id)
     {
         var result = await _studentService.GetStudentByIdAsync(id);
         return Ok(result);
     }
+    [CustomAuthorize(RoleEnum.Admin, RoleEnum.HighSchool)]
     [HttpPost(ApiEndPointConstant.Student.StudentPostEndpoint)]
     public async Task<IActionResult> CreateStudentAsyns(StudentPostModel postModel)
     {
@@ -44,6 +49,7 @@ public class StudentController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
+    [CustomAuthorize(RoleEnum.Admin, RoleEnum.HighSchool, RoleEnum.Student)]
     [HttpPut(ApiEndPointConstant.Student.StudentPutEndpoint)]
     public async Task<IActionResult> UpdateStudentAsync(StudentPutModel putModel, Guid id)
     {
@@ -61,7 +67,7 @@ public class StudentController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
-
+    [CustomAuthorize(RoleEnum.Admin, RoleEnum.HighSchool)]
     [HttpPost(ApiEndPointConstant.Student.ImportStudentEndpoint)]
     public async Task<IActionResult> ImportFromJsonAsync([FromForm] StudentImportModel studentImportModel)
     {
@@ -81,6 +87,7 @@ public class StudentController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
+    [CustomAuthorize(RoleEnum.Admin, RoleEnum.HighSchool)]
     [HttpDelete(ApiEndPointConstant.Student.StudentDeleteEndpoint)]
     public async Task<IActionResult> DeleteStudentAsync(Guid id)
     {
