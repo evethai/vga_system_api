@@ -43,7 +43,7 @@ namespace Infrastructure.Persistence
         private IOccupationRepository _occupationRepository;
         private IWorkSkillsRepository _workSkillsRepository;
         private IAdmissionMethodRepository _admissionMethodRepository;
-        private IOccupationSkillRepository _occupationSkillRepository
+        private IOccupationSkillRepository _occupationSkillRepository;
 
         public UnitOfWork(VgaDbContext context)
         {
