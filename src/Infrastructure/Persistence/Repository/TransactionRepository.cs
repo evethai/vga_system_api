@@ -126,7 +126,7 @@ namespace Infrastructure.Persistence.Repository
                         Id = Guid.NewGuid(),
                         WalletId = transactionModel.WalletId,
                         TransactionType = transactionType,
-                        Description = "Bạn đã nạp " + transactionModel.GoldAmount + " Gold",
+                        Description = "Bạn đã yêu cầu nạp " + transactionModel.GoldAmount + " Gold",
                         GoldAmount = transactionModel.GoldAmount,
                         TransactionDateTime = DateTime.UtcNow,
                     };

@@ -84,7 +84,7 @@
         public static class Wallet
         {
             public const string WalletsEndpoint = ApiEndpoint + "/wallet";
-            public const string WalletEndpoint = ApiEndpoint + "/wallet/{id}";
+            public const string WalletEndpoint = ApiEndpoint + "/wallet/{AccountId}";
             public const string WalletDistributionEndpoint = ApiEndpoint + "/wallet/distribution";
             public const string WalletTest = ApiEndpoint + "/wallet/do-the-test";
             public const string WalletTransferringAndReceiving = ApiEndpoint + "/wallet/tranferring-gold";

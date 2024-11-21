@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
 
 namespace Api.Controllers
 {
@@ -34,9 +35,9 @@ namespace Api.Controllers
         }
         [Authorize]
         [HttpGet(ApiEndPointConstant.Wallet.WalletEndpoint)]
-        public async Task<IActionResult> GetWalletByIdAsync(Guid id)
+        public async Task<IActionResult> GetWalletByIdAsync(Guid AccountId)
         {
-            var result = await _walletService.GetWalletByIdAsync(id);
+            var result = await _walletService.GetWalletByIdAsync(AccountId);
             return Ok(result);
         }
         [CustomAuthorize(RoleEnum.Admin, RoleEnum.University)]
@@ -94,11 +95,11 @@ namespace Api.Controllers
             }
         }
         [HttpPost(ApiEndPointConstant.Wallet.WalletPayOs)]
-        public async Task<IActionResult> RequestTopUpWalletWithPayOs(Guid accountId, float amount)
+        public async Task<IActionResult> RequestTopUpWalletWithPayOs(Guid AccountId, float amount)
         {
             try
             {
-                var paymenturl = await _walletService.RequestTopUpWalletWithPayOsAsync(accountId, amount);
+                var paymenturl = await _walletService.RequestTopUpWalletWithPayOsAsync(AccountId, amount);
                 return Ok(paymenturl);
             }
             catch (Exception ex)
