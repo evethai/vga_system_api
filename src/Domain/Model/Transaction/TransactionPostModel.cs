@@ -15,7 +15,7 @@ namespace Domain.Model.Transaction
             WalletId = walletId;
             GoldAmount = goldAmount;
         }
-        [Required(ErrorMessage = "WalletHighSchoolId is required.")]
+        [Required(ErrorMessage = "AccountId is required.")]
         public Guid WalletId { get; set; }
         [Range(1, int.MaxValue, ErrorMessage = "Gold must be a non-negative value.")]
         public int GoldAmount { get; set; }
