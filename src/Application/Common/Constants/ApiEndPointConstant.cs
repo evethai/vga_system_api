@@ -88,6 +88,8 @@
             public const string WalletDistributionEndpoint = ApiEndpoint + "/wallet/distribution";
             public const string WalletTest = ApiEndpoint + "/wallet/do-the-test";
             public const string WalletTransferringAndReceiving = ApiEndpoint + "/wallet/tranferring-gold";
+            public const string WalletPayOs = ApiEndpoint + "/wallet/request-top-up-wallet-with-payos";
+            
         }
         //Transaction
         public static class Transaction

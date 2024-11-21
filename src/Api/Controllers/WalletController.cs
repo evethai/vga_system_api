@@ -93,5 +93,18 @@ namespace Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpPost(ApiEndPointConstant.Wallet.WalletPayOs)]
+        public async Task<IActionResult> RequestTopUpWalletWithPayOs(Guid accountId, float amount)
+        {
+            try
+            {
+                var paymenturl = await _walletService.RequestTopUpWalletWithPayOsAsync(accountId, amount);
+                return Ok(paymenturl);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
