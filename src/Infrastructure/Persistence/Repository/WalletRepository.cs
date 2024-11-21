@@ -27,10 +27,14 @@ namespace Infrastructure.Persistence.Repository
 
             var idHighschool = _context.HighSchool
                 .Where(a => a.AccountId.Equals(id))
-                .FirstOrDefault() ?? throw new Exception("Not found Account Id"); 
+                .FirstOrDefault() ?? throw new Exception("Account Id is not found"); 
             var listStudent = await _context.Student
                 .Where(a => a.HighSchoolId.Equals(idHighschool.Id) && a.SchoolYears.Equals(years)).AsNoTracking()
-                .ToListAsync() ?? throw new Exception("List student in years is not found");            
+                .ToListAsync();
+            if (listStudent.Count == 0)
+            {
+                throw new Exception("No List Student");
+            }
             var wallets = await _context.Wallet
                 .Where(w => listStudent.Select(s => s.AccountId).Contains(w.AccountId)).AsNoTracking()
                 .ToListAsync();
