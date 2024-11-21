@@ -37,8 +37,20 @@ namespace Api.Controllers
         [HttpGet(ApiEndPointConstant.Wallet.WalletEndpoint)]
         public async Task<IActionResult> GetWalletByIdAsync(Guid AccountId)
         {
-            var result = await _walletService.GetWalletByIdAsync(AccountId);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var result = await _walletService.GetWalletByIdAsync(AccountId);
             return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
         }
         [CustomAuthorize(RoleEnum.Admin, RoleEnum.University)]
         [HttpPut(ApiEndPointConstant.Wallet.WalletTransferringAndReceiving)]
