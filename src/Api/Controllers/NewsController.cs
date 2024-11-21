@@ -32,8 +32,19 @@ namespace Api.Controllers
         [HttpGet(ApiEndPointConstant.News.NewEndpoint)]
         public async Task<IActionResult> GetNewsByIdAsync(Guid id)
         {
-            var news = await _newsService.GetNewsByIdAsync(id);
-            return Ok(news);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var news = await _newsService.GetNewsByIdAsync(id);
+                return Ok(news);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }            
         }
         [CustomAuthorize(RoleEnum.Admin,RoleEnum.University)]
         [HttpPost(ApiEndPointConstant.News.NewsEndpoint)]

@@ -28,8 +28,19 @@ public class HighschoolController : ControllerBase
     [HttpGet(ApiEndPointConstant.HighSchool.HighSchoolEndpoint)]
     public async Task<IActionResult> GetHighschoolById(Guid id)
     {
-        var result = await _highschoolService.GetHighschoolByIdAsync(id);
-        return Ok(result);
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        try
+        {
+            var result = await _highschoolService.GetHighschoolByIdAsync(id);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }    
     }
     [CustomAuthorize(RoleEnum.Admin)]
     [HttpPost(ApiEndPointConstant.HighSchool.HighSchoolPostEndpoint)]
