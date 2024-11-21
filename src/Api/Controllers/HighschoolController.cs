@@ -43,7 +43,8 @@ public class HighschoolController : ControllerBase
         {
             var result = await _highschoolService.CreateHighschoolAsync(postModel);
             return Ok(result);
-        } catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             return BadRequest(ex.Message);
         }

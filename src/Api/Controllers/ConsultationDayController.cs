@@ -6,6 +6,7 @@ using Domain.Model.ConsultationDay;
 using Domain.Model.Student;
 using Domain.Model.TimeSlot;
 using Infrastructure.Persistence.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
@@ -20,7 +21,7 @@ namespace Api.Controllers
             _consultationDayService = consultationDayService;
         }
 
-        //[CustomAuthorize(RoleEnum.Consultant, RoleEnum.Student)]
+        [Authorize]
         [HttpGet(ApiEndPointConstant.ConsultationDay.ConsultationDaysEndpoint)]
         public async Task<IActionResult> GetListConsultationDaysWithPaginateAsync(ConsultationDaySearchModel searchModel)
         {
@@ -28,7 +29,7 @@ namespace Api.Controllers
             return Ok(result);
         }
 
-        //[CustomAuthorize(RoleEnum.Admin, RoleEnum.Student, RoleEnum.Consultant)]
+        [Authorize]
         [HttpGet(ApiEndPointConstant.ConsultationDay.ConsultationDayEndpoint)]
         public async Task<IActionResult> GetConsultationDayByIdAsync(Guid id)
         {
@@ -36,7 +37,7 @@ namespace Api.Controllers
             return Ok(result);
         }
 
-        //[CustomAuthorize(RoleEnum.Consultant)]
+        [CustomAuthorize(RoleEnum.Consultant)]
         [HttpPost(ApiEndPointConstant.ConsultationDay.ConsultationDaysEndpoint)]
         public async Task<IActionResult> CreateConsultationDayWithTimesAsync( ConsultationDayPostModel postModel)
         {
@@ -57,7 +58,7 @@ namespace Api.Controllers
             }
         }
 
-        //[CustomAuthorize(RoleEnum.Consultant)]
+        [CustomAuthorize(RoleEnum.Consultant)]
         [HttpDelete(ApiEndPointConstant.ConsultationDay.ConsultationDayEndpoint)]
         public async Task<IActionResult> DeleteConsultationDayAsync(Guid id)
         {

@@ -5,6 +5,7 @@ using Domain.Enum;
 using Domain.Model.Student;
 using Domain.Model.TimeSlot;
 using Infrastructure.Persistence.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
@@ -19,7 +20,7 @@ namespace Api.Controllers
             _timeSlotService = timeSlotService;
         }
 
-        //[CustomAuthorize(RoleEnum.Admin, RoleEnum.Consultant)]
+        [Authorize]
         [HttpGet(ApiEndPointConstant.TimeSlot.TimeSlotsEndpoint)]
         public async Task<IActionResult> GetListTimeSlotsWithPaginateAsync(TimeSlotSearchModel searchModel)
         {
@@ -27,7 +28,7 @@ namespace Api.Controllers
             return Ok(result);
         }
 
-        //[CustomAuthorize(RoleEnum.Admin, RoleEnum.Consultant)]
+        [Authorize]
         [HttpGet(ApiEndPointConstant.TimeSlot.TimeSlotEndpoint)]
         public async Task<IActionResult> GetTimeSlotByIdAsync(int id)
         {
@@ -44,7 +45,7 @@ namespace Api.Controllers
             }
         }
 
-        //[CustomAuthorize(RoleEnum.Admin)]
+        [CustomAuthorize(RoleEnum.Admin)]
         [HttpPost(ApiEndPointConstant.TimeSlot.TimeSlotsEndpoint)]
         public async Task<IActionResult> CreateTimeSlotAsync(TimeSlotPostModel postModel)
         {
@@ -65,7 +66,7 @@ namespace Api.Controllers
             }
         }
 
-        //[CustomAuthorize(RoleEnum.Admin)]
+        [CustomAuthorize(RoleEnum.Admin)]
         [HttpPut(ApiEndPointConstant.TimeSlot.TimeSlotsEndpoint)]
         public async Task<IActionResult> UpdateTimeSlotAsync(TimeSlotPutModel putModel, int id)
         {
@@ -86,7 +87,7 @@ namespace Api.Controllers
             }
         }
 
-        //[CustomAuthorize(RoleEnum.Admin)]
+        [CustomAuthorize(RoleEnum.Admin)]
         [HttpDelete(ApiEndPointConstant.TimeSlot.TimeSlotsEndpoint)]
         public async Task<IActionResult> DeleteTimeSlotAsync(int id)
         {

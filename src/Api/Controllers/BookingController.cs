@@ -1,5 +1,7 @@
 ﻿using Api.Constants;
+using Api.Validators;
 using Application.Interface.Service;
+using Domain.Enum;
 using Domain.Model.Booking;
 using Domain.Model.Consultant;
 using Domain.Model.TimeSlot;
@@ -18,7 +20,7 @@ namespace Api.Controllers
             _bookingService = bookingService;
         }
 
-        //[CustomAuthorize(RoleEnum.Consultant,RoleEnum.Student)]
+        [CustomAuthorize(RoleEnum.Consultant, RoleEnum.Student)]
         [HttpGet(ApiEndPointConstant.Booking.BookingsEndpoint)]
         public async Task<IActionResult> GetListBookingsWithPaginateAsync(BookingSearchModel searchModel)
         {
@@ -34,7 +36,7 @@ namespace Api.Controllers
             }
         }
 
-        //[CustomAuthorize(RoleEnum.Consultant,RoleEnum.Student)]
+        [CustomAuthorize(RoleEnum.Consultant, RoleEnum.Student)]
         [HttpGet(ApiEndPointConstant.Booking.BookingEndpoint)]
         public async Task<IActionResult> GetBookingByIdAsync(Guid id)
         {
@@ -52,9 +54,9 @@ namespace Api.Controllers
             }
         }
 
-        //[CustomAuthorize(RoleEnum.Student)]
+        [CustomAuthorize(RoleEnum.Student)]
         [HttpPost(ApiEndPointConstant.Booking.BookingsEndpoint)]
-        public async Task<IActionResult> BookConsultationTimeAsync( Guid consultationTimeId, Guid studentId)
+        public async Task<IActionResult> BookConsultationTimeAsync(Guid consultationTimeId, Guid studentId)
         {
             if (!ModelState.IsValid)
             {

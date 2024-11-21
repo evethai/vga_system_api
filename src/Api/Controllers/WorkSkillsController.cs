@@ -1,6 +1,9 @@
 ﻿using Api.Constants;
+using Api.Validators;
 using Application.Interface.Service;
+using Domain.Enum;
 using Domain.Model.WorkSkills;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
@@ -15,7 +18,7 @@ namespace Api.Controllers
         }
 
 
-        //[CustomAuthorize(RoleEnum.Admin)]
+        [Authorize]
         [HttpGet(ApiEndPointConstant.WorkSkill.WorkSkillsEndpoint)]
         public async Task<IActionResult> GetListWorkSkillsWithPaginateAsync(WorkSkillsSearchModel searchModel)
         {
@@ -23,7 +26,7 @@ namespace Api.Controllers
             return Ok(result);
         }
 
-        //[CustomAuthorize(RoleEnum.Admin)]
+        [Authorize]
         [HttpGet(ApiEndPointConstant.WorkSkill.WorkSkillEndpoint)]
         public async Task<IActionResult> GetWorkSkillByIdAsync(Guid id)
         {
@@ -40,7 +43,7 @@ namespace Api.Controllers
             }
         }
 
-        //[CustomAuthorize(RoleEnum.Admin)]
+        [CustomAuthorize(RoleEnum.Admin)]
         [HttpPost(ApiEndPointConstant.WorkSkill.WorkSkillsEndpoint)]
         public async Task<IActionResult> CreateWorkSkillAsync(WorkSkillsPostModel postModel)
         {
@@ -61,7 +64,7 @@ namespace Api.Controllers
             }
         }
 
-        //[CustomAuthorize(RoleEnum.Admin)]
+        [CustomAuthorize(RoleEnum.Admin)]
         [HttpPut(ApiEndPointConstant.WorkSkill.WorkSkillEndpoint)]
         public async Task<IActionResult> UpdateWorkSkillAsync(WorkSkillsPutModel putModel, Guid id)
         {
@@ -82,7 +85,7 @@ namespace Api.Controllers
             }
         }
 
-        //[CustomAuthorize(RoleEnum.Admin)]
+        [CustomAuthorize(RoleEnum.Admin)]
         [HttpDelete(ApiEndPointConstant.WorkSkill.WorkSkillEndpoint)]
         public async Task<IActionResult> DeleteWorkSkillAsync(Guid id)
         {

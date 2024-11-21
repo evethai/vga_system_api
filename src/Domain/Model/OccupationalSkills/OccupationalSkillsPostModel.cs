@@ -12,8 +12,6 @@ namespace Domain.Model.OccupationalSkills
     {
         [Required(ErrorMessage = "WorkSkillsId is required.")]
         public Guid WorkSkillsId { get; set; }
-        [Required(ErrorMessage = "OccupationId is required.")]
-        public Guid OccupationId { get; set; }
         [Required(ErrorMessage = "Content is required.")]
         public string Content { get; set; } = string.Empty;
         [JsonIgnore]
