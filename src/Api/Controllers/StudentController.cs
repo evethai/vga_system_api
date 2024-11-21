@@ -4,6 +4,7 @@ using Application.Interface.Service;
 using Domain.Enum;
 using Domain.Model.Response;
 using Domain.Model.Student;
+using Infrastructure.Persistence.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -24,12 +25,24 @@ public class StudentController : ControllerBase
         var result = await _studentService.GetListStudentAsync(searchModel);
         return Ok(result);
     }
-    [CustomAuthorize(RoleEnum.Admin, RoleEnum.HighSchool)]
+    [Authorize]
     [HttpGet(ApiEndPointConstant.Student.StudentEndpoint)]
     public async Task<IActionResult> GetStudentByIdAsync(Guid id)
     {
-        var result = await _studentService.GetStudentByIdAsync(id);
-        return Ok(result);
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        try
+        {
+            var result = await _studentService.GetStudentByIdAsync(id);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+       
     }
     [CustomAuthorize(RoleEnum.Admin, RoleEnum.HighSchool)]
     [HttpPost(ApiEndPointConstant.Student.StudentPostEndpoint)]

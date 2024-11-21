@@ -59,7 +59,15 @@ namespace Infrastructure.Persistence.Repository
                         : query.OrderBy(p => p.GoldAmount);
                 };
             }
-
+            if (searchModel.sort_by_datetime.HasValue)
+            {
+                orderBy = query =>
+                {
+                    return searchModel.descending.HasValue && searchModel.descending.Value
+                        ? query.OrderByDescending(p => p.TransactionDateTime)
+                        : query.OrderBy(p => p.TransactionDateTime);
+                };
+            }
             if (searchModel.transaction_date_time.HasValue)
             {
                 filter = filter.And(p => p.TransactionDateTime.Date == searchModel.transaction_date_time.Value.Date);
