@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Domain.Model.Account;
+using Domain.Model.Certification;
 
 namespace Domain.Model.Consultant
 {
@@ -23,5 +24,6 @@ namespace Domain.Model.Consultant
         [Required(ErrorMessage = "Gender is required.")]
         public bool Gender { get; set; }
         public string? Image_Url { get; set; }
+        public List<CertificationPutModel>? Certifications { get; set; }
     }
 }

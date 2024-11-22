@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Domain.Model.Account;
+using Domain.Model.Certification;
 
 namespace Domain.Model.Consultant
 {
@@ -23,5 +24,6 @@ namespace Domain.Model.Consultant
         public DateTime DoB { get; set; }
         [Required(ErrorMessage = "Gender is required.")]
         public bool Gender { get; set; }
+        public List<CertificationPostModel> Certifications { get; set; } = new();
     }
 }
