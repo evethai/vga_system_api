@@ -52,12 +52,9 @@ namespace Infrastructure.Persistence.Repository
 
             if (searchModel.sort_by_gold_amount.HasValue && searchModel.sort_by_gold_amount.Value)
             {
-                orderBy = query =>
-                {
-                    return searchModel.descending.HasValue && searchModel.descending.Value
+                orderBy = query => searchModel.descending.HasValue && searchModel.descending.Value
                         ? query.OrderByDescending(p => p.GoldAmount)
                         : query.OrderBy(p => p.GoldAmount);
-                };
             }
 
             if (searchModel.transaction_date_time.HasValue)
