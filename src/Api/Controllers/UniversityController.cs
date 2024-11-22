@@ -4,6 +4,7 @@ using Application.Interface.Service;
 using Domain.Enum;
 using Domain.Model.Highschool;
 using Domain.Model.University;
+using Infrastructure.Persistence.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -31,8 +32,19 @@ namespace Api.Controllers
         [HttpGet(ApiEndPointConstant.University.UniversityEndpoint)]
         public async Task<IActionResult> GetUniversityByIdAsync(Guid id)
         {
-            var result = await _universityService.GetUniversityByIdAsync(id);
-            return Ok(result);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var result = await _universityService.GetUniversityByIdAsync(id);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }       
         }
         [CustomAuthorize(RoleEnum.Admin)]
         [HttpPost(ApiEndPointConstant.University.UniversityPostEndpoint)]

@@ -56,7 +56,15 @@ namespace Infrastructure.Persistence.Repository
                         ? query.OrderByDescending(p => p.GoldAmount)
                         : query.OrderBy(p => p.GoldAmount);
             }
-
+            if (searchModel.sort_by_datetime.HasValue)
+            {
+                orderBy = query =>
+                {
+                    return searchModel.descending.HasValue && searchModel.descending.Value
+                        ? query.OrderByDescending(p => p.TransactionDateTime)
+                        : query.OrderBy(p => p.TransactionDateTime);
+                };
+            }
             if (searchModel.transaction_date_time.HasValue)
             {
                 filter = filter.And(p => p.TransactionDateTime.Date == searchModel.transaction_date_time.Value.Date);
@@ -123,7 +131,7 @@ namespace Infrastructure.Persistence.Repository
                         Id = Guid.NewGuid(),
                         WalletId = transactionModel.WalletId,
                         TransactionType = transactionType,
-                        Description = "Bạn đã nạp " + transactionModel.GoldAmount + " Gold",
+                        Description = "Bạn đã yêu cầu nạp " + transactionModel.GoldAmount + " Gold",
                         GoldAmount = transactionModel.GoldAmount,
                         TransactionDateTime = DateTime.UtcNow,
                     };

@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
 
 namespace Api.Controllers
 {
@@ -34,10 +35,22 @@ namespace Api.Controllers
         }
         [Authorize]
         [HttpGet(ApiEndPointConstant.Wallet.WalletEndpoint)]
-        public async Task<IActionResult> GetWalletByIdAsync(Guid id)
+        public async Task<IActionResult> GetWalletByIdAsync(Guid AccountId)
         {
-            var result = await _walletService.GetWalletByIdAsync(id);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var result = await _walletService.GetWalletByIdAsync(AccountId);
             return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
         }
         [CustomAuthorize(RoleEnum.Admin, RoleEnum.University)]
         [HttpPut(ApiEndPointConstant.Wallet.WalletTransferringAndReceiving)]
@@ -87,6 +100,19 @@ namespace Api.Controllers
             {
                 var result = await _walletService.UpdateWalletUsingByTestAsync(AccountId, goldUsingTest);
                 return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost(ApiEndPointConstant.Wallet.WalletPayOs)]
+        public async Task<IActionResult> RequestTopUpWalletWithPayOs(Guid AccountId, float amount)
+        {
+            try
+            {
+                var paymenturl = await _walletService.RequestTopUpWalletWithPayOsAsync(AccountId, amount);
+                return Ok(paymenturl);
             }
             catch (Exception ex)
             {

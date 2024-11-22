@@ -42,32 +42,28 @@ namespace Infrastructure.Persistence.Service
             };
         }
 
-        public async Task<WalletModel> GetWalletByIdAsync(Guid Id)
+        public async Task<WalletModel> GetWalletByIdAsync(Guid AccountId)
         {
             var wallet = await _unitOfWork.WalletRepository.SingleOrDefaultAsync
-                (predicate: c => c.AccountId.Equals(Id));
+                (predicate: c => c.AccountId.Equals(AccountId)) ?? throw new Exception("Account Id is not found");
             return _mapper.Map<WalletModel>(wallet);
         }
 
         public async Task<ResponseModel> UpdateWalletUsingGoldDistributionAsync(TransactionPutWalletModel model)
         {
-            var walletTransferring = await _unitOfWork.WalletRepository.GetByIdGuidAsync(model.WalletHighSchoolId);
+            var walletTransferring = await _unitOfWork.WalletRepository.
+                SingleOrDefaultAsync(predicate: a=>a.AccountId.Equals( model.AccountId)) ?? throw new Exception("Id Account is not found");
             var receivingWallets = await _unitOfWork.WalletRepository.GetInforStudentHasWalletReceiving(walletTransferring.AccountId, model.Years);
             var totalgoldDistribution = model.Gold * receivingWallets.Count();           
-            if (walletTransferring.GoldBalance < totalgoldDistribution)
+            if(walletTransferring.GoldBalance < totalgoldDistribution)
             {
-                return new ResponseModel
-                {
-                    IsSuccess = false,
-                    Message = "Distribution gold is fail when Gold not enough",
-                };
+                throw new Exception("Distribution gold is fail when Gold not enough");
             }
             walletTransferring.GoldBalance = walletTransferring.GoldBalance - totalgoldDistribution;
             TransactionPostModel transaction_Transferring =
                new TransactionPostModel(walletTransferring.Id, totalgoldDistribution);
             await _unitOfWork.TransactionRepository
                 .CreateTransactionWhenUsingGold(TransactionType.Transferring, transaction_Transferring);
-
             await _unitOfWork.WalletRepository.UpdateAsync(walletTransferring);
             foreach (var receivingWallet in receivingWallets)
             {
@@ -119,14 +115,13 @@ namespace Infrastructure.Persistence.Service
         }
 
         public async Task<ResponseModel> RequestTopUpWalletWithPayOsAsync(Guid accountId, float amount)
-        {
-            var exitAccount = await _unitOfWork.AccountRepository.GetByIdGuidAsync(accountId) ?? throw new Exception("Account Id is not found");
+        {          
             var exitWallet = await _unitOfWork.WalletRepository.
-                SingleOrDefaultAsync(predicate: s => s.AccountId.Equals(exitAccount.Id)) ?? throw new Exception("Wallet is not found");
-            TransactionPostModel transaction = new TransactionPostModel(exitAccount.Id, (int)amount);
+                SingleOrDefaultAsync(predicate: s => s.AccountId.Equals(accountId)) ?? throw new Exception("Wallet is not found");
+            TransactionPostModel transaction = new TransactionPostModel(exitWallet.Id, (int)amount);
             var trans =  await _unitOfWork.TransactionRepository.CreateTransactionWhenUsingGold(TransactionType.Recharge, transaction);
-            exitWallet.GoldBalance += (int)amount;
-            await _unitOfWork.WalletRepository.UpdateAsync(exitWallet);
+            //exitWallet.GoldBalance += (int)amount;
+            //await _unitOfWork.WalletRepository.UpdateAsync(exitWallet);
             await _unitOfWork.SaveChangesAsync();
             var orderId = trans.Id;
             var items = new List<ItemData>
@@ -138,13 +133,12 @@ namespace Infrastructure.Persistence.Service
             string returnUrl = $"https://elderconnection.vercel.app/success?transactionId={orderId}";
             string cancelUrl = $"https://elderconnection.vercel.app/cancel?transactionId={orderId}";
 
-
             var payOSModel = new PaymentData(
                 orderCode: orderCode,
                 amount: (int)amount,
-                description: "Thanh toan don hang",
+                description: "Thanh toan don hang", 
                 items: items,
-            returnUrl: returnUrl,
+                returnUrl: returnUrl,
                 cancelUrl: cancelUrl
             );
             var paymentUrl = await _payOSService.CreatePaymentLink(payOSModel);
@@ -154,7 +148,7 @@ namespace Infrastructure.Persistence.Service
                 {
                     Message = "Create PayOs Is Successfully",
                     IsSuccess = true,
-                    Data = exitWallet
+                    Data = paymentUrl.checkoutUrl
                 };
             }
             return new ResponseModel
