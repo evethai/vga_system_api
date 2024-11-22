@@ -54,6 +54,12 @@ namespace Infrastructure.Persistence.Repository
 
                 filter = filter.And(cd => cd.ConsultationTime.Day.Day >= startOfWeek && cd.ConsultationTime.Day.Day <= endOfWeek);
             }
+            if (searchModel.sortByDay.HasValue && searchModel.sortByDay.Value)
+            {
+                orderBy = query => searchModel.descending.HasValue && searchModel.descending.Value
+                    ? query.OrderByDescending(b => b.ConsultationTime.Day.Day)
+                    : query.OrderBy(b => b.ConsultationTime.Day.Day);
+            }
             return (filter, orderBy);
         }
 

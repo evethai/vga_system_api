@@ -33,7 +33,9 @@ namespace Domain.Model.Transaction
 
         [FromQuery(Name = "sort-by-gold-amount")]
         public bool? sort_by_gold_amount { get; set; } = false;
-        
+        [FromQuery(Name = "sort-by-date-time")]
+        public bool? sort_by_datetime { get; set; } = false;
+
         [FromQuery(Name = "descending")]
         public bool? descending { get; set; } = false;
     }

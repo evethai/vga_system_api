@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Api.Controllers
 {
     [ApiController]
-    [CustomAuthorize(RoleEnum.Admin)]
+    [CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
     public class TestTypeController : ControllerBase
     {
         private readonly ITestTypeService _testTypeService;
