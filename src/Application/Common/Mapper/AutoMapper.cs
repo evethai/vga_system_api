@@ -3,6 +3,7 @@ using Domain.Entity;
 using Domain.Model.AccountWallet;
 using Domain.Model.AdmissionInformation;
 using Domain.Model.Booking;
+using Domain.Model.Certification;
 using Domain.Model.Consultant;
 using Domain.Model.ConsultantLevel;
 using Domain.Model.ConsultationDay;
@@ -260,7 +261,10 @@ namespace Application.Common.Mapper
             CreateMap<ImageNews, ImageNewsModel>().ReverseMap();
             CreateMap<ImageNews, ImageNewsPostModel>().ReverseMap();
             CreateMap<ImageNews, ImageNewsPutModel>().ReverseMap();
-
+            //Certification
+            CreateMap<Certification, CertificationViewModel>().ReverseMap();
+            CreateMap<Certification, CertificationPostModel>().ReverseMap();
+            CreateMap<Certification, CertificationPutModel>().ReverseMap();
         }
 
     }

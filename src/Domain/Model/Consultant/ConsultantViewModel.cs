@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.Model.Certification;
 using Domain.Model.ConsultantLevel;
 using Domain.Model.University;
 
@@ -22,5 +23,6 @@ namespace Domain.Model.Consultant
         public DateTime DateOfBirth { get; set; }
         public bool Gender { get; set; }
         public DateTime CreateAt { get; set; }
+        public List<CertificationViewModel> Certifications { get; set; } 
     }
 }
