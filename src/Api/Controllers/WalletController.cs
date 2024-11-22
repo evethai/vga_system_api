@@ -1,6 +1,7 @@
 ﻿using Api.Constants;
 using Api.Validators;
 using Application.Interface.Service;
+using Application.Library;
 using Domain.Entity;
 using Domain.Enum;
 using Domain.Model.Highschool;
@@ -106,12 +107,25 @@ namespace Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost(ApiEndPointConstant.Wallet.WalletPayOs)]
-        public async Task<IActionResult> RequestTopUpWalletWithPayOs(Guid AccountId, float amount)
+        [HttpPost(ApiEndPointConstant.Wallet.WalletPayOsRequest)]
+        public async Task<IActionResult> RequestTopUpWalletWithPayOs([FromQuery] Guid accountId, [FromQuery] float amount, PayOSUrl url)
         {
             try
             {
-                var paymenturl = await _walletService.RequestTopUpWalletWithPayOsAsync(AccountId, amount);
+                var paymenturl = await _walletService.RequestTopUpWalletWithPayOsAsync(accountId, amount,url);
+                return Ok(paymenturl);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost(ApiEndPointConstant.Wallet.WalletPayOsResponse)]
+        public async Task<IActionResult> RequestDepositToWalletWithPayOs([FromQuery] Guid transactionId, [FromQuery] string status)
+        {
+            try
+            {
+                var paymenturl = await _walletService.RequestDepositToWalletWithPayOs(transactionId, status);
                 return Ok(paymenturl);
             }
             catch (Exception ex)

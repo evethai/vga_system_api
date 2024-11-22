@@ -15,4 +15,9 @@ namespace Application.Library
         public string cancelUrl { get; set; }
 
     }
+    public class PayOSUrl
+    {
+        public string ReturnUrl { get; set; }
+        public string CancelUrl { get; set; }
+    }
 }
