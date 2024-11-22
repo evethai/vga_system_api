@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Library;
 using Domain.Entity;
 using Domain.Model.Highschool;
 using Domain.Model.Region;
@@ -19,6 +20,7 @@ namespace Application.Interface.Service
         Task<ResponseWalletModel> GetAllWallet();
         Task<ResponseModel> UpdateWalletUsingGoldDistributionAsync(TransactionPutWalletModel model);
         Task<ResponseModel> UpdateWalletUsingByTestAsync(Guid WalletStudentId, int goldUsingTest);
-        Task<ResponseModel> RequestTopUpWalletWithPayOsAsync(Guid accountId, float amount);
+        Task<ResponseModel> RequestTopUpWalletWithPayOsAsync(Guid accountId, float amount, PayOSUrl url);
+        Task<ResponseModel> RequestDepositToWalletWithPayOs(Guid transactionId, string status);
     }
 }

@@ -32,7 +32,7 @@ namespace Infrastructure.Persistence.Repository
                 throw new KeyNotFoundException("Null data");
             }
 
-            var email = _context.Account.Where(x => x.Email == registerAccount.Email || x.Phone == registerAccount.Phone).FirstOrDefaultAsync();
+            var email = await _context.Account.Where(x => x.Email.Equals(registerAccount.Email) || x.Phone.Equals(registerAccount.Phone)).FirstOrDefaultAsync();
             if (email != null) throw new Exception("Email or phone is existed");
             
             registerAccount.Phone = string.Concat("84", registerAccount.Phone.AsSpan(1));
