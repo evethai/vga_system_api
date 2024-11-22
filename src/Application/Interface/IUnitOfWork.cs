@@ -38,6 +38,7 @@ namespace Application.Interface
         IWorkSkillsRepository WorkSkillsRepository { get; }
         IAdmissionMethodRepository AdmissionMethodRepository { get; }
         IOccupationSkillRepository OccupationSkillRepository { get; }
+        ICertificationRepository CertificationRepository { get; }
         Task SaveChangesAsync();
     }
 }

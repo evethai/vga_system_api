@@ -39,6 +39,7 @@ namespace Infrastructure.Persistence.Service
                     include: q => q.Include(c => c.Account).ThenInclude(a => a.Wallet)
                                     .Include(c => c.University)
                                     .Include(c => c.ConsultantLevel)
+                                    .Include(c => c.Certifications)
                     ) ?? throw new NotExistsException();
 
                 var result = _mapper.Map<ConsultantViewModel>(consultant);
@@ -73,6 +74,8 @@ namespace Infrastructure.Persistence.Service
                 var university = await _unitOfWork.UniversityRepository.GetByIdGuidAsync(postModel.UniversityId)
                     ?? throw new NotExistsException();
 
+                var listCertificate = new List<Certification>();
+
                 var consultant = _mapper.Map<Consultant>(postModel);
 
                 RegisterAccountModel accountModel = new RegisterAccountModel(
@@ -84,6 +87,13 @@ namespace Infrastructure.Persistence.Service
 
                 //consultant.Id = Guid.NewGuid();
                 consultant.AccountId = accountId;
+
+                foreach (var certi in postModel.Certifications)
+                {
+                    var certification = _mapper.Map<Certification>(certi);
+                    listCertificate.Add(certification);
+                }
+                consultant.Certifications = listCertificate;
 
                 await _unitOfWork.ConsultantRepository.AddAsync(consultant);
                 await _unitOfWork.SaveChangesAsync();
@@ -111,11 +121,52 @@ namespace Infrastructure.Persistence.Service
         {
             try
             {
-                var consultant = await _unitOfWork.ConsultantRepository.GetByIdGuidAsync(consultantId)
-                    ?? throw new NotExistsException();
+                var consultant = await _unitOfWork.ConsultantRepository
+                    .SingleOrDefaultAsync(
+                    predicate: o => o.Id.Equals(consultantId),
+                    include: q => q.Include(c => c.Account).ThenInclude(a => a.Wallet)
+                                    .Include(c => c.University)
+                                    .Include(c => c.ConsultantLevel)
+                                    .Include(c => c.Certifications)
+                    ) ?? throw new NotExistsException();
+
                 var exAccountConsultant = await _unitOfWork.AccountRepository.GetByIdGuidAsync(consultant.AccountId)
                     ?? throw new NotExistsException();
                 _mapper.Map(putModel, consultant);
+
+                var listNewCertificate = new List<Certification>();
+
+                if (putModel.Certifications != null)
+                {
+                    foreach (var certification in putModel.Certifications)
+                    {
+                        if (certification.Id.HasValue)
+                        {
+                            var existingCertification = consultant.Certifications
+                                .FirstOrDefault(s => s.Id == certification.Id.Value) ?? throw new NotExistsException();
+
+                            _mapper.Map(certification, existingCertification);
+                        }
+                        else
+                        {
+                            var newCertification = _mapper.Map<Certification>(certification);
+                            newCertification.ConsultantId = consultantId;
+                            listNewCertificate.Add(newCertification);
+                        }
+                    }
+                    if (listNewCertificate.Count > 0)
+                        await _unitOfWork.CertificationRepository.AddRangeAsync(listNewCertificate);
+
+                    var CertificationToRemove = consultant.Certifications
+                        .Where(s => !putModel.Certifications.Any(c => c.Id == s.Id))
+                        .ToList();
+
+                    foreach (var certification in CertificationToRemove)
+                    {
+                        consultant.Certifications.Remove(certification);
+                    }
+                }
+
                 await _unitOfWork.ConsultantRepository.UpdateAsync(consultant);
                 await _unitOfWork.AccountRepository.UpdateAsync(exAccountConsultant);
                 await _unitOfWork.SaveChangesAsync();
@@ -184,7 +235,8 @@ namespace Infrastructure.Persistence.Service
                     include: q => q.Include(s => s.Account)
                                         .ThenInclude(a => a.Wallet)
                                     .Include(s => s.ConsultantLevel)
-                                    .Include(s => s.University),
+                                    .Include(s => s.University)
+                                    .Include(s => s.Certifications),
                     pageIndex: searchModel.currentPage,
                     pageSize: searchModel.pageSize
                 );
