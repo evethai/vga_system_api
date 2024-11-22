@@ -56,7 +56,7 @@ namespace Infrastructure.Persistence.Repository
                         ? query.OrderByDescending(p => p.GoldAmount)
                         : query.OrderBy(p => p.GoldAmount);
             }
-            if (searchModel.sort_by_datetime.HasValue)
+            if (searchModel.sort_by_datetime.HasValue && searchModel.sort_by_datetime.Value)
             {
                 orderBy = query => searchModel.descending.HasValue && searchModel.descending.Value
                         ? query.OrderByDescending(p => p.TransactionDateTime)
