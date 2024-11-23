@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Api.Controllers
 {
     [ApiController]
-    //[CustomAuthorize(RoleEnum.Admin)]
+    [CustomAuthorize(RoleEnum.Admin)]
     public class QuestionController : ControllerBase
     {
         private readonly IQuestionService _questionService;
