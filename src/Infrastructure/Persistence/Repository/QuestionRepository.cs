@@ -8,6 +8,7 @@ using Domain.Entity;
 using Domain.Model.Question;
 using Domain.Model.Response;
 using Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Repository
 {
@@ -23,57 +24,81 @@ namespace Infrastructure.Persistence.Repository
 
         public async Task<ResponseModel> CreateQuestion(QuestionPostModel model)
         {
-            using (var transaction = await _context.Database.BeginTransactionAsync())
+            var strategy = _context.Database.CreateExecutionStrategy();
+            return await strategy.ExecuteAsync(async () =>
             {
-                try
+                using (var transaction = await _context.Database.BeginTransactionAsync())
                 {
-                    Question question = new Question
+                    try
                     {
-                        TestTypeId = model.TestTypeId,
-                        Content = model.Content,
-                        Group = model.Group,
-                        Status = true,
-                        CreateAt = DateTime.Now,
-                    };
+                        var typeId = await _context.PersonalTest
+                            .Where(p => p.Id == model.personalTestId)
+                            .Select(p => p.TestTypeId)
+                            .FirstOrDefaultAsync();
 
-                    await _context.Question.AddAsync(question);
-                    await _context.SaveChangesAsync(); 
-
-                    if (model.Answers != null && model.Answers.Any())
-                    {
-                        List<Answer> answers = model.Answers.Select(answer => new Answer
+                        if (typeId == null)
                         {
-                            Content = answer.Content,
-                            AnswerValue = answer.AnswerValue,
-                            QuestionId = question.Id, 
-                            status = true
-                        }).ToList();
+                            throw new Exception("TestTypeId not found for the given PersonalTestId.");
+                        }
 
-                        
-                        await _context.Answer.AddRangeAsync(answers);
+                        Question question = new Question
+                        {
+                            TestTypeId = typeId,
+                            Content = model.Content,
+                            Group = model.Group,
+                            Status = true,
+                            CreateAt = DateTime.Now,
+                        };
+
+                        await _context.Question.AddAsync(question);
+                        await _context.SaveChangesAsync();
+
+                        TestQuestion testQuestion = new TestQuestion
+                        {
+                            PersonalTestId = model.personalTestId,
+                            QuestionId = question.Id,
+                            Status = true
+                        };
+
+                        await _context.TestQuestion.AddAsync(testQuestion);
+
+                        if (model.Answers != null && model.Answers.Any())
+                        {
+                            List<Answer> answers = model.Answers.Select(answer => new Answer
+                            {
+                                Content = answer.Content,
+                                AnswerValue = answer.AnswerValue,
+                                QuestionId = question.Id,
+                                status = true
+                            }).ToList();
+
+                            await _context.Answer.AddRangeAsync(answers);
+                        }
+
+                        await _context.SaveChangesAsync();
+                        await transaction.CommitAsync();
+
+                        return new ResponseModel
+                        {
+                            IsSuccess = true,
+                            Message = "Question created successfully.",
+                            Data = question.Id
+                        };
                     }
-                    await _context.SaveChangesAsync();
-
-                    // Commit transaction 
-                    await transaction.CommitAsync();
-                    return new ResponseModel
+                    catch (Exception ex)
                     {
-                        IsSuccess = true,
-                        Message = "Question created successfully."
-                    };
-                }
-                catch (Exception ex)
-                {
-                    await transaction.RollbackAsync();
+                        await transaction.RollbackAsync();
 
-                    return new ResponseModel
-                    {
-                        IsSuccess = false,
-                        Message = ex.Message
-                    };
+                        return new ResponseModel
+                        {
+                            IsSuccess = false,
+                            Message = ex.Message
+                        };
+                    }
                 }
-            }
+            });
         }
+
         #endregion
 
         #region update question

@@ -18,6 +18,7 @@ using Domain.Model.Occupation;
 using Domain.Model.OccupationalGroup;
 using Domain.Model.OccupationalSkills;
 using Domain.Model.PersonalGroup;
+using Domain.Model.PersonalTest;
 using Domain.Model.Question;
 using Domain.Model.Region;
 using Domain.Model.Student;
@@ -43,6 +44,7 @@ namespace Application.Common.Mapper
             //PersonalTest
             CreateMap<PersonalTest, PersonalTestModel>().ReverseMap();
             CreateMap<StudentTest, StudentTestModel>().ReverseMap();
+            CreateMap<PersonalTest, PersonalTestPostModel>().ReverseMap();
 
             //StudentTest
             CreateMap<StudentTest, StudentTestModel>().ReverseMap();
@@ -64,6 +66,12 @@ namespace Application.Common.Mapper
             //Question
             CreateMap<Question, QuestionModel>().ReverseMap();
             CreateMap<Question, QuestionPostModel>().ReverseMap();
+            CreateMap<TestQuestion, QuestionListByTestIdModel>()
+                .ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.Question.Content))
+                .ForMember(dest => dest.Group, opt => opt.MapFrom(src => src.Question.Group))
+                .ForMember(dest => dest.AnswerModels, opt => opt.MapFrom(src => src.Question.Answers))
+                .ReverseMap();
+
 
             //Answer
             CreateMap<Answer, AnswerModel>().ReverseMap();

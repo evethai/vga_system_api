@@ -139,14 +139,35 @@ public class StudentService : IStudentService
                        , studentImport.Phone);
 
                 var student = _mapper.Map<Student>(studentImport);
-                var AccountId = await _unitOfWork.AccountRepository.CreateAccountAndWallet(accountModel, RoleEnum.Student);
+                try
+                {
+                    var AccountId = await _unitOfWork.AccountRepository.CreateAccountAndWallet(accountModel, RoleEnum.Student);
+                    student.Id = Guid.NewGuid();
+                    student.AccountId = AccountId;
+                    student.HighSchoolId = studentImportModel.highschoolId;
+                    student.SchoolYears = studentImportModel.schoolYear;
 
-                student.Id = Guid.NewGuid();
-                student.AccountId = AccountId;
-                student.HighSchoolId = studentImportModel.highschoolId;
-                student.SchoolYears = studentImportModel.schoolYear;
+                    await _unitOfWork.StudentRepository.AddAsync(student);
+                }
+                catch (Exception e)
+                {
+                    if (e.Message.Contains("Email", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var existingStudent = await _unitOfWork.StudentRepository.SingleOrDefaultAsync(
+                            predicate: x => x.Account.Name.Equals(accountModel.Name),
+                            include: s=>s.Include(s => s.Account));
 
-                await _unitOfWork.StudentRepository.AddAsync(student);
+                        if (existingStudent == null)
+                            throw;
+                        existingStudent.SchoolYears = studentImportModel.schoolYear;
+                        await _unitOfWork.StudentRepository.UpdateAsync(existingStudent);   
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                    
+                }
             }
 
             await _unitOfWork.SaveChangesAsync();

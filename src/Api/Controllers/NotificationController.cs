@@ -2,6 +2,7 @@
 using Application.Interface.Service;
 using Domain.Enum;
 using Domain.Model.Notification;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,12 +25,14 @@ namespace Api.Controllers
             return Ok(result);
         }
         [HttpPut]
+        [Authorize]
         public async Task<IActionResult> UpdateNotification(int id, NotiStatus status)
         {
             var result = await _notificationService.UpdateNotification(id, status);
             return Ok(result);
         }
         [HttpPost]
+        //[Authorize]
         public async Task<IActionResult> AddNotification(NotificationPostModel model)
         {
             var result = await _notificationService.AddNotification(model);

@@ -11,8 +11,11 @@ namespace Domain.Model.Question
 {
     public class QuestionPostModel
     {
-        [Required(ErrorMessage = "TestTypeId is required")]
-        public Guid TestTypeId { get; set; }
+        [Required(ErrorMessage = "Personal Test id is required")]
+        public Guid personalTestId { get; set; }
+
+        //[Required(ErrorMessage = "TestTypeId is required")]
+        //public Guid TestTypeId { get; set; }
 
         [Required(ErrorMessage = "Content is required")]
         public string Content { get; set; } = string.Empty;
@@ -39,20 +42,25 @@ namespace Domain.Model.Question
         {
             var model = (QuestionPostModel)validationContext.ObjectInstance;
 
+            if (model.Group != QuestionGroup.None)
+            {
+                model.Answers = null;
+            }
+
             if (model.Group == QuestionGroup.None && (model.Answers == null || model.Answers.Count != 2))
             {
                 return new ValidationResult("MBTI questions must have exactly 2 answers.");
             }
 
-            else if (model.Group != QuestionGroup.None && (model.Answers != null || model.Answers.Any()))
-            {
-                return new ValidationResult("Holland code questions should not have answers.");
-            }
+            //else if (model.Group != QuestionGroup.None && (model.Answers != null || model.Answers.Any()))
+            //{
+            //    return new ValidationResult("Holland code questions should not have answers.");
+            //}
 
-            return ValidationResult.Success; 
+            return ValidationResult.Success;
         }
+
     }
-
-
-
 }
+
+
