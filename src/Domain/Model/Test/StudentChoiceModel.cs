@@ -11,6 +11,7 @@ namespace Domain.Model.Test
 {
     public class StudentChoiceModel
     {
+        [Required(ErrorMessage = "Student id is require!")]
         public Guid StudentTestId { get; set; }
 
         public List<MajorOrOccupationModel> models { get; set; } = new List<MajorOrOccupationModel>();
@@ -21,6 +22,17 @@ namespace Domain.Model.Test
         public Guid Id { get; set; }
         public string Name { get; set; } = null!;
         public int Rating { get; set; }
+        //public StudentChoiceType Type { get; set; }
+    }
+
+    public class stChoiceModel
+    {
+        public Guid StudentTestId { get; set; }
+        public virtual StudentTest StudentTest { get; set; } = null!;
+        public Guid MajorOrOccupationId { get; set; }
+        public string MajorOrOccupationName { get; set; } = null!;
+        public int Rating { get; set; }
         public StudentChoiceType Type { get; set; }
+        public string Image { get; set; } = null!;
     }
 }

@@ -1,4 +1,6 @@
-﻿using Application.Interface.Service;
+﻿using Api.Constants;
+using Application.Interface.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,7 +17,8 @@ namespace Api.Controllers
             _adminService = adminService;
         }
 
-        [HttpGet("dashboard")]
+        [HttpGet(ApiEndPointConstant.Admin.Dashboard)]
+        [Authorize]
         public async Task<IActionResult> GetDashboard()
         {
             var result = await _adminService.GetDashboard();

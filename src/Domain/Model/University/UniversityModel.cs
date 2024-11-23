@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Domain.Enum;
 using Domain.Model.AccountWallet;
+using Domain.Model.AdmissionInformation;
 using Domain.Model.Consultant;
 using Domain.Model.ConsultantLevel;
 using Domain.Model.Highschool;
@@ -31,6 +32,7 @@ namespace Domain.Model.University
         public AccountWalletModel Account { get; set; }
         public List<UniversityLocationModel> UniversityLocations { get; set; }
         public List<ConsultantModel> Consultants { get; set; }
+        public List<AdmissionInformationModel> AdmissionInformation { get; set; }
     }
     public class ConsultantModel
     {

@@ -16,6 +16,6 @@ namespace Application.Interface.Repository
         Task<StudentHistoryModel> GetHistoryTestByStudentId(Guid studentId);
         Task<IEnumerable<Major>> GetMajorsByPersonalGroupId(Guid personalGroupId);
         Task<IEnumerable<Occupation>> GetOccupationByMajorId(Guid majorId);
-        Task<List<StudentChoice>> CreateStudentChoice(StudentChoiceModel StModel, StudentChoiceType type);
+        Task<List<stChoiceModel>> CreateStudentChoice(StudentChoiceModel StModel, StudentChoiceType type);
     }
 }
