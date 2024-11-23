@@ -49,7 +49,7 @@ namespace Api.Controllers
             }
         }
 
-        [CustomAuthorize(RoleEnum.University)]
+        [CustomAuthorize(RoleEnum.Admin)]
         [HttpPut(ApiEndPointConstant.Transaction.TransactionProcessRequest)]
         public async Task<IActionResult> ProcessWithdrawRequestAsync(Guid id, TransactionType type)
         {
