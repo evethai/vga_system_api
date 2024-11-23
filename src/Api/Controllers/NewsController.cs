@@ -1,8 +1,11 @@
 ﻿using Api.Constants;
+using Api.Validators;
 using Application.Interface.Service;
+using Domain.Enum;
 using Domain.Model.News;
 using Domain.Model.Response;
 using Infrastructure.Persistence.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,18 +21,32 @@ namespace Api.Controllers
         {
             _newsService = newsService;
         }
+        [Authorize]
         [HttpGet(ApiEndPointConstant.News.NewsEndpoint)]
         public async Task<IActionResult> GetListNewsAsync([FromQuery] NewsSearchModel searchModel)
         {
             var news = await _newsService.GetListNewsAsync(searchModel);
             return Ok(news);
         }
+        [Authorize]
         [HttpGet(ApiEndPointConstant.News.NewEndpoint)]
         public async Task<IActionResult> GetNewsByIdAsync(Guid id)
         {
-            var news = await _newsService.GetNewsByIdAsync(id);
-            return Ok(news);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var news = await _newsService.GetNewsByIdAsync(id);
+                return Ok(news);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }            
         }
+        [CustomAuthorize(RoleEnum.Admin,RoleEnum.University)]
         [HttpPost(ApiEndPointConstant.News.NewsEndpoint)]
         public async Task<IActionResult> CreateNewsAsync(NewsPostModel postModel)
         {
@@ -47,6 +64,7 @@ namespace Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [CustomAuthorize(RoleEnum.Admin, RoleEnum.University)]
         [HttpPut(ApiEndPointConstant.News.NewEndpoint)]
         public async Task<IActionResult> UpdateNewsAsync(NewsPutModel putModel, Guid id)
         {
@@ -64,6 +82,7 @@ namespace Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [CustomAuthorize(RoleEnum.Admin, RoleEnum.University)]
         [HttpDelete(ApiEndPointConstant.News.NewEndpoint)]
         public async Task<IActionResult> DeleteNewsAsync(Guid id)
         {
@@ -81,6 +100,7 @@ namespace Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [CustomAuthorize(RoleEnum.Admin, RoleEnum.University)]
         [HttpPost(ApiEndPointConstant.ImageNews.ImageNewsEndpoint)]
         public async Task<IActionResult> CreateImageNewsAsync(Guid NewsId, List<ImageNewsPostModel> imageNews)
         {
@@ -98,6 +118,7 @@ namespace Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [CustomAuthorize(RoleEnum.Admin, RoleEnum.University)]
         [HttpDelete(ApiEndPointConstant.ImageNews.ImageNewsDeleteEndpoint)]
         public async Task<IActionResult> DeleteNewsImageAsync(int id)
         {
@@ -115,6 +136,7 @@ namespace Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [CustomAuthorize(RoleEnum.Admin, RoleEnum.University)]
         [HttpPut(ApiEndPointConstant.ImageNews.ImageNewsPutEndpoint)]
         public async Task<IActionResult> UpdateNewsImageAsync(ImageNewsPutModel imageNewsModel, int id)
         {

@@ -1,7 +1,10 @@
 ﻿using Api.Constants;
+using Api.Validators;
 using Application.Interface.Service;
+using Domain.Enum;
 using Domain.Model.Occupation;
 using Infrastructure.Persistence.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
@@ -15,7 +18,7 @@ namespace Api.Controllers
             _occupationService = occupationService;
         }
 
-        //[CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
+        [Authorize]
         [HttpGet(ApiEndPointConstant.Occupation.OccupationsEndpoint)]
         public async Task<IActionResult> GetListOccupationsWithPaginateAsync(OccupationSearchModel searchModel)
         {
@@ -23,7 +26,7 @@ namespace Api.Controllers
             return Ok(result);
         }
 
-        //[CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
+        [Authorize]
         [HttpGet(ApiEndPointConstant.Occupation.OccupationEndpoint)]
         public async Task<IActionResult> GetOccupationByIdAsync(Guid id)
         {
@@ -39,7 +42,8 @@ namespace Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        //[CustomAuthorize(RoleEnum.Admin)]
+
+        [CustomAuthorize(RoleEnum.Admin)]
         [HttpPost(ApiEndPointConstant.Occupation.OccupationsEndpoint)]
         public async Task<IActionResult> CreateOccupationAsync(OccupationPostModel postModel)
         {
@@ -60,7 +64,7 @@ namespace Api.Controllers
             }
         }
 
-        //[CustomAuthorize(RoleEnum.Admin)]
+        [CustomAuthorize(RoleEnum.Admin)]
         [HttpPut(ApiEndPointConstant.Occupation.OccupationEndpoint)]
         public async Task<IActionResult> UpdateOccupationAsync(OccupationPutModel putModel, Guid id)
         {
@@ -81,7 +85,7 @@ namespace Api.Controllers
             }
         }
 
-        //[CustomAuthorize(RoleEnum.Admin)]
+        [CustomAuthorize(RoleEnum.Admin)]
         [HttpDelete(ApiEndPointConstant.Occupation.OccupationEndpoint)]
         public async Task<IActionResult> DeleteOccupationAsync(Guid id)
         {

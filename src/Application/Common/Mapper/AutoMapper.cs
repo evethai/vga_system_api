@@ -3,6 +3,7 @@ using Domain.Entity;
 using Domain.Model.AccountWallet;
 using Domain.Model.AdmissionInformation;
 using Domain.Model.Booking;
+using Domain.Model.Certification;
 using Domain.Model.Consultant;
 using Domain.Model.ConsultantLevel;
 using Domain.Model.ConsultationDay;
@@ -17,6 +18,7 @@ using Domain.Model.Occupation;
 using Domain.Model.OccupationalGroup;
 using Domain.Model.OccupationalSkills;
 using Domain.Model.PersonalGroup;
+using Domain.Model.PersonalTest;
 using Domain.Model.Question;
 using Domain.Model.Region;
 using Domain.Model.Student;
@@ -42,6 +44,7 @@ namespace Application.Common.Mapper
             //PersonalTest
             CreateMap<PersonalTest, PersonalTestModel>().ReverseMap();
             CreateMap<StudentTest, StudentTestModel>().ReverseMap();
+            CreateMap<PersonalTest, PersonalTestPostModel>().ReverseMap();
 
             //StudentTest
             CreateMap<StudentTest, StudentTestModel>().ReverseMap();
@@ -63,6 +66,12 @@ namespace Application.Common.Mapper
             //Question
             CreateMap<Question, QuestionModel>().ReverseMap();
             CreateMap<Question, QuestionPostModel>().ReverseMap();
+            CreateMap<TestQuestion, QuestionListByTestIdModel>()
+                .ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.Question.Content))
+                .ForMember(dest => dest.Group, opt => opt.MapFrom(src => src.Question.Group))
+                .ForMember(dest => dest.AnswerModels, opt => opt.MapFrom(src => src.Question.Answers))
+                .ReverseMap();
+
 
             //Answer
             CreateMap<Answer, AnswerModel>().ReverseMap();
@@ -134,6 +143,19 @@ namespace Application.Common.Mapper
             //Consultation Day
             CreateMap<ConsultationDay, ConsultationDayViewModel>()
                 .ReverseMap();
+            CreateMap<Consultant, ConsultantModel>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.AccountId, opt => opt.MapFrom(src => src.AccountId))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Account.Name))
+                .ForMember(dest => dest.ConsultantLevel, opt => opt.MapFrom(src => src.ConsultantLevel))
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Account.Email))
+                .ForMember(dest => dest.Phone, opt => opt.MapFrom(src => src.Account.Phone))
+                .ForMember(dest => dest.Image_Url, opt => opt.MapFrom(src => src.Account.Image_Url))
+                .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
+                .ForMember(dest => dest.DateOfBirth, opt => opt.MapFrom(src => src.DoB))
+                .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender))
+                .ForMember(dest => dest.CreateAt, opt => opt.MapFrom(src => src.Account.CreateAt))
+            .ReverseMap();
             CreateMap<ConsultationDay, ConsultationDayPostModel>()
                .ReverseMap();
 
@@ -168,6 +190,7 @@ namespace Application.Common.Mapper
             CreateMap<Wallet, WalletAccountModel>().ReverseMap();
             // University
             CreateMap<University, UniversityModel>().ReverseMap();
+            CreateMap<University, UniversityModelGetBy>().ReverseMap();
             CreateMap<University, UniversityPostModel>().ReverseMap();
             CreateMap<University, UniversityPutModel>().ReverseMap();
             // University
@@ -246,7 +269,10 @@ namespace Application.Common.Mapper
             CreateMap<ImageNews, ImageNewsModel>().ReverseMap();
             CreateMap<ImageNews, ImageNewsPostModel>().ReverseMap();
             CreateMap<ImageNews, ImageNewsPutModel>().ReverseMap();
-
+            //Certification
+            CreateMap<Certification, CertificationViewModel>().ReverseMap();
+            CreateMap<Certification, CertificationPostModel>().ReverseMap();
+            CreateMap<Certification, CertificationPutModel>().ReverseMap();
         }
 
     }

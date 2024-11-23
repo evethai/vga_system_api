@@ -20,6 +20,11 @@
             public const string LogoutEndpoint = ApiEndpoint + "/logout/{id}";
         }
 
+        public static class Admin
+        {
+            public const string Dashboard = ApiEndpoint + "/dashboard";
+        }
+
         public static class PersonalTest
         {
             public const string PersonalTestsEndpoint = ApiEndpoint + "/personal-tests";
@@ -28,6 +33,7 @@
             public const string GetResultPersonalTestEndpoint = ApiEndpoint + "/personal-test-result";
             public const string GetMajorsByPersonalGroupIdEndpoint = ApiEndpoint + "/majors-by-personality/{id}";
             public const string FilterMajorAndUniversityEndpoint = ApiEndpoint + "/filter-major-university";
+           
         }
 
         public static class PersonalGroup
@@ -40,6 +46,9 @@
         {
             public const string QuestionsEndpoint = ApiEndpoint + "/questions";
             public const string QuestionEndpoint = ApiEndpoint + "/question/{id}";
+            public const string QuestionsEndpointByTestId = ApiEndpoint + "/questions-by-test/{id}";
+            public const string QuestionsEndpointForPersonalTest = ApiEndpoint + "/questions-for-personal-test";
+
         }
 
         public static class TestType
@@ -79,10 +88,13 @@
         public static class Wallet
         {
             public const string WalletsEndpoint = ApiEndpoint + "/wallet";
-            public const string WalletEndpoint = ApiEndpoint + "/wallet/{id}";
+            public const string WalletEndpoint = ApiEndpoint + "/wallet/{AccountId}";
             public const string WalletDistributionEndpoint = ApiEndpoint + "/wallet/distribution";
             public const string WalletTest = ApiEndpoint + "/wallet/do-the-test";
             public const string WalletTransferringAndReceiving = ApiEndpoint + "/wallet/tranferring-gold";
+            public const string WalletPayOsRequest = ApiEndpoint + "/wallet/request-top-up-wallet-with-payos";
+            public const string WalletPayOsResponse = ApiEndpoint + "/wallet/response-top-up-wallet-with-payos";
+            
         }
         //Transaction
         public static class Transaction
@@ -176,7 +188,7 @@
             public const string AdmisstionInformationListEndpoint = ApiEndpoint + "/admission-informations";
             public const string AdmisstionInformationEndpoint = ApiEndpoint + "/admission-information/{id}";
             public const string AdmisstionInformationPostEndpoint = ApiEndpoint + "/admission-information/{UniversityId}";
-            public const string AdmisstionInformationPutEndpoint = ApiEndpoint + "/admission-informations/{id}";
+            public const string AdmisstionInformationPutEndpoint = ApiEndpoint + "/admission-informations";
             public const string AdmisstionInformationDeleteEndpoint = ApiEndpoint + "/admission-information/{id}";
         }
         public static class AdmisstionMethod

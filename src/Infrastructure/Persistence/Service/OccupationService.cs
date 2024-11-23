@@ -101,6 +101,8 @@ namespace Infrastructure.Persistence.Service
                     .GetByIdGuidAsync(postModel.OccupationalGroupId)
                     ?? throw new NotExistsException();
 
+                var listSkill = new List<OccupationalSKills>();
+
                 var occupation = new Occupation
                 {
                     Id = Guid.NewGuid(),
@@ -130,10 +132,9 @@ namespace Infrastructure.Persistence.Service
                         Content = skillModel.Content,
                         Status = skillModel.Status
                     };
-
-                    occupation.OccupationalSKills.Add(occupationalSkill);
+                    listSkill.Add(occupationalSkill);
                 }
-
+                occupation.OccupationalSKills = listSkill;
                 await _unitOfWork.OccupationRepository.AddAsync(occupation);
                 await _unitOfWork.SaveChangesAsync();
 
@@ -171,6 +172,7 @@ namespace Infrastructure.Persistence.Service
                     ) ?? throw new NotExistsException();
 
                 _mapper.Map(putModel, occupation);
+                var listNewSkill = new List<OccupationalSKills>();
 
                 if (putModel.Skills != null)
                 {
@@ -186,9 +188,13 @@ namespace Infrastructure.Persistence.Service
                         else
                         {
                             var newSkill = _mapper.Map<OccupationalSKills>(skillModel);
-                            occupation.OccupationalSKills.Add(newSkill);
+                            newSkill.Id = Guid.NewGuid();
+                            newSkill.OccupationId = occupation.Id;
+                            listNewSkill.Add(newSkill);
                         }
                     }
+                    if (listNewSkill.Count > 0)
+                        await _unitOfWork.OccupationSkillRepository.AddRangeAsync(listNewSkill);
 
                     var skillsToRemove = occupation.OccupationalSKills
                         .Where(s => !putModel.Skills.Any(um => um.Id == s.Id))

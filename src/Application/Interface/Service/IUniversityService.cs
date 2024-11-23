@@ -13,7 +13,7 @@ namespace Application.Interface.Service
     public interface IUniversityService
     {
         Task<ResponseUniversityModel> GetListUniversityAsync(UniversitySearchModel searchModel);
-        Task<UniversityModel> GetUniversityByIdAsync(Guid Id);
+        Task<UniversityModelGetBy> GetUniversityByIdAsync(Guid Id);
         Task<ResponseModel> DeleteUniversityAsync(Guid Id);
         Task<ResponseModel> CreateUniversityAsync(UniversityPostModel postModel);
         Task<ResponseModel> UpdateUniversityAsync(UniversityPutModel putModel, Guid Id);

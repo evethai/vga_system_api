@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Application.Interface;
 using Application.Interface.Service;
 using AutoMapper;
+using Domain.Entity;
 using Domain.Model.Question;
 using Domain.Model.Response;
 using Microsoft.EntityFrameworkCore;
@@ -21,10 +22,10 @@ namespace Infrastructure.Persistence.Service
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public async Task<IEnumerable<QuestionModel>> GetAllQuestionsByType(Guid id)
+        public async Task<IEnumerable<QuestionListByTestIdModel>> GetAllQuestionsByType(Guid id)
         {
-            var questions = await _unitOfWork.QuestionRepository.GetListAsync(predicate: x=>x.TestTypeId == id,include: x => x.Include(questions=>questions.Answers));
-            var result = _mapper.Map<IEnumerable<QuestionModel>>(questions);
+            var questions = await _unitOfWork.TestQuestionRepository.GetListAsync(predicate: x=>x.PersonalTestId == id && x.Question.Status == true,include: x => x.Include(q => q.Question).ThenInclude(a => a.Answers));
+            var result = _mapper.Map<IEnumerable<QuestionListByTestIdModel>>(questions);
             return result;
         }
         public async Task<QuestionModel> GetQuestionById(int id)
@@ -35,16 +36,43 @@ namespace Infrastructure.Persistence.Service
         }
 
 
-        public async Task<ResponseModel> CreateQuestion(QuestionPostModel questionModel)
-        {
-            var result = await _unitOfWork.QuestionRepository.CreateQuestion(questionModel);
-            return result;
-        }
+        //public async Task<ResponseModel> CreateQuestion(QuestionPostModel questionModel)
+        //{
+        //    var result = await _unitOfWork.QuestionRepository.CreateQuestion(questionModel);
+        //    return result;
+        //}
 
         public async Task<ResponseModel> UpdateQuestion(QuestionPutModel questionModel)
         {
             var result = await _unitOfWork.QuestionRepository.UpdateQuestion(questionModel);
             return result;
+        }
+
+        public async Task<ResponseModel> CreateQuestionForPersonalTest(QuestionPostModel model)
+        {
+            var result = await _unitOfWork.QuestionRepository.CreateQuestion(model);
+            return result;
+        }
+
+        public async Task<ResponseModel> DeleteQuestion(int id)
+        {
+            var question = await _unitOfWork.QuestionRepository.SingleOrDefaultAsync(predicate: x => x.Id == id);
+            if (question == null)
+            {
+                return new ResponseModel
+                {
+                    Message = "Question not found",
+                    IsSuccess = false
+                };
+            }
+            question.Status = false;
+            await _unitOfWork.QuestionRepository.UpdateAsync(question);
+            await _unitOfWork.SaveChangesAsync();
+            return new ResponseModel
+            {
+                Message = "Question deleted successfully",
+                IsSuccess = true
+            };
         }
     }
 }

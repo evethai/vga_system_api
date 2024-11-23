@@ -15,6 +15,7 @@ using Domain.Model.Highschool;
 using Domain.Model.Response;
 using Domain.Model.Student;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.Json;
 using Newtonsoft.Json;
 
 namespace Infrastructure.Persistence.Service;
@@ -50,25 +51,20 @@ public class StudentService : IStudentService
 
     public async Task<StudentModel> GetStudentByIdAsync(Guid StudentId)
     {
-        var student = await _unitOfWork.StudentRepository.SingleOrDefaultAsync(predicate: c=>c.Id.Equals(StudentId),include:a=>a.Include(a=>a.Account).ThenInclude(a => a.Wallet));
+        var student = await _unitOfWork.StudentRepository.
+            SingleOrDefaultAsync(predicate: c=>c.Id.Equals(StudentId)
+            ,include:a=>a.Include(a=>a.Account)
+            .ThenInclude(a => a.Wallet)) ?? throw new Exception("Id is not found");
         return _mapper.Map<StudentModel>(student);
     }
 
     public async Task<ResponseModel> UpdateStudentAsync(StudentPutModel putModel, Guid StudentId)
     {
-        var exitStudent = await _unitOfWork.StudentRepository.GetByIdGuidAsync(StudentId);
-        if (exitStudent == null)
-        {
-            throw new Exception("Student Id not found");
-        }
+        var exitStudent = await _unitOfWork.StudentRepository.GetByIdGuidAsync(StudentId) ?? throw new Exception("Id is not found");       
         exitStudent.DateOfBirth = putModel.DateOfBirth;
         exitStudent.SchoolYears = putModel.SchoolYears;
         exitStudent.Gender = putModel.Gender;
-        var exitAccount = await _unitOfWork.AccountRepository.GetByIdGuidAsync(exitStudent.AccountId);
-        if (exitAccount == null)
-        {
-            throw new Exception("Student Account Id not found");
-        }
+        var exitAccount = await _unitOfWork.AccountRepository.GetByIdGuidAsync(exitStudent.AccountId) ?? throw new Exception("Acount Id is not found");
         exitAccount.Name = putModel.Name;
         exitAccount.Phone = putModel.Phone;
         exitAccount.Email = putModel.Email;
@@ -107,8 +103,8 @@ public class StudentService : IStudentService
 
     public async Task<ResponseModel> DeleteStudentAsync(Guid StudentId)
     {
-        var exStudent = await _unitOfWork.StudentRepository.GetByIdGuidAsync(StudentId);
-        var exAccountStudent = await _unitOfWork.AccountRepository.GetByIdGuidAsync(exStudent.AccountId);
+        var exStudent = await _unitOfWork.StudentRepository.GetByIdGuidAsync(StudentId) ?? throw new Exception("Id is not found");
+        var exAccountStudent = await _unitOfWork.AccountRepository.GetByIdGuidAsync(exStudent.AccountId) ?? throw new Exception("Account Id is not found");
         exAccountStudent.Status = AccountStatus.Blocked;
         await _unitOfWork.AccountRepository.UpdateAsync(exAccountStudent);
         await _unitOfWork.SaveChangesAsync();
@@ -143,14 +139,35 @@ public class StudentService : IStudentService
                        , studentImport.Phone);
 
                 var student = _mapper.Map<Student>(studentImport);
-                var AccountId = await _unitOfWork.AccountRepository.CreateAccountAndWallet(accountModel, RoleEnum.Student);
+                try
+                {
+                    var AccountId = await _unitOfWork.AccountRepository.CreateAccountAndWallet(accountModel, RoleEnum.Student);
+                    student.Id = Guid.NewGuid();
+                    student.AccountId = AccountId;
+                    student.HighSchoolId = studentImportModel.highschoolId;
+                    student.SchoolYears = studentImportModel.schoolYear;
 
-                student.Id = Guid.NewGuid();
-                student.AccountId = AccountId;
-                student.HighSchoolId = studentImportModel.highschoolId;
-                student.SchoolYears = studentImportModel.schoolYear;
+                    await _unitOfWork.StudentRepository.AddAsync(student);
+                }
+                catch (Exception e)
+                {
+                    if (e.Message.Contains("Email", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var existingStudent = await _unitOfWork.StudentRepository.SingleOrDefaultAsync(
+                            predicate: x => x.Account.Name.Equals(accountModel.Name),
+                            include: s=>s.Include(s => s.Account));
 
-                await _unitOfWork.StudentRepository.AddAsync(student);
+                        if (existingStudent == null)
+                            throw;
+                        existingStudent.SchoolYears = studentImportModel.schoolYear;
+                        await _unitOfWork.StudentRepository.UpdateAsync(existingStudent);   
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                    
+                }
             }
 
             await _unitOfWork.SaveChangesAsync();

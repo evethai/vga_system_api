@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,8 +15,9 @@ namespace Domain.Model.Transaction
             WalletId = walletId;
             GoldAmount = goldAmount;
         }
-
+        [Required(ErrorMessage = "WalletId is required.")]
         public Guid WalletId { get; set; }
+        [Range(1, int.MaxValue, ErrorMessage = "Gold must be a non-negative value.")]
         public int GoldAmount { get; set; }
     }
 }

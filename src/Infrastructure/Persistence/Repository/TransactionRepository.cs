@@ -52,14 +52,16 @@ namespace Infrastructure.Persistence.Repository
 
             if (searchModel.sort_by_gold_amount.HasValue && searchModel.sort_by_gold_amount.Value)
             {
-                orderBy = query =>
-                {
-                    return searchModel.descending.HasValue && searchModel.descending.Value
+                orderBy = query => searchModel.descending.HasValue && searchModel.descending.Value
                         ? query.OrderByDescending(p => p.GoldAmount)
                         : query.OrderBy(p => p.GoldAmount);
-                };
             }
-
+            if (searchModel.sort_by_datetime.HasValue && searchModel.sort_by_datetime.Value)
+            {
+                orderBy = query => searchModel.descending.HasValue && searchModel.descending.Value
+                        ? query.OrderByDescending(p => p.TransactionDateTime)
+                        : query.OrderBy(p => p.TransactionDateTime);
+            }
             if (searchModel.transaction_date_time.HasValue)
             {
                 filter = filter.And(p => p.TransactionDateTime.Date == searchModel.transaction_date_time.Value.Date);
@@ -126,7 +128,7 @@ namespace Infrastructure.Persistence.Repository
                         Id = Guid.NewGuid(),
                         WalletId = transactionModel.WalletId,
                         TransactionType = transactionType,
-                        Description = "Bạn đã nạp " + transactionModel.GoldAmount + " Gold",
+                        Description = "Bạn đã yêu cầu nạp " + transactionModel.GoldAmount + " Gold",
                         GoldAmount = transactionModel.GoldAmount,
                         TransactionDateTime = DateTime.UtcNow,
                     };
@@ -135,16 +137,13 @@ namespace Infrastructure.Persistence.Repository
                     break;
             }
             await _context.Transaction.AddAsync(transaction);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return transaction;
         }
         public async Task<Boolean> UpdateWalletUsingByTestAsync(Guid AccountId, int GoldUsing)
         {
-            var exitAccount = _context.Account.Where(s => s.Id.Equals(AccountId)).FirstOrDefault();
-            if (exitAccount == null)
-            {
-                throw new InvalidOperationException("Account Id is not found");
-            }
+            var exitAccount = _context.Account.Where(s => s.Id.Equals(AccountId)).FirstOrDefault()
+                ?? throw new InvalidOperationException("Account Id is not found");
             var exitWallet = _context.Wallet.Where(s => s.AccountId.Equals(exitAccount.Id)).FirstOrDefault()
                 ?? throw new Exception("Wallet is not found");
             if (exitWallet.GoldBalance < GoldUsing)
@@ -160,12 +159,10 @@ namespace Infrastructure.Persistence.Repository
         }
         public async Task<ResponseModel> UpdateWalletByTransferringAndReceivingAsync(WalletPutModel putModel, int gold)
         {
-            var walletTransferring = _context.Wallet.Where(s => s.AccountId.Equals(putModel.account_id_tranferring)).FirstOrDefault();
-            var walletReceiving = _context.Wallet.Where(s => s.AccountId.Equals(putModel.account_id_receiving)).FirstOrDefault();
-            if (walletTransferring == null || walletReceiving == null)
-            {
-                throw new InvalidOperationException("Wallet Id Tranffering or Receiving is not found");
-            }
+            var walletTransferring = _context.Wallet.Where(s => s.AccountId.Equals(putModel.account_id_tranferring)).FirstOrDefault()
+                ?? throw new InvalidOperationException("Account Id Tranffering is not found"); ;
+            var walletReceiving = _context.Wallet.Where(s => s.AccountId.Equals(putModel.account_id_receiving)).FirstOrDefault()
+               ?? throw new InvalidOperationException("Account Id Receiving is not found");
             var RoleTransferring = _context.Account.Where(s => s.Id.Equals(walletTransferring.AccountId)).FirstOrDefault() ?? throw new Exception("Not found Account");
             if (RoleTransferring.Role == RoleEnum.Admin)
             {

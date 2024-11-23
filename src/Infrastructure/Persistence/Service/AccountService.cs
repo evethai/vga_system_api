@@ -33,7 +33,9 @@ namespace Infrastructure.Persistence.Service
             Account account = await _unitOfWork.AccountRepository
                 .SingleOrDefaultAsync(predicate: searchFilter);
 
-            if (account == null || account.Status == AccountStatus.Blocked) return null;
+            if (account == null 
+                || account.Status == AccountStatus.Blocked
+                || account.Role == RoleEnum.Consultant) return null;
 
             RoleEnum role = account.Role;
 
@@ -47,14 +49,16 @@ namespace Infrastructure.Persistence.Service
             Account account = await _unitOfWork.AccountRepository
                 .SingleOrDefaultAsync(predicate: x => x.ZaloId.Equals(model.ZaloId));
 
+
             if (account != null && account.Status == AccountStatus.Active)
             {
-                // 1. If ZaloId exists, return login response
                 RoleEnum role = account.Role;
+                if (role == RoleEnum.Admin
+                    || role == RoleEnum.HighSchool
+                    || role == RoleEnum.University
+                    || account.Status == AccountStatus.Blocked) return null;
                 return await BuildLoginResponse(account, role);
             }
-
-            // 2. If ZaloId not exists, find account by phone
             if (!string.IsNullOrEmpty(model.Phone))
             {
                 account = await _unitOfWork.AccountRepository
@@ -63,17 +67,19 @@ namespace Infrastructure.Persistence.Service
                 if (account != null && account.Status == AccountStatus.Active)
                 {
 
-                    // If account with phone exists, update ZaloId, image
                     account.ZaloId = model.ZaloId;
                     account.Image_Url = model.Image_Url;
                     await _unitOfWork.AccountRepository.UpdateAsync(account);
                     await _unitOfWork.SaveChangesAsync();
 
                     RoleEnum role = account.Role;
+                    if (role == RoleEnum.Admin
+                        || role == RoleEnum.HighSchool
+                        || role == RoleEnum.University
+                        || account.Status == AccountStatus.Blocked) return null;
                     return await BuildLoginResponse(account, role);
                 }
             }
-            // 3. If ZaloId and phone not exists return null
             return null;
         }
         #endregion
@@ -95,7 +101,7 @@ namespace Infrastructure.Persistence.Service
                     return new ResponseModel
                     {
                         IsSuccess = true,
-                        Message = "Token has been revoked"
+                        Message = "Logout successful, Token has been revoked"
                     };
                 }
 
@@ -228,6 +234,7 @@ namespace Infrastructure.Persistence.Service
                     break;
 
                 default:
+                    guidClaim = new Tuple<string, Guid>("Admin", account.Id);
                     loginResponseModel = new LoginResponseModel(account.Id,role,name);
                     break;
             }

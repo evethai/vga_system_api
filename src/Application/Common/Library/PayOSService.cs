@@ -36,7 +36,6 @@ namespace Application.Library
         {
             return await _payOS.confirmWebhook(webhookUrl);
         }
-
         public WebhookData VerifyPaymentWebhookData(WebhookType webhookBody)
         {
             return _payOS.verifyPaymentWebhookData(webhookBody);

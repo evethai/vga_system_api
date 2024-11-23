@@ -4,6 +4,7 @@ using Application.Interface.Service;
 using Domain.Enum;
 using Domain.Model.Transaction;
 using Infrastructure.Persistence.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,7 +20,7 @@ namespace Api.Controllers
         {
             _transactionService = transactionService;
         }
-
+        [Authorize]
         [HttpGet(ApiEndPointConstant.Transaction.TransactionEndPoint)]
         public async Task<IActionResult> GetListTransactionAsync([FromQuery] TransactionSearchModel searchModel)
         {
@@ -27,7 +28,7 @@ namespace Api.Controllers
             return Ok(result);
         }
 
-        //[CustomAuthorize(RoleEnum.Consultant)]
+        [CustomAuthorize(RoleEnum.Consultant)]
         [HttpPost(ApiEndPointConstant.Transaction.TransactionWithdrawRequest)]
         public async Task<IActionResult> CreateWithdrawAsync(Guid id, int goldAmount)
         {
@@ -48,7 +49,7 @@ namespace Api.Controllers
             }
         }
 
-        //[CustomAuthorize(RoleEnum.University)]
+        [CustomAuthorize(RoleEnum.Admin)]
         [HttpPut(ApiEndPointConstant.Transaction.TransactionProcessRequest)]
         public async Task<IActionResult> ProcessWithdrawRequestAsync(Guid id, TransactionType type)
         {

@@ -48,24 +48,8 @@ namespace Infrastructure.Persistence.Service
 
         public async Task<ResponseModel> DeleteUniversityAsync(Guid Id)
         {
-            var exUniversity = await _unitOfWork.UniversityRepository.GetByIdGuidAsync(Id);
-            if (exUniversity == null)
-            {
-                return new ResponseModel
-                {
-                    Message = "University Id is not found",
-                    IsSuccess = false,
-                };
-            }
-            var exAccount = await _unitOfWork.AccountRepository.GetByIdGuidAsync(exUniversity.AccountId);
-            if (exAccount == null)
-            {
-                return new ResponseModel
-                {
-                    Message = "University Account Id is not found",
-                    IsSuccess = false,
-                };
-            }
+            var exUniversity = await _unitOfWork.UniversityRepository.GetByIdGuidAsync(Id) ?? throw new Exception("Id is not found");
+            var exAccount = await _unitOfWork.AccountRepository.GetByIdGuidAsync(exUniversity.AccountId) ?? throw new Exception("Account Id is not found");
             exAccount.Status = AccountStatus.Blocked;
             await _unitOfWork.AccountRepository.UpdateAsync(exAccount);
             await _unitOfWork.SaveChangesAsync();
@@ -98,38 +82,31 @@ namespace Infrastructure.Persistence.Service
             };
         }
 
-        public async Task<UniversityModel> GetUniversityByIdAsync(Guid Id)
+        public async Task<UniversityModelGetBy> GetUniversityByIdAsync(Guid Id)
         {
             var university = await _unitOfWork.UniversityRepository.
-                SingleOrDefaultAsync(predicate: c => c.Id.Equals(Id), 
+                SingleOrDefaultAsync(predicate: c => c.Id.Equals(Id),
                 include: a => a.Include(a => a.Account).ThenInclude(a => a.Wallet)
-                .Include(a=>a.UniversityLocations));
-            return _mapper.Map<UniversityModel>(university);
+                .Include(a => a.UniversityLocations)
+                .Include(a => a.Consultants).ThenInclude(a => a.Account)
+                .Include(a => a.Consultants).ThenInclude(a => a.ConsultantLevel)
+                .Include(a => a.AdmissionInformation).ThenInclude(a => a.AdmissionMethod)
+                .Include(a => a.AdmissionInformation).ThenInclude(a => a.Major));
+
+            if (university == null)
+            {
+                throw new Exception("Id is not found");
+            }
+            return _mapper.Map<UniversityModelGetBy>(university);
         }
 
         public async Task<ResponseModel> UpdateUniversityAsync(UniversityPutModel putModel, Guid Id)
         {
-            var exitUniversity = await _unitOfWork.UniversityRepository.GetByIdGuidAsync(Id);
-            if (exitUniversity == null)
-            {
-                return new ResponseModel
-                {
-                    Message = "University Id is not found",
-                    IsSuccess = false,
-                };
-            }
+            var exitUniversity = await _unitOfWork.UniversityRepository.GetByIdGuidAsync(Id) ?? throw new Exception("Id is not found");
             exitUniversity.Description = putModel.Description;
             exitUniversity.Code = putModel.Code;
             exitUniversity.EstablishedYear = putModel.EstablishedYear;           
-            var exitAccount = await _unitOfWork.AccountRepository.GetByIdGuidAsync(exitUniversity.AccountId);
-            if (exitAccount == null)
-            {
-                return new ResponseModel
-                {
-                    Message = "University Account Id is not found",
-                    IsSuccess = false,
-                };
-            }
+            var exitAccount = await _unitOfWork.AccountRepository.GetByIdGuidAsync(exitUniversity.AccountId) ?? throw new Exception("Account Id is not found");
             exitAccount.Name = putModel.Name;
             exitAccount.Phone = putModel.Phone;
             exitAccount.Email = putModel.Email;
@@ -160,14 +137,6 @@ namespace Infrastructure.Persistence.Service
         public async Task<ResponseModel> UpdateUniversityLocationAsync(int Id, UniversityLocationPutModel universityLocationModels)
         {
             var updateLocation = await _unitOfWork.UniversityRepository.UpdateUniversityLocation(Id, universityLocationModels);
-            if(updateLocation == false)
-            {
-                return new ResponseModel
-                {
-                    Message = "Update University Location is fails",
-                    IsSuccess = false
-                };
-            }
             return new ResponseModel
             {
                 Message = "Update University Location Successfully",
@@ -179,14 +148,6 @@ namespace Infrastructure.Persistence.Service
         public async Task<ResponseModel> DeleteUniversityLocationAsync(int Id)
         {
             var deleteLocation = await _unitOfWork.UniversityRepository.DeleteUniversityLocation(Id);
-            if (deleteLocation == false)
-            {
-                return new ResponseModel
-                {
-                    Message = "Delete University Location is fails",
-                    IsSuccess = false
-                };
-            }
             return new ResponseModel
             {
                 Message = "Delete University Location Successfully",

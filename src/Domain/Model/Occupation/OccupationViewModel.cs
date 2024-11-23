@@ -21,6 +21,7 @@ namespace Domain.Model.Occupation
         public string? PayScale { get; set; }
         public string? JobOutlook { get; set; }
         public bool Status { get; set; }
+        public string Image { get; set; } = string.Empty;
         public EntryLevelEducationViewModel EntryLevelEducation { get; set; } = null!;
         public OccupationalGroupViewModel OccupationalGroup { get; set; } = null!;
         public List<OccupationalSkillsViewModel> OccupationalSkills { get; set; } = new();

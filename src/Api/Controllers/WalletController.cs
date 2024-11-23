@@ -1,14 +1,20 @@
 ﻿using Api.Constants;
+using Api.Validators;
 using Application.Interface.Service;
+using Application.Library;
 using Domain.Entity;
+using Domain.Enum;
 using Domain.Model.Highschool;
 using Domain.Model.Response;
 using Domain.Model.Transaction;
 using Domain.Model.Wallet;
 using Infrastructure.Persistence.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
+using Net.payOS.Types;
 
 namespace Api.Controllers
 {
@@ -22,19 +28,33 @@ namespace Api.Controllers
         {
             _walletService = walletService;
         }
+        [CustomAuthorize(RoleEnum.Admin)]
         [HttpGet(ApiEndPointConstant.Wallet.WalletsEndpoint)]
         public async Task<IActionResult> GetListWallet()
         {
             var result = await _walletService.GetAllWallet();
             return Ok(result);
         }
-
+        [Authorize]
         [HttpGet(ApiEndPointConstant.Wallet.WalletEndpoint)]
-        public async Task<IActionResult> GetWalletByIdAsync(Guid id)
+        public async Task<IActionResult> GetWalletByIdAsync(Guid AccountId)
         {
-            var result = await _walletService.GetWalletByIdAsync(id);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var result = await _walletService.GetWalletByIdAsync(AccountId);
             return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
         }
+        [CustomAuthorize(RoleEnum.Admin, RoleEnum.University)]
         [HttpPut(ApiEndPointConstant.Wallet.WalletTransferringAndReceiving)]
         public async Task<IActionResult> UpdateWalletTransferringAndReceivingAsync(WalletPutModel putModel, int gold)
         {
@@ -52,6 +72,7 @@ namespace Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [CustomAuthorize(RoleEnum.Admin, RoleEnum.HighSchool)]
         [HttpPut(ApiEndPointConstant.Wallet.WalletDistributionEndpoint)]
         public async Task<IActionResult> UpdateWalletUsingGoldDistributionAsync(TransactionPutWalletModel model)
         {
@@ -61,7 +82,7 @@ namespace Api.Controllers
             }
             try
             {
-                var result = await _walletService.UpdateWalletUsingGoldDistributionAsync(model.WalletHighSchoolId, model.Gold, model.Years);
+                var result = await _walletService.UpdateWalletUsingGoldDistributionAsync(model);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -69,6 +90,7 @@ namespace Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
         [HttpPut(ApiEndPointConstant.Wallet.WalletTest)]
         public async Task<IActionResult> UpdateWalletUsingByTestAsync(Guid AccountId, int goldUsingTest)
         {
@@ -84,6 +106,58 @@ namespace Api.Controllers
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost(ApiEndPointConstant.Wallet.WalletPayOsRequest)]
+        public async Task<IActionResult> RequestTopUpWalletWithPayOs([FromQuery] Guid accountId, [FromQuery] float amount, PayOSUrl url)
+        {
+            try
+            {
+                var paymenturl = await _walletService.RequestTopUpWalletWithPayOsAsync(accountId, amount,url);
+                return Ok(paymenturl);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost(ApiEndPointConstant.Wallet.WalletPayOsResponse)]
+        public async Task<IActionResult> RequestDepositToWalletWithPayOs([FromQuery] Guid transactionId, [FromQuery] string status)
+        {
+            try
+            {
+                var paymenturl = await _walletService.RequestDepositToWalletWithPayOs(transactionId, status);
+                return Ok(paymenturl);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost("webhook")]
+        public async Task<IActionResult> ConfirmWebhook(string webhookUrl)
+        {
+            try
+            {
+                var rs = await _walletService.ConfirmWebhook(webhookUrl);
+                return Ok(rs);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Webhook processing failed");
+            }
+        }
+        [HttpPost("webhook-handle")]
+        public async Task<IActionResult> HandleWebhook(WebhookType webhookBody)
+        {
+            try
+            {
+                var rs = _walletService.HandleWebhook(webhookBody);
+                return Ok(webhookBody);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
             }
         }
     }
