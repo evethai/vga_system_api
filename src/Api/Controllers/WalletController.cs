@@ -121,19 +121,19 @@ namespace Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost(ApiEndPointConstant.Wallet.WalletPayOsResponse)]
-        public async Task<IActionResult> RequestDepositToWalletWithPayOs([FromQuery] Guid transactionId, [FromQuery] string status)
-        {
-            try
-            {
-                var paymenturl = await _walletService.RequestDepositToWalletWithPayOs(transactionId, status);
-                return Ok(paymenturl);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
+        //[HttpPost(ApiEndPointConstant.Wallet.WalletPayOsResponse)]
+        //public async Task<IActionResult> RequestDepositToWalletWithPayOs([FromQuery] Guid transactionId, [FromQuery] string status)
+        //{
+        //    try
+        //    {
+        //        var paymenturl = await _walletService.RequestDepositToWalletWithPayOs(transactionId, status);
+        //        return Ok(paymenturl);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
+        //}
         [HttpPost("webhook")]
         public async Task<IActionResult> ConfirmWebhook(string webhookUrl)
         {
