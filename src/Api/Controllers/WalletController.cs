@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
+using Net.payOS.Types;
 
 namespace Api.Controllers
 {
@@ -131,6 +132,32 @@ namespace Api.Controllers
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost("webhook")]
+        public async Task<IActionResult> ConfirmWebhook(string webhookUrl)
+        {
+            try
+            {
+                var rs = await _walletService.ConfirmWebhook(webhookUrl);
+                return Ok(rs);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Webhook processing failed");
+            }
+        }
+        [HttpPost("webhook-handle")]
+        public async Task<IActionResult> HandleWebhook(WebhookType webhookBody)
+        {
+            try
+            {
+                var rs = _walletService.HandleWebhook(webhookBody);
+                return Ok(webhookBody);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
             }
         }
     }
