@@ -158,6 +158,7 @@ namespace Api.Controllers
             catch (Exception ex)
             {
                 return BadRequest(ex);
+            }
         }
     }
 }
