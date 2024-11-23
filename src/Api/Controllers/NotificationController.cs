@@ -32,7 +32,7 @@ namespace Api.Controllers
             return Ok(result);
         }
         [HttpPost]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> AddNotification(NotificationPostModel model)
         {
             var result = await _notificationService.AddNotification(model);

@@ -82,13 +82,22 @@ namespace Infrastructure.Persistence.Service
             };
         }
 
-        public async Task<UniversityModel> GetUniversityByIdAsync(Guid Id)
+        public async Task<UniversityModelGetBy> GetUniversityByIdAsync(Guid Id)
         {
             var university = await _unitOfWork.UniversityRepository.
-                SingleOrDefaultAsync(predicate: c => c.Id.Equals(Id), 
+                SingleOrDefaultAsync(predicate: c => c.Id.Equals(Id),
                 include: a => a.Include(a => a.Account).ThenInclude(a => a.Wallet)
-                .Include(a=>a.UniversityLocations)) ?? throw new Exception("Id is not found");
-            return _mapper.Map<UniversityModel>(university);
+                .Include(a => a.UniversityLocations)
+                .Include(a => a.Consultants).ThenInclude(a => a.Account)
+                .Include(a => a.Consultants).ThenInclude(a => a.ConsultantLevel)
+                .Include(a => a.AdmissionInformation).ThenInclude(a => a.AdmissionMethod)
+                .Include(a => a.AdmissionInformation).ThenInclude(a => a.Major));
+
+            if (university == null)
+            {
+                throw new Exception("Id is not found");
+            }
+            return _mapper.Map<UniversityModelGetBy>(university);
         }
 
         public async Task<ResponseModel> UpdateUniversityAsync(UniversityPutModel putModel, Guid Id)
