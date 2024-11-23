@@ -15,6 +15,7 @@ namespace Domain.Entity
         public string Description { get; set; } = null!;
         public DateTime TransactionDateTime { get; set; }
         public TransactionType TransactionType { get; set; }
-        //public string? Code { get; set; }
+        public string? Code { get; set; }
+        public string? Image { get; set; }
     }
 }
