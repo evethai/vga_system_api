@@ -137,7 +137,7 @@ namespace Infrastructure.Persistence.Repository
                     break;
             }
             await _context.Transaction.AddAsync(transaction);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return transaction;
         }
         public async Task<Boolean> UpdateWalletUsingByTestAsync(Guid AccountId, int GoldUsing)
