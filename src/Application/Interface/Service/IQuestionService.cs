@@ -10,9 +10,11 @@ namespace Application.Interface.Service
 {
     public interface IQuestionService
     {
-        Task<IEnumerable<QuestionModel>> GetAllQuestionsByType(Guid id);
+        Task<IEnumerable<QuestionListByTestIdModel>> GetAllQuestionsByType(Guid id);
         Task<QuestionModel> GetQuestionById(int id);
-        Task<ResponseModel> CreateQuestion(QuestionPostModel questionModel);
+        //Task<ResponseModel> CreateQuestion(QuestionPostModel questionModel);
         Task<ResponseModel> UpdateQuestion(QuestionPutModel questionModel);
+        Task<ResponseModel> CreateQuestionForPersonalTest(QuestionPostModel model);
+        Task<ResponseModel> DeleteQuestion(int id);
     }
 }

@@ -92,7 +92,9 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
                 p.Name,
                 p.Description,
                 p.TestType.Point,
-                Questions = p.TestQuestions.Select(tq => new
+                Questions = p.TestQuestions
+                .Where(q => q.Status == true)
+                .Select(tq => new
                 {
                     tq.Question.Id,
                     tq.Question.Content,

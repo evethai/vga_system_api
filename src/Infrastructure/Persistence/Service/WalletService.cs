@@ -120,7 +120,7 @@ namespace Infrastructure.Persistence.Service
         public async Task<ResponseModel> RequestTopUpWalletWithPayOsAsync([FromQuery] Guid accountId, [FromQuery] float amount, PayOSUrl url)
         {
             var exitWallet = await _unitOfWork.WalletRepository.
-                SingleOrDefaultAsync(predicate: s => s.AccountId.Equals(accountId)) ?? throw new Exception("Wallet is not found");
+                SingleOrDefaultAsync(predicate: s => s.AccountId.Equals(accountId)); if (exitWallet == null) { throw new Exception("Wallet is not found"); }
             TransactionPostModel transaction = new TransactionPostModel(exitWallet.Id, (int)amount);
             var trans = await _unitOfWork.TransactionRepository.CreateTransactionWhenUsingGold(TransactionType.Recharge, transaction);
             await _unitOfWork.SaveChangesAsync();
@@ -138,9 +138,9 @@ namespace Infrastructure.Persistence.Service
                 returnUrl: url.ReturnUrl,
                 cancelUrl: url.CancelUrl
             );
-            var paymentUrl = await _payOSService.CreatePaymentLink(payOSModel);
+            CreatePaymentResult paymentUrl = await _payOSService.CreatePaymentLink(payOSModel);
             if (paymentUrl != null)
-            {
+            {             
                 return new ResponseModel
                 {
                     Message = "Create PayOs Is Successfully",
@@ -186,6 +186,16 @@ namespace Infrastructure.Persistence.Service
                     Message = "Deposit To Wallet Success"
                 };
             }
+        }
+        public async Task<string> ConfirmWebhook(string webhookUrl)
+        {
+            return await _payOSService.ConfirmWebhook(webhookUrl);
+        }
+
+        public WebhookData HandleWebhook(WebhookType webhookBody)
+        {
+            WebhookData webhookData = _payOSService.VerifyPaymentWebhookData(webhookBody);
+            return  webhookData;
         }
     }
 }

@@ -15,4 +15,12 @@ namespace Domain.Model.Question
         public QuestionGroup Group { get; set; }
         public List<AnswerModel>? AnswerModels { get; set; }
     }
+
+    public class  QuestionListByTestIdModel
+    {
+        public int QuestionId { get; set; }
+        public string Content { get; set; } = string.Empty;
+        public QuestionGroup Group { get; set; }
+        public List<AnswerModel>? AnswerModels { get; set; }
+    }
 }

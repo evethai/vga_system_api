@@ -3,6 +3,7 @@ using Api.Services;
 using Api.Validators;
 using Application.Interface.Service;
 using Domain.Enum;
+using Domain.Model.PersonalTest;
 using Domain.Model.Test;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,17 +13,19 @@ namespace Api.Controllers
 {
     [Route("/personal-test")]
     [ApiController]
-    [CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
+   // [CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
     public class PersonalTestController : ControllerBase
     {
         private readonly IStudentTestService _studentTestService;
         private readonly IWalletService _walletService;
+        private readonly IPersonalTestService _personalTestService;
         //private readonly ICacheService _cacheService;
 
-        public PersonalTestController(IStudentTestService studentTestService, IWalletService walletService)
+        public PersonalTestController(IStudentTestService studentTestService, IWalletService walletService, IPersonalTestService personalTestService)
         {
             _studentTestService = studentTestService;
             _walletService = walletService;
+            _personalTestService = personalTestService;
             //_cacheService = cacheService;
         }
 
@@ -111,7 +114,6 @@ namespace Api.Controllers
         }
 
         [HttpGet(ApiEndPointConstant.PersonalTest.GetMajorsByPersonalGroupIdEndpoint)]
-
         public async Task<IActionResult> GetMajorAndOccupationByPersonalGroupId(Guid id)
         {
             try
@@ -126,7 +128,6 @@ namespace Api.Controllers
         }
 
         [HttpPost(ApiEndPointConstant.PersonalTest.FilterMajorAndUniversityEndpoint)]
-
         public async Task<IActionResult> FilterMajorAndUniversity(FilterMajorAndUniversityModel model)
         {
             if (!ModelState.IsValid)
@@ -144,6 +145,41 @@ namespace Api.Controllers
             }
         }
 
+        [HttpPost(ApiEndPointConstant.PersonalTest.PersonalTestsEndpoint)]
+        public async Task<IActionResult> CreatePersonalTest(PersonalTestPostModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var response = await _personalTestService.CreatePersonalTest(model);
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPut(ApiEndPointConstant.PersonalTest.PersonalTestEndpoint)]
+        public async Task<IActionResult> UpdatePersonalTest(Guid id, PersonalTestPostModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var response = await _personalTestService.UpdatePersonalTest(id, model);
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
 
     }
 }

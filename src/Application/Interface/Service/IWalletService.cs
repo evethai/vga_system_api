@@ -10,6 +10,8 @@ using Domain.Model.Region;
 using Domain.Model.Response;
 using Domain.Model.Transaction;
 using Domain.Model.Wallet;
+using Net.payOS;
+using Net.payOS.Types;
 
 namespace Application.Interface.Service
 {
@@ -22,5 +24,7 @@ namespace Application.Interface.Service
         Task<ResponseModel> UpdateWalletUsingByTestAsync(Guid WalletStudentId, int goldUsingTest);
         Task<ResponseModel> RequestTopUpWalletWithPayOsAsync(Guid accountId, float amount, PayOSUrl url);
         Task<ResponseModel> RequestDepositToWalletWithPayOs(Guid transactionId, string status);
+        Task<string> ConfirmWebhook(string webhookUrl);
+        WebhookData HandleWebhook(WebhookType webhookBody);
     }
 }
