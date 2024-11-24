@@ -21,14 +21,12 @@ namespace Api.Controllers
         {
             _newsService = newsService;
         }
-        [Authorize]
         [HttpGet(ApiEndPointConstant.News.NewsEndpoint)]
         public async Task<IActionResult> GetListNewsAsync([FromQuery] NewsSearchModel searchModel)
         {
             var news = await _newsService.GetListNewsAsync(searchModel);
             return Ok(news);
         }
-        [Authorize]
         [HttpGet(ApiEndPointConstant.News.NewEndpoint)]
         public async Task<IActionResult> GetNewsByIdAsync(Guid id)
         {

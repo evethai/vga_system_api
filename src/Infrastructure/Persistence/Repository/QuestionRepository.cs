@@ -174,48 +174,47 @@ namespace Infrastructure.Persistence.Repository
 
             try
             {
-                var questionEntities = new List<Question>();
-                var answerEntities = new List<Answer>();
-                var testQuestionEntities = new List<TestQuestion>();
-
-                foreach (var item in questions)
+                var questionEntities = questions.Select(item => new Question
                 {
-                    var question = new Question
-                    {
-                        Content = item.Content,
-                        Group = QuestionGroup.None,
-                        TestTypeId = testTypeId,
-                        CreateAt = DateTime.UtcNow,
-                        Status = true
-                    };
-                    questionEntities.Add(question);
+                    Content = item.Content,
+                    Group = QuestionGroup.None,
+                    TestTypeId = testTypeId,
+                    CreateAt = DateTime.UtcNow,
+                    Status = true
+                }).ToList();
+                await _context.Question.AddRangeAsync(questionEntities);
+                await _context.SaveChangesAsync();
 
-                    answerEntities.Add(new Answer
+
+                var questionIdDictionary = questionEntities.ToDictionary(q => q.Content, q => q.Id);
+
+
+                var answerEntities = questions.SelectMany(item => new List<Answer>
+                {
+                    new Answer
                     {
                         Content = item.Answer1,
-                        QuestionId = question.Id,
+                        QuestionId = questionIdDictionary[item.Content],  
                         AnswerValue = item.Value1,
                         status = true
-                    });
-                    answerEntities.Add(new Answer
+                    },
+                    new Answer
                     {
                         Content = item.Answer2,
-                        QuestionId = question.Id,
+                        QuestionId = questionIdDictionary[item.Content],  
                         AnswerValue = item.Value2,
                         status = true
-                    });
-                    testQuestionEntities.Add(new TestQuestion
-                    {
-                        PersonalTestId = personalTestId,
-                        QuestionId = question.Id,
-                        Status = true
-                    });
-                }
+                    }
+                }).ToList();
+                var testQuestionEntities = questionEntities.Select(question => new TestQuestion
+                {
+                    PersonalTestId = personalTestId,
+                    QuestionId = question.Id,
+                    Status = true
+                }).ToList();
 
-                await _context.Question.AddRangeAsync(questionEntities);
                 await _context.Answer.AddRangeAsync(answerEntities);
                 await _context.TestQuestion.AddRangeAsync(testQuestionEntities);
-
                 await _context.SaveChangesAsync();
 
                 return new ResponseModel
@@ -234,6 +233,7 @@ namespace Infrastructure.Persistence.Repository
             }
         }
 
+
         public async Task<ResponseModel> AddHollandQuestions(Guid personalTestId, Guid testTypeId, List<DataQuestionHollandModel> questions)
         {
             if (questions == null || !questions.Any())
@@ -247,32 +247,30 @@ namespace Infrastructure.Persistence.Repository
 
             try
             {
-                var questionEntities = new List<Question>();
-                var testQuestionEntities = new List<TestQuestion>();
 
-                foreach (var item in questions)
+                var questionEntities = questions.Select(item => new Question
                 {
-                    var question = new Question
-                    {
-                        Content = item.Content,
-                        Group = item.Group,
-                        TestTypeId = testTypeId,
-                        CreateAt = DateTime.UtcNow,
-                        Status = true
-                    };
-                    questionEntities.Add(question);
-                    testQuestionEntities.Add(new TestQuestion
-                    {
-                        PersonalTestId = personalTestId,
-                        QuestionId = question.Id,
-                        Status = true
-                    });
-                }
+                    Content = item.Content,
+                    Group = item.Group,
+                    TestTypeId = testTypeId,
+                    CreateAt = DateTime.UtcNow,
+                    Status = true
+                }).ToList();
 
                 await _context.Question.AddRangeAsync(questionEntities);
-                await _context.TestQuestion.AddRangeAsync(testQuestionEntities);
+                await _context.SaveChangesAsync(); 
 
+ 
+                var testQuestionEntities = questionEntities.Select(question => new TestQuestion
+                {
+                    PersonalTestId = personalTestId,
+                    QuestionId = question.Id, 
+                    Status = true
+                }).ToList();
+
+                await _context.TestQuestion.AddRangeAsync(testQuestionEntities);
                 await _context.SaveChangesAsync();
+
 
                 return new ResponseModel
                 {
@@ -289,6 +287,7 @@ namespace Infrastructure.Persistence.Repository
                 };
             }
         }
+
 
 
 
