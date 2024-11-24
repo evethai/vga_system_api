@@ -30,7 +30,7 @@ namespace Api.Controllers
         }
 
         [HttpPost(ApiEndPointConstant.PersonalTest.GetResultPersonalTestEndpoint)]
-        
+
         public async Task<IActionResult> CreateResultTest(StudentTestResultModel result)
         {
 
@@ -63,17 +63,18 @@ namespace Api.Controllers
                 //}
                 //else
                 //{
-                    response = await _studentTestService.GetTestById(id);
-                    var transaction = await _walletService.UpdateWalletUsingByTestAsync(accountId, response.Point);
+                response = await _studentTestService.GetTestById(id);
+                var transaction = await _walletService.UpdateWalletUsingByTestAsync(accountId, response.Point);
                 //    await _cacheService.SetCacheResponseAsync(cacheKey, response, TimeSpan.FromMinutes(16));
-                    if(transaction.IsSuccess == false)
-                    {
-                        return Ok("Error transaction with point!");
-                    }
-                    return Ok(response);
+                if (transaction.IsSuccess == false)
+                {
+                    return Ok("Error transaction with point!");
+                }
+                return Ok(response);
                 //}
 
-            }catch (Exception e)
+            }
+            catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
@@ -101,7 +102,7 @@ namespace Api.Controllers
             try
             {
                 var response = await _studentTestService.GetHistoryTestByStudentId(id);
-                if(response == null)
+                if (response == null)
                 {
                     return Ok("User does not take the test!");
                 }
@@ -146,7 +147,7 @@ namespace Api.Controllers
         }
 
         [HttpPost(ApiEndPointConstant.PersonalTest.PersonalTestsEndpoint)]
-        public async Task<IActionResult> CreatePersonalTest(PersonalTestPostModel model)
+        public async Task<IActionResult> CreatePersonalTest([FromForm] PersonalTestPostModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -164,7 +165,7 @@ namespace Api.Controllers
         }
 
         [HttpPut(ApiEndPointConstant.PersonalTest.PersonalTestEndpoint)]
-        public async Task<IActionResult> UpdatePersonalTest(Guid id, PersonalTestPostModel model)
+        public async Task<IActionResult> UpdatePersonalTest(Guid id, PersonalTestPutModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -180,6 +181,19 @@ namespace Api.Controllers
                 return BadRequest(e.Message);
             }
         }
+        [HttpDelete(ApiEndPointConstant.PersonalTest.PersonalTestEndpoint)]
+        public async Task<IActionResult> DeletePersonalTest(Guid id)
+        {
+            try
+            {
+                var response = await _personalTestService.DeletePersonalTest(id);
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
 
+        }
     }
 }

@@ -98,7 +98,7 @@ namespace Infrastructure.Persistence.Service
         #region get all test
         public async Task<IEnumerable<PersonalTestModel>> GetAllTest()
         {
-            var result = await _unitOfWork.PersonalTestRepository.GetAllAsync();
+            var result = await _unitOfWork.PersonalTestRepository.GetListAsync(predicate: x => x.Status == true);
             var testModels = _mapper.Map<IEnumerable<PersonalTestModel>>(result);
             return testModels;
         }

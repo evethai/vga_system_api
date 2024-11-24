@@ -83,7 +83,7 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
     {
 
         var test = await _context.PersonalTest
-            .Where(p => p.Id == personalTestId)
+            .Where(p => p.Id == personalTestId && p.Status == true)
             .Include(p => p.TestType)
             .Select(p => new
             {

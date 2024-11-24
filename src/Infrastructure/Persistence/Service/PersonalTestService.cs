@@ -131,9 +131,7 @@ namespace Infrastructure.Persistence.Service
                 };
             }
         }
-
-
-        public async Task<ResponseModel> UpdatePersonalTest(Guid id, PersonalTestPostModel model)
+        public async Task<ResponseModel> UpdatePersonalTest(Guid id, PersonalTestPutModel model)
         {
             var personalTest = await _unitOfWork.PersonalTestRepository.GetByIdGuidAsync(id);
             if (personalTest == null)
@@ -153,6 +151,29 @@ namespace Infrastructure.Persistence.Service
             {
                 IsSuccess = true,
                 Message = "Update personal test success",
+                Data = personalTest
+            };
+        }
+
+        public async Task<ResponseModel> DeletePersonalTest(Guid id)
+        {
+            var personalTest = await _unitOfWork.PersonalTestRepository.GetByIdGuidAsync(id);
+            if (personalTest == null)
+            {
+                return new ResponseModel
+                {
+                    IsSuccess = false,
+                    Message = "Personal test not found"
+                };
+            }
+            personalTest.Status = false;
+            await _unitOfWork.PersonalTestRepository.UpdateAsync(personalTest);
+            await _unitOfWork.SaveChangesAsync();
+
+            return new ResponseModel
+            {
+                IsSuccess = true,
+                Message = "Delete personal test success",
                 Data = personalTest
             };
         }

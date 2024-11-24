@@ -51,7 +51,7 @@ namespace Api.Controllers
 
         [CustomAuthorize(RoleEnum.Admin)]
         [HttpPut(ApiEndPointConstant.Transaction.TransactionProcessRequest)]
-        public async Task<IActionResult> ProcessWithdrawRequestAsync(Guid id, TransactionType type)
+        public async Task<IActionResult> ProcessWithdrawRequestAsync(Guid id, TransactionProcessRequestModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -59,7 +59,7 @@ namespace Api.Controllers
             }
             try
             {
-                var result = await _transactionService.ProcessWithdrawRequestAsync(id, type);
+                var result = await _transactionService.ProcessWithdrawRequestAsync(id, model);
                 return (result.IsSuccess == false)
                     ? BadRequest(result)
                     : Ok(result);
