@@ -112,7 +112,6 @@ namespace Infrastructure.Persistence.Service
         }
         #endregion
 
-
         public async Task<ResponseModel> GetMajorsByPersonalGroupId(Guid stTestId)
         {
             var personalityGroupId = await _unitOfWork.StudentTestRepository.SingleOrDefaultAsync(predicate: x => x.Id == stTestId, selector: x=> x.PersonalGroupId);

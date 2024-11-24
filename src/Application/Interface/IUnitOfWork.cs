@@ -40,6 +40,7 @@ namespace Application.Interface
         IOccupationSkillRepository OccupationSkillRepository { get; }
         ICertificationRepository CertificationRepository { get; }
         ITestQuestionRepository TestQuestionRepository { get; }
+        IAnswerRepository AnswerRepository { get; }
         Task SaveChangesAsync();
     }
 }

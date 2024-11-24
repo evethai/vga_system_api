@@ -52,10 +52,10 @@ namespace Domain.Model.Question
                 return new ValidationResult("MBTI questions must have exactly 2 answers.");
             }
 
-            //else if (model.Group != QuestionGroup.None && (model.Answers != null || model.Answers.Any()))
-            //{
-            //    return new ValidationResult("Holland code questions should not have answers.");
-            //}
+            else if (model.Group != QuestionGroup.None && (model.Answers != null || model.Answers.Any()))
+            {
+                return new ValidationResult("Holland code questions should not have answers.");
+            }
 
             return ValidationResult.Success;
         }
