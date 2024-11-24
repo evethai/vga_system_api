@@ -233,5 +233,12 @@
             public const string WorkSkillsEndpoint = ApiEndpoint + "/work-skills";
             public const string WorkSkillEndpoint = ApiEndpoint + "/work-skill/{id}";
         }
+
+        //Certification
+        public static class Certification
+        {
+            public const string CertificationsEndpoint = ApiEndpoint + "/certifications";
+            public const string CertificationEndpoint = ApiEndpoint + "/certification/{id}";
+        }
     }
 }

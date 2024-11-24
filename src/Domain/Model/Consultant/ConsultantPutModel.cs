@@ -11,8 +11,6 @@ namespace Domain.Model.Consultant
 {
     public class ConsultantPutModel : AccountPostModel
     {
-        [Required(ErrorMessage = "Name is required.")]
-        public string Name { get; set; } = string.Empty;
         [Required(ErrorMessage = "Consultant level id is required.")]
         public int ConsultantLevelId { get; set; }
         [Required(ErrorMessage = "University Id level id is required.")]
