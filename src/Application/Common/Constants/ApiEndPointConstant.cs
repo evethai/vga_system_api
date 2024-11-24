@@ -20,6 +20,11 @@
             public const string LogoutEndpoint = ApiEndpoint + "/logout/{id}";
         }
 
+        public static class Admin
+        {
+            public const string Dashboard = ApiEndpoint + "/dashboard";
+        }
+
         public static class PersonalTest
         {
             public const string PersonalTestsEndpoint = ApiEndpoint + "/personal-tests";
@@ -28,6 +33,7 @@
             public const string GetResultPersonalTestEndpoint = ApiEndpoint + "/personal-test-result";
             public const string GetMajorsByPersonalGroupIdEndpoint = ApiEndpoint + "/majors-by-personality/{id}";
             public const string FilterMajorAndUniversityEndpoint = ApiEndpoint + "/filter-major-university";
+           
         }
 
         public static class PersonalGroup
@@ -40,6 +46,9 @@
         {
             public const string QuestionsEndpoint = ApiEndpoint + "/questions";
             public const string QuestionEndpoint = ApiEndpoint + "/question/{id}";
+            public const string QuestionsEndpointByTestId = ApiEndpoint + "/questions-by-test/{id}";
+            public const string QuestionsEndpointForPersonalTest = ApiEndpoint + "/questions-for-personal-test";
+
         }
 
         public static class TestType

@@ -134,7 +134,7 @@ namespace Infrastructure.Persistence.Service
                 {
                     Id = major.Id,
                     Name = major.Name,
-                    Type = StudentChoiceType.Major
+                    //Type = StudentChoiceType.Major
                 });
             }
             
@@ -168,6 +168,7 @@ namespace Infrastructure.Persistence.Service
                 {
                     MajorId = choices.MajorOrOccupationId,
                     MajorName = choices.MajorOrOccupationName,
+                    Image = choices.Image,
                     _occupations = _mapper.Map<List<OccupationByMajorIdModel>>(occupations),
                     _universities = _mapper.Map<List<UniversityByMajorIdModel>>(universities)
                 });

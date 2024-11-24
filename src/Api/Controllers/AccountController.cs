@@ -28,7 +28,7 @@ namespace Api.Controllers
             var result = await _accountService.Login(loginRequest);
             if (result == null)
             {
-                return NotFound();
+                return Unauthorized();
             }
             return Ok(result);
         }
@@ -78,7 +78,7 @@ namespace Api.Controllers
         }
 
         [HttpPut(ApiEndPointConstant.Account.AccountEndpoint)]
-        //[CustomAuthorize(RoleEnum.Admin)]
+        [CustomAuthorize(RoleEnum.Admin)]
         public async Task<IActionResult> UpdateStatusAccount(Guid id, AccountStatus status)
         {
             var result = await _accountService.UpdateStatusAccount(id, status);

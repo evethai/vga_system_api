@@ -288,7 +288,64 @@ namespace Infrastructure.Persistence.Repository
                 Data = existedTransaction
             };
         }
-
-
+        public async Task<List<Wallet>> GetInforStudentHasWalletReceiving(Guid id, int years)
+        {
+            var idHighschool = _context.HighSchool
+                .Where(a => a.AccountId.Equals(id))
+                .FirstOrDefault() ?? throw new Exception("Account Id is not found");
+            var listStudent = await _context.Student
+                .Where(a => a.HighSchoolId.Equals(idHighschool.Id) && a.SchoolYears.Equals(years)).AsNoTracking()
+                .ToListAsync();
+            if (listStudent.Count == 0)
+            {
+                throw new Exception("No List Student");
+            }
+            var wallets = await _context.Wallet
+                .Where(w => listStudent.Select(s => s.AccountId).Contains(w.AccountId)).AsNoTracking()
+                .ToListAsync();
+            var responseWallets = wallets.Select(w => new Wallet
+            {
+                Id = w.Id,
+                AccountId = w.AccountId,
+                GoldBalance = w.GoldBalance,
+            }).ToList();
+            return responseWallets;
+        }
+        public async Task<ResponseModel> UpdateWalletUsingGoldDistributionAsync(TransactionPutWalletModel model)
+        {
+            var walletTransferring = _context.Wallet.Where(a=>a.AccountId.Equals(model.AccountId)).FirstOrDefault();
+            if (walletTransferring == null)
+            {
+                throw new Exception("Account Id is not found");
+            }
+            var receivingWallets = await GetInforStudentHasWalletReceiving(model.AccountId, model.Years);
+            var totalgoldDistribution = model.Gold * receivingWallets.Count();
+            if (walletTransferring.GoldBalance < totalgoldDistribution)
+            {
+                throw new Exception("Distribution gold is fail when Gold not enough");
+            }
+            walletTransferring.GoldBalance = walletTransferring.GoldBalance - totalgoldDistribution;
+            TransactionPostModel transaction_Transferring =
+               new TransactionPostModel(walletTransferring.Id, totalgoldDistribution);
+            var trans = await CreateTransactionWhenUsingGold(TransactionType.Transferring, transaction_Transferring);
+            trans.Description = "Bạn đã phân phối " + trans.GoldAmount + "điểm cho học sinh vào năm " + model.Years;
+            _context.Transaction.Update(trans);
+            _context.Wallet.Update(walletTransferring);
+            foreach (var receivingWallet in receivingWallets)
+            {
+                receivingWallet.GoldBalance = receivingWallet.GoldBalance + model.Gold;
+                TransactionPostModel transaction = new TransactionPostModel(receivingWallet.Id, model.Gold);
+                var receiving = await 
+                    CreateTransactionWhenUsingGold(TransactionType.Receiving, transaction);
+                _context.Wallet.Update(receivingWallet);
+            }
+            await _context.SaveChangesAsync();
+            return new ResponseModel
+            {
+                IsSuccess = true,
+                Message = "Distribution gold is Successfully",
+                Data = walletTransferring
+            };
+        }
     }
 }

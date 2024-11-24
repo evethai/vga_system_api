@@ -49,6 +49,7 @@ namespace Api.Installers
             services.AddScoped<IWorkSkillsService, WorkSkillsService>();
             services.AddScoped<IAdmissionInformationService, AdmissionInformationService>();
             services.AddScoped<IAdmissionMethodService, AdmissionMethodService>();
+            services.AddScoped<IPersonalTestService, PersonalTestService>();
             services.AddScoped<ICertificationService,CertificationService>();
 
             //declare hub

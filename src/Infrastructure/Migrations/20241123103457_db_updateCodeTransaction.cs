@@ -5,14 +5,20 @@
 namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdateDescriptionMajorCate : Migration
+    public partial class db_updateCodeTransaction : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "Description",
-                table: "MajorCategory",
+                name: "Code",
+                table: "Transaction",
+                type: "nvarchar(max)",
+                nullable: true);
+
+            migrationBuilder.AddColumn<string>(
+                name: "Image",
+                table: "Transaction",
                 type: "nvarchar(max)",
                 nullable: true);
         }
@@ -21,8 +27,12 @@ namespace Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "Description",
-                table: "MajorCategory");
+                name: "Code",
+                table: "Transaction");
+
+            migrationBuilder.DropColumn(
+                name: "Image",
+                table: "Transaction");
         }
     }
 }

@@ -12,6 +12,5 @@ namespace Application.Interface.Repository
 {
     public interface IWalletRepository : IGenericRepository<Wallet>
     {
-        Task<List<WalletModel>> GetInforStudentHasWalletReceiving(Guid id, int years);
     }
 }

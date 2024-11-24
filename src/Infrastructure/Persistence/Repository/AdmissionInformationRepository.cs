@@ -21,7 +21,7 @@ namespace Infrastructure.Persistence.Repository
         {
             _context = context;
         }
-        public (Expression<Func<AdmissionInformation, bool>> filter, Func<IQueryable<AdmissionInformation>, IOrderedQueryable<AdmissionInformation>> orderBy) BuildFilterAndOrderBy(AdmissionInformationRattingModel model, StudentChoice stChoice)
+        public (Expression<Func<AdmissionInformation, bool>> filter, Func<IQueryable<AdmissionInformation>, IOrderedQueryable<AdmissionInformation>> orderBy) BuildFilterAndOrderBy(AdmissionInformationRattingModel model, stChoiceModel stChoice)
         {
             Expression<Func<AdmissionInformation, bool>> predicate = p => true;
             Func<IQueryable<AdmissionInformation>, IOrderedQueryable<AdmissionInformation>> orderBy = null;

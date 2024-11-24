@@ -88,8 +88,11 @@ namespace Infrastructure.Persistence.Service
                 SingleOrDefaultAsync(predicate: c => c.Id.Equals(Id),
                 include: a => a.Include(a => a.Account).ThenInclude(a => a.Wallet)
                 .Include(a => a.UniversityLocations)
-                .Include(a=>a.Consultants).ThenInclude(a=>a.Account)
-                .Include(a=>a.Consultants).ThenInclude(a=>a.ConsultantLevel));
+                .Include(a => a.Consultants).ThenInclude(a => a.Account)
+                .Include(a => a.Consultants).ThenInclude(a => a.ConsultantLevel)
+                .Include(a => a.AdmissionInformation).ThenInclude(a => a.AdmissionMethod)
+                .Include(a => a.AdmissionInformation).ThenInclude(a => a.Major));
+
             if (university == null)
             {
                 throw new Exception("Id is not found");

@@ -39,6 +39,7 @@ namespace Application.Interface
         IAdmissionMethodRepository AdmissionMethodRepository { get; }
         IOccupationSkillRepository OccupationSkillRepository { get; }
         ICertificationRepository CertificationRepository { get; }
+        ITestQuestionRepository TestQuestionRepository { get; }
         Task SaveChangesAsync();
     }
 }
