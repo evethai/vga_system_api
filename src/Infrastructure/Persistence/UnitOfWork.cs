@@ -102,7 +102,6 @@ namespace Infrastructure.Persistence
             }
             this.disposed = true;
         }
-
         public void Dispose()
         {
             Dispose(true);

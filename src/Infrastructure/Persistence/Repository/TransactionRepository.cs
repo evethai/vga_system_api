@@ -123,7 +123,7 @@ namespace Infrastructure.Persistence.Repository
                         TransactionDateTime = DateTime.UtcNow,
                     };
                     break;
-                case TransactionType.Recharge:
+                case TransactionType.Reject:
                     transaction = new Transaction
                     {
                         Id = Guid.NewGuid(),
@@ -132,7 +132,7 @@ namespace Infrastructure.Persistence.Repository
                         Description = "Bạn đã yêu cầu nạp " + transactionModel.GoldAmount + " Gold",
                         GoldAmount = transactionModel.GoldAmount,
                         TransactionDateTime = DateTime.UtcNow,
-                    };
+                    };               
                     break;
                 default:
                     break;
@@ -347,6 +347,30 @@ namespace Infrastructure.Persistence.Repository
                 Message = "Distribution gold is Successfully",
                 Data = walletTransferring
             };
+        }
+        public async Task<bool> CheckPayOsReturn(long OrderCode, string desc)
+        {
+            var checkTrans = _context.Transaction.Where(x => x.Code != null && x.Code.Equals(OrderCode.ToString())).FirstOrDefault();
+            if (checkTrans == null)
+            {
+                throw new Exception("Not exit Transaction");
+            }
+            if (desc == "success")
+            {
+                var updateWallet = _context.Wallet.Where(a => a.Id.Equals(checkTrans.WalletId)).FirstOrDefault();
+                if (updateWallet == null)
+                {
+                    throw new Exception("Wallet is not found");
+                }
+                checkTrans.Description = "Bạn đã nạp " + checkTrans.GoldAmount + " Gold thành công";
+                checkTrans.TransactionType = TransactionType.Recharge;
+                updateWallet.GoldBalance += checkTrans.GoldAmount;
+                _context.Transaction.Update(checkTrans);
+                _context.Wallet.Update(updateWallet);
+                _context.SaveChanges();
+                return true;
+            }
+            return false;
         }
     }
 }
