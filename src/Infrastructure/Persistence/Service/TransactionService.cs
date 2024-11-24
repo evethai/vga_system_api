@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Common.Constants;
 using Application.Common.Exceptions;
 using AutoMapper;
 using Domain.Entity;
@@ -69,7 +70,7 @@ namespace Application.Interface.Service
 
                 NotificationPostModel notiPostModel = new NotificationPostModel();
                 notiPostModel.AccountId = admin.Id;
-                notiPostModel.Title = "Yêu cầu rút tiền";
+                notiPostModel.Title = NotificationConstant.Title.Request;
                 notiPostModel.Message = $"Tư vấn viên {consultant.Account.Name} đã yêu cầu rút {goldAmount} điểm vào ngày {DateTime.UtcNow}";
                 await _unitOfWork.NotificationRepository.CreateNotification(notiPostModel);
                 await _unitOfWork.SaveChangesAsync();
@@ -88,7 +89,7 @@ namespace Application.Interface.Service
         #endregion
 
         #region Process withdraw request
-        public async Task<ResponseModel> ProcessWithdrawRequestAsync(Guid transactionId, TransactionType type)
+        public async Task<ResponseModel> ProcessWithdrawRequestAsync(Guid transactionId, TransactionProcessRequestModel model)
         {
             try
             {
@@ -100,7 +101,7 @@ namespace Application.Interface.Service
                 if (transaction.TransactionType != TransactionType.Request)
                     throw new Exception("Transaction is not Request");
 
-                var responseModel = await _unitOfWork.TransactionRepository.ProcessWithdrawRequest(transactionId, type);
+                var responseModel = await _unitOfWork.TransactionRepository.ProcessWithdrawRequest(transactionId, model);
 
                 return responseModel;
             }
