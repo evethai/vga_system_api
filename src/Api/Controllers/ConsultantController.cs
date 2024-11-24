@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
-    [Route("api/consultants")]
     [ApiController]
     public class ConsultantController : ControllerBase
     {
@@ -96,7 +95,7 @@ namespace Api.Controllers
             }
         }
 
-        [CustomAuthorize(RoleEnum.University)]
+        [CustomAuthorize(RoleEnum.University,RoleEnum.Admin)]
         [HttpDelete(ApiEndPointConstant.Consultant.ConsultantEndpoint)]
         public async Task<IActionResult> DeleteConsultantAsync(Guid id)
         {
