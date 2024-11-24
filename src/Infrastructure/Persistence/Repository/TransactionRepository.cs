@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Common.Constants;
 using Application.Common.Exceptions;
 using Application.Common.Extensions;
 using Application.Interface;
@@ -231,7 +232,7 @@ namespace Infrastructure.Persistence.Repository
                 Data = transaction_request,
             };
         }
-        public async Task<ResponseModel> ProcessWithdrawRequest(Guid transactionId, TransactionType type)
+        public async Task<ResponseModel> ProcessWithdrawRequest(Guid transactionId, TransactionProcessRequestModel model)
         {
             var existedTransaction = _context.Transaction
                 .Where(t => t.Id.Equals(transactionId))
@@ -248,16 +249,16 @@ namespace Infrastructure.Persistence.Repository
                 Status = Domain.Enum.NotiStatus.Unread
             };
 
-            switch (type)
+            switch (model.type)
             {
                 case TransactionType.Withdraw:
                     //update transaction type and description
                     existedTransaction.TransactionType = TransactionType.Withdraw;
                     existedTransaction.Description = $"Yêu cầu rút {existedTransaction.GoldAmount} điểm đã xử lý thành công";
                     existedTransaction.TransactionDateTime = DateTime.UtcNow;
-
+                    existedTransaction.Image = model.Image;
                     //create notification 
-                    notiPostModel.Title = "Yêu cầu rút điểm đã xử lý thành công";
+                    notiPostModel.Title = NotificationConstant.Title.Withdraw;
                     notiPostModel.Message = $"Yêu cầu rút {existedTransaction.GoldAmount} điểm được xử lý thành công vào ngày {DateTime.UtcNow}";
                     break;
                 case TransactionType.Reject:
@@ -271,7 +272,7 @@ namespace Infrastructure.Persistence.Repository
                     _context.Wallet.Update(wallet);
 
                     //create notification 
-                    notiPostModel.Title = "Yêu cầu rút điểm đã bị từ chối";
+                    notiPostModel.Title = NotificationConstant.Title.Reject;
                     notiPostModel.Message = $"Yêu cầu rút {existedTransaction.GoldAmount} điểm đã bị từ chối vào ngày {DateTime.UtcNow}";
                     break;
                 default:

@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
-    [Route("api/consultant-levels")]
     [ApiController]
     public class ConsultantLevelController : ControllerBase
     {

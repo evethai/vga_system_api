@@ -15,7 +15,11 @@ namespace Application.Common.Constants
         public static class Title
         {
             public const string NewBooking = Notification + "có lịch tư vấn mới.";
+            public const string Booked = Notification + "có lịch tư vấn đã được đặt.";
             public const string UpdateGold = Notification + "cập nhật thông tin xu.";
+            public const string Request = Notification + "yêu cầu rút tiền.";
+            public const string Withdraw = Notification + "yêu cầu rút tiền đã xử lý thành công.";
+            public const string Reject = Notification + "yêu cầu rút điểm đã bị từ chối.";
         }
         public static class Messages
         {

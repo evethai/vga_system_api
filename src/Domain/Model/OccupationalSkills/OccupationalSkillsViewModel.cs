@@ -13,6 +13,6 @@ namespace Domain.Model.OccupationalSkills
         public Guid Id { get; set; }
         public string Content { get; set; } = string.Empty;
         public bool Status { get; set; }
-        public WorkSkillsViewModel WorkSkill { get; set; } = null!;
+        public WorkSkillsViewModel WorkSkills { get; set; } = null!;
     }
 }

@@ -14,6 +14,6 @@ namespace Application.Interface.Service
     {
         Task<ResponseTransactionModel> GetListTransactionAsync(TransactionSearchModel searchModel);
         Task<ResponseModel> CreateWithdrawAsync(Guid consultantId, int goldAmount);
-        Task<ResponseModel> ProcessWithdrawRequestAsync(Guid transactionId, TransactionType type);
+        Task<ResponseModel> ProcessWithdrawRequestAsync(Guid transactionId, TransactionProcessRequestModel model);
     }
 }
