@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Interface;
 using Application.Interface.Repository;
 using Domain.Entity;
+using Domain.Enum;
+using Domain.Model.PersonalTest;
 using Domain.Model.Question;
 using Domain.Model.Response;
 using Infrastructure.Data;
@@ -21,7 +24,6 @@ namespace Infrastructure.Persistence.Repository
         }
 
         #region create question
-
         public async Task<ResponseModel> CreateQuestion(QuestionPostModel model)
         {
             var strategy = _context.Database.CreateExecutionStrategy();
@@ -98,7 +100,6 @@ namespace Infrastructure.Persistence.Repository
                 }
             });
         }
-
         #endregion
 
         #region update question
@@ -159,6 +160,138 @@ namespace Infrastructure.Persistence.Repository
             }
         }
         #endregion
+
+        public async Task<ResponseModel> AddMbtiQuestions(Guid personalTestId, Guid testTypeId, List<DataQuestionMBTIModel> questions)
+        {
+            if (questions == null || !questions.Any())
+            {
+                return new ResponseModel
+                {
+                    IsSuccess = false,
+                    Message = "Questions cannot be null or empty."
+                };
+            }
+
+            try
+            {
+                var questionEntities = new List<Question>();
+                var answerEntities = new List<Answer>();
+                var testQuestionEntities = new List<TestQuestion>();
+
+                foreach (var item in questions)
+                {
+                    var question = new Question
+                    {
+                        Content = item.Content,
+                        Group = QuestionGroup.None,
+                        TestTypeId = testTypeId,
+                        CreateAt = DateTime.UtcNow,
+                        Status = true
+                    };
+                    questionEntities.Add(question);
+
+                    answerEntities.Add(new Answer
+                    {
+                        Content = item.Answer1,
+                        QuestionId = question.Id,
+                        AnswerValue = item.Value1,
+                        status = true
+                    });
+                    answerEntities.Add(new Answer
+                    {
+                        Content = item.Answer2,
+                        QuestionId = question.Id,
+                        AnswerValue = item.Value2,
+                        status = true
+                    });
+                    testQuestionEntities.Add(new TestQuestion
+                    {
+                        PersonalTestId = personalTestId,
+                        QuestionId = question.Id,
+                        Status = true
+                    });
+                }
+
+                await _context.Question.AddRangeAsync(questionEntities);
+                await _context.Answer.AddRangeAsync(answerEntities);
+                await _context.TestQuestion.AddRangeAsync(testQuestionEntities);
+
+                await _context.SaveChangesAsync();
+
+                return new ResponseModel
+                {
+                    IsSuccess = true,
+                    Message = "Added MBTI questions successfully."
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    IsSuccess = false,
+                    Message = $"An error occurred: {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<ResponseModel> AddHollandQuestions(Guid personalTestId, Guid testTypeId, List<DataQuestionHollandModel> questions)
+        {
+            if (questions == null || !questions.Any())
+            {
+                return new ResponseModel
+                {
+                    IsSuccess = false,
+                    Message = "Questions cannot be null or empty."
+                };
+            }
+
+            try
+            {
+                var questionEntities = new List<Question>();
+                var testQuestionEntities = new List<TestQuestion>();
+
+                foreach (var item in questions)
+                {
+                    var question = new Question
+                    {
+                        Content = item.Content,
+                        Group = item.Group,
+                        TestTypeId = testTypeId,
+                        CreateAt = DateTime.UtcNow,
+                        Status = true
+                    };
+                    questionEntities.Add(question);
+                    testQuestionEntities.Add(new TestQuestion
+                    {
+                        PersonalTestId = personalTestId,
+                        QuestionId = question.Id,
+                        Status = true
+                    });
+                }
+
+                await _context.Question.AddRangeAsync(questionEntities);
+                await _context.TestQuestion.AddRangeAsync(testQuestionEntities);
+
+                await _context.SaveChangesAsync();
+
+                return new ResponseModel
+                {
+                    IsSuccess = true,
+                    Message = "Added Holland questions successfully."
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    IsSuccess = false,
+                    Message = $"An error occurred: {ex.Message}"
+                };
+            }
+        }
+
+
+
 
     }
 

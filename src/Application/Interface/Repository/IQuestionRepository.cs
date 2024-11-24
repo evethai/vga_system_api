@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Domain.Entity;
+using Domain.Model.PersonalTest;
 using Domain.Model.Question;
 using Domain.Model.Response;
 
@@ -13,5 +14,7 @@ namespace Application.Interface.Repository
     {
         Task<ResponseModel> CreateQuestion(QuestionPostModel model);
         Task<ResponseModel> UpdateQuestion(QuestionPutModel model);
+        Task<ResponseModel> AddHollandQuestions(Guid personalTestId, Guid testTypeId, List<DataQuestionHollandModel> questions);
+        Task<ResponseModel> AddMbtiQuestions(Guid personalTestId, Guid testTypeId, List<DataQuestionMBTIModel> questions);
     }
 }
