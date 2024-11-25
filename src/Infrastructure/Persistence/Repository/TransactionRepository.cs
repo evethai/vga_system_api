@@ -221,9 +221,9 @@ namespace Infrastructure.Persistence.Repository
             await CreateTransactionWhenUsingGold(TransactionType.Request, transaction_request);
 
             //hold point to process request
-            existedWallet.GoldBalance -= gold;
-            _context.Wallet.Update(existedWallet);
-            await _context.SaveChangesAsync();
+            //existedWallet.GoldBalance -= gold;
+            //_context.Wallet.Update(existedWallet);
+            //await _context.SaveChangesAsync();
 
             return new ResponseModel
             {
@@ -257,6 +257,11 @@ namespace Infrastructure.Persistence.Repository
                     existedTransaction.Description = $"Yêu cầu rút {existedTransaction.GoldAmount} điểm đã xử lý thành công";
                     existedTransaction.TransactionDateTime = DateTime.UtcNow;
                     existedTransaction.Image = model.Image;
+
+                    //update wallet
+                    wallet.GoldBalance -= existedTransaction.GoldAmount;
+                    _context.Wallet.Update(wallet);
+
                     //create notification 
                     notiPostModel.Title = NotificationConstant.Title.Withdraw;
                     notiPostModel.Message = $"Yêu cầu rút {existedTransaction.GoldAmount} điểm được xử lý thành công vào ngày {DateTime.UtcNow}";
@@ -268,8 +273,8 @@ namespace Infrastructure.Persistence.Repository
                     existedTransaction.TransactionDateTime = DateTime.UtcNow;
 
                     //update wallet
-                    wallet.GoldBalance += existedTransaction.GoldAmount;
-                    _context.Wallet.Update(wallet);
+                    //wallet.GoldBalance += existedTransaction.GoldAmount;
+                    //_context.Wallet.Update(wallet);
 
                     //create notification 
                     notiPostModel.Title = NotificationConstant.Title.Reject;
