@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Common.Exceptions;
 using Application.Common.Utils;
 using Application.Interface;
 using Application.Interface.Service;
@@ -52,15 +53,15 @@ public class StudentService : IStudentService
     public async Task<StudentModel> GetStudentByIdAsync(Guid StudentId)
     {
         var student = await _unitOfWork.StudentRepository.
-            SingleOrDefaultAsync(predicate: c=>c.Id.Equals(StudentId)
-            ,include:a=>a.Include(a=>a.Account)
+            SingleOrDefaultAsync(predicate: c => c.Id.Equals(StudentId)
+            , include: a => a.Include(a => a.Account)
             .ThenInclude(a => a.Wallet)) ?? throw new Exception("Id is not found");
         return _mapper.Map<StudentModel>(student);
     }
 
     public async Task<ResponseModel> UpdateStudentAsync(StudentPutModel putModel, Guid StudentId)
     {
-        var exitStudent = await _unitOfWork.StudentRepository.GetByIdGuidAsync(StudentId) ?? throw new Exception("Id is not found");       
+        var exitStudent = await _unitOfWork.StudentRepository.GetByIdGuidAsync(StudentId) ?? throw new Exception("Id is not found");
         exitStudent.DateOfBirth = putModel.DateOfBirth;
         exitStudent.SchoolYears = putModel.SchoolYears;
         exitStudent.Gender = putModel.Gender;
@@ -82,10 +83,10 @@ public class StudentService : IStudentService
     }
     public async Task<ResponseModel> CreateStudentAsync(StudentPostModel postModel)
     {
-        
+
         RegisterAccountModel accountModel = new RegisterAccountModel(
             postModel.Name
-            ,postModel.Email
+            , postModel.Email
             , postModel.Password
             , postModel.Phone);
         var AccountId = await _unitOfWork.AccountRepository.CreateAccountAndWallet(accountModel, RoleEnum.Student);
@@ -134,39 +135,41 @@ public class StudentService : IStudentService
 
             foreach (var studentImport in students.Data)
             {
-                RegisterAccountModel accountModel = new RegisterAccountModel(studentImport.Name,studentImport.Email
+                RegisterAccountModel accountModel = new RegisterAccountModel(studentImport.Name, studentImport.Email
                        , studentImport.Password
                        , studentImport.Phone);
 
                 var student = _mapper.Map<Student>(studentImport);
                 try
                 {
-                    var AccountId = await _unitOfWork.AccountRepository.CreateAccountAndWallet(accountModel, RoleEnum.Student);
-                    student.Id = Guid.NewGuid();
-                    student.AccountId = AccountId;
-                    student.HighSchoolId = studentImportModel.highschoolId;
-                    student.SchoolYears = studentImportModel.schoolYear;
+                    var existingAccount = await _unitOfWork.AccountRepository.SingleOrDefaultAsync(
+                        predicate: acc => acc.Email.Equals(accountModel.Email) || acc.Phone.Equals(accountModel.Phone));
 
-                    await _unitOfWork.StudentRepository.AddAsync(student);
-                }
-                catch (Exception e)
-                {
-                    if (e.Message.Contains("Email", StringComparison.OrdinalIgnoreCase))
+                    if (existingAccount != null)
                     {
                         var existingStudent = await _unitOfWork.StudentRepository.SingleOrDefaultAsync(
-                            predicate: x => x.Account.Name.Equals(accountModel.Name),
-                            include: s=>s.Include(s => s.Account));
+                            predicate: x => x.AccountId == existingAccount.Id) ?? throw new NotExistsException();
 
-                        if (existingStudent == null)
-                            throw;
                         existingStudent.SchoolYears = studentImportModel.schoolYear;
-                        await _unitOfWork.StudentRepository.UpdateAsync(existingStudent);   
+
+                        await _unitOfWork.StudentRepository.UpdateAsync(existingStudent);
+
                     }
                     else
                     {
-                        throw;
+                        var accountId = await _unitOfWork.AccountRepository.CreateAccountAndWallet(accountModel, RoleEnum.Student);
+                        student.Id = Guid.NewGuid();
+                        student.AccountId = accountId;
+                        student.HighSchoolId = studentImportModel.highschoolId;
+                        student.SchoolYears = studentImportModel.schoolYear;
+                        student.DateOfBirth = DateTime.FromOADate(studentImport.excelSerialDate);
+
+                        await _unitOfWork.StudentRepository.AddAsync(student);
                     }
-                    
+                }
+                catch (Exception e)
+                {
+                    throw new InvalidOperationException($"Error while processing student: {studentImport.Email}", e);
                 }
             }
 
