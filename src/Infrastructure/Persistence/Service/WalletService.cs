@@ -90,12 +90,12 @@ namespace Infrastructure.Persistence.Service
             };
         }
 
-        public async Task<ResponseModel> RequestTopUpWalletWithPayOsAsync([FromQuery] Guid accountId, [FromQuery] float amount, PayOSUrl url)
+        public async Task<ResponseModel> RequestTopUpWalletWithPayOsAsync(Guid accountId,float amount, PayOSUrl url)
         {
             var exitWallet = await _unitOfWork.WalletRepository.
                 SingleOrDefaultAsync(predicate: s => s.AccountId.Equals(accountId)); if (exitWallet == null) { throw new Exception("Wallet is not found"); }
             TransactionPostModel transaction = new TransactionPostModel(exitWallet.Id, (int)amount);
-            var trans = await _unitOfWork.TransactionRepository.CreateTransactionWhenUsingGold(TransactionType.Recharge, transaction);
+            var trans = await _unitOfWork.TransactionRepository.CreateTransactionWhenUsingGold(TransactionType.Reject, transaction);
             var items = new List<ItemData>
             {
                 new ItemData("NẠP TIỀN VÀO HỆ THỐNG", 1, (int)amount)
@@ -127,39 +127,6 @@ namespace Infrastructure.Persistence.Service
                 Message = "Create URL failed"
             };
         }
-        public async Task<ResponseModel> RequestDepositToWalletWithPayOs(Guid transactionId, string status)
-        {
-            var trans = await _unitOfWork.TransactionRepository.GetByIdGuidAsync(transactionId) ?? throw new Exception("Transaction is Not Found");
-            if (status.ToUpper() == "PAID")
-            {
-                var updateWallet = await _unitOfWork.WalletRepository.GetByIdGuidAsync(trans.WalletId);
-                if (updateWallet == null)
-                {
-                    throw new Exception("Wallet is not found");
-                }
-                trans.Description = "Bạn đã nạp " + trans.GoldAmount + " Gold";
-                updateWallet.GoldBalance += trans.GoldAmount;
-                await _unitOfWork.TransactionRepository.UpdateAsync(trans);
-                await _unitOfWork.WalletRepository.UpdateAsync(updateWallet);
-                await _unitOfWork.SaveChangesAsync();
-                return new ResponseModel
-                {
-                    IsSuccess = true,
-                    Message = "Deposit To Wallet Success",
-                    Data = updateWallet
-                };
-            }
-            else
-            {
-                await _unitOfWork.TransactionRepository.DeleteAsync(trans);
-                await _unitOfWork.SaveChangesAsync();
-                return new ResponseModel
-                {
-                    IsSuccess = true,
-                    Message = "Deposit To Wallet Success"
-                };
-            }
-        }
         public async Task<string> ConfirmWebhook(string webhookUrl)
         {
             return await _payOSService.ConfirmWebhook(webhookUrl);
@@ -167,36 +134,13 @@ namespace Infrastructure.Persistence.Service
 
         public async Task<ResponseModel> HandleWebhook(WebhookType webhookBody)
         {
-            WebhookData webhookData = _payOSService.VerifyPaymentWebhookData(webhookBody);
-            var checkTrans = await _unitOfWork.TransactionRepository.SingleOrDefaultAsync(predicate: a => a.Code.Equals(webhookData.orderCode));
-            if (checkTrans == null)
-            {
-                throw new Exception("Not exit Transaction");
-            }
-            if (webhookData.code != "00")
-            {
-                await _unitOfWork.TransactionRepository.DeleteAsync(checkTrans);
-                return new ResponseModel
-                {
-                    IsSuccess = false,
-                    Message = "Giao dịch đã được xóa"
-                };
-
-            }
-            var updateWallet = await _unitOfWork.WalletRepository.GetByIdGuidAsync(checkTrans.WalletId);
-            if (updateWallet == null)
-            {
-                throw new Exception("Wallet is not found");
-            }
-            checkTrans.Description = "Bạn đã nạp " + checkTrans.GoldAmount + " Gold";
-            updateWallet.GoldBalance += checkTrans.GoldAmount;
-            await _unitOfWork.TransactionRepository.UpdateAsync(checkTrans);
-            await _unitOfWork.WalletRepository.UpdateAsync(updateWallet);
-            await _unitOfWork.SaveChangesAsync();
+            WebhookData webhookData = _payOSService.VerifyPaymentWebhookData(webhookBody);           
+            var rs = await _unitOfWork.TransactionRepository.CheckPayOsReturn(webhookBody.data.orderCode, webhookBody.desc);
             return new ResponseModel
             {
                 IsSuccess = true,
-                Message = "Deposit To Wallet Success"
+                Message = "Deposit To Wallet Success",
+                Data = webhookData +"--------------" + rs
             };
         }
     }
