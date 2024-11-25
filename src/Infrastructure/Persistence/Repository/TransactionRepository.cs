@@ -72,10 +72,19 @@ namespace Infrastructure.Persistence.Repository
 
         public async Task<Transaction> CreateTransactionWhenUsingGold(TransactionType transactionType, TransactionPostModel transactionModel)
         {
-            if (transactionModel == null)
+            var accoount = _context.Wallet.Where(a => a.Id.Equals(transactionModel.WalletId)).FirstOrDefault();
+            if (transactionModel == null || accoount == null)
             {
-                throw new KeyNotFoundException("Null data");
+                throw new KeyNotFoundException("Account not found");
             }
+            Notification notiPostModel = new Notification
+            {
+                AccountId = accoount.AccountId,
+                CreatedAt = DateTime.UtcNow,
+                Status = Domain.Enum.NotiStatus.Unread,
+                Message = NotificationConstant.Messages.UpdateGold,
+                Title = NotificationConstant.Messages.UpdateGold
+            };
             Transaction transaction = null;
             switch (transactionType)
             {
@@ -132,11 +141,12 @@ namespace Infrastructure.Persistence.Repository
                         Description = "Bạn đã yêu cầu nạp " + transactionModel.GoldAmount + " Gold",
                         GoldAmount = transactionModel.GoldAmount,
                         TransactionDateTime = DateTime.UtcNow,
-                    };               
+                    };
                     break;
                 default:
                     break;
             }
+            await _context.Notification.AddAsync(notiPostModel);
             await _context.Transaction.AddAsync(transaction);
             await _context.SaveChangesAsync();
             return transaction;
@@ -370,6 +380,15 @@ namespace Infrastructure.Persistence.Repository
                 checkTrans.Description = "Bạn đã nạp " + checkTrans.GoldAmount + " Gold thành công";
                 checkTrans.TransactionType = TransactionType.Recharge;
                 updateWallet.GoldBalance += checkTrans.GoldAmount;
+                Notification notiPostModel = new Notification
+                {
+                    AccountId = updateWallet.AccountId,
+                    CreatedAt = DateTime.UtcNow,
+                    Status = Domain.Enum.NotiStatus.Unread,
+                    Message = "Bạn đã nạp " + checkTrans.GoldAmount + "điểm thành công",
+                    Title = NotificationConstant.Messages.UpdateGold
+                };
+                _context.Notification.Add(notiPostModel);
                 _context.Transaction.Update(checkTrans);
                 _context.Wallet.Update(updateWallet);
                 _context.SaveChanges();
