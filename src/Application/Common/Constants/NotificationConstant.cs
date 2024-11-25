@@ -19,7 +19,7 @@ namespace Application.Common.Constants
             public const string UpdateGold = Notification + "cập nhật thông tin xu.";
             public const string Request = Notification + "yêu cầu rút tiền.";
             public const string Withdraw = Notification + "yêu cầu rút tiền đã xử lý thành công.";
-            public const string Reject = Notification + "yêu cầu rút điểm đã bị từ chối.";
+            public const string Reject = Notification + "yêu cầu rút tiền đã bị từ chối.";
         }
         public static class Messages
         {
