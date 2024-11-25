@@ -15,7 +15,7 @@ namespace Application.Interface.Service
         Task<IEnumerable<PersonalTestModel>> GetAllTest();
         Task<StudentHistoryModel> GetHistoryTestByStudentId(Guid studentId);
         Task<ResponseModel> GetMajorsByPersonalGroupId(Guid stTestId);
-        Task<ResponseModel> FilterMajorAndUniversity(FilterMajorAndUniversityModel model);
+        Task<ResponseModel> FilterOccupationAndUniversity(FilterMajorAndUniversityModel model);
 
     }
 }

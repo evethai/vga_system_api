@@ -103,62 +103,66 @@ namespace Infrastructure.Persistence.Repository
         #endregion
 
         #region update question
-        public async Task<ResponseModel> UpdateQuestion(QuestionPutModel model)
+        public async Task<ResponseModel> UpdateQuestion(QuestionPutModel model, int id)
         {
-            using (var transaction = await _context.Database.BeginTransactionAsync())
+            var strategy = _context.Database.CreateExecutionStrategy();
+
+            return await strategy.ExecuteAsync(async () =>
             {
-                try
+                using (var transaction = await _context.Database.BeginTransactionAsync())
                 {
-                    var question = await _context.Question.FindAsync(model.Id);
-                    if (question == null)
+                    try
                     {
+                        var question = await _context.Question.FindAsync(id);
+                        if (question == null)
+                        {
+                            return new ResponseModel
+                            {
+                                IsSuccess = false,
+                                Message = "Question not found."
+                            };
+                        }
+
+                        question.Content = model.Content;
+                        question.Group = model.Group;
+
+                        if (model.Answers != null)
+                        {
+                            foreach (var answer in model.Answers)
+                            {
+                                var existingAnswer = await _context.Answer.FindAsync(answer.Id);
+                                if (existingAnswer != null)
+                                {
+                                    existingAnswer.Content = answer.Content;
+                                    existingAnswer.AnswerValue = answer.AnswerValue;
+                                    existingAnswer.status = true;
+                                }
+                            }
+                        }
+
+                        await _context.SaveChangesAsync();
+                        await transaction.CommitAsync();
+
+                        return new ResponseModel
+                        {
+                            IsSuccess = true,
+                            Message = "Question updated successfully."
+                        };
+                    }
+                    catch (Exception ex)
+                    {
+                        await transaction.RollbackAsync();
+
                         return new ResponseModel
                         {
                             IsSuccess = false,
-                            Message = "Question not found."
+                            Message = ex.Message
                         };
                     }
-
-                    question.Content = model.Content;
-                    question.Group = model.Group;
-                    question.Status = model.status;
-
-                    if (model.Answers != null)
-                    {
-                        foreach (var answer in model.Answers)
-                        {
-                            var existingAnswer = await _context.Answer.FindAsync(answer.Id);
-                            if (existingAnswer != null)
-                            {
-                                existingAnswer.Content = answer.Content;
-                                existingAnswer.AnswerValue = answer.AnswerValue;
-                                existingAnswer.status = true;
-                            }
-                        }
-                    }
-
-
-                    await _context.SaveChangesAsync();
-
-                    await transaction.CommitAsync();
-                    return new ResponseModel
-                    {
-                        IsSuccess = true,
-                        Message = "Question updated successfully."
-                    };
                 }
-                catch (Exception ex)
-                {
-                    await transaction.RollbackAsync();
-
-                    return new ResponseModel
-                    {
-                        IsSuccess = false,
-                        Message = ex.Message
-                    };
-                }
-            }
+            });
         }
+
         #endregion
 
         public async Task<ResponseModel> AddMbtiQuestions(Guid personalTestId, Guid testTypeId, List<DataQuestionMBTIModel> questions)

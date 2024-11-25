@@ -8,18 +8,16 @@ using Domain.Enum;
 
 namespace Domain.Model.Question
 {
-    public class QuestionPutModel
+    public class QuestionPutModel 
     {
-        [Required(ErrorMessage = "Id is required")]
-        public int Id { get; set; }
-        [Required(ErrorMessage = "TestTypeId is required")]
+        [Required(ErrorMessage = "Content is required")]
         public string Content { get; set; } = string.Empty;
         [Required(ErrorMessage = "Group is required")]
         public QuestionGroup Group { get; set; }
-        public bool status { get; set; }
-        [RequiredIfMBTI()]
+        [RequiredPutModel()]
         public List<AnswerPutModel>? Answers { get; set; } = new List<AnswerPutModel>();
     }
+
     public class AnswerPutModel
     {
         [Required(ErrorMessage = "Answer content is required")]
@@ -28,5 +26,31 @@ namespace Domain.Model.Question
         public string Content { get; set; } = string.Empty;
         [Required(ErrorMessage = "Answer value is required")]
         public AnswerValue AnswerValue { get; set; }
+    }
+
+    public class RequiredPutModel : ValidationAttribute
+    {
+        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
+        {
+            var model = (QuestionPutModel)validationContext.ObjectInstance;
+
+            if (model.Group != QuestionGroup.None)
+            {
+                model.Answers = null;
+            }
+
+            if (model.Group == QuestionGroup.None && (model.Answers == null || model.Answers.Count != 2))
+            {
+                return new ValidationResult("MBTI questions must have exactly 2 answers.");
+            }
+
+            else if (model.Group != QuestionGroup.None && (model.Answers != null || model.Answers.Any()))
+            {
+                return new ValidationResult("Holland code questions should not have answers.");
+            }
+
+            return ValidationResult.Success;
+        }
+
     }
 }

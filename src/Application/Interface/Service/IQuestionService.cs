@@ -13,7 +13,7 @@ namespace Application.Interface.Service
         Task<IEnumerable<QuestionListByTestIdModel>> GetAllQuestionsByType(Guid id);
         Task<QuestionModel> GetQuestionById(int id);
         //Task<ResponseModel> CreateQuestion(QuestionPostModel questionModel);
-        Task<ResponseModel> UpdateQuestion(QuestionPutModel questionModel);
+        Task<ResponseModel> UpdateQuestion(QuestionPutModel questionModel, int id);
         Task<ResponseModel> CreateQuestionForPersonalTest(QuestionPostModel model);
         Task<ResponseModel> DeleteQuestion(int id);
     }

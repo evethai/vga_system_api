@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Api.Controllers
 {
     [ApiController]
-    [CustomAuthorize(RoleEnum.Admin)]
+    //[CustomAuthorize(RoleEnum.Admin)]
     public class QuestionController : ControllerBase
     {
         private readonly IQuestionService _questionService;
@@ -50,7 +50,7 @@ namespace Api.Controllers
         //}
 
         [HttpPut(ApiEndPointConstant.Question.QuestionEndpoint)]
-        public async Task<IActionResult> UpdateQuestion(QuestionPutModel questionModel)
+        public async Task<IActionResult> UpdateQuestion(QuestionPutModel questionModel, int id)
         {
             if (!ModelState.IsValid)
             {
@@ -58,7 +58,11 @@ namespace Api.Controllers
             }
             try
             {
-                var result = await _questionService.UpdateQuestion(questionModel);
+                var result = await _questionService.UpdateQuestion(questionModel,id);
+                if (!result.IsSuccess)
+                {
+                    return BadRequest(result.Message);
+                }
                 return Ok(result);
             }
             catch (Exception ex)
@@ -77,6 +81,10 @@ namespace Api.Controllers
             try
             {
                 var result = await _questionService.CreateQuestionForPersonalTest(model);
+                if (!result.IsSuccess) 
+                {
+                    return BadRequest(result.Message);
+                }
                 return Ok(result);
             }
             catch (Exception ex)
@@ -91,6 +99,10 @@ namespace Api.Controllers
             try
             {
                 var result = await _questionService.DeleteQuestion(id);
+                if (!result.IsSuccess)
+                {
+                    return BadRequest(result.Message);
+                }
                 return Ok(result);
             }
             catch (Exception ex)

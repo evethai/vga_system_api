@@ -13,7 +13,7 @@ namespace Application.Interface.Repository
     public interface IQuestionRepository : IGenericRepository<Question>
     {
         Task<ResponseModel> CreateQuestion(QuestionPostModel model);
-        Task<ResponseModel> UpdateQuestion(QuestionPutModel model);
+        Task<ResponseModel> UpdateQuestion(QuestionPutModel model, int id);
         Task<ResponseModel> AddHollandQuestions(Guid personalTestId, Guid testTypeId, List<DataQuestionHollandModel> questions);
         Task<ResponseModel> AddMbtiQuestions(Guid personalTestId, Guid testTypeId, List<DataQuestionMBTIModel> questions);
     }

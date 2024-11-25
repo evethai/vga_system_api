@@ -145,7 +145,7 @@ namespace Infrastructure.Persistence.Service
             };
         }
 
-        public async Task<ResponseModel> FilterMajorAndUniversity(FilterMajorAndUniversityModel model)
+        public async Task<ResponseModel> FilterOccupationAndUniversity(FilterMajorAndUniversityModel model)
         {
             var stChoices = await _unitOfWork.StudentTestRepository.CreateStudentChoice(model.studentChoiceModel, StudentChoiceType.Major);
             if(stChoices == null || !stChoices.Any())
@@ -173,7 +173,6 @@ namespace Infrastructure.Persistence.Service
                 });
             }
             
-
             return new ResponseModel
             {
                 IsSuccess = true,

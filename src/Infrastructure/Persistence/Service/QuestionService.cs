@@ -42,9 +42,9 @@ namespace Infrastructure.Persistence.Service
         //    return result;
         //}
 
-        public async Task<ResponseModel> UpdateQuestion(QuestionPutModel questionModel)
+        public async Task<ResponseModel> UpdateQuestion(QuestionPutModel questionModel, int id)
         {
-            var result = await _unitOfWork.QuestionRepository.UpdateQuestion(questionModel);
+            var result = await _unitOfWork.QuestionRepository.UpdateQuestion(questionModel, id);
             return result;
         }
 

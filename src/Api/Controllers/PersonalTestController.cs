@@ -137,8 +137,12 @@ namespace Api.Controllers
             }
             try
             {
-                var response = await _studentTestService.FilterMajorAndUniversity(model);
-                return Ok(response);
+                var result = await _studentTestService.FilterOccupationAndUniversity(model);
+                if (!result.IsSuccess)
+                {
+                    return BadRequest(result.Message);
+                }
+                return Ok(result);
             }
             catch (Exception e)
             {
@@ -155,8 +159,12 @@ namespace Api.Controllers
             }
             try
             {
-                var response = await _personalTestService.CreatePersonalTest(model);
-                return Ok(response);
+                var result = await _personalTestService.CreatePersonalTest(model);
+                if (!result.IsSuccess)
+                {
+                    return BadRequest(result.Message);
+                }
+                return Ok(result);
             }
             catch (Exception e)
             {
@@ -174,6 +182,10 @@ namespace Api.Controllers
             try
             {
                 var response = await _personalTestService.UpdatePersonalTest(id, model);
+                if (!response.IsSuccess)
+                {
+                    return BadRequest(response.Message);
+                }
                 return Ok(response);
             }
             catch (Exception e)
@@ -187,6 +199,10 @@ namespace Api.Controllers
             try
             {
                 var response = await _personalTestService.DeletePersonalTest(id);
+                if (!response.IsSuccess)
+                {
+                    return BadRequest(response.Message);
+                }
                 return Ok(response);
             }
             catch (Exception e)
