@@ -25,7 +25,7 @@ namespace Infrastructure.Persistence.Service
         public async Task<ResponseModel> CreatePersonalTest(PersonalTestPostModel model)
         {
             var personalTest = _mapper.Map<PersonalTest>(model);
-            personalTest.CreateAt = DateTime.UtcNow;
+            personalTest.CreateAt = DateTime.UtcNow.ToLocalTime();
             personalTest.Status = true;
             await _unitOfWork.PersonalTestRepository.AddAsync(personalTest);
             await _unitOfWork.SaveChangesAsync();

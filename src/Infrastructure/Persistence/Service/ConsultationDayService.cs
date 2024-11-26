@@ -60,7 +60,7 @@ namespace Infrastructure.Persistence.Service
         {
             try
             {
-                if (postModel.Day < DateOnly.FromDateTime(DateTime.UtcNow))
+                if (postModel.Day < DateOnly.FromDateTime(DateTime.UtcNow.ToLocalTime()))
                 {
                     return new ResponseModel
                     {

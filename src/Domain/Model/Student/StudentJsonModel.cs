@@ -20,5 +20,5 @@ public class StudentJsonModel : AccountPostModel
     [JsonIgnore]
     public bool Status { get; set; } = true;
     [JsonIgnore]
-    public DateTime CreateAt { get; set; }  = DateTime.UtcNow;
+    public DateTime CreateAt { get; set; }  = DateTime.UtcNow.ToLocalTime();
 }

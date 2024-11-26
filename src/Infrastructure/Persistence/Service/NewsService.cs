@@ -30,7 +30,7 @@ namespace Infrastructure.Persistence.Service
         public async Task<ResponseModel> CreateNewsAsync(NewsPostModel postModel)
         {
             var news = _mapper.Map<News>(postModel);
-            news.CreatedAt = DateTime.UtcNow;
+            news.CreatedAt = DateTime.UtcNow.ToLocalTime();
             var result = await _unitOfWork.NewsRepository.AddAsync(news);
             await _unitOfWork.SaveChangesAsync();
             var img = await _unitOfWork.NewsRepository.CreateImageNews(news.Id, postModel.ImageNews);

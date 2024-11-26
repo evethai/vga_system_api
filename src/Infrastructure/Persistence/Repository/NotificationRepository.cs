@@ -25,7 +25,7 @@ namespace Infrastructure.Persistence.Repository
                 AccountId = model.AccountId,
                 Title = model.Title,
                 Message = model.Message,
-                CreatedAt = DateTime.UtcNow,
+                CreatedAt = DateTime.UtcNow.ToLocalTime(),
                 Status = Domain.Enum.NotiStatus.Unread
             };
 
