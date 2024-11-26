@@ -94,7 +94,8 @@ namespace Infrastructure.Persistence.Service
         {
             var exitWallet = await _unitOfWork.WalletRepository.
                 SingleOrDefaultAsync(predicate: s => s.AccountId.Equals(accountId)); if (exitWallet == null) { throw new Exception("Wallet is not found"); }
-            TransactionPostModel transaction = new TransactionPostModel(exitWallet.Id, (int)amount);
+                var points= amount/1000;
+            TransactionPostModel transaction = new TransactionPostModel(exitWallet.Id, (int)points);
             var trans = await _unitOfWork.TransactionRepository.CreateTransactionWhenUsingGold(TransactionType.Reject, transaction);
             var items = new List<ItemData>
             {

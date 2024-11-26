@@ -15,7 +15,9 @@ namespace Application.Common.Constants
             "http://localhost:3030",
             "https://zalo.me",
             "https://h5.zdn.vn",
-            "https://vga-beta.vercel.app"
+            "https://vga-beta.vercel.app",
+            "https://vga-nh8pp1j38-nhat679s-projects.vercel.app/",
+            "https://vga-payment-qt992zzqy-nhat679s-projects.vercel.app/"
         };
     }
 }

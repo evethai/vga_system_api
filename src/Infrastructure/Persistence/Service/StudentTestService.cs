@@ -78,6 +78,7 @@ namespace Infrastructure.Persistence.Service
                     Code = personalGroupModel.Code,
                     Name = personalGroupModel.Name,
                     Des = personalGroupModel.Description,
+                    About = personalGroupModel.About,
                     Majors = personalGroupModel.Majors,
                     Percent = personalGroupModel.Percent
                 }

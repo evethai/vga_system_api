@@ -13,6 +13,7 @@ namespace Domain.Model.PersonalGroup
         public string Code { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
+        public string? About { get; set; } 
         public List<MajorCategoryModel>? Majors { get; set; }
         public Object? Percent { get; set; }
     }

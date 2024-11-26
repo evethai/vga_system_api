@@ -70,8 +70,8 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
             Id = m_Type.Id,
             Code = m_Type.Code,
             Description = m_Type.Description,
-            Name = m_Type.Name
-
+            Name = m_Type.Name,
+            About = m_Type.About
         };
 
         return result;

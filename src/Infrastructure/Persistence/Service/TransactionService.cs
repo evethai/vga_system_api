@@ -59,7 +59,7 @@ namespace Application.Interface.Service
                 var admin = await _unitOfWork.AccountRepository.SingleOrDefaultAsync(
                     predicate: o => o.Role.Equals(RoleEnum.Admin)) ?? throw new NotExistsException();
 
-                if (goldAmount > consultant.Account.Wallet.GoldBalance)
+                if (goldAmount > consultant.Account.Wallet.GoldBalance || goldAmount <= 0)
                     return new ResponseModel
                     {
                         Message = "Không đủ số tiền để rút",
