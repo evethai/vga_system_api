@@ -262,6 +262,8 @@ namespace Infrastructure.Persistence.Repository
             switch (model.type)
             {
                 case TransactionType.Withdraw:
+                    if (existedTransaction.GoldAmount > wallet.GoldBalance)
+                        throw new Exception("Not enought gold to process");
                     //update transaction type and description
                     existedTransaction.TransactionType = TransactionType.Withdraw;
                     existedTransaction.Description = $"Yêu cầu rút {existedTransaction.GoldAmount} điểm đã xử lý thành công";
@@ -329,7 +331,7 @@ namespace Infrastructure.Persistence.Repository
         }
         public async Task<ResponseModel> UpdateWalletUsingGoldDistributionAsync(TransactionPutWalletModel model)
         {
-            var walletTransferring = _context.Wallet.Where(a=>a.AccountId.Equals(model.AccountId)).FirstOrDefault();
+            var walletTransferring = _context.Wallet.Where(a => a.AccountId.Equals(model.AccountId)).FirstOrDefault();
             if (walletTransferring == null)
             {
                 throw new Exception("Account Id is not found");
@@ -351,7 +353,7 @@ namespace Infrastructure.Persistence.Repository
             {
                 receivingWallet.GoldBalance = receivingWallet.GoldBalance + model.Gold;
                 TransactionPostModel transaction = new TransactionPostModel(receivingWallet.Id, model.Gold);
-                var receiving = await 
+                var receiving = await
                     CreateTransactionWhenUsingGold(TransactionType.Receiving, transaction);
                 _context.Wallet.Update(receivingWallet);
             }

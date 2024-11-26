@@ -25,6 +25,7 @@ namespace Domain.Model.Consultant
         public bool Gender { get; set; }
         public AccountStatus AccountStatus { get; set; }
         public DateTime CreateAt { get; set; }
+        public int WalletBalance { get; set; }
         public List<CertificationViewModel> Certifications { get; set; } 
     }
 }
