@@ -90,7 +90,10 @@ namespace Application.Common.Mapper
 
 
             //Transaction
-            CreateMap<Transaction, TransactionModel>().ReverseMap();
+            CreateMap<Transaction, TransactionModel>()
+                 .ForMember(dest => dest.AccountId, opt => opt.MapFrom(src => src.Wallet.AccountId))
+                 .ForMember(dest => dest.AccountName, opt => opt.MapFrom(src => src.Wallet.Account.Name))
+                 .ReverseMap();
             CreateMap<Transaction, TransactionPostModel>().ReverseMap();
             //TestType
             CreateMap<TestType, TestTypeModel>().ReverseMap();
