@@ -72,7 +72,7 @@ namespace Infrastructure.Persistence.Repository
 
         public async Task<Transaction> CreateTransactionWhenUsingGold(TransactionType transactionType, TransactionPostModel transactionModel)
         {
-            var accoount = _context.Wallet.Where(a => a.Id.Equals(transactionModel.WalletId)).FirstOrDefault();
+            var accoount = _context.Wallet.Where(a => a.Id.Equals(transactionModel.WalletId)).AsNoTracking().FirstOrDefault();
             if (transactionModel == null || accoount == null)
             {
                 throw new KeyNotFoundException("Account not found");
@@ -146,7 +146,7 @@ namespace Infrastructure.Persistence.Repository
                 default:
                     break;
             }
-            await _context.Notification.AddAsync(notiPostModel);
+            _context.Notification.Add(notiPostModel);
             await _context.Transaction.AddAsync(transaction);
             await _context.SaveChangesAsync();
             return transaction;
@@ -344,7 +344,7 @@ namespace Infrastructure.Persistence.Repository
             TransactionPostModel transaction_Transferring =
                new TransactionPostModel(walletTransferring.Id, totalgoldDistribution);
             var trans = await CreateTransactionWhenUsingGold(TransactionType.Transferring, transaction_Transferring);
-            trans.Description = "Bạn đã phân phối " + trans.GoldAmount + "điểm cho học sinh vào năm " + model.Years;
+            trans.Description = "Bạn đã phân phối " + trans.GoldAmount + " điểm cho học sinh vào năm " + model.Years;
             _context.Transaction.Update(trans);
             _context.Wallet.Update(walletTransferring);
             foreach (var receivingWallet in receivingWallets)
