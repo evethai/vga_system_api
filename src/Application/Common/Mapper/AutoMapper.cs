@@ -122,6 +122,7 @@ namespace Application.Common.Mapper
                 .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender))
                 .ForMember(dest => dest.CreateAt, opt => opt.MapFrom(src => src.Account.CreateAt))
                 .ForMember(dest => dest.AccountStatus, opt => opt.MapFrom(src => src.Account.Status))
+                .ForMember(dest => dest.WalletBalance, opt => opt.MapFrom(src => src.Account.Wallet.GoldBalance))
                 .ReverseMap();
             CreateMap<Consultant, ConsultantPostModel>()
                 //.ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Account.Name))
