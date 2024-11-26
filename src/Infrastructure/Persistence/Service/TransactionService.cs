@@ -31,8 +31,7 @@ namespace Application.Interface.Service
             var (filter, orderBy) = _unitOfWork.TransactionRepository.BuildFilterAndOrderBy(searchModel);
             var transaction = await _unitOfWork.TransactionRepository.GetBySearchAsync(filter, orderBy,
                 q => q.Include(s => s.Wallet)
-                       .ThenInclude(a => a.Account)
-                        .ThenInclude(a => a.University),
+                       .ThenInclude(a => a.Account)                        ,
                 pageIndex: searchModel.currentPage,
                 pageSize: searchModel.pageSize);
             var total = await _unitOfWork.TransactionRepository.CountAsync(filter);

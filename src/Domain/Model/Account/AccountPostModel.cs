@@ -16,6 +16,8 @@ namespace Domain.Model.Account
         [RegularExpression(@"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$", ErrorMessage = "Email is not valid")]
         public string Email { get; set; } = string.Empty;
         [Required(ErrorMessage = "Password is required.")]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$", 
+            ErrorMessage = "Password must be at least 8 characters long, and include an uppercase letter, a lowercase letter, a number, and a special character.")]
         public string Password { get; set; } = string.Empty!;
         [DataType(DataType.PhoneNumber)]
         [RegularExpression(@"^\+?[0-9]\d{1,10}$", ErrorMessage = "Phone is not valid")]

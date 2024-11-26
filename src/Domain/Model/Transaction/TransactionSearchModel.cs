@@ -23,13 +23,13 @@ namespace Domain.Model.Transaction
         [FromQuery(Name = "transaction-date-time")]
         public DateTime? transaction_date_time { get; set; }
         
-        [FromQuery(Name = "account_id")]
+        [FromQuery(Name = "account-id")]
         public Guid? account_id { get; set; }
+        [FromQuery(Name = "account-name")]
+        public string? account_name { get; set; }
 
         [FromQuery(Name = "transaction-type")]
         public TransactionType? transaction_type { get; set; }
-        [FromQuery(Name = "university-id")]
-        public Guid? UniversityId { get; set; }
 
         [FromQuery(Name = "sort-by-gold-amount")]
         public bool? sort_by_gold_amount { get; set; } = false;

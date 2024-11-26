@@ -17,6 +17,7 @@ namespace Application.Interface.Repository
     {
         (Expression<Func<Transaction, bool>> filter, Func<IQueryable<Transaction>, IOrderedQueryable<Transaction>> orderBy) BuildFilterAndOrderBy(TransactionSearchModel searchModel);
         Task<Transaction> CreateTransactionWhenUsingGold(TransactionType transactionType, TransactionPostModel transactionModel);
+        Task<Transaction> CreateTransactionPayOS(TransactionType transactionType, TransactionPostModel transactionModel);
         Task<Boolean> UpdateWalletUsingByTestAsync(Guid AccountId, int GoldUsing);
         Task<ResponseModel> UpdateWalletByTransferringAndReceivingAsync(WalletPutModel putModel, int gold);
         Task<ResponseModel> CreateTransactionRequest(Guid WalletId, int gold);
