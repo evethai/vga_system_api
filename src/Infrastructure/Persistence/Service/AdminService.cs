@@ -24,9 +24,9 @@ namespace Infrastructure.Persistence.Service
             var highSchools = await _unitOfWork.HighschoolRepository.CountAsync();
             var universities = await _unitOfWork.UniversityRepository.CountAsync();
             var numberAcc = await _unitOfWork.AccountRepository.CountAsync(a => a.Role != RoleEnum.Admin);
-            var testsInDay = await _unitOfWork.StudentTestRepository.CountAsync(x => x.Date == DateTime.UtcNow.Date);
-            var testsInWeek = await _unitOfWork.StudentTestRepository.CountAsync(x => x.Date >= DateTime.UtcNow.Date.AddDays(-7));
-            var testsInMonth = await _unitOfWork.StudentTestRepository.CountAsync(x => x.Date >= DateTime.UtcNow.Date.AddMonths(-1));
+            var testsInDay = await _unitOfWork.StudentTestRepository.CountAsync(x => x.Date == DateTime.UtcNow.ToLocalTime().Date);
+            var testsInWeek = await _unitOfWork.StudentTestRepository.CountAsync(x => x.Date >= DateTime.UtcNow.ToLocalTime().Date.AddDays(-7));
+            var testsInMonth = await _unitOfWork.StudentTestRepository.CountAsync(x => x.Date >= DateTime.UtcNow.ToLocalTime().Date.AddMonths(-1));
 
             return new DashboardModel
             {

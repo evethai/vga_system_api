@@ -70,7 +70,7 @@ namespace Application.Interface.Service
                 NotificationPostModel notiPostModel = new NotificationPostModel();
                 notiPostModel.AccountId = admin.Id;
                 notiPostModel.Title = NotificationConstant.Title.Request;
-                notiPostModel.Message = $"Tư vấn viên {consultant.Account.Name} đã yêu cầu rút {goldAmount} điểm vào ngày {DateTime.UtcNow}";
+                notiPostModel.Message = $"Tư vấn viên {consultant.Account.Name} đã yêu cầu rút {goldAmount} điểm vào ngày {DateTime.UtcNow.ToLocalTime()}";
                 await _unitOfWork.NotificationRepository.CreateNotification(notiPostModel);
                 await _unitOfWork.SaveChangesAsync();
 
