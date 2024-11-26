@@ -16,7 +16,7 @@ namespace Application.Common.Constants
         {
             public const string NewBooking = Notification + "có lịch tư vấn mới.";
             public const string Booked = Notification + "có lịch tư vấn đã được đặt.";
-            public const string UpdateGold = Notification + "cập nhật thông tin xu.";
+            public const string UpdateGold = Notification + "cập nhật thông tin điểm.";
             public const string Request = Notification + "yêu cầu rút tiền.";
             public const string Withdraw = Notification + "yêu cầu rút tiền đã xử lý thành công.";
             public const string Reject = Notification + "yêu cầu rút tiền đã bị từ chối.";
@@ -24,7 +24,7 @@ namespace Application.Common.Constants
         public static class Messages
         {
             public const string NewBooking = "Có một học sinh đặt lịch tư vấn vào lúc ";
-            public const string UpdateGold = "Có biến động số xu trong tài khoản";
+            public const string UpdateGold = "Có biến động số điểm trong tài khoản";
         }
     }
 }
