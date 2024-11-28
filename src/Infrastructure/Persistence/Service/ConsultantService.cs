@@ -38,7 +38,7 @@ namespace Infrastructure.Persistence.Service
                     .SingleOrDefaultAsync(
                     predicate: o => o.Id.Equals(consultantId),
                     include: q => q.Include(c => c.Account).ThenInclude(a => a.Wallet)
-                                    .Include(c => c.University)
+                                    .Include(c => c.University).ThenInclude(u => u.Account)
                                     .Include(c => c.ConsultantLevel)
                                     .Include(c => c.Certifications)
                     ) ?? throw new NotExistsException();
@@ -204,7 +204,7 @@ namespace Infrastructure.Persistence.Service
                     include: q => q.Include(s => s.Account)
                                         .ThenInclude(a => a.Wallet)
                                     .Include(s => s.ConsultantLevel)
-                                    .Include(s => s.University)
+                                    .Include(s => s.University).ThenInclude(u => u.Account)
                                     .Include(s => s.Certifications),
                     pageIndex: searchModel.currentPage,
                     pageSize: searchModel.pageSize

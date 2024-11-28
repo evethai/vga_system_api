@@ -283,6 +283,16 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
                 Rating = s.Rating
             })
             .ToListAsync();
+
+        foreach (var item in majorSelected)
+        {
+            var m = _context.Major.Where(x => x.Id.Equals(item.MajorId));
+            if(m != null)
+            {
+                item.Image = m.Select(x => x.Image).FirstOrDefault();
+            }
+        }
+
         var result = tests.Select(test => new HistoryTestModel
         {
             PersonalTestId = test.Id,

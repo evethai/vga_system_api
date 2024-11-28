@@ -183,7 +183,7 @@ namespace Infrastructure.Persistence.Repository
                     Content = item.Content,
                     Group = QuestionGroup.None,
                     TestTypeId = testTypeId,
-                    CreateAt = DateTime.UtcNow,
+                    CreateAt = DateTime.UtcNow.AddHours(7),
                     Status = true
                 }).ToList();
                 await _context.Question.AddRangeAsync(questionEntities);
@@ -257,7 +257,7 @@ namespace Infrastructure.Persistence.Repository
                     Content = item.Content,
                     Group = item.Group,
                     TestTypeId = testTypeId,
-                    CreateAt = DateTime.UtcNow,
+                    CreateAt = DateTime.UtcNow.AddHours(7),
                     Status = true
                 }).ToList();
 

@@ -38,7 +38,7 @@ namespace Infrastructure.Persistence.Service
             try
             {
                 var personalTest = _mapper.Map<PersonalTest>(model);
-                personalTest.CreateAt = DateTime.UtcNow;
+                personalTest.CreateAt = DateTime.UtcNow.AddHours(7);
                 personalTest.Status = true;
 
                 await _unitOfWork.PersonalTestRepository.AddAsync(personalTest);

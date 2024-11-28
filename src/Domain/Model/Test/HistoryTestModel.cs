@@ -28,6 +28,7 @@ namespace Domain.Model.Test
     {
         public Guid MajorId { get; set; }
         public string MajorName { get; set; } = string.Empty;
+        public string? Image { get; set; } 
         public int Rating { get; set; }
     }
 }

@@ -15,6 +15,7 @@ public class StudentModel
     public DateTime DateOfBirth { get; set; }
     public int SchoolYears { get; set; }
     public Guid HighSchoolId { get; set; }
+    public string HighSchoolName { get; set; }
     public AccountWalletModel Account { get; set; }   
 }
 public class ResponseStudentModel

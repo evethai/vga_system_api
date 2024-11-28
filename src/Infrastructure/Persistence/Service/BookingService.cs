@@ -119,7 +119,7 @@ namespace Infrastructure.Persistence.Service
                     TransactionType = TransactionType.Using,
                     Description = $"Bạn đã sử dụng {priceOnSlot} điểm để đặt tư vấn",
                     GoldAmount = (int)priceOnSlot,
-                    TransactionDateTime = DateTime.UtcNow
+                    TransactionDateTime = DateTime.UtcNow.AddHours(7)
                 };
 
                 var consultantTransaction = new Transaction
@@ -129,7 +129,7 @@ namespace Infrastructure.Persistence.Service
                     TransactionType = TransactionType.Receiving,
                     Description = $"Bạn đã nhận {priceOnSlot} điểm từ buổi tư vấn",
                     GoldAmount = (int)priceOnSlot,
-                    TransactionDateTime = DateTime.UtcNow
+                    TransactionDateTime = DateTime.UtcNow.AddHours(7)
                 };
 
                 // Call consolidated method in the repository
