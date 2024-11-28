@@ -11,7 +11,7 @@ namespace Application.Interface.Service
     public interface ICertificationService
     {
         Task<ResponseModel> GetCertificationByIdAsync(int id);
-        Task<ResponseModel> CreateCertificationAsync(CertificationPostModel postModel, Guid consultantId);
+        Task<ResponseModel> CreateCertificationAsync(CertificationPostModel postModel);
         Task<ResponseModel> DeleteCertificationAsync(int certificationId);
     }
 }
