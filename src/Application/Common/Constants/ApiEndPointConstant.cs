@@ -46,7 +46,7 @@
         {
             public const string QuestionsEndpoint = ApiEndpoint + "/questions";
             public const string QuestionEndpoint = ApiEndpoint + "/question/{id}";
-            public const string QuestionsEndpointByTestId = ApiEndpoint + "/questions-by-test/{id}";
+            public const string QuestionsEndpointByTestId = ApiEndpoint + "/questions-by-test";
             public const string QuestionsEndpointForPersonalTest = ApiEndpoint + "/questions-for-personal-test";
 
         }

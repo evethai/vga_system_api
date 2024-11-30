@@ -83,11 +83,11 @@ namespace Api.Controllers
 
 
         [HttpGet(ApiEndPointConstant.PersonalTest.PersonalTestsEndpoint)]
-        public async Task<IActionResult> GetAllTest()
+        public async Task<IActionResult> GetAllTest([FromForm] PersonalTestSearchModel model)
         {
             try
             {
-                var response = await _studentTestService.GetAllTest();
+                var response = await _studentTestService.GetAllTest(model);
                 return Ok(response);
             }
             catch (Exception e)

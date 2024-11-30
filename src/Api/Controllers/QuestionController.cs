@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Api.Controllers
 {
     [ApiController]
-    [CustomAuthorize(RoleEnum.Admin)]
+    //[CustomAuthorize(RoleEnum.Admin)]
     public class QuestionController : ControllerBase
     {
         private readonly IQuestionService _questionService;
@@ -19,9 +19,9 @@ namespace Api.Controllers
         }
 
         [HttpGet(ApiEndPointConstant.Question.QuestionsEndpointByTestId)]
-        public async Task<IActionResult> GetAllQuestionsByType(Guid id)
+        public async Task<IActionResult> GetAllQuestionsByType([FromForm] QuestionSearchModel model)
         {
-            var result = await _questionService.GetAllQuestionsByType(id);
+            var result = await _questionService.GetAllQuestionsByTestId(model);
             return Ok(result);
         }
         [HttpGet(ApiEndPointConstant.Question.QuestionEndpoint)]

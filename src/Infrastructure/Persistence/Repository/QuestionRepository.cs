@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Common.Extensions;
 using Application.Interface;
 using Application.Interface.Repository;
 using Domain.Entity;
 using Domain.Enum;
+using Domain.Model.Consultant;
 using Domain.Model.PersonalTest;
 using Domain.Model.Question;
 using Domain.Model.Response;
@@ -291,10 +294,6 @@ namespace Infrastructure.Persistence.Repository
                 };
             }
         }
-
-
-
-
 
     }
 

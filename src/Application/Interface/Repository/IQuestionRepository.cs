@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Domain.Entity;
@@ -16,5 +17,6 @@ namespace Application.Interface.Repository
         Task<ResponseModel> UpdateQuestion(QuestionPutModel model, int id);
         Task<ResponseModel> AddHollandQuestions(Guid personalTestId, Guid testTypeId, List<DataQuestionHollandModel> questions);
         Task<ResponseModel> AddMbtiQuestions(Guid personalTestId, Guid testTypeId, List<DataQuestionMBTIModel> questions);
+
     }
 }

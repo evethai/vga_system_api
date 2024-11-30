@@ -154,7 +154,6 @@ namespace Infrastructure.Persistence.Service
                 Data = personalTest
             };
         }
-
         public async Task<ResponseModel> DeletePersonalTest(Guid id)
         {
             var personalTest = await _unitOfWork.PersonalTestRepository.GetByIdGuidAsync(id);

@@ -22,11 +22,21 @@ namespace Infrastructure.Persistence.Service
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public async Task<IEnumerable<QuestionListByTestIdModel>> GetAllQuestionsByType(Guid id)
+        public async Task<ResponseQuestionModel> GetAllQuestionsByTestId(QuestionSearchModel model)
         {
-            var questions = await _unitOfWork.TestQuestionRepository.GetListAsync(predicate: x=>x.PersonalTestId == id && x.Question.Status == true,include: x => x.Include(q => q.Question).ThenInclude(a => a.Answers));
+            //var questions = await _unitOfWork.TestQuestionRepository.GetListAsync(predicate: x=>x.PersonalTestId == model.PersonalTestId && x.Question.Status == true,include: x => x.Include(q => q.Question).ThenInclude(a => a.Answers));
+            var conditions = _unitOfWork.TestQuestionRepository.BuildFilterAndOrderBy(model);
+            var questions = await _unitOfWork.TestQuestionRepository.GetByConditionAsync(conditions.filter, conditions.orderBy, includeProperties: "Question,Question.Answers", pageIndex: model.Page, pageSize: model.Size);
+
             var result = _mapper.Map<IEnumerable<QuestionListByTestIdModel>>(questions);
-            return result;
+            var total = await _unitOfWork.TestQuestionRepository.CountAsync(conditions.filter);
+            var response = new ResponseQuestionModel
+            {
+                total = total,
+                currentPage = model.Page,
+                questions = result.ToList()
+            };
+            return response;
         }
         public async Task<QuestionModel> GetQuestionById(int id)
         {
@@ -34,13 +44,6 @@ namespace Infrastructure.Persistence.Service
             var result = _mapper.Map<QuestionModel>(question);
             return result;
         }
-
-
-        //public async Task<ResponseModel> CreateQuestion(QuestionPostModel questionModel)
-        //{
-        //    var result = await _unitOfWork.QuestionRepository.CreateQuestion(questionModel);
-        //    return result;
-        //}
 
         public async Task<ResponseModel> UpdateQuestion(QuestionPutModel questionModel, int id)
         {
