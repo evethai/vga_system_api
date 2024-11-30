@@ -267,7 +267,11 @@ namespace Application.Common.Mapper
             CreateMap<AdmissionMethod, AdmissionMethodPostModel>().ReverseMap();
             CreateMap<AdmissionMethod, AdmissionMethodPutModel>().ReverseMap();
             //News
-            CreateMap<News, NewsModel>().ReverseMap();
+            CreateMap<News, NewsModel>()
+                .ForMember(dest => dest.UniversityId, opt => opt.MapFrom(src => src.University.Id))
+                .ForMember(dest => dest.UniversityName, opt => opt.MapFrom(src => src.University.Account.Name))
+                .ForMember(dest => dest.UniversityImageUrl, opt => opt.MapFrom(src => src.University.Account.Image_Url))
+                .ReverseMap();
             CreateMap<News, NewsPostModel>().ReverseMap();
             CreateMap<News, NewsPutModel>().ReverseMap();
             //NewsImage

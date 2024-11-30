@@ -23,7 +23,6 @@ namespace Application.Interface.Service
         Task<ResponseModel> UpdateWalletUsingGoldDistributionAsync(TransactionPutWalletModel model);
         Task<ResponseModel> UpdateWalletUsingByTestAsync(Guid WalletStudentId, int goldUsingTest);
         Task<ResponseModel> RequestTopUpWalletWithPayOsAsync(Guid accountId, float amount, PayOSUrl url);
-        //Task<ResponseModel> RequestDepositToWalletWithPayOs(Guid transactionId, string status);
         Task<string> ConfirmWebhook(string webhookUrl);
         Task<ResponseModel> HandleWebhook(WebhookType webhookBody);
     }
