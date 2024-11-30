@@ -39,7 +39,7 @@ namespace Api.Controllers
 
         [CustomAuthorize(RoleEnum.Consultant, RoleEnum.University)]
         [HttpPost(ApiEndPointConstant.Certification.CertificationsEndpoint)]
-        public async Task<IActionResult> CreateCertificationAsync(CertificationPostModel postModel)
+        public async Task<IActionResult> CreateCertificationAsync(CertificationPostModel postModel, Guid consultantId)
         {
             if (!ModelState.IsValid)
             {
@@ -47,7 +47,7 @@ namespace Api.Controllers
             }
             try
             {
-                var result = await _certificationService.CreateCertificationAsync(postModel);
+                var result = await _certificationService.CreateCertificationAsync(postModel, consultantId);
                 return (result.IsSuccess == false)
                     ? BadRequest(result)
                     : Ok(result);
