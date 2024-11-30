@@ -64,7 +64,8 @@ namespace Infrastructure.Persistence.Service
             var (filter, orderBy) = _unitOfWork.NewsRepository.BuildFilterAndOrderBy(searchModel);
             var news = await _unitOfWork.NewsRepository
                 .GetBySearchAsync(filter, orderBy,
-                q => q.Include(s => s.ImageNews),
+                q => q.Include(s => s.ImageNews)
+                .Include(s=>s.University).ThenInclude(s=>s.Account),
                 pageIndex: searchModel.currentPage,
                 pageSize: searchModel.pageSize);
             var total = await _unitOfWork.NewsRepository.CountAsync(filter);
@@ -81,14 +82,16 @@ namespace Infrastructure.Persistence.Service
         {
 
             var news = await _unitOfWork.NewsRepository.
-                SingleOrDefaultAsync(predicate: c => c.Id.Equals(NewsId), include: c => c.Include(c => c.ImageNews))
+                SingleOrDefaultAsync(predicate: c => c.Id.Equals(NewsId), 
+                include: c => c.Include(c => c.ImageNews)
+                .Include(s=>s.University).ThenInclude(s=>s.Account))
                 ?? throw new Exception("Id is not found");
             return _mapper.Map<NewsModel>(news);
         }
 
         public async Task<ResponseModel> UpdateNewsAsync(NewsPutModel putModel, Guid Id)
         {
-            var exit = await _unitOfWork.NewsRepository.SingleOrDefaultAsync(predicate: c => c.Id.Equals(Id), include: c => c.Include(c => c.ImageNews))
+            var exit = await _unitOfWork.NewsRepository.SingleOrDefaultAsync(predicate: c => c.Id.Equals(Id))
                 ?? throw new Exception("Id is not found");
             exit.Title = putModel.Title;
             exit.Content = putModel.Content;
