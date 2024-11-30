@@ -53,13 +53,14 @@ namespace Infrastructure.Persistence.Service
         #endregion
 
         #region Create certification time
-        public async Task<ResponseModel> CreateCertificationAsync(CertificationPostModel postModel)
+        public async Task<ResponseModel> CreateCertificationAsync(CertificationPostModel postModel, Guid consultantId)
         {
             try
             {
-                var consultant = await _unitOfWork.ConsultantRepository.GetByIdGuidAsync(postModel.ConsultantId) ?? throw new NotExistsException();
+                var consultant = await _unitOfWork.ConsultantRepository.GetByIdGuidAsync(consultantId) ?? throw new NotExistsException();
 
                 var certi = _mapper.Map<Certification>(postModel);
+                certi.ConsultantId = consultant.Id;
 
                 await _unitOfWork.CertificationRepository.AddAsync(certi);
                 await _unitOfWork.SaveChangesAsync();

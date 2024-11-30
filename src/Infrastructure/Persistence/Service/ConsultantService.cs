@@ -92,6 +92,7 @@ namespace Infrastructure.Persistence.Service
                 foreach (var certi in postModel.Certifications)
                 {
                     var certification = _mapper.Map<Certification>(certi);
+                    certification.ConsultantId = consultant.Id;
                     listCertificate.Add(certification);
                 }
                 consultant.Certifications = listCertificate;
