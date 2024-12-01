@@ -18,7 +18,7 @@ namespace Api.Controllers
         }
 
         [HttpGet(ApiEndPointConstant.Admin.Dashboard)]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> GetDashboard()
         {
             var result = await _adminService.GetDashboard();

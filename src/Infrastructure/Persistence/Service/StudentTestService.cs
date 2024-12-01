@@ -80,7 +80,7 @@ namespace Infrastructure.Persistence.Service
                     Name = personalGroupModel.Name,
                     Des = personalGroupModel.Description,
                     About = personalGroupModel.About,
-                    Majors = personalGroupModel.Majors,
+                    MajorCategories = personalGroupModel.Majors,
                     Percent = personalGroupModel.Percent
                 }
             };

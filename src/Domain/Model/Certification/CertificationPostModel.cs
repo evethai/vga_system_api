@@ -10,8 +10,6 @@ namespace Domain.Model.Certification
 {
     public class CertificationPostModel
     {
-        [Required(ErrorMessage = "Consultant Id is required.")]
-        public Guid ConsultantId { get; set; }
         [Required(ErrorMessage = "Description is required.")]
         public string Description { get; set; } = string.Empty;
         [Required(ErrorMessage = "Image url is required.")]

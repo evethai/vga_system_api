@@ -23,6 +23,7 @@ namespace Domain.Model.Test
     {
         public List<HistoryTestModel> HistoryTests { get; set; } = new List<HistoryTestModel>();
         public List<HistoryMajorModel> HistoryMajor { get; set; } = new List<HistoryMajorModel>();
+        public List<MajorCategoryModel> MajorByHollandResult { get; set; } = new List<MajorCategoryModel>();
     }
     public class HistoryMajorModel
     {

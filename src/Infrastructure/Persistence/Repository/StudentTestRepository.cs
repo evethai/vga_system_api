@@ -191,11 +191,13 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
         {
             Id = p.MajorCategory.Id,
             Name = p.MajorCategory.Name,
+            Image = p.MajorCategory.Image,
             Majors = p.MajorCategory.Majors.Select(m => new MajorModel
             {
                 Id = m.Id,
                 Name = m.Name,
-                Code = m.Code
+                Code = m.Code,
+                Image = m.Image
             }).ToList()
         })
         .ToList();
@@ -272,17 +274,36 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
 
         var stTestId = tests.FirstOrDefault(t => t.PersonalTest?.TestType.TypeCode == TestTypeCode.Holland);
 
-
+        //Major selected by student
         var majorSelected = await _context.StudentChoice
-            .Where(s => s.StudentTestId == stTestId.Id )
-            .OrderByDescending(s => s.Rating)
-            .Select(s => new HistoryMajorModel
+            .Where(s => s.StudentTestId == stTestId.Id)
+            .GroupBy(s => new { s.MajorOrOccupationId, s.MajorOrOccupationName }) 
+            .Select(g => new HistoryMajorModel
             {
-                MajorId = s.MajorOrOccupationId,
-                MajorName = s.MajorOrOccupationName,
-                Rating = s.Rating
+                MajorId = g.Key.MajorOrOccupationId, 
+                MajorName = g.Key.MajorOrOccupationName, 
+                Rating = g.Max(x => x.Rating) 
             })
+            .OrderByDescending(m => m.Rating) 
             .ToListAsync();
+
+        //Major by result
+        var majorsByResultes = _context.MajorPersonalMatrix
+           .Where(p => p.PersonalGroupId == stTestId.PersonalGroupId)
+           .Select(p => new MajorCategoryModel
+           {
+               Id = p.MajorCategory.Id,
+               Name = p.MajorCategory.Name,
+               Image = p.MajorCategory.Image,
+               Majors = p.MajorCategory.Majors.Select(m => new MajorModel
+               {
+                   Id = m.Id,
+                   Name = m.Name,
+                   Code = m.Code,
+                   Image = m.Image
+               }).ToList()
+           })
+           .ToList();
 
         foreach (var item in majorSelected)
         {
@@ -307,7 +328,8 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
         return new StudentHistoryModel
         {
             HistoryTests = result,
-            HistoryMajor = majorSelected
+            HistoryMajor = majorSelected,
+            MajorByHollandResult = majorsByResultes
         };
     }
 
