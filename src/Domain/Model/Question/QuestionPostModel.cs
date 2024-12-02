@@ -9,24 +9,17 @@ using Domain.Enum;
 
 namespace Domain.Model.Question
 {
-    public class QuestionPostModel
+    public class QuestionPostModel 
     {
-        [Required(ErrorMessage = "Personal Test id is required")]
-        public Guid personalTestId { get; set; }
-
-        //[Required(ErrorMessage = "TestTypeId is required")]
-        //public Guid TestTypeId { get; set; }
-
         [Required(ErrorMessage = "Content is required")]
         public string Content { get; set; } = string.Empty;
         [Required(ErrorMessage = "Group is required")]
         public QuestionGroup Group { get; set; }
-
-
-        [RequiredIfMBTI()]
+        [Required(ErrorMessage = "Personal Test id is required")]
+        public Guid personalTestId { get; set; }
+        [RequiredPostModel()]
         public List<AnswerPostModel>? Answers { get; set; } = new List<AnswerPostModel>();
     }
-
     public class AnswerPostModel
     {
         [Required(ErrorMessage = "Answer content is required")]
@@ -36,7 +29,7 @@ namespace Domain.Model.Question
         public AnswerValue AnswerValue { get; set; }
     }
 
-    public class RequiredIfMBTI : ValidationAttribute
+    public class RequiredPostModel : ValidationAttribute
     {
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
@@ -52,15 +45,16 @@ namespace Domain.Model.Question
                 return new ValidationResult("MBTI questions must have exactly 2 answers.");
             }
 
-            //else if (model.Group != QuestionGroup.None && (model.Answers != null || model.Answers.Any()))
-            //{
-            //    return new ValidationResult("Holland code questions should not have answers.");
-            //}
+            else if (model.Group != QuestionGroup.None && (model.Answers != null || model.Answers.Any()))
+            {
+                return new ValidationResult("Holland code questions should not have answers.");
+            }
 
             return ValidationResult.Success;
         }
 
     }
+
 }
 
 

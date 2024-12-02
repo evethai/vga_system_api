@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Common.Constants;
 using Application.Common.Exceptions;
 using AutoMapper;
 using Domain.Entity;
@@ -30,8 +31,7 @@ namespace Application.Interface.Service
             var (filter, orderBy) = _unitOfWork.TransactionRepository.BuildFilterAndOrderBy(searchModel);
             var transaction = await _unitOfWork.TransactionRepository.GetBySearchAsync(filter, orderBy,
                 q => q.Include(s => s.Wallet)
-                       .ThenInclude(a => a.Account)
-                        .ThenInclude(a => a.University),
+                       .ThenInclude(a => a.Account)                        ,
                 pageIndex: searchModel.currentPage,
                 pageSize: searchModel.pageSize);
             var total = await _unitOfWork.TransactionRepository.CountAsync(filter);
@@ -58,7 +58,7 @@ namespace Application.Interface.Service
                 var admin = await _unitOfWork.AccountRepository.SingleOrDefaultAsync(
                     predicate: o => o.Role.Equals(RoleEnum.Admin)) ?? throw new NotExistsException();
 
-                if (goldAmount > consultant.Account.Wallet.GoldBalance)
+                if (goldAmount > consultant.Account.Wallet.GoldBalance || goldAmount <= 0)
                     return new ResponseModel
                     {
                         Message = "Không đủ số tiền để rút",
@@ -69,8 +69,8 @@ namespace Application.Interface.Service
 
                 NotificationPostModel notiPostModel = new NotificationPostModel();
                 notiPostModel.AccountId = admin.Id;
-                notiPostModel.Title = "Yêu cầu rút tiền";
-                notiPostModel.Message = $"Tư vấn viên {consultant.Account.Name} đã yêu cầu rút {goldAmount} điểm vào ngày {DateTime.UtcNow}";
+                notiPostModel.Title = NotificationConstant.Title.Request;
+                notiPostModel.Message = $"Tư vấn viên {consultant.Account.Name} đã yêu cầu rút {goldAmount} điểm vào ngày {DateTime.UtcNow.AddHours(7).AddHours(7)}";
                 await _unitOfWork.NotificationRepository.CreateNotification(notiPostModel);
                 await _unitOfWork.SaveChangesAsync();
 
@@ -88,7 +88,7 @@ namespace Application.Interface.Service
         #endregion
 
         #region Process withdraw request
-        public async Task<ResponseModel> ProcessWithdrawRequestAsync(Guid transactionId, TransactionType type)
+        public async Task<ResponseModel> ProcessWithdrawRequestAsync(Guid transactionId, TransactionProcessRequestModel model)
         {
             try
             {
@@ -100,7 +100,7 @@ namespace Application.Interface.Service
                 if (transaction.TransactionType != TransactionType.Request)
                     throw new Exception("Transaction is not Request");
 
-                var responseModel = await _unitOfWork.TransactionRepository.ProcessWithdrawRequest(transactionId, type);
+                var responseModel = await _unitOfWork.TransactionRepository.ProcessWithdrawRequest(transactionId, model);
 
                 return responseModel;
             }

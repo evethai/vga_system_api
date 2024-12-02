@@ -16,7 +16,10 @@ namespace Domain.Model.Transaction
         public string Description { get; set; } = null!;
         public DateTime TransactionDateTime { get; set; }
         public TransactionType TransactionType { get; set; }
-        //public string? Code { get; set; }
+        public string? Code { get; set; }
+        public string? Image { get; set; }
+        public Guid AccountId { get; set; }
+        public string? AccountName { get; set; }
     }
     public class ResponseTransactionModel
     {

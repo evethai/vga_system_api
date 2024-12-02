@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
-    [Route("api/consultant_times")]
     [ApiController]
     public class ConsultationTimeController : ControllerBase
     {

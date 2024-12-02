@@ -1,5 +1,6 @@
 ﻿using Domain.Entity;
 using Domain.Model;
+using Domain.Model.PersonalTest;
 using Domain.Model.Question;
 using Domain.Model.Response;
 using Domain.Model.Test;
@@ -12,10 +13,10 @@ namespace Application.Interface.Service
 
         Task<ResponseModel> CreateResultForTest(StudentTestResultModel result);
         Task<PersonalTestModel> GetTestById(Guid id);
-        Task<IEnumerable<PersonalTestModel>> GetAllTest();
+        Task<ResponsePersonalTestModel> GetAllTest(PersonalTestSearchModel model);
         Task<StudentHistoryModel> GetHistoryTestByStudentId(Guid studentId);
         Task<ResponseModel> GetMajorsByPersonalGroupId(Guid stTestId);
-        Task<ResponseModel> FilterMajorAndUniversity(FilterMajorAndUniversityModel model);
+        Task<ResponseModel> FilterOccupationAndUniversity(FilterMajorAndUniversityModel model);
 
     }
 }

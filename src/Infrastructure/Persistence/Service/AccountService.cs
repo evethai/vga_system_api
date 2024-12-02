@@ -155,7 +155,7 @@ namespace Infrastructure.Persistence.Service
                 };
             }
 
-            if (existingRefreshToken.ExpireAt > DateTime.UtcNow)
+            if (existingRefreshToken.ExpireAt > DateTime.UtcNow.AddHours(7))
             {
                 return new ResponseModel
                 {
@@ -246,7 +246,7 @@ namespace Infrastructure.Persistence.Service
 
             string refreshToken;
 
-            if (existingRefreshToken != null && existingRefreshToken.ExpireAt > DateTime.UtcNow)
+            if (existingRefreshToken != null && existingRefreshToken.ExpireAt > DateTime.UtcNow.AddHours(7))
             {
                 refreshToken = existingRefreshToken.Token;
             }
@@ -263,8 +263,8 @@ namespace Infrastructure.Persistence.Service
                     JwtId = jwt.Id,
                     IsUsed = false,
                     IsRevoked = false,
-                    ExpireAt = DateTime.UtcNow.AddDays(3),
-                    IssuedAt = DateTime.UtcNow
+                    ExpireAt = DateTime.UtcNow.AddHours(7).AddDays(3),
+                    IssuedAt = DateTime.UtcNow.AddHours(7)
                 };
 
                 await _unitOfWork.RefreshTokenRepository.AddAsync(r_token);

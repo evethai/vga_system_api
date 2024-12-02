@@ -50,6 +50,7 @@ namespace Api.Installers
             services.AddScoped<IAdmissionInformationService, AdmissionInformationService>();
             services.AddScoped<IAdmissionMethodService, AdmissionMethodService>();
             services.AddScoped<IPersonalTestService, PersonalTestService>();
+            services.AddScoped<ICertificationService,CertificationService>();
 
             //declare hub
             services.AddSingleton<UserConnectionManager>();

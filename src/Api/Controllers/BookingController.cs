@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
-    [Route("api/consultants")]
     [ApiController]
     public class BookingController : ControllerBase
     {

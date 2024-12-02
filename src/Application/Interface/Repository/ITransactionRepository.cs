@@ -16,10 +16,13 @@ namespace Application.Interface.Repository
     public interface ITransactionRepository :IGenericRepository<Transaction>
     {
         (Expression<Func<Transaction, bool>> filter, Func<IQueryable<Transaction>, IOrderedQueryable<Transaction>> orderBy) BuildFilterAndOrderBy(TransactionSearchModel searchModel);
-        Task<Transaction> CreateTransactionWhenUsingGold(TransactionType transactionType, TransactionPostModel transactionModel);
+        Task<Transaction> CreateTransactionWhenUsingGold(TransactionType transactionType, TransactionPostModel transactionModel, string message);
+        Task<Transaction> CreateTransactionPayOS(TransactionType transactionType, TransactionPostModel transactionModel);
         Task<Boolean> UpdateWalletUsingByTestAsync(Guid AccountId, int GoldUsing);
         Task<ResponseModel> UpdateWalletByTransferringAndReceivingAsync(WalletPutModel putModel, int gold);
         Task<ResponseModel> CreateTransactionRequest(Guid WalletId, int gold);
-        Task<ResponseModel> ProcessWithdrawRequest(Guid transactionId, TransactionType type);
+        Task<ResponseModel> ProcessWithdrawRequest(Guid transactionId, TransactionProcessRequestModel model);
+        Task<ResponseModel> UpdateWalletUsingGoldDistributionAsync(TransactionPutWalletModel model);
+        Task<bool> CheckPayOsReturn(long OrderCode, string desc);
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.Enum;
 using Domain.Model.Certification;
 using Domain.Model.ConsultantLevel;
 using Domain.Model.University;
@@ -22,7 +23,9 @@ namespace Domain.Model.Consultant
         public string Description { get; set; } = string.Empty;
         public DateTime DateOfBirth { get; set; }
         public bool Gender { get; set; }
+        public AccountStatus AccountStatus { get; set; }
         public DateTime CreateAt { get; set; }
+        public int WalletBalance { get; set; }
         public List<CertificationViewModel> Certifications { get; set; } 
     }
 }

@@ -12,6 +12,7 @@ using AutoMapper;
 using Domain.Entity;
 using Domain.Enum;
 using Domain.Model.Account;
+using Domain.Model.Certification;
 using Domain.Model.Consultant;
 using Domain.Model.Response;
 using Microsoft.EntityFrameworkCore;
@@ -37,7 +38,7 @@ namespace Infrastructure.Persistence.Service
                     .SingleOrDefaultAsync(
                     predicate: o => o.Id.Equals(consultantId),
                     include: q => q.Include(c => c.Account).ThenInclude(a => a.Wallet)
-                                    .Include(c => c.University)
+                                    .Include(c => c.University).ThenInclude(u => u.Account)
                                     .Include(c => c.ConsultantLevel)
                                     .Include(c => c.Certifications)
                     ) ?? throw new NotExistsException();
@@ -91,6 +92,7 @@ namespace Infrastructure.Persistence.Service
                 foreach (var certi in postModel.Certifications)
                 {
                     var certification = _mapper.Map<Certification>(certi);
+                    certification.ConsultantId = consultant.Id;
                     listCertificate.Add(certification);
                 }
                 consultant.Certifications = listCertificate;
@@ -121,62 +123,30 @@ namespace Infrastructure.Persistence.Service
         {
             try
             {
-                var consultant = await _unitOfWork.ConsultantRepository
-                    .SingleOrDefaultAsync(
+                // Fetch the consultant with related data, including Account
+                var consultant = await _unitOfWork.ConsultantRepository.SingleOrDefaultAsync(
                     predicate: o => o.Id.Equals(consultantId),
                     include: q => q.Include(c => c.Account).ThenInclude(a => a.Wallet)
-                                    .Include(c => c.University)
-                                    .Include(c => c.ConsultantLevel)
-                                    .Include(c => c.Certifications)
-                    ) ?? throw new NotExistsException();
+                                   .Include(c => c.University)
+                                   .Include(c => c.ConsultantLevel)
+                                   .Include(c => c.Certifications)
+                ) ?? throw new NotExistsException();
 
-                var exAccountConsultant = await _unitOfWork.AccountRepository.GetByIdGuidAsync(consultant.AccountId)
-                    ?? throw new NotExistsException();
                 _mapper.Map(putModel, consultant);
 
-                var listNewCertificate = new List<Certification>();
+                foreach (var certi in consultant.Certifications)
+                    await _unitOfWork.CertificationRepository.UpdateAsync(certi);
 
-                if (putModel.Certifications != null)
-                {
-                    foreach (var certification in putModel.Certifications)
-                    {
-                        if (certification.Id.HasValue)
-                        {
-                            var existingCertification = consultant.Certifications
-                                .FirstOrDefault(s => s.Id == certification.Id.Value) ?? throw new NotExistsException();
-
-                            _mapper.Map(certification, existingCertification);
-                        }
-                        else
-                        {
-                            var newCertification = _mapper.Map<Certification>(certification);
-                            newCertification.ConsultantId = consultantId;
-                            listNewCertificate.Add(newCertification);
-                        }
-                    }
-                    if (listNewCertificate.Count > 0)
-                        await _unitOfWork.CertificationRepository.AddRangeAsync(listNewCertificate);
-
-                    var CertificationToRemove = consultant.Certifications
-                        .Where(s => !putModel.Certifications.Any(c => c.Id == s.Id))
-                        .ToList();
-
-                    foreach (var certification in CertificationToRemove)
-                    {
-                        consultant.Certifications.Remove(certification);
-                    }
-                }
-
+                await _unitOfWork.AccountRepository.UpdateAsync(consultant.Account);
                 await _unitOfWork.ConsultantRepository.UpdateAsync(consultant);
-                await _unitOfWork.AccountRepository.UpdateAsync(exAccountConsultant);
                 await _unitOfWork.SaveChangesAsync();
 
                 var result = _mapper.Map<ConsultantViewModel>(consultant);
                 return new ResponseModel
                 {
-                    Message = $"Người tư vấn với id '{consultantId}' đã được cập nhật thành công",
+                    Message = $"Consultant with id '{consultantId}' has been updated successfully",
                     IsSuccess = true,
-                    Data = result,
+                    Data = result
                 };
             }
             catch (Exception ex)
@@ -184,7 +154,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while update consultant: {ex.Message}"
+                    Message = $"An error occurred while updating consultant: {ex.Message}"
                 };
             }
         }
@@ -235,7 +205,7 @@ namespace Infrastructure.Persistence.Service
                     include: q => q.Include(s => s.Account)
                                         .ThenInclude(a => a.Wallet)
                                     .Include(s => s.ConsultantLevel)
-                                    .Include(s => s.University)
+                                    .Include(s => s.University).ThenInclude(u => u.Account)
                                     .Include(s => s.Certifications),
                     pageIndex: searchModel.currentPage,
                     pageSize: searchModel.pageSize

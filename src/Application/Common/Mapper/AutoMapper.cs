@@ -57,7 +57,9 @@ namespace Application.Common.Mapper
             CreateMap<HighSchool, HighschoolPutModel>().ReverseMap();
 
             //Student
-            CreateMap<Student, StudentModel>().ReverseMap();
+            CreateMap<Student, StudentModel>()
+                .ForMember(dest => dest.HighSchoolName, opt => opt.MapFrom(src => src.HighSchool.Account.Name))
+                .ReverseMap();
             CreateMap<Student, StudentPostModel>().ReverseMap();
             CreateMap<Student, StudentPutModel>().ReverseMap();
             CreateMap<Student, StudentJsonModel>().ReverseMap();
@@ -90,7 +92,10 @@ namespace Application.Common.Mapper
 
 
             //Transaction
-            CreateMap<Transaction, TransactionModel>().ReverseMap();
+            CreateMap<Transaction, TransactionModel>()
+                 .ForMember(dest => dest.AccountId, opt => opt.MapFrom(src => src.Wallet.AccountId))
+                 .ForMember(dest => dest.AccountName, opt => opt.MapFrom(src => src.Wallet.Account.Name))
+                 .ReverseMap();
             CreateMap<Transaction, TransactionPostModel>().ReverseMap();
             //TestType
             CreateMap<TestType, TestTypeModel>().ReverseMap();
@@ -121,6 +126,8 @@ namespace Application.Common.Mapper
                 .ForMember(dest => dest.DateOfBirth, opt => opt.MapFrom(src => src.DoB))
                 .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender))
                 .ForMember(dest => dest.CreateAt, opt => opt.MapFrom(src => src.Account.CreateAt))
+                .ForMember(dest => dest.AccountStatus, opt => opt.MapFrom(src => src.Account.Status))
+                .ForMember(dest => dest.WalletBalance, opt => opt.MapFrom(src => src.Account.Wallet.GoldBalance))
                 .ReverseMap();
             CreateMap<Consultant, ConsultantPostModel>()
                 //.ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Account.Name))
@@ -131,13 +138,13 @@ namespace Application.Common.Mapper
                 //.ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender))
                 .ReverseMap();
             CreateMap<Consultant, ConsultantPutModel>()
-                //.ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Account.Name))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Account.Name))
                 //.ForMember(dest => dest.ConsultantLevelId, opt => opt.MapFrom(src => src.ConsultantLevelId))
                 //.ForMember(dest => dest.UniversityId, opt => opt.MapFrom(src => src.UniversityId))
                 //.ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
-                //.ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Account.Email))
-                //.ForMember(dest => dest.Phone, opt => opt.MapFrom(src => src.Account.Phone))
-                //.ForMember(dest => dest.Image_Url, opt => opt.MapFrom(src => src.Account.Image_Url))
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Account.Email))
+                .ForMember(dest => dest.Phone, opt => opt.MapFrom(src => src.Account.Phone))
+                .ForMember(dest => dest.Image_Url, opt => opt.MapFrom(src => src.Account.Image_Url))
                 .ReverseMap();
 
             //Consultation Day
@@ -262,7 +269,11 @@ namespace Application.Common.Mapper
             CreateMap<AdmissionMethod, AdmissionMethodPostModel>().ReverseMap();
             CreateMap<AdmissionMethod, AdmissionMethodPutModel>().ReverseMap();
             //News
-            CreateMap<News, NewsModel>().ReverseMap();
+            CreateMap<News, NewsModel>()
+                .ForMember(dest => dest.UniversityId, opt => opt.MapFrom(src => src.University.Id))
+                .ForMember(dest => dest.UniversityName, opt => opt.MapFrom(src => src.University.Account.Name))
+                .ForMember(dest => dest.UniversityImageUrl, opt => opt.MapFrom(src => src.University.Account.Image_Url))
+                .ReverseMap();
             CreateMap<News, NewsPostModel>().ReverseMap();
             CreateMap<News, NewsPutModel>().ReverseMap();
             //NewsImage

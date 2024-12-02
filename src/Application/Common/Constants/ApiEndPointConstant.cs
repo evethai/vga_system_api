@@ -46,7 +46,7 @@
         {
             public const string QuestionsEndpoint = ApiEndpoint + "/questions";
             public const string QuestionEndpoint = ApiEndpoint + "/question/{id}";
-            public const string QuestionsEndpointByTestId = ApiEndpoint + "/questions-by-test/{id}";
+            public const string QuestionsEndpointByTestId = ApiEndpoint + "/questions-by-test";
             public const string QuestionsEndpointForPersonalTest = ApiEndpoint + "/questions-for-personal-test";
 
         }
@@ -241,6 +241,13 @@
         {
             public const string WorkSkillsEndpoint = ApiEndpoint + "/work-skills";
             public const string WorkSkillEndpoint = ApiEndpoint + "/work-skill/{id}";
+        }
+
+        //Certification
+        public static class Certification
+        {
+            public const string CertificationsEndpoint = ApiEndpoint + "/certifications";
+            public const string CertificationEndpoint = ApiEndpoint + "/certification/{id}";
         }
     }
 }
