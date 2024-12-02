@@ -11,6 +11,8 @@ namespace Domain.Model.News
     {
         public Guid Id { get; set; }
         public Guid UniversityId { get; set; }
+        public string UniversityName { get; set; }
+        public string UniversityImageUrl { get; set; }
         public string Title { get; set; } = string.Empty;
         public string Content { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }

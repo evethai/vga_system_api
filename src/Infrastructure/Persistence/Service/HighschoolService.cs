@@ -61,7 +61,7 @@ public class HighschoolService : IHighschoolService
             , postModel.Phone);
         var AccountId = await _unitOfWork.AccountRepository.CreateAccountAndWallet(accountModel, RoleEnum.HighSchool);
         highschool.AccountId = AccountId;
-        var result = await _unitOfWork.HighschoolRepository.AddAsync(highschool);
+        await _unitOfWork.HighschoolRepository.AddAsync(highschool);
         await _unitOfWork.SaveChangesAsync();
         return new ResponseModel
         {
@@ -75,8 +75,8 @@ public class HighschoolService : IHighschoolService
     {
         var exitHighschool = await _unitOfWork.HighschoolRepository.GetByIdGuidAsync(Id) ?? throw new Exception("Id is not found");
         exitHighschool.Address = putModel.Address;
-        var exitRegion = await _unitOfWork.RegionRepository.GetByIdGuidAsync(Id) ?? throw new Exception("Region id is not found");
-        exitHighschool.RegionId = putModel.RegionId;
+        var exitRegion = await _unitOfWork.RegionRepository.GetByIdGuidAsync(putModel.RegionId) ?? throw new Exception("Region id is not found");
+        exitHighschool.RegionId = exitRegion.Id;
         var exitAccount = await _unitOfWork.AccountRepository.GetByIdGuidAsync(exitHighschool.AccountId) ?? throw new Exception("Highschool Account Id is not found");
         exitAccount.Name = putModel.Name;
         exitAccount.Phone = putModel.Phone;
@@ -102,7 +102,6 @@ public class HighschoolService : IHighschoolService
         await _unitOfWork.SaveChangesAsync();
         return new ResponseModel
         {
-
             Message = " Highschool Delete Successfully",
             IsSuccess = true
         };

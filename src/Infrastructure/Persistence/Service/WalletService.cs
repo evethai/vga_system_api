@@ -45,14 +45,12 @@ namespace Infrastructure.Persistence.Service
                 wallets = result
             };
         }
-
         public async Task<WalletModel> GetWalletByIdAsync(Guid AccountId)
         {
             var wallet = await _unitOfWork.WalletRepository.SingleOrDefaultAsync
                 (predicate: c => c.AccountId.Equals(AccountId)) ?? throw new Exception("Account Id is not found");
             return _mapper.Map<WalletModel>(wallet);
         }
-
         public async Task<ResponseModel> UpdateWalletUsingGoldDistributionAsync(TransactionPutWalletModel model)
         {
             var check = await _unitOfWork.TransactionRepository.UpdateWalletUsingGoldDistributionAsync(model);
@@ -89,7 +87,6 @@ namespace Infrastructure.Persistence.Service
                 Data = TransactionInfor
             };
         }
-
         public async Task<ResponseModel> RequestTopUpWalletWithPayOsAsync(Guid accountId,float amount, PayOSUrl url)
         {
             var exitWallet = await _unitOfWork.WalletRepository.
@@ -132,7 +129,6 @@ namespace Infrastructure.Persistence.Service
         {
             return await _payOSService.ConfirmWebhook(webhookUrl);
         }
-
         public async Task<ResponseModel> HandleWebhook(WebhookType webhookBody)
         {
             WebhookData webhookData = _payOSService.VerifyPaymentWebhookData(webhookBody);           
