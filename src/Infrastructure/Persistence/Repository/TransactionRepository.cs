@@ -68,7 +68,7 @@ namespace Infrastructure.Persistence.Repository
             return (filter, orderBy);
         }
 
-        public async Task<Transaction> CreateTransactionWhenUsingGold(TransactionType transactionType, TransactionPostModel transactionModel)
+        public async Task<Transaction> CreateTransactionWhenUsingGold(TransactionType transactionType, TransactionPostModel transactionModel, string message)
         {
             var accoount = _context.Wallet.Where(a => a.Id.Equals(transactionModel.WalletId)).AsNoTracking().FirstOrDefault();
             if (transactionModel == null || accoount == null)
@@ -90,7 +90,7 @@ namespace Infrastructure.Persistence.Repository
                         Id = Guid.NewGuid(),
                         WalletId = transactionModel.WalletId,
                         TransactionType = transactionType,
-                        Description = "Bạn đã chuyển " + transactionModel.GoldAmount + " điểm",
+                        Description = message,
                         GoldAmount = transactionModel.GoldAmount,
                         TransactionDateTime = DateTime.UtcNow.AddHours(7),
                     };
@@ -103,7 +103,7 @@ namespace Infrastructure.Persistence.Repository
                         Id = Guid.NewGuid(),
                         WalletId = transactionModel.WalletId,
                         TransactionType = transactionType,
-                        Description = "Bạn đã nhận " + transactionModel.GoldAmount + " điểm",
+                        Description = message,
                         GoldAmount = transactionModel.GoldAmount,
                         TransactionDateTime = DateTime.UtcNow.AddHours(7),
                     };
@@ -116,7 +116,7 @@ namespace Infrastructure.Persistence.Repository
                         Id = Guid.NewGuid(),
                         WalletId = transactionModel.WalletId,
                         TransactionType = transactionType,
-                        Description = "Bạn đã sử dụng " + transactionModel.GoldAmount + " điểm vào bài Test",
+                        Description = message,
                         GoldAmount = transactionModel.GoldAmount,
                         TransactionDateTime = DateTime.UtcNow.AddHours(7),
                     };
@@ -143,8 +143,9 @@ namespace Infrastructure.Persistence.Repository
                 throw new Exception("User is not enought gold");
             }
             exitAccount.Wallet.GoldBalance -= GoldUsing;
+            string mess = "Bạn đã sử dụng " + GoldUsing + " điểm vào bài Test";
             TransactionPostModel transaction = new TransactionPostModel(exitAccount.Wallet.Id, GoldUsing);
-            await CreateTransactionWhenUsingGold(TransactionType.Using, transaction);
+            await CreateTransactionWhenUsingGold(TransactionType.Using, transaction, mess);
             _context.Wallet.Update(exitWallet);
             _context.SaveChanges();
             return true;
@@ -156,16 +157,19 @@ namespace Infrastructure.Persistence.Repository
             var walletReceiving = _context.Wallet.Where(s => s.AccountId.Equals(putModel.account_id_receiving)).FirstOrDefault()
                ?? throw new InvalidOperationException("Account Id Receiving is not found");
             var RoleTransferring = _context.Account.Where(s => s.Id.Equals(walletTransferring.AccountId)).FirstOrDefault() ?? throw new Exception("Not found Account");
+            var RoleReceiving = _context.Account.Where(s => s.Id.Equals(walletReceiving.AccountId)).FirstOrDefault() ?? throw new Exception("Not found Account");
+            var messReceiving = "Bạn đã nhận " + gold + " điểm từ " + RoleTransferring.Name;
+            var messTransferring = "Bạn đã chuyển " + gold + " điểm đến " + RoleReceiving.Name;
             if (RoleTransferring.Role == RoleEnum.Admin)
             {
                 TransactionPostModel transaction_Transferring =
                new TransactionPostModel(walletTransferring.Id, gold);
-                await CreateTransactionWhenUsingGold(TransactionType.Transferring, transaction_Transferring);
+                await CreateTransactionWhenUsingGold(TransactionType.Transferring, transaction_Transferring,messTransferring);
 
                 walletReceiving.GoldBalance = walletReceiving.GoldBalance + gold;
                 TransactionPostModel transaction_Receiving =
                   new TransactionPostModel(walletReceiving.Id, gold);
-                await CreateTransactionWhenUsingGold(TransactionType.Receiving, transaction_Receiving);
+                await CreateTransactionWhenUsingGold(TransactionType.Receiving, transaction_Receiving, messReceiving);
                 _context.Wallet.Update(walletReceiving);
                 _context.SaveChanges();
                 return new ResponseModel
@@ -184,13 +188,13 @@ namespace Infrastructure.Persistence.Repository
                 walletTransferring.GoldBalance -= gold;
                 TransactionPostModel transaction_Transferring =
                 new TransactionPostModel(walletTransferring.Id, gold);
-                await CreateTransactionWhenUsingGold(TransactionType.Transferring, transaction_Transferring);
+                await CreateTransactionWhenUsingGold(TransactionType.Transferring, transaction_Transferring, messTransferring);
                 _context.Wallet.Update(walletTransferring);
                 //-------------------------------------------
                 walletReceiving.GoldBalance += gold;
                 TransactionPostModel transaction_Receiving =
                   new TransactionPostModel(walletReceiving.Id, gold);
-                await CreateTransactionWhenUsingGold(TransactionType.Receiving, transaction_Receiving);
+                await CreateTransactionWhenUsingGold(TransactionType.Receiving, transaction_Receiving, messReceiving);
                 _context.Wallet.Update(walletReceiving);
                 _context.SaveChanges();
                 return new ResponseModel
@@ -333,23 +337,22 @@ namespace Infrastructure.Persistence.Repository
             }
             var receivingWallets = await GetInforStudentHasWalletReceiving(model.AccountId, model.Years);
             var totalgoldDistribution = model.Gold * receivingWallets.Count();
+            var mess = "Bạn đã phân phối " + totalgoldDistribution + " điểm cho học sinh vào năm " + model.Years;          
             if (walletTransferring.GoldBalance < totalgoldDistribution)
             {
                 throw new Exception("Distribution gold is fail when Gold not enough");
             }
             walletTransferring.GoldBalance = walletTransferring.GoldBalance - totalgoldDistribution;
             TransactionPostModel transaction_Transferring =
-               new TransactionPostModel(walletTransferring.Id, totalgoldDistribution);
-            var trans = await CreateTransactionWhenUsingGold(TransactionType.Transferring, transaction_Transferring);
-            trans.Description = "Bạn đã phân phối " + trans.GoldAmount + " điểm cho học sinh vào năm " + model.Years;
-            _context.Transaction.Update(trans);
-            _context.Wallet.Update(walletTransferring);
+               new TransactionPostModel(walletTransferring.Id, totalgoldDistribution);     
+            var trans = await CreateTransactionWhenUsingGold(TransactionType.Transferring, transaction_Transferring, mess);           
             foreach (var receivingWallet in receivingWallets)
             {
+                var messStudent = "Bạn đã nhận " + model.Gold + " điểm từ trường phân phối vào năm " + model.Years;
                 receivingWallet.GoldBalance = receivingWallet.GoldBalance + model.Gold;
                 TransactionPostModel transaction = new TransactionPostModel(receivingWallet.Id, model.Gold);
                 var receiving = await
-                    CreateTransactionWhenUsingGold(TransactionType.Receiving, transaction);
+                    CreateTransactionWhenUsingGold(TransactionType.Receiving, transaction, messStudent);
                 _context.Wallet.Update(receivingWallet);
             }
             await _context.SaveChangesAsync();
