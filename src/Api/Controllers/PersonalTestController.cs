@@ -19,18 +19,17 @@ namespace Api.Controllers
         private readonly IStudentTestService _studentTestService;
         private readonly IWalletService _walletService;
         private readonly IPersonalTestService _personalTestService;
-        //private readonly ICacheService _cacheService;
+        private readonly ICacheService _cacheService;
 
-        public PersonalTestController(IStudentTestService studentTestService, IWalletService walletService, IPersonalTestService personalTestService)
+        public PersonalTestController(IStudentTestService studentTestService, IWalletService walletService, IPersonalTestService personalTestService, ICacheService cacheService)
         {
             _studentTestService = studentTestService;
             _walletService = walletService;
             _personalTestService = personalTestService;
-            //_cacheService = cacheService;
+            _cacheService = cacheService;
         }
 
         [HttpPost(ApiEndPointConstant.PersonalTest.GetResultPersonalTestEndpoint)]
-
         public async Task<IActionResult> CreateResultTest(StudentTestResultModel result)
         {
 
@@ -46,41 +45,43 @@ namespace Api.Controllers
 
         }
 
-
         [HttpGet(ApiEndPointConstant.PersonalTest.PersonalTestEndpoint)]
         public async Task<IActionResult> GetPersonalTestById(Guid id, Guid accountId)
         {
             try
             {
+                var cacheKey = RedisConstants.PersonalTestId + id;
+                var cacheResponse = await _cacheService.GetCacheResponseAsync<string>(cacheKey);
+                PersonalTestModel response;
 
-                //var cacheKey = RedisConstants.PersonalTestId + id;
-                //var cacheResponse = await _cacheService.GetCacheResponseAsync<string>(cacheKey);
-                var response = new PersonalTestModel();
-                //if (cacheResponse != null)
-                //{
-                //    response = JsonConvert.DeserializeObject<PersonalTestModel>(cacheResponse);
-                //    return Ok(response);
-                //}
-                //else
-                //{
-                response = await _studentTestService.GetTestById(id);
+                if (cacheResponse != null)
+                {
+                    response = JsonConvert.DeserializeObject<PersonalTestModel>(cacheResponse);
+                }
+                else
+                {
+                    response = await _studentTestService.GetTestById(id);
+
+                    if (response == null)
+                    {
+                        return Ok("Test does not exist!");
+                    }
+                    await _cacheService.SetCacheResponseAsync(cacheKey, response, TimeSpan.FromMinutes(16));
+                }
                 var transaction = await _walletService.UpdateWalletUsingByTestAsync(accountId, response.Point);
-                //    await _cacheService.SetCacheResponseAsync(cacheKey, response, TimeSpan.FromMinutes(16));
-                if (transaction.IsSuccess == false)
+
+                if (!transaction.IsSuccess)
                 {
                     return Ok("Error transaction with point!");
                 }
-                return Ok(response);
-                //}
 
+                return Ok(response);
             }
             catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
         }
-
-
 
         [HttpGet(ApiEndPointConstant.PersonalTest.PersonalTestsEndpoint)]
         public async Task<IActionResult> GetAllTest([FromForm] PersonalTestSearchModel model)
