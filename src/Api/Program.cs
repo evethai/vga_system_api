@@ -40,7 +40,7 @@ app.UseSwaggerUI(c =>
 
 app.UseCors(CorsConstant.PolicyName);
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
