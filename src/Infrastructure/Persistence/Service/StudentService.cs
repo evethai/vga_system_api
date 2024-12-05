@@ -69,7 +69,6 @@ public class StudentService : IStudentService
         exitAccount.Name = putModel.Name;
         exitAccount.Phone = putModel.Phone;
         exitAccount.Email = putModel.Email;
-        exitAccount.Password = PasswordUtil.HashPassword(putModel.Password);
         await _unitOfWork.AccountRepository.UpdateAsync(exitAccount);
         var result = await _unitOfWork.StudentRepository.UpdateAsync(exitStudent);
         await _unitOfWork.SaveChangesAsync();
