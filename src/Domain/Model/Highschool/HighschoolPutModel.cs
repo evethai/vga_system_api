@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Domain.Model.Account;
 
 namespace Domain.Model.Highschool;
-public class HighschoolPutModel : AccountPostModel
+public class HighschoolPutModel : AccountPutModel
 {
     [Required(ErrorMessage = "Address is required.")]
     public string Address { get; set; }

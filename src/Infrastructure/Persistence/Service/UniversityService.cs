@@ -110,7 +110,6 @@ namespace Infrastructure.Persistence.Service
             exitAccount.Name = putModel.Name;
             exitAccount.Phone = putModel.Phone;
             exitAccount.Email = putModel.Email;
-            exitAccount.Password = PasswordUtil.HashPassword(putModel.Password);
             await _unitOfWork.AccountRepository.UpdateAsync(exitAccount);
             await _unitOfWork.UniversityRepository.UpdateAsync(exitUniversity);
             var result = _mapper.Map<UniversityModel>(exitUniversity);

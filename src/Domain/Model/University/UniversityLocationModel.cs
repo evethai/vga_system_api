@@ -9,6 +9,8 @@ namespace Domain.Model.University
 {
     public class UniversityLocationModel
     {
+        [Required(ErrorMessage = "Id is required.")]
+        public int Id { get; set; }
         [Required(ErrorMessage = "RegionId is required.")]
         public Guid RegionId { get; set; }
         [Required(ErrorMessage = "Address is required.")]

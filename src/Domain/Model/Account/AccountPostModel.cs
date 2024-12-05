@@ -24,4 +24,17 @@ namespace Domain.Model.Account
         [Required(ErrorMessage = "Phone is required.")]
         public string Phone { get; set; } = string.Empty;
     }
+    public class AccountPutModel
+    {
+        [Required(ErrorMessage = "Name is required.")]
+        public string Name { get; set; }
+        [DataType(DataType.EmailAddress)]
+        [Required(ErrorMessage = "Email is required.")]
+        [RegularExpression(@"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$", ErrorMessage = "Email is not valid")]
+        public string Email { get; set; } = string.Empty;
+        [DataType(DataType.PhoneNumber)]
+        [RegularExpression(@"^\+?[0-9]\d{1,10}$", ErrorMessage = "Phone is not valid")]
+        [Required(ErrorMessage = "Phone is required.")]
+        public string Phone { get; set; } = string.Empty;
+    }
 }
