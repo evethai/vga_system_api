@@ -18,6 +18,7 @@
             public const string LoginZaloEndpoint = ApiEndpoint + "/login-zalo";
             public const string RefreshTokenEndpoint = ApiEndpoint + "/refresh-token";
             public const string LogoutEndpoint = ApiEndpoint + "/logout/{id}";
+            public const string UpdatePassword = ApiEndpoint + "/password/{id}";
         }
 
         public static class Admin

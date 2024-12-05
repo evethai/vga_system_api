@@ -17,5 +17,6 @@ namespace Application.Interface.Service
         Task<ResponseModel> Logout(Guid AccountId);
         Task<ResponseModel> CreateRefreshToken(RefreshTokenRequestModel model);
         Task<ResponseModel> UpdateStatusAccount(Guid accountId, AccountStatus status);
+        Task<ResponseModel> ResetPassword(Guid accountId, string password);
     }
 }
