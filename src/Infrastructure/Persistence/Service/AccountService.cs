@@ -323,5 +323,26 @@ namespace Infrastructure.Persistence.Service
         }
         #endregion
 
+        public async Task<ResponseModel> ResetPassword (Guid accountId,string password)
+        {
+            var account = await _unitOfWork.AccountRepository.GetByIdGuidAsync(accountId);
+            if (account == null)
+            {
+                return new ResponseModel
+                {
+                    IsSuccess = false,
+                    Message = "Account is not found!"
+                };
+            }
+            account.Password = PasswordUtil.HashPassword(password);
+            await _unitOfWork.SaveChangesAsync();
+
+            return new ResponseModel
+            {
+                IsSuccess = true,
+                Message = "Update password is successful.",
+            };
+        }
+
     }
 }
