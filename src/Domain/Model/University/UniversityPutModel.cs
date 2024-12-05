@@ -9,7 +9,7 @@ using Domain.Model.Account;
 
 namespace Domain.Model.University
 {
-    public class UniversityPutModel: AccountPostModel
+    public class UniversityPutModel: AccountPutModel
     {
         [Required(ErrorMessage = "Description is required.")]
         public string Description { get; set; } = string.Empty;

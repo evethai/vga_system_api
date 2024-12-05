@@ -9,7 +9,7 @@ using Domain.Model.Certification;
 
 namespace Domain.Model.Consultant
 {
-    public class ConsultantPutModel : AccountPostModel
+    public class ConsultantPutModel : AccountPutModel
     {
         [Required(ErrorMessage = "Consultant level id is required.")]
         public int ConsultantLevelId { get; set; }

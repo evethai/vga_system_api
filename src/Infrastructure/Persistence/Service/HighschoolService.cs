@@ -81,7 +81,6 @@ public class HighschoolService : IHighschoolService
         exitAccount.Name = putModel.Name;
         exitAccount.Phone = putModel.Phone;
         exitAccount.Email = putModel.Email;
-        exitAccount.Password = PasswordUtil.HashPassword(putModel.Password);
         await _unitOfWork.AccountRepository.UpdateAsync(exitAccount);      
         await _unitOfWork.HighschoolRepository.UpdateAsync(exitHighschool);
         await _unitOfWork.SaveChangesAsync();
