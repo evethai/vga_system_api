@@ -24,10 +24,36 @@ namespace Infrastructure.Persistence.Service
             var highSchools = await _unitOfWork.HighschoolRepository.CountAsync();
             var universities = await _unitOfWork.UniversityRepository.CountAsync();
             var numberAcc = await _unitOfWork.AccountRepository.CountAsync(a => a.Role != RoleEnum.Admin);
-            var testsInDay = await _unitOfWork.StudentTestRepository.CountAsync(x => x.Date == DateTime.UtcNow.ToLocalTime().Date);
-            var testsInWeek = await _unitOfWork.StudentTestRepository.CountAsync(x => x.Date >= DateTime.UtcNow.ToLocalTime().Date.AddDays(-7));
-            var testsInMonth = await _unitOfWork.StudentTestRepository.CountAsync(x => x.Date >= DateTime.UtcNow.ToLocalTime().Date.AddMonths(-1));
+            var testsInDay = await _unitOfWork.StudentTestRepository.CountAsync(x => x.Date == DateTime.UtcNow.AddHours(7).Date);
+            var testsInWeek = await _unitOfWork.StudentTestRepository.CountAsync(x => x.Date >= DateTime.UtcNow.AddHours(7).Date.AddDays(-7));
+            //var testsInMonth = await _unitOfWork.StudentTestRepository.CountAsync(x => x.Date >= DateTime.UtcNow.AddHours(7).Date.AddMonths(-1));
 
+
+            var mbtiTestsInMonth = new List<int>();
+            var hollandTestsInMonth = new List<int>();
+            int monthNow = DateTime.UtcNow.AddHours(7).Month;
+            //for from this month to 1 if after this month not have test return 0
+            for (int i = monthNow; i >= 0; i--)
+            {
+                var test = await _unitOfWork.StudentTestRepository.CountAsync(x => x.Date.Month == DateTime.UtcNow.AddHours(7).Date.AddMonths(-i+1).Month && x.PersonalTest.TestType.TypeCode == TestTypeCode.MBTI);
+                mbtiTestsInMonth.Add(test);
+                var test1 = await _unitOfWork.StudentTestRepository.CountAsync(x => x.Date.Month == DateTime.UtcNow.AddHours(7).Date.AddMonths(-i + 1).Month && x.PersonalTest.TestType.TypeCode == TestTypeCode.Holland);
+                hollandTestsInMonth.Add(test1);
+            }
+
+
+
+            var totalPoint = await _unitOfWork.TransactionRepository.GetListAsync(predicate: x => x.Wallet.Account.Role == RoleEnum.Student &&
+                                                                                             x.TransactionType == TransactionType.Recharge &&
+                                                                                             x.TransactionDateTime >= DateTime.UtcNow.AddHours(7).Date.AddMonths(-1),
+                                                                                  selector: x => x.GoldAmount);
+            var totalPointStudent = totalPoint.Sum();
+
+            var numberAdminTransferring = await _unitOfWork.TransactionRepository.GetListAsync(predicate: x => x.Wallet.Account.Role == RoleEnum.Admin &&
+                                                                                                    x.TransactionType == TransactionType.Transferring &&
+                                                                                                    x.TransactionDateTime >= DateTime.UtcNow.AddHours(7).Date.AddMonths(-1),
+                                                                                                    selector: x => x.GoldAmount);
+            var totalPointAdminTransferring = numberAdminTransferring.Sum();
             return new DashboardModel
             {
                 NumberAccount = numberAcc,
@@ -36,7 +62,10 @@ namespace Infrastructure.Persistence.Service
                 TotalUniversities = universities,
                 NumberOfTestsInDay = testsInDay,
                 NumberOfTestsInWeek = testsInWeek,
-                NumberOfTestsInMonth = testsInMonth
+                NumberOfMBTITestsInMonth = mbtiTestsInMonth,
+                NumberOfHollandTestsInMonth = hollandTestsInMonth,
+                TotalPointRechargeStudent = totalPointStudent,
+                TotalPointAdminTransferring = totalPointAdminTransferring
             };
 
         }

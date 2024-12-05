@@ -119,7 +119,7 @@ namespace Infrastructure.Persistence.Service
                     TransactionType = TransactionType.Using,
                     Description = $"Bạn đã sử dụng {priceOnSlot} điểm để đặt tư vấn",
                     GoldAmount = (int)priceOnSlot,
-                    TransactionDateTime = DateTime.UtcNow.ToLocalTime()
+                    TransactionDateTime = DateTime.UtcNow.AddHours(7)
                 };
 
                 var consultantTransaction = new Transaction
@@ -129,7 +129,7 @@ namespace Infrastructure.Persistence.Service
                     TransactionType = TransactionType.Receiving,
                     Description = $"Bạn đã nhận {priceOnSlot} điểm từ buổi tư vấn",
                     GoldAmount = (int)priceOnSlot,
-                    TransactionDateTime = DateTime.UtcNow.ToLocalTime()
+                    TransactionDateTime = DateTime.UtcNow.AddHours(7)
                 };
 
                 // Call consolidated method in the repository
@@ -144,7 +144,7 @@ namespace Infrastructure.Persistence.Service
 
                 NotificationPostModel notiPostModel = new NotificationPostModel();
                 notiPostModel.AccountId = consultationTime.Day.Consultant.AccountId;
-                notiPostModel.Title = NotificationConstant.Title.Booked;
+                notiPostModel.Title = NotificationConstant.Title.NewBooking;
                 notiPostModel.Message = $"Lịch tư vấn của bạn vào slot từ {consultationTime.SlotTime.StartTime} đến {consultationTime.SlotTime.EndTime} vào ngày {consultationTime.Day.Day} đã được đặt thành công bởi {student.Account.Name}.";
 
                 await _unitOfWork.NotificationRepository.CreateNotification(notiPostModel);

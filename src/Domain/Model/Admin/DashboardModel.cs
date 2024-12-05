@@ -14,7 +14,10 @@ namespace Domain.Model.Admin
         public int TotalUniversities { get; set; }
         public int NumberOfTestsInDay { get; set; }
         public int NumberOfTestsInWeek { get; set; }
-        public int NumberOfTestsInMonth { get; set; }
+        public List<int> NumberOfMBTITestsInMonth { get; set; } = new List<int>();
+        public List<int> NumberOfHollandTestsInMonth { get; set; } = new List<int>();
+        public int TotalPointRechargeStudent { get; set; }
+        public int TotalPointAdminTransferring { get; set; }
 
 
     }

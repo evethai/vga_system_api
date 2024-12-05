@@ -13,7 +13,7 @@ namespace Api.Controllers
 {
     [Route("/personal-test")]
     [ApiController]
-    [CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
+    //[CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
     public class PersonalTestController : ControllerBase
     {
         private readonly IStudentTestService _studentTestService;
@@ -30,7 +30,7 @@ namespace Api.Controllers
         }
 
         [HttpPost(ApiEndPointConstant.PersonalTest.GetResultPersonalTestEndpoint)]
-        
+
         public async Task<IActionResult> CreateResultTest(StudentTestResultModel result)
         {
 
@@ -63,17 +63,18 @@ namespace Api.Controllers
                 //}
                 //else
                 //{
-                    response = await _studentTestService.GetTestById(id);
-                    var transaction = await _walletService.UpdateWalletUsingByTestAsync(accountId, response.Point);
+                response = await _studentTestService.GetTestById(id);
+                var transaction = await _walletService.UpdateWalletUsingByTestAsync(accountId, response.Point);
                 //    await _cacheService.SetCacheResponseAsync(cacheKey, response, TimeSpan.FromMinutes(16));
-                    if(transaction.IsSuccess == false)
-                    {
-                        return Ok("Error transaction with point!");
-                    }
-                    return Ok(response);
+                if (transaction.IsSuccess == false)
+                {
+                    return Ok("Error transaction with point!");
+                }
+                return Ok(response);
                 //}
 
-            }catch (Exception e)
+            }
+            catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
@@ -82,11 +83,11 @@ namespace Api.Controllers
 
 
         [HttpGet(ApiEndPointConstant.PersonalTest.PersonalTestsEndpoint)]
-        public async Task<IActionResult> GetAllTest()
+        public async Task<IActionResult> GetAllTest([FromForm] PersonalTestSearchModel model)
         {
             try
             {
-                var response = await _studentTestService.GetAllTest();
+                var response = await _studentTestService.GetAllTest(model);
                 return Ok(response);
             }
             catch (Exception e)
@@ -101,7 +102,7 @@ namespace Api.Controllers
             try
             {
                 var response = await _studentTestService.GetHistoryTestByStudentId(id);
-                if(response == null)
+                if (response == null)
                 {
                     return Ok("User does not take the test!");
                 }
@@ -136,8 +137,12 @@ namespace Api.Controllers
             }
             try
             {
-                var response = await _studentTestService.FilterMajorAndUniversity(model);
-                return Ok(response);
+                var result = await _studentTestService.FilterOccupationAndUniversity(model);
+                if (!result.IsSuccess)
+                {
+                    return BadRequest(result.Message);
+                }
+                return Ok(result);
             }
             catch (Exception e)
             {
@@ -146,7 +151,7 @@ namespace Api.Controllers
         }
 
         [HttpPost(ApiEndPointConstant.PersonalTest.PersonalTestsEndpoint)]
-        public async Task<IActionResult> CreatePersonalTest(PersonalTestPostModel model)
+        public async Task<IActionResult> CreatePersonalTest([FromForm] PersonalTestPostModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -154,8 +159,12 @@ namespace Api.Controllers
             }
             try
             {
-                var response = await _personalTestService.CreatePersonalTest(model);
-                return Ok(response);
+                var result = await _personalTestService.CreatePersonalTest(model);
+                if (!result.IsSuccess)
+                {
+                    return BadRequest(result.Message);
+                }
+                return Ok(result);
             }
             catch (Exception e)
             {
@@ -164,7 +173,7 @@ namespace Api.Controllers
         }
 
         [HttpPut(ApiEndPointConstant.PersonalTest.PersonalTestEndpoint)]
-        public async Task<IActionResult> UpdatePersonalTest(Guid id, PersonalTestPostModel model)
+        public async Task<IActionResult> UpdatePersonalTest(Guid id, PersonalTestPutModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -173,6 +182,10 @@ namespace Api.Controllers
             try
             {
                 var response = await _personalTestService.UpdatePersonalTest(id, model);
+                if (!response.IsSuccess)
+                {
+                    return BadRequest(response.Message);
+                }
                 return Ok(response);
             }
             catch (Exception e)
@@ -180,6 +193,23 @@ namespace Api.Controllers
                 return BadRequest(e.Message);
             }
         }
+        [HttpDelete(ApiEndPointConstant.PersonalTest.PersonalTestEndpoint)]
+        public async Task<IActionResult> DeletePersonalTest(Guid id)
+        {
+            try
+            {
+                var response = await _personalTestService.DeletePersonalTest(id);
+                if (!response.IsSuccess)
+                {
+                    return BadRequest(response.Message);
+                }
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
 
+        }
     }
 }

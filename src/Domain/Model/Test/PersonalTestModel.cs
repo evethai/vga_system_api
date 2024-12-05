@@ -17,4 +17,10 @@ namespace Domain.Model.Test
         public string Description { get; set; } = string.Empty;
         public List<QuestionModel> QuestionModels { get; set; } = new List<QuestionModel>();
     }
+    public class ResponsePersonalTestModel
+    {
+        public int? total { get; set; }
+        public int? currentPage { get; set; }
+        public List<PersonalTestModel> questions { get; set; }
+    }
 }

@@ -51,7 +51,7 @@ namespace Infrastructure.Persistence.Repository
                         Password = PasswordUtil.HashPassword(registerAccount.Password),
                         Role = _role,
                         Status = AccountStatus.Active,
-                        CreateAt = DateTime.UtcNow.ToLocalTime()
+                        CreateAt = DateTime.UtcNow.AddHours(7)
                     };
                     account.Wallet = new Wallet
                     {
@@ -71,7 +71,7 @@ namespace Infrastructure.Persistence.Repository
                         Password = PasswordUtil.HashPassword(registerAccount.Password),
                         Role = _role,
                         Status = AccountStatus.Active,
-                        CreateAt = DateTime.UtcNow.ToLocalTime()
+                        CreateAt = DateTime.UtcNow.AddHours(7)
                     };
                     account.Wallet = new Wallet
                     {
@@ -90,7 +90,7 @@ namespace Infrastructure.Persistence.Repository
                         Password = PasswordUtil.HashPassword(registerAccount.Password),
                         Role = _role,
                         Status = AccountStatus.Active,
-                        CreateAt = DateTime.UtcNow.ToLocalTime()
+                        CreateAt = DateTime.UtcNow.AddHours(7)
                     };
                     account.Wallet = new Wallet
                     {
@@ -109,7 +109,7 @@ namespace Infrastructure.Persistence.Repository
                         Password = PasswordUtil.HashPassword(registerAccount.Password),
                         Role = _role,
                         Status = AccountStatus.Active,
-                        CreateAt = DateTime.UtcNow.ToLocalTime()
+                        CreateAt = DateTime.UtcNow.AddHours(7)
                     };
                     account.Wallet = new Wallet
                     {

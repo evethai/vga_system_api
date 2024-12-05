@@ -1,10 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Common.Extensions;
+using Application.Interface;
 using Application.Interface.Repository;
 using Domain.Entity;
+using Domain.Enum;
+using Domain.Model.Consultant;
+using Domain.Model.PersonalTest;
 using Domain.Model.Question;
 using Domain.Model.Response;
 using Infrastructure.Data;
@@ -21,7 +27,6 @@ namespace Infrastructure.Persistence.Repository
         }
 
         #region create question
-
         public async Task<ResponseModel> CreateQuestion(QuestionPostModel model)
         {
             var strategy = _context.Database.CreateExecutionStrategy();
@@ -98,67 +103,197 @@ namespace Infrastructure.Persistence.Repository
                 }
             });
         }
-
         #endregion
 
         #region update question
-        public async Task<ResponseModel> UpdateQuestion(QuestionPutModel model)
+        public async Task<ResponseModel> UpdateQuestion(QuestionPutModel model, int id)
         {
-            using (var transaction = await _context.Database.BeginTransactionAsync())
+            var strategy = _context.Database.CreateExecutionStrategy();
+
+            return await strategy.ExecuteAsync(async () =>
             {
-                try
+                using (var transaction = await _context.Database.BeginTransactionAsync())
                 {
-                    var question = await _context.Question.FindAsync(model.Id);
-                    if (question == null)
+                    try
                     {
+                        var question = await _context.Question.FindAsync(id);
+                        if (question == null)
+                        {
+                            return new ResponseModel
+                            {
+                                IsSuccess = false,
+                                Message = "Question not found."
+                            };
+                        }
+
+                        question.Content = model.Content;
+                        question.Group = model.Group;
+
+                        if (model.Answers != null)
+                        {
+                            foreach (var answer in model.Answers)
+                            {
+                                var existingAnswer = await _context.Answer.FindAsync(answer.Id);
+                                if (existingAnswer != null)
+                                {
+                                    existingAnswer.Content = answer.Content;
+                                    existingAnswer.AnswerValue = answer.AnswerValue;
+                                    existingAnswer.status = true;
+                                }
+                            }
+                        }
+
+                        await _context.SaveChangesAsync();
+                        await transaction.CommitAsync();
+
+                        return new ResponseModel
+                        {
+                            IsSuccess = true,
+                            Message = "Question updated successfully."
+                        };
+                    }
+                    catch (Exception ex)
+                    {
+                        await transaction.RollbackAsync();
+
                         return new ResponseModel
                         {
                             IsSuccess = false,
-                            Message = "Question not found."
+                            Message = ex.Message
                         };
                     }
-
-                    question.Content = model.Content;
-                    question.Group = model.Group;
-                    question.Status = model.status;
-
-                    if (model.Answers != null)
-                    {
-                        foreach (var answer in model.Answers)
-                        {
-                            var existingAnswer = await _context.Answer.FindAsync(answer.Id);
-                            if (existingAnswer != null)
-                            {
-                                existingAnswer.Content = answer.Content;
-                                existingAnswer.AnswerValue = answer.AnswerValue;
-                                existingAnswer.status = true;
-                            }
-                        }
-                    }
-
-
-                    await _context.SaveChangesAsync();
-
-                    await transaction.CommitAsync();
-                    return new ResponseModel
-                    {
-                        IsSuccess = true,
-                        Message = "Question updated successfully."
-                    };
                 }
-                catch (Exception ex)
+            });
+        }
+
+        #endregion
+
+        public async Task<ResponseModel> AddMbtiQuestions(Guid personalTestId, Guid testTypeId, List<DataQuestionMBTIModel> questions)
+        {
+            if (questions == null || !questions.Any())
+            {
+                return new ResponseModel
                 {
-                    await transaction.RollbackAsync();
+                    IsSuccess = false,
+                    Message = "Questions cannot be null or empty."
+                };
+            }
 
-                    return new ResponseModel
+            try
+            {
+                var questionEntities = questions.Select(item => new Question
+                {
+                    Content = item.Content,
+                    Group = QuestionGroup.None,
+                    TestTypeId = testTypeId,
+                    CreateAt = DateTime.UtcNow.AddHours(7),
+                    Status = true
+                }).ToList();
+                await _context.Question.AddRangeAsync(questionEntities);
+                await _context.SaveChangesAsync();
+
+
+                var questionIdDictionary = questionEntities.ToDictionary(q => q.Content, q => q.Id);
+
+
+                var answerEntities = questions.SelectMany(item => new List<Answer>
+                {
+                    new Answer
                     {
-                        IsSuccess = false,
-                        Message = ex.Message
-                    };
-                }
+                        Content = item.Answer1,
+                        QuestionId = questionIdDictionary[item.Content],  
+                        AnswerValue = item.Value1,
+                        status = true
+                    },
+                    new Answer
+                    {
+                        Content = item.Answer2,
+                        QuestionId = questionIdDictionary[item.Content],  
+                        AnswerValue = item.Value2,
+                        status = true
+                    }
+                }).ToList();
+                var testQuestionEntities = questionEntities.Select(question => new TestQuestion
+                {
+                    PersonalTestId = personalTestId,
+                    QuestionId = question.Id,
+                    Status = true
+                }).ToList();
+
+                await _context.Answer.AddRangeAsync(answerEntities);
+                await _context.TestQuestion.AddRangeAsync(testQuestionEntities);
+                await _context.SaveChangesAsync();
+
+                return new ResponseModel
+                {
+                    IsSuccess = true,
+                    Message = "Added MBTI questions successfully."
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    IsSuccess = false,
+                    Message = $"An error occurred: {ex.Message}"
+                };
             }
         }
-        #endregion
+
+
+        public async Task<ResponseModel> AddHollandQuestions(Guid personalTestId, Guid testTypeId, List<DataQuestionHollandModel> questions)
+        {
+            if (questions == null || !questions.Any())
+            {
+                return new ResponseModel
+                {
+                    IsSuccess = false,
+                    Message = "Questions cannot be null or empty."
+                };
+            }
+
+            try
+            {
+
+                var questionEntities = questions.Select(item => new Question
+                {
+                    Content = item.Content,
+                    Group = item.Group,
+                    TestTypeId = testTypeId,
+                    CreateAt = DateTime.UtcNow.AddHours(7),
+                    Status = true
+                }).ToList();
+
+                await _context.Question.AddRangeAsync(questionEntities);
+                await _context.SaveChangesAsync(); 
+
+ 
+                var testQuestionEntities = questionEntities.Select(question => new TestQuestion
+                {
+                    PersonalTestId = personalTestId,
+                    QuestionId = question.Id, 
+                    Status = true
+                }).ToList();
+
+                await _context.TestQuestion.AddRangeAsync(testQuestionEntities);
+                await _context.SaveChangesAsync();
+
+
+                return new ResponseModel
+                {
+                    IsSuccess = true,
+                    Message = "Added Holland questions successfully."
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    IsSuccess = false,
+                    Message = $"An error occurred: {ex.Message}"
+                };
+            }
+        }
 
     }
 

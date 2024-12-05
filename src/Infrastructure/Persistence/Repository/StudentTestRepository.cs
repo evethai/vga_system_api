@@ -70,8 +70,8 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
             Id = m_Type.Id,
             Code = m_Type.Code,
             Description = m_Type.Description,
-            Name = m_Type.Name
-
+            Name = m_Type.Name,
+            About = m_Type.About
         };
 
         return result;
@@ -83,7 +83,7 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
     {
 
         var test = await _context.PersonalTest
-            .Where(p => p.Id == personalTestId)
+            .Where(p => p.Id == personalTestId && p.Status == true)
             .Include(p => p.TestType)
             .Select(p => new
             {
@@ -127,7 +127,7 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
                 Id = q.Id,
                 Content = q.Content,
                 Group = q.Group,
-                AnswerModels = q.Answers
+                Answers = q.Answers
             }).OrderBy(q => q.Group).ToList()
         };
 
@@ -191,11 +191,13 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
         {
             Id = p.MajorCategory.Id,
             Name = p.MajorCategory.Name,
+            Image = p.MajorCategory.Image,
             Majors = p.MajorCategory.Majors.Select(m => new MajorModel
             {
                 Id = m.Id,
                 Name = m.Name,
-                Code = m.Code
+                Code = m.Code,
+                Image = m.Image
             }).ToList()
         })
         .ToList();
@@ -272,17 +274,46 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
 
         var stTestId = tests.FirstOrDefault(t => t.PersonalTest?.TestType.TypeCode == TestTypeCode.Holland);
 
-
+        //Major selected by student
         var majorSelected = await _context.StudentChoice
-            .Where(s => s.StudentTestId == stTestId.Id )
-            .OrderByDescending(s => s.Rating)
-            .Select(s => new HistoryMajorModel
+            .Where(s => s.StudentTestId == stTestId.Id)
+            .GroupBy(s => new { s.MajorOrOccupationId, s.MajorOrOccupationName }) 
+            .Select(g => new HistoryMajorModel
             {
-                MajorId = s.MajorOrOccupationId,
-                MajorName = s.MajorOrOccupationName,
-                Rating = s.Rating
+                MajorId = g.Key.MajorOrOccupationId, 
+                MajorName = g.Key.MajorOrOccupationName, 
+                Rating = g.Max(x => x.Rating) 
             })
+            .OrderByDescending(m => m.Rating) 
             .ToListAsync();
+
+        //Major by result
+        var majorsByResultes = _context.MajorPersonalMatrix
+           .Where(p => p.PersonalGroupId == stTestId.PersonalGroupId)
+           .Select(p => new MajorCategoryModel
+           {
+               Id = p.MajorCategory.Id,
+               Name = p.MajorCategory.Name,
+               Image = p.MajorCategory.Image,
+               Majors = p.MajorCategory.Majors.Select(m => new MajorModel
+               {
+                   Id = m.Id,
+                   Name = m.Name,
+                   Code = m.Code,
+                   Image = m.Image
+               }).ToList()
+           })
+           .ToList();
+
+        foreach (var item in majorSelected)
+        {
+            var m = _context.Major.Where(x => x.Id.Equals(item.MajorId));
+            if(m != null)
+            {
+                item.Image = m.Select(x => x.Image).FirstOrDefault();
+            }
+        }
+
         var result = tests.Select(test => new HistoryTestModel
         {
             PersonalTestId = test.Id,
@@ -297,7 +328,8 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
         return new StudentHistoryModel
         {
             HistoryTests = result,
-            HistoryMajor = majorSelected
+            HistoryMajor = majorSelected,
+            MajorByHollandResult = majorsByResultes
         };
     }
 

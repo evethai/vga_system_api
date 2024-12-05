@@ -110,6 +110,7 @@ namespace Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [CustomAuthorize(RoleEnum.Student)]
         [HttpPost(ApiEndPointConstant.Wallet.WalletPayOsRequest)]
         public async Task<IActionResult> RequestTopUpWalletWithPayOs([FromQuery] Guid accountId, [FromQuery] float amount, PayOSUrl url)
         {

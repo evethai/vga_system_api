@@ -8,6 +8,7 @@ using Domain.Enum;
 using Domain.Model;
 using Domain.Model.Major;
 using Domain.Model.PersonalGroup;
+using Domain.Model.PersonalTest;
 using Domain.Model.Question;
 using Domain.Model.Response;
 using Domain.Model.Test;
@@ -78,7 +79,8 @@ namespace Infrastructure.Persistence.Service
                     Code = personalGroupModel.Code,
                     Name = personalGroupModel.Name,
                     Des = personalGroupModel.Description,
-                    Majors = personalGroupModel.Majors,
+                    About = personalGroupModel.About,
+                    MajorCategories = personalGroupModel.Majors,
                     Percent = personalGroupModel.Percent
                 }
             };
@@ -96,11 +98,20 @@ namespace Infrastructure.Persistence.Service
         #endregion
 
         #region get all test
-        public async Task<IEnumerable<PersonalTestModel>> GetAllTest()
+        public async Task<ResponsePersonalTestModel> GetAllTest(PersonalTestSearchModel model)
         {
-            var result = await _unitOfWork.PersonalTestRepository.GetAllAsync();
+            var conditions = _unitOfWork.PersonalTestRepository.BuildFilterAndOrderBy(model);
+            //var result = await _unitOfWork.PersonalTestRepository.GetListAsync(predicate: x => x.Status == true);
+            var result = await _unitOfWork.PersonalTestRepository.GetByConditionAsync(conditions.filter, conditions.orderBy,pageIndex: model.Page, pageSize: model.Size);
             var testModels = _mapper.Map<IEnumerable<PersonalTestModel>>(result);
-            return testModels;
+            var total = await _unitOfWork.PersonalTestRepository.CountAsync(conditions.filter);
+            return new ResponsePersonalTestModel
+            {
+                total = total,
+                currentPage = model.Page,
+                questions = testModels.ToList()
+            };
+            
         }
         #endregion
 
@@ -111,7 +122,6 @@ namespace Infrastructure.Persistence.Service
             return tests;
         }
         #endregion
-
 
         public async Task<ResponseModel> GetMajorsByPersonalGroupId(Guid stTestId)
         {
@@ -146,7 +156,7 @@ namespace Infrastructure.Persistence.Service
             };
         }
 
-        public async Task<ResponseModel> FilterMajorAndUniversity(FilterMajorAndUniversityModel model)
+        public async Task<ResponseModel> FilterOccupationAndUniversity(FilterMajorAndUniversityModel model)
         {
             var stChoices = await _unitOfWork.StudentTestRepository.CreateStudentChoice(model.studentChoiceModel, StudentChoiceType.Major);
             if(stChoices == null || !stChoices.Any())
@@ -174,7 +184,6 @@ namespace Infrastructure.Persistence.Service
                 });
             }
             
-
             return new ResponseModel
             {
                 IsSuccess = true,

@@ -78,7 +78,7 @@ namespace Infrastructure.Persistence.Repository
             Notification notiPostModel = new Notification
             {
                 AccountId = accoount.AccountId,
-                CreatedAt = DateTime.UtcNow.ToLocalTime(),
+                CreatedAt = DateTime.UtcNow.AddHours(7),
                 Status = Domain.Enum.NotiStatus.Unread,                
             };
             Transaction transaction = null;
@@ -92,7 +92,7 @@ namespace Infrastructure.Persistence.Repository
                         TransactionType = transactionType,
                         Description = message,
                         GoldAmount = transactionModel.GoldAmount,
-                        TransactionDateTime = DateTime.UtcNow.ToLocalTime(),
+                        TransactionDateTime = DateTime.UtcNow.AddHours(7),
                     };
                     notiPostModel.Message = "Bạn đã chuyển " + transactionModel.GoldAmount + " điểm";
                     notiPostModel.Title = NotificationConstant.Title.UpdateGold;
@@ -105,7 +105,7 @@ namespace Infrastructure.Persistence.Repository
                         TransactionType = transactionType,
                         Description = message,
                         GoldAmount = transactionModel.GoldAmount,
-                        TransactionDateTime = DateTime.UtcNow.ToLocalTime(),
+                        TransactionDateTime = DateTime.UtcNow.AddHours(7),
                     };
                     notiPostModel.Message ="Bạn đã nhận " + transactionModel.GoldAmount + " điểm";
                     notiPostModel.Title = NotificationConstant.Title.UpdateGold;
@@ -118,7 +118,7 @@ namespace Infrastructure.Persistence.Repository
                         TransactionType = transactionType,
                         Description = message,
                         GoldAmount = transactionModel.GoldAmount,
-                        TransactionDateTime = DateTime.UtcNow.ToLocalTime(),
+                        TransactionDateTime = DateTime.UtcNow.AddHours(7),
                     };
                     notiPostModel.Message = "Bạn đã sử dụng " + transactionModel.GoldAmount + " điểm vào bài Test";
                     notiPostModel.Title = NotificationConstant.Title.UpdateGold;
@@ -225,7 +225,7 @@ namespace Infrastructure.Persistence.Repository
                 TransactionType = TransactionType.Request,
                 Description = "Bạn yêu cầu rút " + gold + " điểm",
                 GoldAmount = gold,
-                TransactionDateTime = DateTime.UtcNow.ToLocalTime(),
+                TransactionDateTime = DateTime.UtcNow.AddHours(7),
             };
             await _context.Transaction.AddAsync(transaction);
 
@@ -254,7 +254,7 @@ namespace Infrastructure.Persistence.Repository
             Notification notiPostModel = new Notification
             {
                 AccountId = wallet.AccountId,
-                CreatedAt = DateTime.UtcNow.ToLocalTime(),
+                CreatedAt = DateTime.UtcNow.AddHours(7),
                 Status = Domain.Enum.NotiStatus.Unread
             };
 
@@ -266,7 +266,7 @@ namespace Infrastructure.Persistence.Repository
                     //update transaction type and description
                     existedTransaction.TransactionType = TransactionType.Withdraw;
                     existedTransaction.Description = $"Yêu cầu rút {existedTransaction.GoldAmount} điểm đã xử lý thành công";
-                    existedTransaction.TransactionDateTime = DateTime.UtcNow.ToLocalTime();
+                    existedTransaction.TransactionDateTime = DateTime.UtcNow.AddHours(7);
                     existedTransaction.Image = model.Image;
 
                     //update wallet
@@ -275,13 +275,13 @@ namespace Infrastructure.Persistence.Repository
 
                     //create notification 
                     notiPostModel.Title = NotificationConstant.Title.Withdraw;
-                    notiPostModel.Message = $"Yêu cầu rút {existedTransaction.GoldAmount} điểm được xử lý thành công vào ngày {DateTime.UtcNow.ToLocalTime()}";
+                    notiPostModel.Message = $"Yêu cầu rút {existedTransaction.GoldAmount} điểm được xử lý thành công vào ngày {DateTime.UtcNow.AddHours(7)}";
                     break;
                 case TransactionType.Reject:
                     //update transaction type and description
                     existedTransaction.TransactionType = TransactionType.Reject;
                     existedTransaction.Description = $"Yêu cầu rút {existedTransaction.GoldAmount} điểm đã bị từ chối";
-                    existedTransaction.TransactionDateTime = DateTime.UtcNow.ToLocalTime();
+                    existedTransaction.TransactionDateTime = DateTime.UtcNow.AddHours(7);
 
                     //update wallet
                     //wallet.GoldBalance += existedTransaction.GoldAmount;
@@ -289,7 +289,7 @@ namespace Infrastructure.Persistence.Repository
 
                     //create notification 
                     notiPostModel.Title = NotificationConstant.Title.Reject;
-                    notiPostModel.Message = $"Yêu cầu rút {existedTransaction.GoldAmount} điểm đã bị từ chối vào ngày {DateTime.UtcNow.ToLocalTime()}";
+                    notiPostModel.Message = $"Yêu cầu rút {existedTransaction.GoldAmount} điểm đã bị từ chối vào ngày {DateTime.UtcNow.AddHours(7)}";
                     break;
                 default:
                     throw new Exception("Appcepted type is Withdraw or Reject only");
@@ -383,7 +383,7 @@ namespace Infrastructure.Persistence.Repository
                 Notification notiPostModel = new Notification
                 {
                     AccountId = updateWallet.AccountId,
-                    CreatedAt = DateTime.UtcNow.ToLocalTime(),
+                    CreatedAt = DateTime.UtcNow.AddHours(7),
                     Status = Domain.Enum.NotiStatus.Unread,
                     Message = "Bạn đã nạp " + checkTrans.GoldAmount + " điểm thành công",
                     Title = NotificationConstant.Messages.UpdateGold
@@ -404,9 +404,9 @@ namespace Infrastructure.Persistence.Repository
                 Id = Guid.NewGuid(),
                 WalletId = transactionModel.WalletId,
                 TransactionType = transactionType,
-                Description ="Bạn đã yêu cầu nạp " + transactionModel.GoldAmount + " điểm",
+                Description ="Bạn đã hủy yêu cầu thanh toán " + transactionModel.GoldAmount + " điểm",
                 GoldAmount = transactionModel.GoldAmount,
-                TransactionDateTime = DateTime.UtcNow.ToLocalTime(),
+                TransactionDateTime = DateTime.UtcNow.AddHours(7),
             };
             await _context.Transaction.AddAsync(transaction);
             await _context.SaveChangesAsync();

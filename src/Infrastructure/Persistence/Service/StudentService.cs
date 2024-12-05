@@ -36,7 +36,8 @@ public class StudentService : IStudentService
         var student = await _unitOfWork.StudentRepository
             .GetBySearchAsync(filter, orderBy,
             q => q.Include(s => s.Account)
-                   .ThenInclude(a => a.Wallet),
+                   .ThenInclude(a => a.Wallet)
+                   .Include(a=>a.HighSchool).ThenInclude(x => x.Account),
             pageIndex: searchModel.currentPage,
             pageSize: searchModel.pageSize);
 
@@ -55,7 +56,8 @@ public class StudentService : IStudentService
         var student = await _unitOfWork.StudentRepository.
             SingleOrDefaultAsync(predicate: c => c.Id.Equals(StudentId)
             , include: a => a.Include(a => a.Account)
-            .ThenInclude(a => a.Wallet)) ?? throw new Exception("Id is not found");
+            .ThenInclude(a => a.Wallet)
+            .Include(x => x.HighSchool).ThenInclude(x => x.Account)) ?? throw new Exception("Id is not found");
         return _mapper.Map<StudentModel>(student);
     }
 

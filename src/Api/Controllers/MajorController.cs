@@ -101,7 +101,7 @@ namespace Api.Controllers
             }
         }
 
-        [CustomAuthorize(RoleEnum.Student)]
+        //[CustomAuthorize(RoleEnum.Student)]
         [HttpGet(ApiEndPointConstant.Major.MajorAndRelationEndpoint)]
         public async Task<IActionResult> OccupationAndUniversityByMajorId(Guid id)
         {

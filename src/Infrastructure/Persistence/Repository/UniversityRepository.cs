@@ -105,7 +105,8 @@ namespace Infrastructure.Persistence.Repository
                 .Select(ai => new UniversityByMajorIdModel
                 {
                     Id = ai.UniversityId,
-                    Name = ai.University.Account.Name
+                    Name = ai.University.Account.Name,
+                    Image = ai.University.Account.Image_Url,
                 }
                 )
                 .Distinct()

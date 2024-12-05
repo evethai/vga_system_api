@@ -57,7 +57,9 @@ namespace Application.Common.Mapper
             CreateMap<HighSchool, HighschoolPutModel>().ReverseMap();
 
             //Student
-            CreateMap<Student, StudentModel>().ReverseMap();
+            CreateMap<Student, StudentModel>()
+                .ForMember(dest => dest.HighSchoolName, opt => opt.MapFrom(src => src.HighSchool.Account.Name))
+                .ReverseMap();
             CreateMap<Student, StudentPostModel>().ReverseMap();
             CreateMap<Student, StudentPutModel>().ReverseMap();
             CreateMap<Student, StudentJsonModel>().ReverseMap();

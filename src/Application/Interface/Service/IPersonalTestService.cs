@@ -11,6 +11,7 @@ namespace Application.Interface.Service
     public interface IPersonalTestService
     {
         Task<ResponseModel> CreatePersonalTest(PersonalTestPostModel model);
-        Task<ResponseModel> UpdatePersonalTest(Guid id, PersonalTestPostModel model);
+        Task<ResponseModel> UpdatePersonalTest(Guid id, PersonalTestPutModel model);
+        Task<ResponseModel> DeletePersonalTest(Guid id);
     }
 }
