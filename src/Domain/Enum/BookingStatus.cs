@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace Domain.Enum
 {
-    public enum StudentChoiceType
+    public enum  BookingStatus
     {
-        Test = 1,
-        Care = 2
+        Consulted = 1,
+        NotYet_Consulted = 2,
+        Cancel  = 3
     }
 }

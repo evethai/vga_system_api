@@ -36,7 +36,7 @@ namespace Infrastructure.Persistence.Repository
             }
             if (searchModel.universityId.HasValue)
             {
-                filter = filter.And(c => c.UniversityId.Equals(searchModel.universityId));
+                //filter = filter.And(c => c.UniversityId.Equals(searchModel.universityId));
             }
             if (searchModel.status.HasValue)
             {

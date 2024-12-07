@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(VgaDbContext))]
-    [Migration("20241126082323_personalgroup")]
-    partial class personalgroup
+    [Migration("20241207142629_DbInit")]
+    partial class DbInit
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -175,11 +175,17 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid>("ConsultationTimeId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("Status")
-                        .HasColumnType("bit");
+                    b.Property<string>("Image")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<Guid>("StudentId")
                         .HasColumnType("uniqueidentifier");
@@ -212,6 +218,9 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("MajorId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
 
@@ -219,7 +228,33 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("ConsultantId");
 
+                    b.HasIndex("MajorId");
+
                     b.ToTable("Certification");
+                });
+
+            modelBuilder.Entity("Domain.Entity.ConstantRelation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ConsultantId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("UniversityId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConsultantId");
+
+                    b.HasIndex("UniversityId");
+
+                    b.ToTable("ConstantRelation");
                 });
 
             modelBuilder.Entity("Domain.Entity.Consultant", b =>
@@ -244,17 +279,12 @@ namespace Infrastructure.Migrations
                     b.Property<bool>("Gender")
                         .HasColumnType("bit");
 
-                    b.Property<Guid>("UniversityId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.HasIndex("AccountId")
                         .IsUnique();
 
                     b.HasIndex("ConsultantLevelId");
-
-                    b.HasIndex("UniversityId");
 
                     b.ToTable("Consultant");
                 });
@@ -528,6 +558,9 @@ namespace Infrastructure.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Hashtag")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -883,7 +916,7 @@ namespace Infrastructure.Migrations
                     b.Property<int>("Rating")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("StudentTestId")
+                    b.Property<Guid>("StudentId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Type")
@@ -891,7 +924,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("StudentTestId");
+                    b.HasIndex("StudentId");
 
                     b.ToTable("StudentChoice");
                 });
@@ -1209,7 +1242,34 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Domain.Entity.Major", "Major")
+                        .WithMany("Certifications")
+                        .HasForeignKey("MajorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Consultant");
+
+                    b.Navigation("Major");
+                });
+
+            modelBuilder.Entity("Domain.Entity.ConstantRelation", b =>
+                {
+                    b.HasOne("Domain.Entity.Consultant", "Consultant")
+                        .WithMany("ConstantRelations")
+                        .HasForeignKey("ConsultantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entity.University", "University")
+                        .WithMany("ConstantRelations")
+                        .HasForeignKey("UniversityId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Consultant");
+
+                    b.Navigation("University");
                 });
 
             modelBuilder.Entity("Domain.Entity.Consultant", b =>
@@ -1226,17 +1286,9 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entity.University", "University")
-                        .WithMany("Consultants")
-                        .HasForeignKey("UniversityId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.Navigation("Account");
 
                     b.Navigation("ConsultantLevel");
-
-                    b.Navigation("University");
                 });
 
             modelBuilder.Entity("Domain.Entity.ConsultationDay", b =>
@@ -1473,13 +1525,13 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entity.StudentChoice", b =>
                 {
-                    b.HasOne("Domain.Entity.StudentTest", "StudentTest")
+                    b.HasOne("Domain.Entity.Student", "Student")
                         .WithMany("StudentChoices")
-                        .HasForeignKey("StudentTestId")
+                        .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("StudentTest");
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("Domain.Entity.StudentTest", b =>
@@ -1606,6 +1658,8 @@ namespace Infrastructure.Migrations
                 {
                     b.Navigation("Certifications");
 
+                    b.Navigation("ConstantRelations");
+
                     b.Navigation("ConsultationDays");
                 });
 
@@ -1637,6 +1691,8 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entity.Major", b =>
                 {
                     b.Navigation("AdmissionInformation");
+
+                    b.Navigation("Certifications");
                 });
 
             modelBuilder.Entity("Domain.Entity.MajorCategory", b =>
@@ -1697,12 +1753,9 @@ namespace Infrastructure.Migrations
                 {
                     b.Navigation("Bookings");
 
-                    b.Navigation("StudentTests");
-                });
-
-            modelBuilder.Entity("Domain.Entity.StudentTest", b =>
-                {
                     b.Navigation("StudentChoices");
+
+                    b.Navigation("StudentTests");
                 });
 
             modelBuilder.Entity("Domain.Entity.TestType", b =>
@@ -1723,7 +1776,7 @@ namespace Infrastructure.Migrations
                 {
                     b.Navigation("AdmissionInformation");
 
-                    b.Navigation("Consultants");
+                    b.Navigation("ConstantRelations");
 
                     b.Navigation("News");
 

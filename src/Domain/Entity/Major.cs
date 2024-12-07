@@ -19,6 +19,8 @@ namespace Domain.Entity
         public Guid MajorCategoryId { get; set; }
         public virtual MajorCategory MajorCategory { get; set; } = null!;
         public virtual ICollection<AdmissionInformation> AdmissionInformation { get; set; } = null!;
+        public virtual ICollection<Certification> Certifications { get; set; } = null!;
+
 
     }
 }

@@ -104,7 +104,7 @@ namespace Infrastructure.Persistence.Service
                     Id = Guid.NewGuid(),
                     ConsultationTimeId = consultationTimeId,
                     StudentId = studentId,
-                    Status = true
+                    Status = BookingStatus.NotYet_Consulted
                 };
 
                 consultationTime.Status = (int)ConsultationTimeStatusEnum.Booked;
