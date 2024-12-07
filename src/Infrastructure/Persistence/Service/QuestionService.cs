@@ -40,7 +40,7 @@ namespace Infrastructure.Persistence.Service
         }
         public async Task<QuestionModel> GetQuestionById(int id)
         {
-            var question = await _unitOfWork.QuestionRepository.SingleOrDefaultAsync(predicate: x => x.Id == id, include: x=>x.Include(question => question.Answers));
+            var question = await _unitOfWork.QuestionRepository.SingleOrDefaultAsync(predicate: x => x.Id == id && x.Status == true, include: x=>x.Include(question => question.Answers));
             var result = _mapper.Map<QuestionModel>(question);
             return result;
         }

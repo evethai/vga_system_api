@@ -21,7 +21,7 @@ namespace Infrastructure.Persistence.Repository
         public (Expression<Func<TestQuestion, bool>> filter, Func<IQueryable<TestQuestion>, IOrderedQueryable<TestQuestion>> orderBy)
         BuildFilterAndOrderBy(QuestionSearchModel searchModel)
         {
-            Expression<Func<TestQuestion, bool>> filter = p => p.PersonalTestId.Equals(searchModel.PersonalTestId) && p.Status ==true ;
+            Expression<Func<TestQuestion, bool>> filter = p => p.PersonalTestId.Equals(searchModel.PersonalTestId) && p.Status == true && p.Question.Status == true ;
             Func<IQueryable<TestQuestion>, IOrderedQueryable<TestQuestion>> orderBy = null;
             if (!string.IsNullOrEmpty(searchModel.Content))
             {
