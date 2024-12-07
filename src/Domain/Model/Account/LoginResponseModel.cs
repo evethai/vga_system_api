@@ -14,14 +14,15 @@ namespace Domain.Model.Account
         public string RefreshToken { get; set; } 
         public string Name { get; set; }
         public RoleEnum Role { get; set; }
+        public string? ImageUrl { get; set; }
 
 
-        public LoginResponseModel(Guid accountId, RoleEnum role, string name)
+        public LoginResponseModel(Guid accountId, RoleEnum role, string name, string? imageUrl)
         {
             AccountId = accountId;
             Role = role;
             Name = name;
-
+            ImageUrl = imageUrl;
         }
     }
 
@@ -29,8 +30,8 @@ namespace Domain.Model.Account
     {
         public Guid UserId { get; set; }
 
-        public StudentAccountResponseModel(Guid accountId, RoleEnum role,string name, Guid studentId)
-            : base(accountId,role,name) 
+        public StudentAccountResponseModel(Guid accountId, RoleEnum role,string name, Guid studentId, string? imageUrl)
+            : base(accountId,role,name,imageUrl) 
         {
             UserId = studentId;
         }
@@ -40,8 +41,8 @@ namespace Domain.Model.Account
     {
         public Guid UserId { get; set; }
 
-        public CareerExpertAccountResponseModel(Guid accountId, RoleEnum role, string name, Guid careerExpertId)
-            : base(accountId, role, name) 
+        public CareerExpertAccountResponseModel(Guid accountId, RoleEnum role, string name, Guid careerExpertId, string? imageUrl)
+            : base(accountId, role, name, imageUrl) 
         {
             UserId = careerExpertId;
         }
@@ -51,7 +52,7 @@ namespace Domain.Model.Account
     {
         public Guid UserId { get; set; }
 
-        public HighSchoolAccountResponseModel(Guid accountId, RoleEnum role, string name, Guid highSchoolId) : base(accountId, role, name) 
+        public HighSchoolAccountResponseModel(Guid accountId, RoleEnum role, string name, Guid highSchoolId, string? imageUrl) : base(accountId, role, name, imageUrl) 
         {
             UserId = highSchoolId;
         }
@@ -61,7 +62,7 @@ namespace Domain.Model.Account
     {
         public Guid UserId { get; set; }
 
-        public UniversityAccountResponseModel(Guid accountId, RoleEnum role, string name, Guid universityId) : base(accountId, role, name) 
+        public UniversityAccountResponseModel(Guid accountId, RoleEnum role, string name, Guid universityId, string? imageUrl) : base(accountId, role, name, imageUrl) 
         {
             UserId = universityId;
         }
