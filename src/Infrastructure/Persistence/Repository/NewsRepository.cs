@@ -69,6 +69,43 @@ namespace Infrastructure.Persistence.Repository
             return Task.FromResult(true);
         }
 
+       public NewsModel HashTagNews(Guid NewsId)
+        {
+            var ExitNews = _context.News.Where(a => a.Id.Equals(NewsId)).Include(a => a.ImageNews)
+                .Include(a => a.University).ThenInclude(a => a.Account).FirstOrDefault() ?? throw new Exception("Id is not found");
+            List<HashTag> tagsValue = new List<HashTag>();
+            if (ExitNews.Hashtag != null)
+            {
+                List<string> tagsKey = new List<string>(ExitNews.Hashtag.Split(','));
+                foreach (var tag in tagsKey)
+                {
+                    var NameMajor = _context.Major.Where(s => s.Id.Equals(Guid.Parse(tag))).FirstOrDefault() ?? throw new Exception("Major Id is not found");
+                    HashTag hashTag = new HashTag
+                    {
+                        Keys = tag,
+                        Values = NameMajor.Name,
+                    };
+                    tagsValue.Add(hashTag);
+                }
+            }
+            else
+            {
+                tagsValue = null;
+            }
+            NewsModel newsModel = new NewsModel
+            {
+                Id = NewsId,
+                UniversityId = ExitNews.UniversityId,
+                UniversityName = ExitNews.University.Account.Name,
+                UniversityImageUrl = ExitNews.University.Account.Image_Url,
+                Title = ExitNews.Title,
+                Content = ExitNews.Content,
+                CreatedAt = ExitNews.CreatedAt,
+                _HashTag = tagsValue,
+            };
+            return newsModel;
+        }
+
         public Task<bool> UpdateImageNews(ImageNewsPutModel imageNews, int id)
         {
             var _imgNews = _context.ImageNews.Where(s => s.Id == id).FirstOrDefault() ?? throw new Exception("Id is not found");          
