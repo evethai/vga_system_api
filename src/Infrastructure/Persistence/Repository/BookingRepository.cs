@@ -135,7 +135,8 @@ namespace Infrastructure.Persistence.Repository
 
                     //update booking type 
                     existedBooking.Status = model.Type;
-
+                    if (model.Comment != null || model.Comment != "")
+                        existedBooking.Comment = model.Comment;
                     //update wallet
                     wallet.GoldBalance += (int)existedBooking.Price;
 
@@ -165,8 +166,8 @@ namespace Infrastructure.Persistence.Repository
                     //update booking
                     existedBooking.Status = model.Type;
                     if (model.Comment != null || model.Comment != "")
-                        existedBooking.Comment = model.Comment;
-
+                       throw new Exception("Comment is not null or empty");
+                    existedBooking.Comment = model.Comment;
                     //update wallet
                     wallet.GoldBalance += (int)existedBooking.Price;
 
