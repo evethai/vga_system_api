@@ -17,7 +17,7 @@ namespace Domain.Model.News
         public string Content { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
         public List<ImageNewsModel> ImageNews { get; set; }
-
+        public List<HashTag>? _HashTag { get; set; }
     }
     public class ResponseNewsModel
     {
@@ -25,5 +25,9 @@ namespace Domain.Model.News
         public int? currentPage { get; set; }
         public List<NewsModel> _news { get; set; }
     }
-
+    public class HashTag
+    {
+        public string Keys { get; set; }
+        public string Values { get; set; }
+    }
 }

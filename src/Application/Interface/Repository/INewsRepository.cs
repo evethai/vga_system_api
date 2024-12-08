@@ -17,5 +17,6 @@ namespace Application.Interface.Repository
         Task<Boolean> DeleteAllImageNews(Guid NewId);
         Task<Boolean> CreateImageNews(Guid NewsId, List<ImageNewsPostModel> imageNews);
         Task<Boolean> UpdateImageNews(ImageNewsPutModel imageNews, int id);
+        NewsModel HashTagNews(Guid NewsId);
     }
 }
