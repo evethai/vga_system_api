@@ -22,7 +22,7 @@ namespace Domain.Entity
         public bool Gender { get; set; }
         public virtual ICollection<Certification> Certifications { get; set; } = null!;
         public virtual ICollection<ConsultationDay> ConsultationDays { get; set; } = null!;
-        public virtual ICollection<ConstantRelation> ConstantRelations { get; set; } = null!;
+        public virtual ICollection<ConsultantRelation> ConsultantRelations { get; set; } = null!;
 
 
     }

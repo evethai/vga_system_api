@@ -5,16 +5,19 @@ using System.Text;
 using System.Threading.Tasks;
 using Domain.Enum;
 
-namespace Domain.Entity
+namespace Domain.Model.StudentChoice
 {
-    public class StudentChoice : BasicEntity
+    public class StudentChoiceModel
     {
-        public Guid StudentId { get; set; }
-        public virtual Student Student { get; set; } = null!;
+        public List<StudentCareModel>? listMajor { get; set; }
+        public List<StudentCareModel>? listOccupation { get; set; }
+
+    }
+
+    public class StudentCareModel
+    {
         public Guid MajorOrOccupationId { get; set; }
         public string MajorOrOccupationName { get; set; } = null!;
         public int Rating { get; set; }
-        public bool isMajor { get; set; }
-        public StudentChoiceType Type { get; set; }
     }
 }

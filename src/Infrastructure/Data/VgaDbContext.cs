@@ -59,7 +59,7 @@ namespace Infrastructure.Data
         public DbSet<MajorOccupationMatrix> MajorOccupationMatrix { get; set; }
         public DbSet<StudentChoice> StudentChoice { get; set; }
         public DbSet<UniversityLocation> UniversityLocation { get; set; }
-        public DbSet<ConstantRelation> ConstantRelation { get; set; }
+        public DbSet<ConsultantRelation> ConstantRelation { get; set; }
 
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
@@ -155,11 +155,11 @@ namespace Infrastructure.Data
             });
 
             //consultantRelation
-            modelBuilder.Entity<ConstantRelation>(entity =>
+            modelBuilder.Entity<ConsultantRelation>(entity =>
             {
                 entity.HasKey(c => c.Id);
-                entity.HasOne(st => st.Consultant).WithMany(pt => pt.ConstantRelations).HasForeignKey(st => st.ConsultantId).OnDelete(DeleteBehavior.Restrict);
-                entity.HasOne(st => st.University).WithMany(pt => pt.ConstantRelations).HasForeignKey(st => st.UniversityId).OnDelete(DeleteBehavior.Restrict);
+                entity.HasOne(st => st.Consultant).WithMany(pt => pt.ConsultantRelations).HasForeignKey(st => st.ConsultantId).OnDelete(DeleteBehavior.Restrict);
+                entity.HasOne(st => st.University).WithMany(pt => pt.ConsultantRelations).HasForeignKey(st => st.UniversityId).OnDelete(DeleteBehavior.Restrict);
 
             });
 
