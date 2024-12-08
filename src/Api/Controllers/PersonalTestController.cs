@@ -224,7 +224,7 @@ namespace Api.Controllers
         [HttpPost(ApiEndPointConstant.PersonalTest.StudentCareEndpoint)]
         public async Task<IActionResult> CreateStudentCare (StudentChoicePostModel model)
         {
-            if(ModelState.IsValid)
+            if(!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }

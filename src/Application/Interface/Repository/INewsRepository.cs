@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Domain.Entity;
 using Domain.Model.Highschool;
 using Domain.Model.News;
+using Domain.Model.Response;
 
 namespace Application.Interface.Repository
 {
@@ -18,5 +19,6 @@ namespace Application.Interface.Repository
         Task<Boolean> CreateImageNews(Guid NewsId, List<ImageNewsPostModel> imageNews);
         Task<Boolean> UpdateImageNews(ImageNewsPutModel imageNews, int id);
         NewsModel HashTagNews(Guid NewsId);
+        Task<ResponseModel> HashTagNotification(NewsPostModel postModel);
     }
 }

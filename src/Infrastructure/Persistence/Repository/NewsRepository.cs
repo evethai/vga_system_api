@@ -4,11 +4,14 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Common.Constants;
 using Application.Common.Extensions;
 using Application.Interface;
 using Application.Interface.Repository;
 using Domain.Entity;
+using Domain.Enum;
 using Domain.Model.News;
+using Domain.Model.Response;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -105,7 +108,107 @@ namespace Infrastructure.Persistence.Repository
             };
             return newsModel;
         }
+        public async Task<ResponseModel> HashTagNotification(NewsPostModel postModel)
+        {
+            var strategy = _context.Database.CreateExecutionStrategy();
+            return await strategy.ExecuteAsync(async () =>
+            {
+                using (var transaction = await _context.Database.BeginTransactionAsync())
+                {
+                    try
+                    {
+                        var checkUniversity = _context.University.Where(s => s.Id.Equals(postModel.UniversityId)).FirstOrDefault();
+                        if (postModel == null || checkUniversity == null)
+                        { throw new Exception("Model is null or University is not found"); }
 
+                        var StudentCare = new List<StudentChoice>();
+                        if (!string.IsNullOrWhiteSpace(postModel.Hashtag))
+                        {
+                            List<string> tagsKey = new List<string>(postModel.Hashtag.Split(','));
+                            foreach (string tagKey in tagsKey)
+                            {
+                                var NameMajor = _context.Major
+                                    .FirstOrDefault(s => s.Id.Equals(Guid.Parse(tagKey)));
+
+                                if (NameMajor == null)
+                                {
+                                    throw new Exception($"Major Id '{tagKey}' is not found.");
+                                }
+                                StudentCare = _context.StudentChoice
+                                   .Where(s => s.isMajor == true
+                                               && s.MajorOrOccupationId.Equals(NameMajor.Id)
+                                               && s.Type == StudentChoiceType.Care)
+                                   .ToList();
+                            }
+                        }
+                        else { postModel.Hashtag = null; }
+                        News news = new News
+                        {
+                            Title = postModel.Title,
+                            Content = postModel.Content,
+                            CreatedAt = DateTime.UtcNow.AddHours(7),
+                            UniversityId = postModel.UniversityId,
+                            Hashtag = postModel.Hashtag,
+                        };
+                        await _context.News.AddAsync(news);
+                        await _context.SaveChangesAsync();
+                        //----------
+                        var _newsId = _context.News.Where(s => s.Id.Equals(news.Id)).FirstOrDefault() ?? throw new Exception("Id is not found");
+                        if (postModel.ImageNews != null)
+                        {
+                            foreach (var image in postModel.ImageNews)
+                            {
+                                ImageNews img = new ImageNews
+                                {
+                                    NewsId = _newsId.Id,
+                                    DescriptionTitle = image.DescriptionTitle,
+                                    ImageUrl = image.ImageUrl,
+                                };
+                                await _context.ImageNews.AddAsync(img);
+                            }
+                            await _context.SaveChangesAsync();
+                        }
+                        //----------
+                        if (StudentCare != null)
+                        {
+                            List<Notification> notifications = new List<Notification>();
+                            foreach (var studentChoice in StudentCare)
+                            {
+                                var checkAccountId = _context.Student.
+                                Where(s => s.Id.Equals(studentChoice.StudentId)).
+                                FirstOrDefault() ?? throw new Exception("Account id is not found");
+                                notifications.Add(new Notification
+                                {
+                                    AccountId = checkAccountId.AccountId,
+                                    CreatedAt = DateTime.UtcNow.AddHours(7),
+                                    Status = Domain.Enum.NotiStatus.Unread,
+                                    Message = "Tin tức |" + _newsId.Id,
+                                    Title = NotificationConstant.Title.NewsNoti
+                                });
+                            }
+                            await _context.Notification.AddRangeAsync(notifications);
+                        }
+                        await _context.SaveChangesAsync();
+                        await transaction.CommitAsync();
+                        return new ResponseModel
+                        {
+                            IsSuccess = true,
+                            Message = "News created successfully.",
+                            Data = news
+                        };
+                    }
+                    catch (Exception ex)
+                    {
+                        await transaction.RollbackAsync();
+                        return new ResponseModel
+                        {
+                            IsSuccess = false,
+                            Message = ex.Message
+                        };
+                    }
+                }
+            });     
+        }
         public Task<bool> UpdateImageNews(ImageNewsPutModel imageNews, int id)
         {
             var _imgNews = _context.ImageNews.Where(s => s.Id == id).FirstOrDefault() ?? throw new Exception("Id is not found");          
