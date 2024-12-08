@@ -8,9 +8,9 @@ using Domain.Entity;
 
 namespace Application.Interface.Repository
 {
-    public interface IConsultantRelationRepository : IGenericRepository<ConstantRelation>
+    public interface IConsultantRelationRepository : IGenericRepository<ConsultantRelation>
     {
-        Task AddRangeAsync(IEnumerable<ConstantRelation> consultantRelations);
-        void DeleteRange(IEnumerable<ConstantRelation> relations);
+        Task AddRangeAsync(IEnumerable<ConsultantRelation> consultantRelations);
+        void DeleteRange(IEnumerable<ConsultantRelation> relations);
     }
 }

@@ -41,7 +41,7 @@ namespace Infrastructure.Persistence.Service
                                     //.Include(c => c.University).ThenInclude(u => u.Account)
                                     .Include(c => c.ConsultantLevel)
                                     .Include(c => c.Certifications).ThenInclude(c => c.Major)
-                                    .Include(c => c.ConstantRelations).ThenInclude(cr => cr.University.Account)
+                                    .Include(c => c.ConsultantRelations).ThenInclude(cr => cr.University.Account)
                     ) ?? throw new NotExistsException();
 
                 var result = _mapper.Map<ConsultantViewModel>(consultant);
@@ -133,12 +133,12 @@ namespace Infrastructure.Persistence.Service
                                    //.Include(c => c.University)
                                    .Include(c => c.ConsultantLevel)
                                    .Include(c => c.Certifications)
-                                   .Include(c => c.ConstantRelations).ThenInclude(cr => cr.University.Account)
+                                   .Include(c => c.ConsultantRelations).ThenInclude(cr => cr.University.Account)
                 ) ?? throw new NotExistsException();
 
                 _mapper.Map(putModel, consultant);
 
-                var listNewRelation = new List<ConstantRelation>();
+                var listNewRelation = new List<ConsultantRelation>();
 
                 if (putModel.ConsultantRelations != null)
                 {
@@ -146,14 +146,14 @@ namespace Infrastructure.Persistence.Service
                     {
                         if (relationModel.Id.HasValue)
                         {
-                            var existingRelation = consultant.ConstantRelations
+                            var existingRelation = consultant.ConsultantRelations
                                 .FirstOrDefault(s => s.Id == relationModel.Id.Value) ?? throw new NotExistsException();
 
                              _mapper.Map(relationModel, existingRelation);
                         }
                         else
                         {
-                            var newRelation = _mapper.Map<ConstantRelation>(relationModel);
+                            var newRelation = _mapper.Map<ConsultantRelation>(relationModel);
                             newRelation.ConsultantId = consultantId;
                             listNewRelation.Add(newRelation);
                         }
@@ -161,7 +161,7 @@ namespace Infrastructure.Persistence.Service
                     if (listNewRelation.Count > 0)
                         await _unitOfWork.ConsultantRelationRepository.AddRangeAsync(listNewRelation);
 
-                    var relationsToRemove = consultant.ConstantRelations
+                    var relationsToRemove = consultant.ConsultantRelations
                         .Where(s => !putModel.ConsultantRelations.Any(um => um.Id == s.Id))
                         .ToList();
 

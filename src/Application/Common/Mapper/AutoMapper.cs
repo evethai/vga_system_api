@@ -288,10 +288,10 @@ namespace Application.Common.Mapper
             CreateMap<Certification, CertificationPostModel>().ReverseMap();
             CreateMap<Certification, CertificationPutModel>().ReverseMap();
             //ConsultantRelation
-            CreateMap<ConstantRelation, ConsultantRelationViewModel>()
+            CreateMap<ConsultantRelation, ConsultantRelationViewModel>()
                 .ForMember(dest => dest.UniversityName, opt => opt.MapFrom(src => src.University.Account.Name))
                 .ReverseMap();
-            CreateMap<ConstantRelation, ConsultantRelationPostPutModel>().ReverseMap();
+            CreateMap<ConsultantRelation, ConsultantRelationPostPutModel>().ReverseMap();
         }
 
     }

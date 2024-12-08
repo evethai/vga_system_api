@@ -10,19 +10,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Repository
 {
-    public class ConsultantRelationRepository : GenericRepository<ConstantRelation>, IConsultantRelationRepository
+    public class ConsultantRelationRepository : GenericRepository<ConsultantRelation>, IConsultantRelationRepository
     {
         private readonly VgaDbContext _context;
         public ConsultantRelationRepository(VgaDbContext context) : base(context)
         {
             _context = context;
         }
-        public async Task AddRangeAsync(IEnumerable<ConstantRelation> consultantRelations)
+        public async Task AddRangeAsync(IEnumerable<ConsultantRelation> consultantRelations)
         {
             await _context.AddRangeAsync(consultantRelations);
         }
 
-        public void DeleteRange(IEnumerable<ConstantRelation> relations)
+        public void DeleteRange(IEnumerable<ConsultantRelation> relations)
         {
             _context.RemoveRange(relations);
         }

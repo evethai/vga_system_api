@@ -47,6 +47,10 @@ namespace Infrastructure.Persistence.Repository
             {
                 filter = filter.And(p => p.ConsultationTime.Day.ConsultantId.Equals(searchModel.consultantId.Value));
             }
+            if (searchModel.status.HasValue)
+            {
+                filter = filter.And(p => p.Status.Equals(searchModel.status.Value));
+            }
             if (searchModel.Day.HasValue)
             {
                 filter = filter.And(p => p.ConsultationTime.Day.Day.Equals(searchModel.Day.Value));
