@@ -104,12 +104,13 @@ namespace Infrastructure.Persistence.Service
                     Id = Guid.NewGuid(),
                     ConsultationTimeId = consultationTimeId,
                     StudentId = studentId,
-                    Status = BookingStatus.NotYet_Consulted
+                    Status = BookingStatus.NotYet_Consulted,
+                    Price = priceOnSlot
                 };
 
                 consultationTime.Status = (int)ConsultationTimeStatusEnum.Booked;
                 studentWallet.GoldBalance -= (int)priceOnSlot;
-                consultantWallet.GoldBalance += (int)priceOnSlot;
+                //consultantWallet.GoldBalance += (int)priceOnSlot;
 
                 // Create transactions
                 var studentTransaction = new Transaction
@@ -122,15 +123,15 @@ namespace Infrastructure.Persistence.Service
                     TransactionDateTime = DateTime.UtcNow.AddHours(7)
                 };
 
-                var consultantTransaction = new Transaction
-                {
-                    Id = Guid.NewGuid(),
-                    WalletId = consultantWallet.Id,
-                    TransactionType = TransactionType.Receiving,
-                    Description = $"Bạn đã nhận {priceOnSlot} điểm từ buổi tư vấn",
-                    GoldAmount = (int)priceOnSlot,
-                    TransactionDateTime = DateTime.UtcNow.AddHours(7)
-                };
+                //var consultantTransaction = new Transaction
+                //{
+                //    Id = Guid.NewGuid(),
+                //    WalletId = consultantWallet.Id,
+                //    TransactionType = TransactionType.Receiving,
+                //    Description = $"Bạn đã nhận {priceOnSlot} điểm từ buổi tư vấn",
+                //    GoldAmount = (int)priceOnSlot,
+                //    TransactionDateTime = DateTime.UtcNow.AddHours(7)
+                //};
 
                 // Call consolidated method in the repository
                 await _unitOfWork.BookingRepository.SaveBookingDataAsync(
@@ -138,8 +139,7 @@ namespace Infrastructure.Persistence.Service
                     studentWallet,
                     consultantWallet,
                     booking,
-                    studentTransaction,
-                    consultantTransaction
+                    studentTransaction
                 );
 
                 NotificationPostModel notiPostModel = new NotificationPostModel();
@@ -267,6 +267,115 @@ namespace Infrastructure.Persistence.Service
                 currentPage = searchModel.currentPage,
                 bookings = listBookings,
             };
+        }
+        #endregion
+
+        #region Process booking status
+        public async Task<ResponseModel> ProcessBookingAsync(Guid bookingId, BookingConsultantUpdateModel model)
+        {
+            try
+            {
+                var booking = await _unitOfWork.BookingRepository.GetByIdGuidAsync(bookingId)
+                    ?? throw new NotExistsException();
+
+                if (booking.Status != BookingStatus.NotYet_Consulted)
+                    throw new Exception("Booking is not 'NotYet_Consulted' status");
+
+                var responseModel = await _unitOfWork.BookingRepository.ProcessBooking(bookingId, model);
+
+                return responseModel;
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    IsSuccess = false,
+                    Message = $"An error occurred while process booking: {ex.Message}"
+                };
+            }
+        }
+        #endregion
+
+        #region Report booking
+        public async Task<ResponseModel> ReportBookingAsync(Guid bookingId, BookingStudentReportModel model)
+        {
+            try
+            {
+                var booking = await _unitOfWork.BookingRepository.SingleOrDefaultAsync(
+                    predicate: b => b.Id == bookingId,
+                    include: q => q.Include(b => b.ConsultationTime.Day.Consultant.Account)
+                                    .Include(b =>b.Student.Account)
+                    ) ?? throw new NotExistsException();
+
+                var studentName= booking.Student.Account.Name;
+                var consultantName = booking.ConsultationTime.Day.Consultant.Account.Name;
+
+                if (booking.Status != BookingStatus.Consulted && booking.Status != BookingStatus.NotYet_Consulted)
+                    throw new Exception("Booking is not 'Consulted' and 'NotYet_Consulted' status");
+
+                if (DateOnly.FromDateTime(DateTime.Today) <= booking.ConsultationTime.Day.Day.AddDays(1)) 
+                    throw new Exception("You can only report 1 day after your consultation date.");
+
+                var admin = await _unitOfWork.AccountRepository.SingleOrDefaultAsync(
+                    predicate: o => o.Role.Equals(RoleEnum.Admin)) ?? throw new NotExistsException();
+
+                booking.Status = BookingStatus.Reported;
+                booking.Comment = model.Comment;
+                booking.Image= model.Image;
+
+                NotificationPostModel notiPostModel = new NotificationPostModel();
+                notiPostModel.AccountId = admin.Id;
+                notiPostModel.Title = NotificationConstant.Title.BookingReported;
+                notiPostModel.Message = $"Học sinh {studentName} đã báo cáo buổi tư vấn với tư vấn viên {consultantName}";
+
+                await _unitOfWork.BookingRepository.UpdateAsync(booking);
+                await _unitOfWork.NotificationRepository.CreateNotification(notiPostModel);
+                await _unitOfWork.SaveChangesAsync();
+
+                var result = _mapper.Map<BookingViewModel>(booking);
+                return new ResponseModel
+                {
+                    IsSuccess = true,
+                    Message = "Báo cáo lịch thành công",
+                    Data = result
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    IsSuccess = false,
+                    Message = $"An error occurred while report booking: {ex.Message}"
+                };
+            }
+        }
+        #endregion
+
+        #region Process report booking
+        public async Task<ResponseModel> ProcessReportBookingAsync(Guid bookingId, BookingProcessReportModel model)
+        {
+            try
+            {
+                var booking = await _unitOfWork.BookingRepository.SingleOrDefaultAsync(
+                    predicate: b => b.Id == bookingId,
+                    include: q => q.Include(b => b.ConsultationTime.Day).Include(b => b.ConsultationTime.SlotTime)
+                    )?? throw new NotExistsException();
+
+                if (booking.Status != BookingStatus.Reported)
+                    throw new Exception("Booking is not 'Reported' status");
+
+                var responseModel = await _unitOfWork.BookingRepository.ProcessReport(bookingId, model);
+
+                return responseModel;
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    IsSuccess = false,
+                    Message = $"An error occurred while process report: {ex.Message}"
+                };
+            }
         }
         #endregion
     }

@@ -6,6 +6,7 @@ using Domain.Model.Booking;
 using Domain.Model.Certification;
 using Domain.Model.Consultant;
 using Domain.Model.ConsultantLevel;
+using Domain.Model.ConsultantRelation;
 using Domain.Model.ConsultationDay;
 using Domain.Model.ConsultationTime;
 using Domain.Model.EntryLevelEducation;
@@ -281,9 +282,16 @@ namespace Application.Common.Mapper
             CreateMap<ImageNews, ImageNewsPostModel>().ReverseMap();
             CreateMap<ImageNews, ImageNewsPutModel>().ReverseMap();
             //Certification
-            CreateMap<Certification, CertificationViewModel>().ReverseMap();
+            CreateMap<Certification, CertificationViewModel>()
+                .ForMember(dest => dest.MajorName, opt => opt.MapFrom(src => src.Major.Name))
+                .ReverseMap();
             CreateMap<Certification, CertificationPostModel>().ReverseMap();
             CreateMap<Certification, CertificationPutModel>().ReverseMap();
+            //ConsultantRelation
+            CreateMap<ConsultantRelation, ConsultantRelationViewModel>()
+                .ForMember(dest => dest.UniversityName, opt => opt.MapFrom(src => src.University.Account.Name))
+                .ReverseMap();
+            CreateMap<ConsultantRelation, ConsultantRelationPostPutModel>().ReverseMap();
         }
 
     }

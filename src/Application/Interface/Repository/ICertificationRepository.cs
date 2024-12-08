@@ -10,5 +10,6 @@ namespace Application.Interface.Repository
     public interface ICertificationRepository : IGenericRepository<Certification>
     {
         Task AddRangeAsync(IEnumerable<Certification> certifications);
+        Task UpdateRangeAsync(IEnumerable<Certification> certifications);
     }
 }

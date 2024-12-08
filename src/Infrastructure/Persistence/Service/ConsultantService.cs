@@ -40,7 +40,8 @@ namespace Infrastructure.Persistence.Service
                     include: q => q.Include(c => c.Account).ThenInclude(a => a.Wallet)
                                     //.Include(c => c.University).ThenInclude(u => u.Account)
                                     .Include(c => c.ConsultantLevel)
-                                    .Include(c => c.Certifications)
+                                    .Include(c => c.Certifications).ThenInclude(c => c.Major)
+                                    .Include(c => c.ConsultantRelations).ThenInclude(cr => cr.University.Account)
                     ) ?? throw new NotExistsException();
 
                 var result = _mapper.Map<ConsultantViewModel>(consultant);
@@ -72,8 +73,8 @@ namespace Infrastructure.Persistence.Service
 
                 var consultantLevel = await _unitOfWork.ConsultantLevelRepository.GetByIdAsync(postModel.ConsultantLevelId)
                     ?? throw new NotExistsException();
-                var university = await _unitOfWork.UniversityRepository.GetByIdGuidAsync(postModel.UniversityId)
-                    ?? throw new NotExistsException();
+                //var university = await _unitOfWork.UniversityRepository.GetByIdGuidAsync(postModel.UniversityId)
+                //    ?? throw new NotExistsException();
 
                 var listCertificate = new List<Certification>();
 
@@ -92,6 +93,8 @@ namespace Infrastructure.Persistence.Service
                 foreach (var certi in postModel.Certifications)
                 {
                     var certification = _mapper.Map<Certification>(certi);
+                    var major = await _unitOfWork.MajorRepository.GetByIdGuidAsync(certification.MajorId)
+                        ?? throw new NotExistsException();
                     certification.ConsultantId = consultant.Id;
                     listCertificate.Add(certification);
                 }
@@ -130,12 +133,48 @@ namespace Infrastructure.Persistence.Service
                                    //.Include(c => c.University)
                                    .Include(c => c.ConsultantLevel)
                                    .Include(c => c.Certifications)
+                                   .Include(c => c.ConsultantRelations).ThenInclude(cr => cr.University.Account)
                 ) ?? throw new NotExistsException();
 
                 _mapper.Map(putModel, consultant);
 
-                foreach (var certi in consultant.Certifications)
-                    await _unitOfWork.CertificationRepository.UpdateAsync(certi);
+                var listNewRelation = new List<ConsultantRelation>();
+
+                if (putModel.ConsultantRelations != null)
+                {
+                    foreach (var relationModel in putModel.ConsultantRelations)
+                    {
+                        if (relationModel.Id.HasValue)
+                        {
+                            var existingRelation = consultant.ConsultantRelations
+                                .FirstOrDefault(s => s.Id == relationModel.Id.Value) ?? throw new NotExistsException();
+
+                             _mapper.Map(relationModel, existingRelation);
+                        }
+                        else
+                        {
+                            var newRelation = _mapper.Map<ConsultantRelation>(relationModel);
+                            newRelation.ConsultantId = consultantId;
+                            listNewRelation.Add(newRelation);
+                        }
+                    }
+                    if (listNewRelation.Count > 0)
+                        await _unitOfWork.ConsultantRelationRepository.AddRangeAsync(listNewRelation);
+
+                    var relationsToRemove = consultant.ConsultantRelations
+                        .Where(s => !putModel.ConsultantRelations.Any(um => um.Id == s.Id))
+                        .ToList();
+
+                    if (relationsToRemove.Any())
+                    {
+                        _unitOfWork.ConsultantRelationRepository.DeleteRange(relationsToRemove);
+                    }
+                }
+
+                if (consultant.Certifications.Any())
+                {
+                    await _unitOfWork.CertificationRepository.UpdateRangeAsync(consultant.Certifications.ToList());
+                }
 
                 await _unitOfWork.AccountRepository.UpdateAsync(consultant.Account);
                 await _unitOfWork.ConsultantRepository.UpdateAsync(consultant);

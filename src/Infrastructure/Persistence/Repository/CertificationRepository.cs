@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Application.Interface.Repository;
 using Domain.Entity;
 using Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Repository
 {
@@ -19,6 +20,14 @@ namespace Infrastructure.Persistence.Repository
         public async Task AddRangeAsync(IEnumerable<Certification> certifications)
         {
             await _context.AddRangeAsync(certifications);
+        }
+        public Task UpdateRangeAsync(IEnumerable<Certification> certifications)
+        {
+            foreach (var certification in certifications)
+            {
+                _context.Entry(certification).State = EntityState.Modified;
+            }
+            return Task.CompletedTask;
         }
     }
 }
