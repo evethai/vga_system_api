@@ -29,22 +29,8 @@ namespace Infrastructure.Persistence.Service
 
         public async Task<ResponseModel> CreateNewsAsync(NewsPostModel postModel)
         {
-            var news = _mapper.Map<News>(postModel);
-            news.CreatedAt = DateTime.UtcNow.AddHours(7);
-            news.Hashtag = postModel.Hashtag;
-            var result = await _unitOfWork.NewsRepository.AddAsync(news);
-            await _unitOfWork.SaveChangesAsync();
-            var img = await _unitOfWork.NewsRepository.CreateImageNews(news.Id, postModel.ImageNews);
-            if(img == false)
-            {
-                throw new Exception("Create image is error");
-            } 
-            return new ResponseModel
-            {
-                Message = "Create News is Successfully",
-                IsSuccess = true,
-                Data = postModel
-            };
+            var news = await _unitOfWork.NewsRepository.HashTagNotification(postModel);
+            return news;
         }
 
         public async Task<ResponseModel> DeleteNewsAsync(Guid Id)
