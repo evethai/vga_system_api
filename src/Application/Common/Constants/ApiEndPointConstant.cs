@@ -34,6 +34,8 @@
             public const string GetResultPersonalTestEndpoint = ApiEndpoint + "/personal-test-result";
             public const string GetMajorsByPersonalGroupIdEndpoint = ApiEndpoint + "/majors-by-personality/{id}";
             public const string FilterMajorAndUniversityEndpoint = ApiEndpoint + "/filter-major-university";
+            public const string StudentCareEndpoint = ApiEndpoint + "/student-care";
+            public const string GetStudentCareEndpoint = StudentCareEndpoint + "/{id}";
            
         }
 

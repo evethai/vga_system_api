@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entity
 {
-    public class ConstantRelation : BaseEntity
+    public class ConsultantRelation : BaseEntity
     {
         public Guid ConsultantId { get; set; }
         public virtual Consultant Consultant { get; set; } = null!;

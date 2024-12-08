@@ -29,21 +29,8 @@ namespace Infrastructure.Persistence.Service
 
         public async Task<ResponseModel> CreateNewsAsync(NewsPostModel postModel)
         {
-            var news = _mapper.Map<News>(postModel);
-            news.CreatedAt = DateTime.UtcNow.AddHours(7);
-            var result = await _unitOfWork.NewsRepository.AddAsync(news);
-            await _unitOfWork.SaveChangesAsync();
-            var img = await _unitOfWork.NewsRepository.CreateImageNews(news.Id, postModel.ImageNews);
-            if(img == false)
-            {
-                throw new Exception("Create image is error");
-            } 
-            return new ResponseModel
-            {
-                Message = "Create News is Successfully",
-                IsSuccess = true,
-                Data = postModel
-            };
+            var news = await _unitOfWork.NewsRepository.HashTagNotification(postModel);
+            return news;
         }
 
         public async Task<ResponseModel> DeleteNewsAsync(Guid Id)
@@ -67,9 +54,14 @@ namespace Infrastructure.Persistence.Service
                 q => q.Include(s => s.ImageNews)
                 .Include(s=>s.University).ThenInclude(s=>s.Account),
                 pageIndex: searchModel.currentPage,
-                pageSize: searchModel.pageSize);
+                pageSize: searchModel.pageSize);          
             var total = await _unitOfWork.NewsRepository.CountAsync(filter);
-            var listNews = _mapper.Map<List<NewsModel>>(news);
+            List<NewsModel> listNews = new List<NewsModel>(); 
+            foreach (var item in news)
+            {
+                var HashTagValues = _unitOfWork.NewsRepository.HashTagNews(item.Id);
+                listNews.Add(HashTagValues);
+            }
             return new ResponseNewsModel
             {
                 total = total,
@@ -78,23 +70,18 @@ namespace Infrastructure.Persistence.Service
             };
         }
 
-        public async Task<NewsModel> GetNewsByIdAsync(Guid NewsId)
+        public Task<NewsModel> GetNewsByIdAsync(Guid NewsId)
         {
-
-            var news = await _unitOfWork.NewsRepository.
-                SingleOrDefaultAsync(predicate: c => c.Id.Equals(NewsId), 
-                include: c => c.Include(c => c.ImageNews)
-                .Include(s=>s.University).ThenInclude(s=>s.Account))
-                ?? throw new Exception("Id is not found");
-            return _mapper.Map<NewsModel>(news);
+            var HashTagValues = _unitOfWork.NewsRepository.HashTagNews(NewsId);
+            return Task.FromResult(HashTagValues);
         }
-
         public async Task<ResponseModel> UpdateNewsAsync(NewsPutModel putModel, Guid Id)
         {
             var exit = await _unitOfWork.NewsRepository.SingleOrDefaultAsync(predicate: c => c.Id.Equals(Id))
                 ?? throw new Exception("Id is not found");
             exit.Title = putModel.Title;
             exit.Content = putModel.Content;
+            exit.Hashtag = putModel.Hashtag;
             await _unitOfWork.NewsRepository.UpdateAsync(exit);
             await _unitOfWork.SaveChangesAsync();
             return new ResponseModel
@@ -104,7 +91,6 @@ namespace Infrastructure.Persistence.Service
                 Data = putModel
             }; 
         }
-
         public async Task<ResponseModel> CreateImageNewsAsync(Guid NewsId, List<ImageNewsPostModel> imageNews)
         {
             var result = await _unitOfWork.NewsRepository.CreateImageNews(NewsId, imageNews) ;

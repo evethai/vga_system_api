@@ -20,7 +20,7 @@ namespace Domain.Entity
         public virtual ICollection<AdmissionInformation> AdmissionInformation { get; set; } = null!;
         public virtual ICollection<UniversityLocation> UniversityLocations { get; set; } = null!;
         //public virtual ICollection<Consultant> Consultants { get; set; } = null!;
-        public virtual ICollection<ConstantRelation> ConstantRelations { get; set; } = null!;
+        public virtual ICollection<ConsultantRelation> ConsultantRelations { get; set; } = null!;
 
 
     }

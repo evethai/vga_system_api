@@ -25,6 +25,7 @@ namespace Application.Common.Constants
             public const string BookingReported = Notification + "báo cáo buổi tư vấn.";
             public const string BookingProcessConsult = Notification + "không chấp nhận báo cáo buổi tư vấn.";
             public const string BookingProcessCancel = Notification + "xử lý báo cáo buổi tư vấn thành công.";
+            public const string NewsNoti = Notification + "Có tin tức về chuyên ngành bạn quan tâm.";
         }
         public static class Messages
         {
