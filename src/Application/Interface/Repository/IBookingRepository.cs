@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Domain.Entity;
 using Domain.Model.Booking;
 using Domain.Model.Consultant;
+using Domain.Model.Response;
 
 namespace Application.Interface.Repository
 {
@@ -22,7 +23,9 @@ namespace Application.Interface.Repository
             Wallet studentWallet,
             Wallet consultantWallet,
             Booking booking,
-            Transaction studentTransaction,
-            Transaction consultantTransaction);
+            Transaction studentTransaction);
+
+        Task<ResponseModel> ProcessBooking(Guid bookingId, BookingConsultantUpdateModel model);
+        Task<ResponseModel> ProcessReport(Guid bookingId, BookingProcessReportModel model);
     }
 }

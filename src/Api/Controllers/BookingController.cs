@@ -73,5 +73,68 @@ namespace Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [CustomAuthorize(RoleEnum.Consultant)]
+        [HttpPut(ApiEndPointConstant.Booking.BookingEndpoint)]
+        public async Task<IActionResult> ProcessBookingAsync(Guid id, BookingConsultantUpdateModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var result = await _bookingService.ProcessBookingAsync(id, model);
+                return (result.IsSuccess == false)
+                    ? BadRequest(result)
+                    : Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [CustomAuthorize(RoleEnum.Student)]
+        [HttpPut(ApiEndPointConstant.Booking.ReportBookingEndpoint)]
+        public async Task<IActionResult> ReportBookingAsync(Guid id, BookingStudentReportModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var result = await _bookingService.ReportBookingAsync(id, model);
+                return (result.IsSuccess == false)
+                    ? BadRequest(result)
+                    : Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [CustomAuthorize(RoleEnum.Admin)]
+        [HttpPut(ApiEndPointConstant.Booking.ProcessReportBookingEndpoint)]
+        public async Task<IActionResult> ProcessReportBookingAsync(Guid id, BookingProcessReportModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var result = await _bookingService.ProcessReportBookingAsync(id, model);
+                return (result.IsSuccess == false)
+                    ? BadRequest(result)
+                    : Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

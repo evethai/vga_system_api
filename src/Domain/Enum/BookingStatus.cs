@@ -8,8 +8,9 @@ namespace Domain.Enum
 {
     public enum  BookingStatus
     {
-        Consulted = 1,
-        NotYet_Consulted = 2,
-        Cancel  = 3
+        Consulted = 2,
+        NotYet_Consulted = 1,
+        Canceled  = 3,
+        Reported = 4
     }
 }

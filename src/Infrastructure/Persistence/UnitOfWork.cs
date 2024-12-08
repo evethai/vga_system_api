@@ -47,6 +47,7 @@ namespace Infrastructure.Persistence
         private ICertificationRepository _certificationRepository;
         private ITestQuestionRepository _testQuestionRepository;
         private IAnswerRepository _answerRepository;
+        private IConsultantRelationRepository _consultantRelationRepository;
         public UnitOfWork(VgaDbContext context)
         {
             _context = context;
@@ -85,7 +86,7 @@ namespace Infrastructure.Persistence
         public ICertificationRepository CertificationRepository => _certificationRepository ??= new CertificationRepository(_context);
         public ITestQuestionRepository TestQuestionRepository => _testQuestionRepository ??= new TestQuestionRepository(_context);
         public IAnswerRepository AnswerRepository => _answerRepository ??= new AnswerRepository(_context);
-
+        public IConsultantRelationRepository ConsultantRelationRepository => _consultantRelationRepository ??= new ConsultantRelationRepository(_context);
         public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();

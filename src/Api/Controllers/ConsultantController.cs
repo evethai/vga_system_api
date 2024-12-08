@@ -53,7 +53,7 @@ namespace Api.Controllers
             }
         }
 
-        [CustomAuthorize(RoleEnum.University)]
+        [CustomAuthorize(RoleEnum.Admin)]
         [HttpPost(ApiEndPointConstant.Consultant.ConsultantsEndpoint)]
         public async Task<IActionResult> CreateConsultantAsyns(ConsultantPostModel postModel)
         {
@@ -74,7 +74,7 @@ namespace Api.Controllers
             }
         }
 
-        [CustomAuthorize(RoleEnum.University)]
+        [CustomAuthorize(RoleEnum.Admin)]
         [HttpPut(ApiEndPointConstant.Consultant.ConsultantEndpoint)]
         public async Task<IActionResult> UpdateConsultantAsync(ConsultantPutModel putModel, Guid id)
         {

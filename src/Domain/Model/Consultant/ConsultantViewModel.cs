@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Domain.Enum;
 using Domain.Model.Certification;
 using Domain.Model.ConsultantLevel;
+using Domain.Model.ConsultantRelation;
 using Domain.Model.University;
 
 namespace Domain.Model.Consultant
@@ -16,7 +17,7 @@ namespace Domain.Model.Consultant
         public Guid AccountId { get; set; }
         public string Name { get; set; } = string.Empty;
         public ConsultantLevelViewModel ConsultantLevel { get; set; }
-        public UniversityModel University { get; set; }
+        //public UniversityModel University { get; set; }
         public string Email { get; set; } = string.Empty;
         public string Phone { get; set; } = string.Empty;
         public string? Image_Url { get; set; }
@@ -27,5 +28,6 @@ namespace Domain.Model.Consultant
         public DateTime CreateAt { get; set; }
         public int WalletBalance { get; set; }
         public List<CertificationViewModel> Certifications { get; set; } 
+        public List<ConsultantRelationViewModel> ConstantRelations { get; set; }
     }
 }

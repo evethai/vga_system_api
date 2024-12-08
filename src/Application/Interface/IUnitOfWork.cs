@@ -41,6 +41,7 @@ namespace Application.Interface
         ICertificationRepository CertificationRepository { get; }
         ITestQuestionRepository TestQuestionRepository { get; }
         IAnswerRepository AnswerRepository { get; }
+        IConsultantRelationRepository ConsultantRelationRepository { get; }
         Task SaveChangesAsync();
     }
 }
