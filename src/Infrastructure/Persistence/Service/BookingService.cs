@@ -313,8 +313,18 @@ namespace Infrastructure.Persistence.Service
                 if (booking.Status != BookingStatus.Consulted && booking.Status != BookingStatus.NotYet_Consulted)
                     throw new Exception("Booking is not 'Consulted' and 'NotYet_Consulted' status");
 
-                if (DateOnly.FromDateTime(DateTime.Today) <= booking.ConsultationTime.Day.Day.AddDays(1)) 
-                    throw new Exception("You can only report 1 day after your consultation date.");
+                var dateTimeStart = new DateTime(
+                        booking.ConsultationTime.Day.Day.Year,
+                        booking.ConsultationTime.Day.Day.Month,
+                        booking.ConsultationTime.Day.Day.Day,
+                        booking.ConsultationTime.SlotTime.StartTime.Hour,
+                        booking.ConsultationTime.SlotTime.StartTime.Minute,
+                        booking.ConsultationTime.SlotTime.StartTime.Second,
+                        DateTimeKind.Utc
+                    );
+
+                if (dateTimeStart < DateTime.UtcNow.AddHours(7))
+                    throw new Exception("You can only report after your consultation date time.");
 
                 var admin = await _unitOfWork.AccountRepository.SingleOrDefaultAsync(
                     predicate: o => o.Role.Equals(RoleEnum.Admin)) ?? throw new NotExistsException();
@@ -328,8 +338,15 @@ namespace Infrastructure.Persistence.Service
                 notiPostModel.Title = NotificationConstant.Title.BookingReported;
                 notiPostModel.Message = $"Học sinh {studentName} đã báo cáo buổi tư vấn với tư vấn viên {consultantName}";
 
+                NotificationPostModel notiConsultantPostModel = new NotificationPostModel();
+                notiConsultantPostModel.AccountId = booking.ConsultationTime.Day.Consultant.Account.Id;
+                notiConsultantPostModel.Title = NotificationConstant.Title.BookingReported;
+                notiConsultantPostModel.Message = $"Học sinh {studentName} đã báo cáo buổi tư vấn với bạn";
+
+
                 await _unitOfWork.BookingRepository.UpdateAsync(booking);
                 await _unitOfWork.NotificationRepository.CreateNotification(notiPostModel);
+                await _unitOfWork.NotificationRepository.CreateNotification(notiConsultantPostModel);
                 await _unitOfWork.SaveChangesAsync();
 
                 var result = _mapper.Map<BookingViewModel>(booking);
