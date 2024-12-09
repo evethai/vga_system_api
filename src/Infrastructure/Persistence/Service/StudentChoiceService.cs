@@ -47,25 +47,45 @@ namespace Infrastructure.Persistence.Service
                         Message = "Major or Occupation Id is not Existed!"
                     };
             }
-            StudentChoice stChoice = new StudentChoice
-            {
-                StudentId = model.StudentId,
-                MajorOrOccupationId = model.MajorOrOccupationId,
-                MajorOrOccupationName = name,
-                Rating = model.Rating,
-                isMajor = model.isMajor,
-                Type = StudentChoiceType.Care
-            };
-            var result = await _unitOfWork.StudentChoiceRepository.AddAsync(stChoice);
-            await _unitOfWork.SaveChangesAsync();
 
+            var exited = await _unitOfWork.StudentChoiceRepository.SingleOrDefaultAsync(predicate: x => x.MajorOrOccupationId == model.MajorOrOccupationId &&
+                                                                                             x.Type == StudentChoiceType.Care &&
+                                                                                             x.StudentId == model.StudentId);
+            if (exited == null)
+            {
+                StudentChoice stChoice = new StudentChoice
+                {
+                    StudentId = model.StudentId,
+                    MajorOrOccupationId = model.MajorOrOccupationId,
+                    MajorOrOccupationName = name,
+                    Rating = model.Rating,
+                    isMajor = model.isMajor,
+                    Type = StudentChoiceType.Care
+                };
+                var result = await _unitOfWork.StudentChoiceRepository.AddAsync(stChoice);
+                await _unitOfWork.SaveChangesAsync();
+
+
+                return new ResponseModel
+                {
+                    IsSuccess = true,
+                    Message = "Create new student care is success .",
+                    Data = result
+                };
+            }
+            
+            exited.Rating = model.Rating;
+            await _unitOfWork.StudentChoiceRepository.UpdateAsync(exited);
+            await _unitOfWork.SaveChangesAsync();
 
             return new ResponseModel
             {
                 IsSuccess = true,
-                Message = "Create new student care is success .",
-                Data = result
+                Message = "Update level care of major or occupation.",
+                Data = exited
             };
+
+            
         }
 
 
@@ -86,20 +106,26 @@ namespace Infrastructure.Persistence.Service
             {
                 if (stCare.isMajor)
                 {
+                    var major = await _unitOfWork.MajorRepository.GetByIdGuidAsync(stCare.MajorOrOccupationId);
                     listMajor.Add(new StudentCareModel
                     {
                         MajorOrOccupationId = stCare.MajorOrOccupationId,
                         MajorOrOccupationName = stCare.MajorOrOccupationName,
-                        Rating = stCare.Rating
+                        Rating = stCare.Rating,
+                        Image = major.Image,
+                        Description = major.Description
                     });
                 }
                 else
                 {
+                    var occ = await _unitOfWork.OccupationRepository.GetByIdGuidAsync(stCare.MajorOrOccupationId);
                     listOcc.Add(new StudentCareModel
                     {
                         MajorOrOccupationId = stCare.MajorOrOccupationId,
                         MajorOrOccupationName = stCare.MajorOrOccupationName,
-                        Rating = stCare.Rating
+                        Rating = stCare.Rating,
+                        Image = occ.Image,
+                        Description = occ.Description
                     });
                 }
             }

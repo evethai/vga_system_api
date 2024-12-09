@@ -55,7 +55,7 @@ namespace Infrastructure.Persistence.Service
         #endregion
 
         #region Get by id
-        public async Task<ResponseModel> GetOccupationByIdAsync(Guid occupationId)
+        public async Task<ResponseModel> GetOccupationByIdAsync(Guid occupationId,Guid studentId)
         {
             try
             {
@@ -69,6 +69,12 @@ namespace Infrastructure.Persistence.Service
                     ) ?? throw new NotExistsException();
 
                 var result = _mapper.Map<OccupationViewModel>(occupation);
+                var isCare = await _unitOfWork.StudentChoiceRepository.SingleOrDefaultAsync(predicate: x => x.StudentId == studentId && x.MajorOrOccupationId == occupationId && x.Type == Domain.Enum.StudentChoiceType.Care);
+                if (isCare != null)
+                {
+                    result.IsCare = true;
+                    result.CareLevel = isCare.Rating;
+                }
                 return new ResponseModel
                 {
                     Message = $"Lấy nghề với id '{occupation}' thành công",

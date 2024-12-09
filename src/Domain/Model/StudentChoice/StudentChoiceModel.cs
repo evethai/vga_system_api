@@ -19,5 +19,7 @@ namespace Domain.Model.StudentChoice
         public Guid MajorOrOccupationId { get; set; }
         public string MajorOrOccupationName { get; set; } = null!;
         public int Rating { get; set; }
+        public string? Image { get; set; }
+        public string? Description { get; set; }
     }
 }
