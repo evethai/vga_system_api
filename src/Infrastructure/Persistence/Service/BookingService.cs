@@ -305,6 +305,7 @@ namespace Infrastructure.Persistence.Service
                     predicate: b => b.Id == bookingId,
                     include: q => q.Include(b => b.ConsultationTime.Day.Consultant.Account)
                                     .Include(b =>b.Student.Account)
+                                    .Include(b => b.ConsultationTime.SlotTime)
                     ) ?? throw new NotExistsException();
 
                 var studentName= booking.Student.Account.Name;
