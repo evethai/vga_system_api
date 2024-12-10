@@ -82,7 +82,19 @@ namespace Api.Controllers
         public async Task<IActionResult> UpdateStatusAccount(Guid id, AccountStatus status)
         {
             var result = await _accountService.UpdateStatusAccount(id, status);
-            if (result == null)
+            if (result.IsSuccess == false)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+        }
+
+        [HttpPut(ApiEndPointConstant.Account.UpdatePassword)]
+        [CustomAuthorize(RoleEnum.University, RoleEnum.HighSchool)]
+        public async Task<IActionResult> UpdatePassword (Guid id, string password)
+        {
+            var result = await _accountService.ResetPassword(id, password);
+            if(result.IsSuccess == false)
             {
                 return NotFound();
             }

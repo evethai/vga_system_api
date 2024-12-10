@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Domain.Model.Account;
 
 namespace Domain.Model.Student;
-public class StudentPutModel : AccountPostModel
+public class StudentPutModel : AccountPutModel
 {
     [Required(ErrorMessage = "Gender is required.")]
     public bool Gender { get; set; }

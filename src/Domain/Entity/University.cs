@@ -19,7 +19,9 @@ namespace Domain.Entity
         public virtual ICollection<News> News { get; set; } = null!;
         public virtual ICollection<AdmissionInformation> AdmissionInformation { get; set; } = null!;
         public virtual ICollection<UniversityLocation> UniversityLocations { get; set; } = null!;
-        public virtual ICollection<Consultant> Consultants { get; set; } = null!;
+        //public virtual ICollection<Consultant> Consultants { get; set; } = null!;
+        public virtual ICollection<ConsultantRelation> ConsultantRelations { get; set; } = null!;
+
 
     }
 }

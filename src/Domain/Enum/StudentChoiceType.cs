@@ -8,7 +8,7 @@ namespace Domain.Enum
 {
     public enum StudentChoiceType
     {
-        Major = 1,
-        Occupation = 2
+        Test = 1,
+        Care = 2
     }
 }

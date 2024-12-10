@@ -12,6 +12,8 @@ namespace Domain.Entity
     {
         public Guid ConsultantId { get; set; }
         public virtual Consultant Consultant { get; set; } = null!;
+        public Guid MajorId { get; set; }
+        public virtual Major Major { get; set; }
         public string Description { get; set; } = string.Empty;
         public string ImageUrl { get; set; } = string.Empty;
         public bool Status { get; set; }

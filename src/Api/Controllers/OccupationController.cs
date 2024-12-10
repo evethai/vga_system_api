@@ -28,11 +28,11 @@ namespace Api.Controllers
 
         [Authorize]
         [HttpGet(ApiEndPointConstant.Occupation.OccupationEndpoint)]
-        public async Task<IActionResult> GetOccupationByIdAsync(Guid id)
+        public async Task<IActionResult> GetOccupationByIdAsync(Guid id, Guid studentId)
         {
             try
             {
-                var result = await _occupationService.GetOccupationByIdAsync(id);
+                var result = await _occupationService.GetOccupationByIdAsync(id,studentId);
                 return (result.IsSuccess == false)
                     ? BadRequest(result)
                     : Ok(result);

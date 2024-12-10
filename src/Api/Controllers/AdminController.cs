@@ -18,10 +18,16 @@ namespace Api.Controllers
         }
 
         [HttpGet(ApiEndPointConstant.Admin.Dashboard)]
-        //[Authorize]
         public async Task<IActionResult> GetDashboard()
         {
             var result = await _adminService.GetDashboard();
+            return Ok(result);
+        }
+
+        [HttpGet(ApiEndPointConstant.Admin.UniversityDashboard)]
+        public async Task<IActionResult> GetUniDashboard(Guid id)
+        {
+            var result = await _adminService.GetUniversityDashBoard(id);
             return Ok(result);
         }
 

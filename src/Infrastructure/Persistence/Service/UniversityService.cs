@@ -88,8 +88,8 @@ namespace Infrastructure.Persistence.Service
                 SingleOrDefaultAsync(predicate: c => c.Id.Equals(Id),
                 include: a => a.Include(a => a.Account).ThenInclude(a => a.Wallet)
                 .Include(a => a.UniversityLocations)
-                .Include(a => a.Consultants).ThenInclude(a => a.Account)
-                .Include(a => a.Consultants).ThenInclude(a => a.ConsultantLevel)
+                //.Include(a => a.Consultants).ThenInclude(a => a.Account)
+                //.Include(a => a.Consultants).ThenInclude(a => a.ConsultantLevel)
                 .Include(a => a.AdmissionInformation).ThenInclude(a => a.AdmissionMethod)
                 .Include(a => a.AdmissionInformation).ThenInclude(a => a.Major));
 
@@ -110,7 +110,6 @@ namespace Infrastructure.Persistence.Service
             exitAccount.Name = putModel.Name;
             exitAccount.Phone = putModel.Phone;
             exitAccount.Email = putModel.Email;
-            exitAccount.Password = PasswordUtil.HashPassword(putModel.Password);
             await _unitOfWork.AccountRepository.UpdateAsync(exitAccount);
             await _unitOfWork.UniversityRepository.UpdateAsync(exitUniversity);
             var result = _mapper.Map<UniversityModel>(exitUniversity);

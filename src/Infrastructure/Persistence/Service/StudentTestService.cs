@@ -158,7 +158,7 @@ namespace Infrastructure.Persistence.Service
 
         public async Task<ResponseModel> FilterOccupationAndUniversity(FilterMajorAndUniversityModel model)
         {
-            var stChoices = await _unitOfWork.StudentTestRepository.CreateStudentChoice(model.studentChoiceModel, StudentChoiceType.Major);
+            var stChoices = await _unitOfWork.StudentTestRepository.CreateStudentChoice(model.studentChoiceModel, StudentChoiceType.Test);
             if(stChoices == null || !stChoices.Any())
             {
                 return new ResponseModel

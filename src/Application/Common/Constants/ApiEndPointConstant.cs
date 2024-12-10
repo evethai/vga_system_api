@@ -18,11 +18,14 @@
             public const string LoginZaloEndpoint = ApiEndpoint + "/login-zalo";
             public const string RefreshTokenEndpoint = ApiEndpoint + "/refresh-token";
             public const string LogoutEndpoint = ApiEndpoint + "/logout/{id}";
+            public const string UpdatePassword = ApiEndpoint + "/password/{id}";
         }
 
         public static class Admin
         {
             public const string Dashboard = ApiEndpoint + "/dashboard";
+            public const string UniversityDashboard = ApiEndpoint + "/uni/dashboard/{id}";
+
         }
 
         public static class PersonalTest
@@ -33,6 +36,8 @@
             public const string GetResultPersonalTestEndpoint = ApiEndpoint + "/personal-test-result";
             public const string GetMajorsByPersonalGroupIdEndpoint = ApiEndpoint + "/majors-by-personality/{id}";
             public const string FilterMajorAndUniversityEndpoint = ApiEndpoint + "/filter-major-university";
+            public const string StudentCareEndpoint = ApiEndpoint + "/student-care";
+            public const string GetStudentCareEndpoint = StudentCareEndpoint + "/{id}";
            
         }
 
@@ -145,6 +150,8 @@
         {
             public const string BookingsEndpoint = ApiEndpoint + "/bookings";
             public const string BookingEndpoint = ApiEndpoint + "/booking/{id}";
+            public const string ReportBookingEndpoint = ApiEndpoint + "/booking/report/{id}";
+            public const string ProcessReportBookingEndpoint = ApiEndpoint + "/booking/process-report/{id}";
         }
         //University
         public static class University

@@ -102,6 +102,7 @@ namespace Infrastructure.Persistence.Repository
             var universities = await _context.Major
                 .Where(m => m.Id == majorId)
                 .SelectMany(m => m.AdmissionInformation)
+                .OrderBy(m => m.University.Account.Name)
                 .Select(ai => new UniversityByMajorIdModel
                 {
                     Id = ai.UniversityId,
