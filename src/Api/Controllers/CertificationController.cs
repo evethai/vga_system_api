@@ -37,7 +37,7 @@ namespace Api.Controllers
             }
         }
 
-        [CustomAuthorize(RoleEnum.Consultant, RoleEnum.University)]
+        [CustomAuthorize(RoleEnum.Consultant, RoleEnum.Admin)]
         [HttpPost(ApiEndPointConstant.Certification.CertificationsEndpoint)]
         public async Task<IActionResult> CreateCertificationAsync(CertificationPostModel postModel, Guid consultantId)
         {
@@ -58,7 +58,7 @@ namespace Api.Controllers
             }
         }
 
-        [CustomAuthorize(RoleEnum.Consultant, RoleEnum.University)]
+        [CustomAuthorize(RoleEnum.Consultant, RoleEnum.Admin)]
         [HttpDelete(ApiEndPointConstant.Certification.CertificationEndpoint)]
         public async Task<IActionResult> DeleteCertificationAsync(int id)
         {

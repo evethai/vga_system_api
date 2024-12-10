@@ -103,11 +103,11 @@ namespace Api.Controllers
 
         //[CustomAuthorize(RoleEnum.Student)]
         [HttpGet(ApiEndPointConstant.Major.MajorAndRelationEndpoint)]
-        public async Task<IActionResult> OccupationAndUniversityByMajorId(Guid id)
+        public async Task<IActionResult> OccupationAndUniversityByMajorId(Guid id, Guid studentId)
         {
             try
             {
-                var result = await _majorService.OccupationAndUniversityByMajorId(id);
+                var result = await _majorService.OccupationAndUniversityByMajorId(id,  studentId);
                 return (result.IsSuccess == false)
                     ? BadRequest(result)
                     : Ok(result);

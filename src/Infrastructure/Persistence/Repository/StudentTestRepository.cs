@@ -276,7 +276,7 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
 
         //Major selected by student
         var majorSelected = await _context.StudentChoice
-            .Where(s => s.StudentTestId == stTestId.Id)
+            .Where(s => s.StudentId == stTestId.StudentId)
             .GroupBy(s => new { s.MajorOrOccupationId, s.MajorOrOccupationName }) 
             .Select(g => new HistoryMajorModel
             {
@@ -412,9 +412,11 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
 
         try
         {
+            var studentId = _context.StudentTest.Where(s => s.Id == StModel.StudentTestId).Select(s=>s.StudentId).FirstOrDefault();
+
             var studentChoices = StModel.models.Select(m => new StudentChoice
             {
-                StudentTestId = StModel.StudentTestId,
+                StudentId = studentId,
                 MajorOrOccupationId = m.Id,
                 MajorOrOccupationName = m.Name,
                 Rating = m.Rating,
@@ -465,7 +467,7 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
                     MajorOrOccupationId = g.Key,
                     MajorOrOccupationName = groupedMajors
                         .FirstOrDefault(m => m.MajorOrOccupationId == g.Key)?.MajorOrOccupationName ?? string.Empty,
-                    StudentTestId = g.First().StudentTestId,
+                   // StudentTestId = g.First().StudentTestId,
                     Type = g.First().Type,
                     Image = groupedMajors
                         .FirstOrDefault(m => m.MajorOrOccupationId == g.Key)?.MajorOrOccupationImage ?? string.Empty,

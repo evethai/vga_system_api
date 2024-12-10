@@ -27,8 +27,8 @@ namespace Domain.Model.Test
 
     public class stChoiceModel
     {
-        public Guid StudentTestId { get; set; }
-        public virtual StudentTest StudentTest { get; set; } = null!;
+        //public Guid StudentTestId { get; set; }
+        //public virtual StudentTest StudentTest { get; set; } = null!;
         public Guid MajorOrOccupationId { get; set; }
         public string MajorOrOccupationName { get; set; } = null!;
         public int Rating { get; set; }

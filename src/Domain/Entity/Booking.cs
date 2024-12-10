@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.Enum;
 
 namespace Domain.Entity
 {
@@ -13,6 +14,10 @@ namespace Domain.Entity
         public ConsultationTime ConsultationTime { get; set; } = null!;
         public Guid StudentId { get; set; }
         public Student Student { get; set; } = null!;
-        public bool Status { get; set; }
+        public BookingStatus Status { get; set; }
+        public string? Comment { get; set; }
+        public string? Image { get; set; }
+        public double Price { get; set; }
+
     }
 }

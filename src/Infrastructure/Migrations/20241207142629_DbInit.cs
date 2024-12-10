@@ -255,6 +255,34 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Consultant",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AccountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ConsultantLevelId = table.Column<int>(type: "int", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DoB = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Gender = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Consultant", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Consultant_Account_AccountId",
+                        column: x => x.AccountId,
+                        principalTable: "Account",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Consultant_ConsultantLevel_ConsultantLevelId",
+                        column: x => x.ConsultantLevelId,
+                        principalTable: "ConsultantLevel",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Major",
                 columns: table => new
                 {
@@ -373,6 +401,7 @@ namespace Infrastructure.Migrations
                     Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    About = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Status = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -432,41 +461,6 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Consultant",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AccountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UniversityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ConsultantLevelId = table.Column<int>(type: "int", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DoB = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Gender = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Consultant", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Consultant_Account_AccountId",
-                        column: x => x.AccountId,
-                        principalTable: "Account",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Consultant_ConsultantLevel_ConsultantLevelId",
-                        column: x => x.ConsultantLevelId,
-                        principalTable: "ConsultantLevel",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Consultant_University_UniversityId",
-                        column: x => x.UniversityId,
-                        principalTable: "University",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "News",
                 columns: table => new
                 {
@@ -474,7 +468,8 @@ namespace Infrastructure.Migrations
                     UniversityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Hashtag = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -523,7 +518,9 @@ namespace Infrastructure.Migrations
                     GoldAmount = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TransactionDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    TransactionType = table.Column<int>(type: "int", nullable: false)
+                    TransactionType = table.Column<int>(type: "int", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -534,6 +531,52 @@ namespace Infrastructure.Migrations
                         principalTable: "Wallet",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ConstantRelation",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ConsultantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UniversityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Status = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ConstantRelation", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ConstantRelation_Consultant_ConsultantId",
+                        column: x => x.ConsultantId,
+                        principalTable: "Consultant",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ConstantRelation_University_UniversityId",
+                        column: x => x.UniversityId,
+                        principalTable: "University",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ConsultationDay",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ConsultantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Day = table.Column<DateOnly>(type: "date", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ConsultationDay", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ConsultationDay_Consultant_ConsultantId",
+                        column: x => x.ConsultantId,
+                        principalTable: "Consultant",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -569,6 +612,35 @@ namespace Infrastructure.Migrations
                         name: "FK_AdmissionInformation_University_UniversityId",
                         column: x => x.UniversityId,
                         principalTable: "University",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Certification",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ConsultantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MajorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Certification", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Certification_Consultant_ConsultantId",
+                        column: x => x.ConsultantId,
+                        principalTable: "Consultant",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Certification_Major_MajorId",
+                        column: x => x.MajorId,
+                        principalTable: "Major",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -704,48 +776,6 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Certification",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ConsultantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Status = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Certification", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Certification_Consultant_ConsultantId",
-                        column: x => x.ConsultantId,
-                        principalTable: "Consultant",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ConsultationDay",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ConsultantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Day = table.Column<DateOnly>(type: "date", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ConsultationDay", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ConsultationDay_Consultant_ConsultantId",
-                        column: x => x.ConsultantId,
-                        principalTable: "Consultant",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ImageNews",
                 columns: table => new
                 {
@@ -762,6 +792,56 @@ namespace Infrastructure.Migrations
                         name: "FK_ImageNews_News_NewsId",
                         column: x => x.NewsId,
                         principalTable: "News",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ConsultationTime",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TimeSlotId = table.Column<int>(type: "int", nullable: false),
+                    ConsultationDayId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Note = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ConsultationTime", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ConsultationTime_ConsultationDay_ConsultationDayId",
+                        column: x => x.ConsultationDayId,
+                        principalTable: "ConsultationDay",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ConsultationTime_TimeSlot_TimeSlotId",
+                        column: x => x.TimeSlotId,
+                        principalTable: "TimeSlot",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StudentChoice",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    StudentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MajorOrOccupationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MajorOrOccupationName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Rating = table.Column<int>(type: "int", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StudentChoice", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_StudentChoice_Student_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "Student",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -801,63 +881,15 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ConsultationTime",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TimeSlotId = table.Column<int>(type: "int", nullable: false),
-                    ConsultationDayId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    Note = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ConsultationTime", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ConsultationTime_ConsultationDay_ConsultationDayId",
-                        column: x => x.ConsultationDayId,
-                        principalTable: "ConsultationDay",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ConsultationTime_TimeSlot_TimeSlotId",
-                        column: x => x.TimeSlotId,
-                        principalTable: "TimeSlot",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "StudentChoice",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    StudentTestId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    MajorOrOccupationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    MajorOrOccupationName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Rating = table.Column<int>(type: "int", nullable: false),
-                    Type = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_StudentChoice", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_StudentChoice_StudentTest_StudentTestId",
-                        column: x => x.StudentTestId,
-                        principalTable: "StudentTest",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Booking",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ConsultationTimeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     StudentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Status = table.Column<bool>(type: "bit", nullable: false)
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Comment = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -924,6 +956,21 @@ namespace Infrastructure.Migrations
                 column: "ConsultantId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Certification_MajorId",
+                table: "Certification",
+                column: "MajorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ConstantRelation_ConsultantId",
+                table: "ConstantRelation",
+                column: "ConsultantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ConstantRelation_UniversityId",
+                table: "ConstantRelation",
+                column: "UniversityId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Consultant_AccountId",
                 table: "Consultant",
                 column: "AccountId",
@@ -933,11 +980,6 @@ namespace Infrastructure.Migrations
                 name: "IX_Consultant_ConsultantLevelId",
                 table: "Consultant",
                 column: "ConsultantLevelId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Consultant_UniversityId",
-                table: "Consultant",
-                column: "UniversityId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ConsultationDay_ConsultantId",
@@ -1057,9 +1099,9 @@ namespace Infrastructure.Migrations
                 column: "HighSchoolId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StudentChoice_StudentTestId",
+                name: "IX_StudentChoice_StudentId",
                 table: "StudentChoice",
-                column: "StudentTestId");
+                column: "StudentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StudentTest_PersonalGroupId",
@@ -1130,6 +1172,9 @@ namespace Infrastructure.Migrations
                 name: "Certification");
 
             migrationBuilder.DropTable(
+                name: "ConstantRelation");
+
+            migrationBuilder.DropTable(
                 name: "ImageNews");
 
             migrationBuilder.DropTable(
@@ -1151,6 +1196,9 @@ namespace Infrastructure.Migrations
                 name: "StudentChoice");
 
             migrationBuilder.DropTable(
+                name: "StudentTest");
+
+            migrationBuilder.DropTable(
                 name: "TestQuestion");
 
             migrationBuilder.DropTable(
@@ -1163,10 +1211,10 @@ namespace Infrastructure.Migrations
                 name: "AdmissionMethod");
 
             migrationBuilder.DropTable(
-                name: "Major");
+                name: "ConsultationTime");
 
             migrationBuilder.DropTable(
-                name: "ConsultationTime");
+                name: "Major");
 
             migrationBuilder.DropTable(
                 name: "News");
@@ -1178,7 +1226,13 @@ namespace Infrastructure.Migrations
                 name: "WorkSkills");
 
             migrationBuilder.DropTable(
-                name: "StudentTest");
+                name: "PersonalGroup");
+
+            migrationBuilder.DropTable(
+                name: "Student");
+
+            migrationBuilder.DropTable(
+                name: "PersonalTest");
 
             migrationBuilder.DropTable(
                 name: "Question");
@@ -1187,13 +1241,16 @@ namespace Infrastructure.Migrations
                 name: "Wallet");
 
             migrationBuilder.DropTable(
-                name: "MajorCategory");
-
-            migrationBuilder.DropTable(
                 name: "ConsultationDay");
 
             migrationBuilder.DropTable(
                 name: "TimeSlot");
+
+            migrationBuilder.DropTable(
+                name: "MajorCategory");
+
+            migrationBuilder.DropTable(
+                name: "University");
 
             migrationBuilder.DropTable(
                 name: "EntryLevelEducation");
@@ -1202,34 +1259,22 @@ namespace Infrastructure.Migrations
                 name: "OccupationalGroup");
 
             migrationBuilder.DropTable(
-                name: "PersonalGroup");
-
-            migrationBuilder.DropTable(
-                name: "PersonalTest");
-
-            migrationBuilder.DropTable(
-                name: "Student");
-
-            migrationBuilder.DropTable(
-                name: "Consultant");
+                name: "HighSchool");
 
             migrationBuilder.DropTable(
                 name: "TestType");
 
             migrationBuilder.DropTable(
-                name: "HighSchool");
-
-            migrationBuilder.DropTable(
-                name: "ConsultantLevel");
-
-            migrationBuilder.DropTable(
-                name: "University");
+                name: "Consultant");
 
             migrationBuilder.DropTable(
                 name: "Region");
 
             migrationBuilder.DropTable(
                 name: "Account");
+
+            migrationBuilder.DropTable(
+                name: "ConsultantLevel");
         }
     }
 }

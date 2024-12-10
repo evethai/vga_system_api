@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.Enum;
 
 namespace Domain.Model.Booking
 {
@@ -24,6 +25,8 @@ namespace Domain.Model.Booking
         public string StudentName { get; set; } = string.Empty;
         public string StudentEmail { get; set; } = string.Empty;
         public string StudentPhone { get; set; } = string.Empty;
-        public bool Status { get; set; }
+        public BookingStatus Status { get; set; }
+        public string? Comment { get; set; }
+        public string? Image { get; set; }
     }
 }

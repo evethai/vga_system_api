@@ -59,6 +59,7 @@ namespace Infrastructure.Data
         public DbSet<MajorOccupationMatrix> MajorOccupationMatrix { get; set; }
         public DbSet<StudentChoice> StudentChoice { get; set; }
         public DbSet<UniversityLocation> UniversityLocation { get; set; }
+        public DbSet<ConsultantRelation> ConstantRelation { get; set; }
 
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
@@ -134,7 +135,7 @@ namespace Infrastructure.Data
                 entity.HasOne(u => u.Account).WithOne(a => a.University).HasForeignKey<University>(u => u.AccountId);
                 entity.HasMany(u => u.AdmissionInformation).WithOne(u => u.University).HasForeignKey(u => u.UniversityId).OnDelete(DeleteBehavior.Restrict);
                 entity.HasMany(u => u.News).WithOne(u => u.University).HasForeignKey(u => u.UniversityId).OnDelete(DeleteBehavior.Restrict);
-                entity.HasMany(u => u.Consultants).WithOne(u => u.University).HasForeignKey(u => u.UniversityId).OnDelete(DeleteBehavior.Restrict);
+                //entity.HasMany(u => u.Consultants).WithOne(u => u.University).HasForeignKey(u => u.UniversityId).OnDelete(DeleteBehavior.Restrict);
             });
 
             // personal test
@@ -151,6 +152,22 @@ namespace Infrastructure.Data
                 entity.HasOne(st => st.Student).WithMany(s => s.StudentTests).HasForeignKey(st => st.StudentId).OnDelete(DeleteBehavior.Restrict);
                 entity.HasOne(st => st.PersonalTest).WithMany(pt => pt.StudentTests).HasForeignKey(st => st.PersonalTestId).OnDelete(DeleteBehavior.Restrict);
                 entity.HasOne(st => st.PersonalGroup).WithMany(pg => pg.StudentTests).HasForeignKey(st => st.PersonalGroupId).OnDelete(DeleteBehavior.Restrict);
+            });
+
+            //consultantRelation
+            modelBuilder.Entity<ConsultantRelation>(entity =>
+            {
+                entity.HasKey(c => c.Id);
+                entity.HasOne(st => st.Consultant).WithMany(pt => pt.ConsultantRelations).HasForeignKey(st => st.ConsultantId).OnDelete(DeleteBehavior.Restrict);
+                entity.HasOne(st => st.University).WithMany(pt => pt.ConsultantRelations).HasForeignKey(st => st.UniversityId).OnDelete(DeleteBehavior.Restrict);
+
+            });
+
+            modelBuilder.Entity<Certification>(entity =>
+            {
+                entity.HasKey(st => st.Id);
+                entity.HasOne(st => st.Consultant).WithMany(pt => pt.Certifications).HasForeignKey(st => st.ConsultantId).OnDelete(DeleteBehavior.Restrict);
+                entity.HasOne(st => st.Major).WithMany(pg => pg.Certifications).HasForeignKey(st => st.MajorId).OnDelete(DeleteBehavior.Restrict);
             });
 
             // question
