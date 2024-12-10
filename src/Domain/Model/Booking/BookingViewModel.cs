@@ -26,5 +26,7 @@ namespace Domain.Model.Booking
         public string StudentEmail { get; set; } = string.Empty;
         public string StudentPhone { get; set; } = string.Empty;
         public BookingStatus Status { get; set; }
+        public string? Comment { get; set; }
+        public string? Image { get; set; }
     }
 }
