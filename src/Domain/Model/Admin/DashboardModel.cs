@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Model.Admin
 {
-    public  class DashboardModel
+    public class DashboardModel
     {
         public int NumberAccount { get; set; }
         public int TotalStudents { get; set; }
@@ -18,7 +18,13 @@ namespace Domain.Model.Admin
         public List<int> NumberOfHollandTestsInMonth { get; set; } = new List<int>();
         public int TotalPointRechargeStudent { get; set; }
         public int TotalPointAdminTransferring { get; set; }
+    }
 
-
+    public class DashboardUniversityModel
+    {
+        public int NumberConsultant { get; set; }
+        public int TotalPointTransfer { get; set; }
+        public int TotalPointReceive { get; set; }
+        public List<int> NumberOfPointReceiveInMonth { get; set; } = new List<int>();
     }
 }

@@ -20,6 +20,7 @@ namespace Domain.Model.Major
         public string Image { get; set; } = string.Empty;
         public bool IsCare { get; set; } = false;
         public int CareLevel { get; set; } = 0;
+        public int NumberCare { get; set; } = 0;
 
         public List<OccupationByMajorIdModel>? Occupations { get; set; } = new List<OccupationByMajorIdModel>();
         public List<UniversityByMajorIdModel>? Universities { get; set; } = new List<UniversityByMajorIdModel>();

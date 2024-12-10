@@ -91,7 +91,7 @@ namespace Infrastructure.Persistence.Service
 
         public async Task<ResponseModel> GetAllStudentCareById (Guid StudentId)
         {
-            var result = await _unitOfWork.StudentChoiceRepository.GetListAsync(predicate: a => a.StudentId == StudentId && a.Type == StudentChoiceType.Care,orderBy: a => a.OrderByDescending(a => a.Rating));
+            var result = await _unitOfWork.StudentChoiceRepository.GetListAsync(predicate: a => a.StudentId == StudentId && a.Rating >0 && a.Type == StudentChoiceType.Care,orderBy: a => a.OrderByDescending(a => a.Rating));
             if (result == null)
             {
                 return new ResponseModel

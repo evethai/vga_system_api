@@ -15,6 +15,7 @@ using Domain.Model.OccupationalGroup;
 using Domain.Model.Response;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace Infrastructure.Persistence.Service
 {
     public class OccupationService : IOccupationService
@@ -74,6 +75,12 @@ namespace Infrastructure.Persistence.Service
                 {
                     result.IsCare = true;
                     result.CareLevel = isCare.Rating;
+                }
+
+                var numberLike = await _unitOfWork.StudentChoiceRepository.GetListAsync(predicate: x => x.MajorOrOccupationId == occupationId && x.Type == Domain.Enum.StudentChoiceType.Care && x.Rating > 0);
+                if (numberLike != null)
+                {
+                    result.NumberCare = numberLike.Count();
                 }
                 return new ResponseModel
                 {
