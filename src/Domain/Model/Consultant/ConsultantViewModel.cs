@@ -28,7 +28,7 @@ namespace Domain.Model.Consultant
         public DateTime CreateAt { get; set; }
         public int WalletBalance { get; set; }
         public List<CertificationViewModel> Certifications { get; set; } 
-        public List<ConsultantRelationViewModel> ConstantRelations { get; set; }
+        public List<ConsultantRelationViewModel> ConsultantRelations { get; set; }
     }
 
     public class ConsultantOfMajorModel

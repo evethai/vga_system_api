@@ -97,7 +97,7 @@ namespace Infrastructure.Persistence.Service
                 NumberConsultant = numberOfConsultant,
                 TotalPointReceive = sumReceive,
                 TotalPointTransfer = sumTransfer,
-                NumberOfPointReceiveInMonth = listTransferEachMonth
+                NumberOfPointTransferringInMonth = listTransferEachMonth
             };
         }
     }

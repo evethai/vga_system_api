@@ -6,6 +6,7 @@ using Domain.Model.Booking;
 using Domain.Model.Consultant;
 using Domain.Model.TimeSlot;
 using Infrastructure.Persistence.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
@@ -19,7 +20,7 @@ namespace Api.Controllers
             _bookingService = bookingService;
         }
 
-        [CustomAuthorize(RoleEnum.Consultant, RoleEnum.Student)]
+        [Authorize]
         [HttpGet(ApiEndPointConstant.Booking.BookingsEndpoint)]
         public async Task<IActionResult> GetListBookingsWithPaginateAsync(BookingSearchModel searchModel)
         {
@@ -35,7 +36,7 @@ namespace Api.Controllers
             }
         }
 
-        [CustomAuthorize(RoleEnum.Consultant, RoleEnum.Student)]
+        [Authorize]
         [HttpGet(ApiEndPointConstant.Booking.BookingEndpoint)]
         public async Task<IActionResult> GetBookingByIdAsync(Guid id)
         {

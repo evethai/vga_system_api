@@ -25,6 +25,6 @@ namespace Domain.Model.Admin
         public int NumberConsultant { get; set; }
         public int TotalPointTransfer { get; set; }
         public int TotalPointReceive { get; set; }
-        public List<int> NumberOfPointReceiveInMonth { get; set; } = new List<int>();
+        public List<int> NumberOfPointTransferringInMonth { get; set; } = new List<int>();
     }
 }
