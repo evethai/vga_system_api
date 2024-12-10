@@ -6,6 +6,7 @@ using Domain.Model.Booking;
 using Domain.Model.Certification;
 using Domain.Model.Consultant;
 using Domain.Model.ConsultantLevel;
+using Domain.Model.ConsultantRelation;
 using Domain.Model.ConsultationDay;
 using Domain.Model.ConsultationTime;
 using Domain.Model.EntryLevelEducation;
@@ -118,7 +119,7 @@ namespace Application.Common.Mapper
                 .ForMember(dest => dest.AccountId, opt => opt.MapFrom(src => src.AccountId))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Account.Name))
                 .ForMember(dest => dest.ConsultantLevel, opt => opt.MapFrom(src => src.ConsultantLevel))
-                .ForMember(dest => dest.University, opt => opt.MapFrom(src => src.University))
+                //.ForMember(dest => dest.University, opt => opt.MapFrom(src => src.University))
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Account.Email))
                 .ForMember(dest => dest.Phone, opt => opt.MapFrom(src => src.Account.Phone))
                 .ForMember(dest => dest.Image_Url, opt => opt.MapFrom(src => src.Account.Image_Url))
@@ -145,7 +146,13 @@ namespace Application.Common.Mapper
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Account.Email))
                 .ForMember(dest => dest.Phone, opt => opt.MapFrom(src => src.Account.Phone))
                 .ForMember(dest => dest.Image_Url, opt => opt.MapFrom(src => src.Account.Image_Url))
-                .ReverseMap();
+                .ReverseMap()
+                .ForMember(dest => dest.ConsultantRelations, opt => opt.Ignore());
+
+            CreateMap<Consultant, ConsultantOfMajorModel>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Account.Name))
+                .ForMember(dest => dest.Image_Url, opt => opt.MapFrom(src => src.Account.Image_Url));
 
             //Consultation Day
             CreateMap<ConsultationDay, ConsultationDayViewModel>()
@@ -281,9 +288,16 @@ namespace Application.Common.Mapper
             CreateMap<ImageNews, ImageNewsPostModel>().ReverseMap();
             CreateMap<ImageNews, ImageNewsPutModel>().ReverseMap();
             //Certification
-            CreateMap<Certification, CertificationViewModel>().ReverseMap();
+            CreateMap<Certification, CertificationViewModel>()
+                .ForMember(dest => dest.MajorName, opt => opt.MapFrom(src => src.Major.Name))
+                .ReverseMap();
             CreateMap<Certification, CertificationPostModel>().ReverseMap();
             CreateMap<Certification, CertificationPutModel>().ReverseMap();
+            //ConsultantRelation
+            CreateMap<ConsultantRelation, ConsultantRelationViewModel>()
+                .ForMember(dest => dest.UniversityName, opt => opt.MapFrom(src => src.University.Account.Name))
+                .ReverseMap();
+            CreateMap<ConsultantRelation, ConsultantRelationPostPutModel>().ReverseMap();
         }
 
     }

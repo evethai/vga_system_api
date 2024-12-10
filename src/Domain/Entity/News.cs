@@ -13,6 +13,7 @@ namespace Domain.Entity
         public string Title { get; set; } = string.Empty;
         public string Content { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
+        public string? Hashtag { get; set; }
         public virtual ICollection<ImageNews> ImageNews { get; set; } = null!;
 
     }

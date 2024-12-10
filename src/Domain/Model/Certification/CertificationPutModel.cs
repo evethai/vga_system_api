@@ -13,6 +13,7 @@ namespace Domain.Model.Certification
         public int? Id { get; set; }
         public string? Description { get; set; }
         public string? ImageUrl { get; set; }
+        public Guid? MajorId { get; set; }
         [JsonIgnore]
         public bool Status { get; set; } = true;
     }

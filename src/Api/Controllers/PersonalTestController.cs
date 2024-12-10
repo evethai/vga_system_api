@@ -4,6 +4,7 @@ using Api.Validators;
 using Application.Interface.Service;
 using Domain.Enum;
 using Domain.Model.PersonalTest;
+using Domain.Model.StudentChoice;
 using Domain.Model.Test;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,13 +21,17 @@ namespace Api.Controllers
         private readonly IWalletService _walletService;
         private readonly IPersonalTestService _personalTestService;
         private readonly ICacheService _cacheService;
+        private readonly IStudentChoiceService _studentChoiceService;
 
-        public PersonalTestController(IStudentTestService studentTestService, IWalletService walletService, IPersonalTestService personalTestService, ICacheService cacheService)
+
+        public PersonalTestController(IStudentTestService studentTestService, IWalletService walletService, IPersonalTestService personalTestService, ICacheService cacheService, IStudentChoiceService studentChoiceService)
         {
             _studentTestService = studentTestService;
             _walletService = walletService;
             _personalTestService = personalTestService;
             _cacheService = cacheService;
+            _studentChoiceService = studentChoiceService;
+
         }
 
         [HttpPost(ApiEndPointConstant.PersonalTest.GetResultPersonalTestEndpoint)]
@@ -211,6 +216,34 @@ namespace Api.Controllers
                 return BadRequest(e.Message);
             }
 
+        }
+
+        [HttpGet(ApiEndPointConstant.PersonalTest.GetStudentCareEndpoint)]
+        public async Task<IActionResult> GetStudentCareById (Guid id)
+        {
+            var result = await _studentChoiceService.GetAllStudentCareById(id);
+            return Ok(result);
+        }
+        [HttpPost(ApiEndPointConstant.PersonalTest.StudentCareEndpoint)]
+        public async Task<IActionResult> CreateStudentCare (StudentChoicePostModel model)
+        {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var result = await _studentChoiceService.CreateNewStudentCare(model);
+                if (!result.IsSuccess)
+                {
+                    return BadRequest(result.Message);
+                }
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
     }
 }

@@ -22,7 +22,7 @@ namespace Domain.Entity
         public int SchoolYears { get; set; }
         public virtual ICollection<StudentTest> StudentTests { get; set; } = null!;
         public virtual ICollection<Booking> Bookings { get; set; } = null!;
-
+        public virtual ICollection<StudentChoice> StudentChoices { get; set; } = null!;
 
     }
 
