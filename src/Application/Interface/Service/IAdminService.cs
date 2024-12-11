@@ -10,5 +10,6 @@ namespace Application.Interface.Service
     public interface IAdminService
     {
         Task<DashboardModel> GetDashboard();
+        Task<DashboardUniversityModel> GetUniversityDashBoard(Guid universityId);
     }
 }

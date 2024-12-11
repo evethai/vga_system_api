@@ -8,6 +8,7 @@ using Application.Interface;
 using Application.Interface.Service;
 using AutoMapper;
 using Domain.Entity;
+using Domain.Model.Consultant;
 using Domain.Model.EntryLevelEducation;
 using Domain.Model.Major;
 using Domain.Model.Response;
@@ -171,7 +172,7 @@ namespace Infrastructure.Persistence.Service
         #endregion
 
         #region get detail and list occupation and university by major id
-        public async Task<ResponseModel> OccupationAndUniversityByMajorId(Guid majorId)
+        public async Task<ResponseModel> OccupationAndUniversityByMajorId(Guid majorId, Guid studentId)
         {
             try
             {
@@ -183,13 +184,29 @@ namespace Infrastructure.Persistence.Service
 
                 var result = _mapper.Map<MajorViewModel>(major);
 
+                var isCare = await _unitOfWork.StudentChoiceRepository.SingleOrDefaultAsync(predicate: x => x.StudentId == studentId && x.MajorOrOccupationId == majorId && x.Type == Domain.Enum.StudentChoiceType.Care);
+                if(isCare != null)
+                {
+                    result.IsCare = true;
+                    result.CareLevel = isCare.Rating;
+                }
+                var numberLike = await _unitOfWork.StudentChoiceRepository.GetListAsync(predicate: x => x.MajorOrOccupationId == majorId && x.Type == Domain.Enum.StudentChoiceType.Care && x.Rating > 0);
+                if(numberLike != null)
+                {
+                    result.NumberCare = numberLike.Count();
+                }
+
                 var occupations = await _unitOfWork.OccupationRepository.GetOccupationByMajorId(majorId);
                 var universities = await _unitOfWork.UniversityRepository.GetListUniversityByMajorId(majorId);
+                var consultants = await _unitOfWork.CertificationRepository.GetListAsync(predicate: m => m.MajorId == majorId, selector: m => m.Consultant,include: m => m.Include(m => m.Consultant).ThenInclude(m=>m.Account));
+
                 var oc_model = _mapper.Map<List<OccupationByMajorIdModel>>(occupations);
                 var un_model = _mapper.Map<List<UniversityByMajorIdModel>>(universities);
+                var con_model = _mapper.Map<List<ConsultantOfMajorModel>>(consultants);
 
                 result.Occupations = oc_model;
                 result.Universities = un_model;
+                result.Consultatnts = con_model;
                 return new ResponseModel
                 {
                     Message = $"Lấy ngành với id '{major}' thành công",

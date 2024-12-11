@@ -30,4 +30,11 @@ namespace Domain.Model.Consultant
         public List<CertificationViewModel> Certifications { get; set; } 
         public List<ConsultantRelationViewModel> ConsultantRelations { get; set; }
     }
+
+    public class ConsultantOfMajorModel
+    {
+        public Guid Id { get; set; }
+        public string Name { set; get; } = string.Empty;
+        public string Image_Url { get; set; } = string.Empty;
+    }
 }

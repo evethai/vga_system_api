@@ -24,6 +24,8 @@
         public static class Admin
         {
             public const string Dashboard = ApiEndpoint + "/dashboard";
+            public const string UniversityDashboard = ApiEndpoint + "/uni/dashboard/{id}";
+
         }
 
         public static class PersonalTest

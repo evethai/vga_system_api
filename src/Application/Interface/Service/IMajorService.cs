@@ -15,6 +15,6 @@ namespace Application.Interface.Service
         Task<ResponseModel> CreateMajorAsync(MajorPostModel postModel);
         Task<ResponseModel> UpdateMajorAsync(MajorPutModel putModel, Guid majorId);
         Task<ResponseModel> DeleteMajorAsync(Guid majorId);
-        Task<ResponseModel> OccupationAndUniversityByMajorId(Guid majorId);
+        Task<ResponseModel> OccupationAndUniversityByMajorId(Guid majorId, Guid studentId);
     }
 }

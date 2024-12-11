@@ -149,6 +149,11 @@ namespace Application.Common.Mapper
                 .ReverseMap()
                 .ForMember(dest => dest.ConsultantRelations, opt => opt.Ignore());
 
+            CreateMap<Consultant, ConsultantOfMajorModel>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Account.Name))
+                .ForMember(dest => dest.Image_Url, opt => opt.MapFrom(src => src.Account.Image_Url));
+
             //Consultation Day
             CreateMap<ConsultationDay, ConsultationDayViewModel>()
                 .ReverseMap();

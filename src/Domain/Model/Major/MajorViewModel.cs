@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.Model.Consultant;
 
 namespace Domain.Model.Major
 {
@@ -17,9 +18,13 @@ namespace Domain.Model.Major
         public Guid MajorCategoryId { get; set; }
         public string MajorCategoryName { get; set; } = string.Empty;
         public string Image { get; set; } = string.Empty;
+        public bool IsCare { get; set; } = false;
+        public int CareLevel { get; set; } = 0;
+        public int NumberCare { get; set; } = 0;
 
         public List<OccupationByMajorIdModel>? Occupations { get; set; } = new List<OccupationByMajorIdModel>();
         public List<UniversityByMajorIdModel>? Universities { get; set; } = new List<UniversityByMajorIdModel>();
+        public List<ConsultantOfMajorModel>? Consultatnts { get; set; } = new List<ConsultantOfMajorModel>();
     }
 
     public class OccupationByMajorIdModel
