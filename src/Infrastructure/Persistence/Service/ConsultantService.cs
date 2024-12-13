@@ -245,7 +245,8 @@ namespace Infrastructure.Persistence.Service
                                         .ThenInclude(a => a.Wallet)
                                     .Include(s => s.ConsultantLevel)
                                     //.Include(s => s.University).ThenInclude(u => u.Account)
-                                    .Include(s => s.Certifications),
+                                    .Include(s => s.Certifications)
+                                    .Include(c => c.ConsultantRelations).ThenInclude(cr => cr.University.Account),
                     pageIndex: searchModel.currentPage,
                     pageSize: searchModel.pageSize
                 );
