@@ -147,8 +147,13 @@ namespace Infrastructure.Persistence.Service
                 notiPostModel.Title = NotificationConstant.Title.NewBooking;
                 notiPostModel.Message = $"Lịch tư vấn của bạn vào slot từ {consultationTime.SlotTime.StartTime} đến {consultationTime.SlotTime.EndTime} vào ngày {consultationTime.Day.Day} đã được đặt thành công bởi {student.Account.Name}.";
 
-                await _unitOfWork.NotificationRepository.CreateNotification(notiPostModel);
+                NotificationPostModel notiStudentPostModel = new NotificationPostModel();
+                notiStudentPostModel.AccountId = student.AccountId;
+                notiStudentPostModel.Title = NotificationConstant.Title.BookingConsultant;
+                notiStudentPostModel.Message = $"Bạn đã đặt tư vấn vào slot từ {consultationTime.SlotTime.StartTime} đến {consultationTime.SlotTime.EndTime} vào ngày {consultationTime.Day.Day} với tư vấn viên {consultationTime.Day.Consultant.Account.Name}.";
 
+                await _unitOfWork.NotificationRepository.CreateNotification(notiPostModel);
+                await _unitOfWork.NotificationRepository.CreateNotification(notiStudentPostModel);
                 var result = _mapper.Map<BookingViewModel>(booking);
                 return new ResponseModel
                 {

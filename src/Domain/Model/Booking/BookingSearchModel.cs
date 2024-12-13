@@ -22,6 +22,8 @@ namespace Domain.Model.Booking
         public Guid? studentId { get; set; }
         [FromQuery(Name = "consultant-id")]
         public Guid? consultantId { get; set; }
+        [FromQuery(Name = "university-id")]
+        public Guid? universityId { get; set; }
         [FromQuery(Name = "booking-status")]
         public BookingStatus? status { get; set; }
         [FromQuery(Name = "day")]
