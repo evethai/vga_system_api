@@ -24,6 +24,8 @@
         public static class Admin
         {
             public const string Dashboard = ApiEndpoint + "/dashboard";
+            public const string UniversityDashboard = ApiEndpoint + "/uni/dashboard/{id}";
+
         }
 
         public static class PersonalTest
@@ -148,6 +150,8 @@
         {
             public const string BookingsEndpoint = ApiEndpoint + "/bookings";
             public const string BookingEndpoint = ApiEndpoint + "/booking/{id}";
+            public const string ReportBookingEndpoint = ApiEndpoint + "/booking/report/{id}";
+            public const string ProcessReportBookingEndpoint = ApiEndpoint + "/booking/process-report/{id}";
         }
         //University
         public static class University

@@ -17,6 +17,7 @@ namespace Domain.Entity
         public BookingStatus Status { get; set; }
         public string? Comment { get; set; }
         public string? Image { get; set; }
+        public double Price { get; set; }
 
     }
 }

@@ -15,6 +15,7 @@ using Domain.Model.OccupationalGroup;
 using Domain.Model.Response;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace Infrastructure.Persistence.Service
 {
     public class OccupationService : IOccupationService
@@ -55,7 +56,7 @@ namespace Infrastructure.Persistence.Service
         #endregion
 
         #region Get by id
-        public async Task<ResponseModel> GetOccupationByIdAsync(Guid occupationId)
+        public async Task<ResponseModel> GetOccupationByIdAsync(Guid occupationId,Guid studentId)
         {
             try
             {
@@ -69,6 +70,18 @@ namespace Infrastructure.Persistence.Service
                     ) ?? throw new NotExistsException();
 
                 var result = _mapper.Map<OccupationViewModel>(occupation);
+                var isCare = await _unitOfWork.StudentChoiceRepository.SingleOrDefaultAsync(predicate: x => x.StudentId == studentId && x.MajorOrOccupationId == occupationId && x.Type == Domain.Enum.StudentChoiceType.Care);
+                if (isCare != null)
+                {
+                    result.IsCare = true;
+                    result.CareLevel = isCare.Rating;
+                }
+
+                var numberLike = await _unitOfWork.StudentChoiceRepository.GetListAsync(predicate: x => x.MajorOrOccupationId == occupationId && x.Type == Domain.Enum.StudentChoiceType.Care && x.Rating > 0);
+                if (numberLike != null)
+                {
+                    result.NumberCare = numberLike.Count();
+                }
                 return new ResponseModel
                 {
                     Message = $"Lấy nghề với id '{occupation}' thành công",

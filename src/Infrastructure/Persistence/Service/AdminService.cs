@@ -33,7 +33,7 @@ namespace Infrastructure.Persistence.Service
             var hollandTestsInMonth = new List<int>();
             int monthNow = DateTime.UtcNow.AddHours(7).Month;
             //for from this month to 1 if after this month not have test return 0
-            for (int i = monthNow; i >= 0; i--)
+            for (int i = monthNow; i > 0; i--)
             {
                 var test = await _unitOfWork.StudentTestRepository.CountAsync(x => x.Date.Month == DateTime.UtcNow.AddHours(7).Date.AddMonths(-i+1).Month && x.PersonalTest.TestType.TypeCode == TestTypeCode.MBTI);
                 mbtiTestsInMonth.Add(test);
@@ -70,6 +70,35 @@ namespace Infrastructure.Persistence.Service
 
         }
 
+        public async Task<DashboardUniversityModel> GetUniversityDashBoard(Guid universityId)
+        {
+            var numberOfConsultant = await _unitOfWork.ConsultantRelationRepository.CountAsync(x => x.UniversityId == universityId);
+            var totalReceive = await _unitOfWork.TransactionRepository.GetListAsync(predicate: x=>x.Wallet.Account.University.Id == universityId &&
+                                                                                                x.TransactionType == TransactionType.Receiving, selector : x=>x.GoldAmount);
+            var sumReceive = totalReceive.Sum();
 
+            var totalTransfer = await _unitOfWork.TransactionRepository.GetListAsync(predicate: x=>x.Wallet.Account.University.Id == universityId &&
+                                                                                                x.TransactionType == TransactionType.Transferring, selector : x=>x.GoldAmount);
+            var sumTransfer = totalTransfer.Sum();
+
+            List<int> listTransferEachMonth = new List<int>();
+            int monthNow = DateTime.UtcNow.AddHours(7).Month;
+            for (int i = monthNow; i > 0; i--)
+            {
+                var numberOfEachMonth = await _unitOfWork.TransactionRepository.GetListAsync(predicate: x => x.Wallet.Account.University.Id == universityId &&
+                                                                                                x.TransactionType == TransactionType.Transferring &&
+                                                                                                x.TransactionDateTime.Month == DateTime.UtcNow.AddHours(7).Date.AddMonths(-i + 1).Month, selector: x => x.GoldAmount);
+                listTransferEachMonth.Add(numberOfEachMonth.Sum());
+            }
+
+
+            return new DashboardUniversityModel
+            {
+                NumberConsultant = numberOfConsultant,
+                TotalPointReceive = sumReceive,
+                TotalPointTransfer = sumTransfer,
+                NumberOfPointTransferringInMonth = listTransferEachMonth
+            };
+        }
     }
 }

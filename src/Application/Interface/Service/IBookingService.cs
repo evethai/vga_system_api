@@ -14,5 +14,9 @@ namespace Application.Interface.Service
         Task<ResponseModel> GetBookingByIdAsync(Guid bookingId);
         Task<ResponseModel> GetAllBookingsAsync();
         Task<ResponseBookingModel> GetListBookingsWithPaginateAsync(BookingSearchModel searchModel);
+        Task<ResponseModel> ProcessBookingAsync(Guid bookingId, BookingConsultantUpdateModel model);
+        Task<ResponseModel> ReportBookingAsync(Guid bookingId, BookingStudentReportModel model);
+        Task<ResponseModel> ProcessReportBookingAsync(Guid bookingId, BookingProcessReportModel model);
+
     }
 }

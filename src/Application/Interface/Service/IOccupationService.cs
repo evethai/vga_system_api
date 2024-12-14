@@ -11,7 +11,7 @@ namespace Application.Interface.Service
     public interface IOccupationService
     {
         Task<ResponseOccupationModel> GetListOccupationsWithPaginateAsync(OccupationSearchModel searchModel);
-        Task<ResponseModel> GetOccupationByIdAsync(Guid occupationId);
+        Task<ResponseModel> GetOccupationByIdAsync(Guid occupationId, Guid studentId);
         Task<ResponseModel> CreateOccupationAsync(OccupationPostModel postModel);
         Task<ResponseModel> UpdateOccupationAsync(Guid occupationId, OccupationPutModel putModel);
         Task<ResponseModel> DeleteOccupationAsync(Guid occupationId);
