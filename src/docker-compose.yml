@@ -1,7 +1,6 @@
 version: '3.8'
 
 services:
-  # API service
   api:
     container_name: vga.api
     build:
@@ -15,10 +14,7 @@ services:
     depends_on:
       - sqlserver
       - cache
-    networks:
-      - app-network
 
-  # SQL Server service
   sqlserver:
     container_name: sqlserver
     image: mcr.microsoft.com/mssql/server:2019-latest
@@ -30,10 +26,7 @@ services:
     volumes:
       - sql_data:/var/opt/mssql
     restart: always
-    networks:
-      - app-network
 
-  # Redis cache service
   cache:
     image: redis:latest
     restart: always
@@ -41,29 +34,7 @@ services:
       - "6380:6379"
     volumes:
       - redis_data:/data
-    networks:
-      - app-network
-
-  # Nginx reverse proxy
-  nginx:
-    image: nginx:latest
-    container_name: nginx
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf  # Mount cấu hình Nginx vào container
-      - /etc/ssl/certs:/etc/ssl/certs  # Mount chứng chỉ SSL
-      - /etc/ssl/private:/etc/ssl/private  # Mount khóa riêng SSL
-    ports:
-      - "80:80"
-      - "443:443"
-    depends_on:
-      - api  # Đảm bảo Nginx khởi động sau khi API sẵn sàng
-    networks:
-      - app-network
 
 volumes:
   sql_data:
   redis_data:
-
-networks:
-  app-network:
-    driver: bridge
