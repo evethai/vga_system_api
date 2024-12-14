@@ -95,6 +95,17 @@ namespace Infrastructure.Persistence.Repository
             {
                 tagsValue = null;
             }
+            List<ImageNewsModel> listImageNews = new List<ImageNewsModel>();
+            foreach(var newImg in ExitNews.ImageNews)
+            {
+                ImageNewsModel img = new ImageNewsModel
+                {
+                    Id = newImg.Id,
+                    DescriptionTitle = newImg.DescriptionTitle,
+                    ImageUrl = newImg.ImageUrl,
+                };
+                listImageNews.Add(img);
+            }
             NewsModel newsModel = new NewsModel
             {
                 Id = NewsId,
@@ -105,6 +116,7 @@ namespace Infrastructure.Persistence.Repository
                 Content = ExitNews.Content,
                 CreatedAt = ExitNews.CreatedAt,
                 _HashTag = tagsValue,
+                ImageNews = listImageNews
             };
             return newsModel;
         }
