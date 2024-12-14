@@ -52,7 +52,8 @@ namespace Infrastructure.Persistence.Service
             var news = await _unitOfWork.NewsRepository
                 .GetBySearchAsync(filter, orderBy,
                 q => q.Include(s => s.ImageNews)
-                .Include(s=>s.University).ThenInclude(s=>s.Account),
+                .Include(s=>s.University).
+                ThenInclude(s=>s.Account),
                 pageIndex: searchModel.currentPage,
                 pageSize: searchModel.pageSize);          
             var total = await _unitOfWork.NewsRepository.CountAsync(filter);
