@@ -33,7 +33,7 @@ namespace Domain.Model.Account
         [RegularExpression(@"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$", ErrorMessage = "Email is not valid")]
         public string Email { get; set; } = string.Empty;
         [DataType(DataType.PhoneNumber)]
-        [RegularExpression(@"^\+?[0-9]\d{10,11}$", ErrorMessage = "Phone is not valid")]
+        [RegularExpression(@"^\+?[0-9]\d{9,10}$", ErrorMessage = "Phone is not valid")]
         [Required(ErrorMessage = "Phone is required.")]
         public string Phone { get; set; } = string.Empty;
     }
