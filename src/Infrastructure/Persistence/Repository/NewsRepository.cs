@@ -59,9 +59,13 @@ namespace Infrastructure.Persistence.Repository
         public Task<bool> DeleteAllImageNews(Guid NewId)
         {
             var exitNewsImageId = _context.ImageNews.Where(s => s.NewsId.Equals(NewId)).FirstOrDefault();
-            _context.ImageNews.Remove(exitNewsImageId);
-            _context.SaveChanges();
-            return Task.FromResult(true);
+            if(exitNewsImageId != null)
+            {
+                _context.ImageNews.Remove(exitNewsImageId);
+                _context.SaveChanges();
+                return Task.FromResult(true);
+            }
+            return Task.FromResult(false);
         }
 
         public Task<bool> DeleteOneImageNews(int id)
