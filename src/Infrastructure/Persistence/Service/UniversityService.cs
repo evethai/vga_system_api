@@ -107,6 +107,7 @@ namespace Infrastructure.Persistence.Service
             exitUniversity.Code = putModel.Code;
             exitUniversity.EstablishedYear = putModel.EstablishedYear;           
             var exitAccount = await _unitOfWork.AccountRepository.GetByIdGuidAsync(exitUniversity.AccountId) ?? throw new Exception("Account Id is not found");
+            await _unitOfWork.AccountRepository.checkPhoneAndMail(exitAccount.Id,putModel.Email, putModel.Phone);
             exitAccount.Name = putModel.Name;
             exitAccount.Phone = putModel.Phone;
             exitAccount.Email = putModel.Email;
