@@ -73,11 +73,15 @@ public class HighschoolService : IHighschoolService
 
     public async Task<ResponseModel> UpdateHighschoolAsync(HighschoolPutModel putModel, Guid Id)
     {
-        var exitHighschool = await _unitOfWork.HighschoolRepository.GetByIdGuidAsync(Id) ?? throw new Exception("Id is not found");
+        var exitHighschool = await _unitOfWork.HighschoolRepository
+            .GetByIdGuidAsync(Id) ?? throw new Exception("Id is not found");
         exitHighschool.Address = putModel.Address;
-        var exitRegion = await _unitOfWork.RegionRepository.GetByIdGuidAsync(putModel.RegionId) ?? throw new Exception("Region id is not found");
+        var exitRegion = await _unitOfWork.RegionRepository
+            .GetByIdGuidAsync(putModel.RegionId) ?? throw new Exception("Region id is not found");
         exitHighschool.RegionId = exitRegion.Id;
-        var exitAccount = await _unitOfWork.AccountRepository.GetByIdGuidAsync(exitHighschool.AccountId) ?? throw new Exception("Highschool Account Id is not found");
+        var exitAccount = await _unitOfWork.AccountRepository
+            .GetByIdGuidAsync(exitHighschool.AccountId) ?? throw new Exception("Highschool Account Id is not found");
+        await _unitOfWork.AccountRepository.checkPhoneAndMail(exitAccount.Id,putModel.Email, putModel.Phone);
         exitAccount.Name = putModel.Name;
         exitAccount.Phone = putModel.Phone;
         exitAccount.Email = putModel.Email;
