@@ -14,7 +14,7 @@ namespace Api.Controllers
 {
     [Route("/personal-test")]
     [ApiController]
-    //[CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
+    [CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
     public class PersonalTestController : ControllerBase
     {
         private readonly IStudentTestService _studentTestService;
