@@ -11,7 +11,7 @@ namespace Domain.Model.ConsultantRelation
     public class ConsultantRelationPostPutModel
     {
         public Guid? Id { get; set; }
-        [Required(ErrorMessage = "UniversityId is required")]
+        //[Required(ErrorMessage = "UniversityId is required")]
         public Guid UniversityId { get; set; }
         [JsonIgnore]
         public bool Status { get; set; } = true;
