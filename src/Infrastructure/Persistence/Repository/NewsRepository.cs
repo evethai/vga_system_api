@@ -140,7 +140,8 @@ namespace Infrastructure.Persistence.Repository
                         var StudentCare = new List<StudentChoice>();
                         if (!string.IsNullOrWhiteSpace(postModel.Hashtag))
                         {
-                            List<string> tagsKey = new List<string>(postModel.Hashtag.Split(','));
+                            List<string> tagsKey = new List<string>(postModel.Hashtag.Split(',')); 
+
                             foreach (string tagKey in tagsKey)
                             {
                                 var NameMajor = _context.Major
@@ -150,11 +151,12 @@ namespace Infrastructure.Persistence.Repository
                                 {
                                     throw new Exception($"Major Id '{tagKey}' is not found.");
                                 }
-                                StudentCare = _context.StudentChoice
+                                var care = _context.StudentChoice
                                    .Where(s => s.isMajor == true
                                                && s.MajorOrOccupationId.Equals(NameMajor.Id)
                                                && s.Type == StudentChoiceType.Care)
                                    .ToList();
+                                StudentCare.AddRange(care);
                             }
                         }
                         else { postModel.Hashtag = null; }
