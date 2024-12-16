@@ -339,20 +339,22 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
     public async Task<IEnumerable<Major>> GetMajorsByPersonalGroupId(Guid personalGroupId)
     {
         var categoryIds = await _context.MajorPersonalMatrix
-                                        .Where(x => x.PersonalGroupId == personalGroupId).OrderByDescending(x=>x.AppropriateLevel)
-                                        .Select(x => x.MajorCategoryId)
+                                        .Where(x => x.PersonalGroupId == personalGroupId).OrderByDescending(x => x.AppropriateLevel)
+                                        //.Select(x => x.MajorCategoryId)
+                                        .Include(x => x.MajorCategory).ThenInclude(x => x.Majors)
                                         .ToListAsync();
 
-        var majorsByCategories = await _context.Major
-                                               .Where(x => categoryIds.Contains(x.MajorCategoryId))
-                                               .GroupBy(x => x.MajorCategoryId)
-                                               .ToListAsync();
+        //var majorsByCategories = await _context.Major
+        //                                       .Where(x => categoryIds.Contains(x.MajorCategoryId))
+        //                                       .GroupBy(x => x.MajorCategoryId)
+        //                                       .ToListAsync();
 
         List<Major> majorChoices = new();
-        Random random = new Random();
-        foreach (var majorGroup in majorsByCategories)
+        //Random random = new Random();
+        foreach (var majorGroup in categoryIds)
         {
-            var top5Majors = majorGroup.OrderBy(x => random.Next()).Take(5).ToList();
+            //var top5Majors = majorGroup.OrderBy(x => random.Next()).Take(5).ToList();
+            var top5Majors = majorGroup.MajorCategory.Majors.Take(5).ToList();
             majorChoices.AddRange(top5Majors);
         }
 
