@@ -16,11 +16,17 @@ namespace Api.Installers
             {
                 return;
             }
-            services.AddSingleton<IConnectionMultiplexer>(_ => ConnectionMultiplexer.Connect(redisConfig.ConnectionString));
+
+            var options = ConfigurationOptions.Parse(redisConfig.ConnectionString);
+            options.AbortOnConnectFail = false;
+
+            services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(options));
+
             services.AddStackExchangeRedisCache(options =>
             {
                 options.Configuration = redisConfig.ConnectionString;
             });
+
             services.AddSingleton<ICacheService, CacheService>();
         }
     }

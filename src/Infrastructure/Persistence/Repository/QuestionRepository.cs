@@ -168,6 +168,77 @@ namespace Infrastructure.Persistence.Repository
 
         #endregion
 
+        //public async Task<ResponseModel> AddMbtiQuestions(Guid personalTestId, Guid testTypeId, List<DataQuestionMBTIModel> questions)
+        //{
+        //    if (questions == null || !questions.Any())
+        //    {
+        //        return new ResponseModel
+        //        {
+        //            IsSuccess = false,
+        //            Message = "Questions cannot be null or empty."
+        //        };
+        //    }
+
+        //    try
+        //    {
+        //        var questionEntities = questions.Select(item => new Question
+        //        {
+        //            Content = item.Content,
+        //            Group = QuestionGroup.None,
+        //            TestTypeId = testTypeId,
+        //            CreateAt = DateTime.UtcNow.AddHours(7),
+        //            Status = true
+        //        }).ToList();
+        //        await _context.Question.AddRangeAsync(questionEntities);
+        //        await _context.SaveChangesAsync();
+
+
+        //        var questionIdDictionary = questionEntities.ToDictionary(q => q.Content, q => q.Id);
+
+
+        //        var answerEntities = questions.SelectMany(item => new List<Answer>
+        //        {
+        //            new Answer
+        //            {
+        //                Content = item.Answer1,
+        //                QuestionId = questionIdDictionary[item.Content],  
+        //                AnswerValue = item.Value1,
+        //                status = true
+        //            },
+        //            new Answer
+        //            {
+        //                Content = item.Answer2,
+        //                QuestionId = questionIdDictionary[item.Content],  
+        //                AnswerValue = item.Value2,
+        //                status = true
+        //            }
+        //        }).ToList();
+        //        var testQuestionEntities = questionEntities.Select(question => new TestQuestion
+        //        {
+        //            PersonalTestId = personalTestId,
+        //            QuestionId = question.Id,
+        //            Status = true
+        //        }).ToList();
+
+        //        await _context.Answer.AddRangeAsync(answerEntities);
+        //        await _context.TestQuestion.AddRangeAsync(testQuestionEntities);
+        //        await _context.SaveChangesAsync();
+
+        //        return new ResponseModel
+        //        {
+        //            IsSuccess = true,
+        //            Message = "Added MBTI questions successfully."
+        //        };
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return new ResponseModel
+        //        {
+        //            IsSuccess = false,
+        //            Message = $"An error occurred: {ex.Message}"
+        //        };
+        //    }
+        //}
         public async Task<ResponseModel> AddMbtiQuestions(Guid personalTestId, Guid testTypeId, List<DataQuestionMBTIModel> questions)
         {
             if (questions == null || !questions.Any())
@@ -179,8 +250,24 @@ namespace Infrastructure.Persistence.Repository
                 };
             }
 
+            var duplicateQuestions = questions
+                .GroupBy(q => q.Content)
+                .Where(g => g.Count() > 1)
+                .Select(g => g.Key)
+                .ToList();
+
+            if (duplicateQuestions.Any())
+            {
+                return new ResponseModel
+                {
+                    IsSuccess = false,
+                    Message = $"Duplicate questions found: {string.Join(", ", duplicateQuestions)}"
+                };
+            }
+
             try
             {
+
                 var questionEntities = questions.Select(item => new Question
                 {
                     Content = item.Content,
@@ -189,30 +276,31 @@ namespace Infrastructure.Persistence.Repository
                     CreateAt = DateTime.UtcNow.AddHours(7),
                     Status = true
                 }).ToList();
+
                 await _context.Question.AddRangeAsync(questionEntities);
                 await _context.SaveChangesAsync();
 
-
                 var questionIdDictionary = questionEntities.ToDictionary(q => q.Content, q => q.Id);
-
 
                 var answerEntities = questions.SelectMany(item => new List<Answer>
                 {
                     new Answer
                     {
                         Content = item.Answer1,
-                        QuestionId = questionIdDictionary[item.Content],  
+                        QuestionId = questionIdDictionary[item.Content],
                         AnswerValue = item.Value1,
                         status = true
                     },
                     new Answer
                     {
                         Content = item.Answer2,
-                        QuestionId = questionIdDictionary[item.Content],  
+                        QuestionId = questionIdDictionary[item.Content],
                         AnswerValue = item.Value2,
                         status = true
                     }
                 }).ToList();
+
+
                 var testQuestionEntities = questionEntities.Select(question => new TestQuestion
                 {
                     PersonalTestId = personalTestId,
@@ -239,6 +327,7 @@ namespace Infrastructure.Persistence.Repository
                 };
             }
         }
+
 
 
         public async Task<ResponseModel> AddHollandQuestions(Guid personalTestId, Guid testTypeId, List<DataQuestionHollandModel> questions)
