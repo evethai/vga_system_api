@@ -76,7 +76,7 @@ namespace Infrastructure.Persistence.Service
                         return new ResponseModel
                         {
                             IsSuccess = false,
-                            Message = "Failed to add MBTI questions"
+                            Message = result.Message
                         };
                     }
                 }
