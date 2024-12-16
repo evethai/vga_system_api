@@ -1,4 +1,5 @@
 ﻿using Api.Constants;
+using Api.Validators;
 using Application.Interface.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -16,14 +17,14 @@ namespace Api.Controllers
         {
             _adminService = adminService;
         }
-
+        [CustomAuthorize(Domain.Enum.RoleEnum.Admin)]
         [HttpGet(ApiEndPointConstant.Admin.Dashboard)]
         public async Task<IActionResult> GetDashboard()
         {
             var result = await _adminService.GetDashboard();
             return Ok(result);
         }
-
+        [CustomAuthorize(Domain.Enum.RoleEnum.University)]
         [HttpGet(ApiEndPointConstant.Admin.UniversityDashboard)]
         public async Task<IActionResult> GetUniDashboard(Guid id)
         {

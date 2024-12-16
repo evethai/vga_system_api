@@ -35,8 +35,6 @@ namespace Infrastructure.Persistence.Repository
             var email = await _context.Account.Where(x => x.Email.Equals(registerAccount.Email)|| x.Phone.Equals(registerAccount.Phone)).FirstOrDefaultAsync();
             if (email != null)
                 throw new Exception($"Email hoặc số điện thoại của '{registerAccount.Name}' đã tồn tại trong hệ thống");
-            
-            
             registerAccount.Phone = string.Concat("84", registerAccount.Phone.AsSpan(1));
             Account account = null;
             switch (_role)
@@ -125,6 +123,22 @@ namespace Infrastructure.Persistence.Repository
             _context.SaveChanges();
             return account.Id;
         }
-
+        public async Task<bool> checkPhoneAndMail(Guid Id,string Mail, string Phone)
+        {
+            var currentUser = _context.Account
+            .Where(u => u.Id == Id)
+            .FirstOrDefault() ?? throw new Exception("Id is not found");
+            if (currentUser.Phone == Phone && currentUser.Email == Mail)
+            {
+                return true; 
+            }
+            bool email = await _context.Account.AnyAsync(x => x.Id!=Id && x.Email.Equals(Mail));
+            bool phone = await _context.Account.AnyAsync(x => x.Id!=Id && x.Phone.Equals(Phone));
+            if(email == true || phone == true)
+            {
+                throw new Exception($"Email hoặc số điện thoại đã tồn tại trong hệ thống");
+            }
+            return true;
+        }
     }
 }

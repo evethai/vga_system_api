@@ -43,7 +43,8 @@ namespace Application.Common.Mapper
             CreateMap<Region, RegionModel>().ReverseMap();
 
             //PersonalTest
-            CreateMap<PersonalTest, PersonalTestModel>().ReverseMap();
+            CreateMap<PersonalTest, PersonalTestModel>()
+             .ForMember(dest => dest.Point, opt => opt.MapFrom(src => src.TestType.Point)).ReverseMap();
             CreateMap<StudentTest, StudentTestModel>().ReverseMap();
             CreateMap<PersonalTest, PersonalTestPostModel>().ReverseMap();
 

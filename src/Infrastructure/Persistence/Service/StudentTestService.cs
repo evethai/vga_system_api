@@ -102,7 +102,7 @@ namespace Infrastructure.Persistence.Service
         {
             var conditions = _unitOfWork.PersonalTestRepository.BuildFilterAndOrderBy(model);
             //var result = await _unitOfWork.PersonalTestRepository.GetListAsync(predicate: x => x.Status == true);
-            var result = await _unitOfWork.PersonalTestRepository.GetByConditionAsync(conditions.filter, conditions.orderBy,pageIndex: model.Page, pageSize: model.Size);
+            var result = await _unitOfWork.PersonalTestRepository.GetByConditionAsync(conditions.filter, conditions.orderBy,includeProperties: "TestType", pageIndex: model.Page, pageSize: model.Size);
             var testModels = _mapper.Map<IEnumerable<PersonalTestModel>>(result);
             var total = await _unitOfWork.PersonalTestRepository.CountAsync(conditions.filter);
             return new ResponsePersonalTestModel
