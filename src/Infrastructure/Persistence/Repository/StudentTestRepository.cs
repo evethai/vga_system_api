@@ -339,7 +339,7 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
     public async Task<IEnumerable<Major>> GetMajorsByPersonalGroupId(Guid personalGroupId)
     {
         var categoryIds = await _context.MajorPersonalMatrix
-                                        .Where(x => x.PersonalGroupId == personalGroupId)
+                                        .Where(x => x.PersonalGroupId == personalGroupId).OrderByDescending(x=>x.AppropriateLevel)
                                         .Select(x => x.MajorCategoryId)
                                         .ToListAsync();
 
