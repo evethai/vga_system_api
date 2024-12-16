@@ -68,6 +68,7 @@ public class StudentService : IStudentService
         exitStudent.SchoolYears = putModel.SchoolYears;
         exitStudent.Gender = putModel.Gender;
         var exitAccount = await _unitOfWork.AccountRepository.GetByIdGuidAsync(exitStudent.AccountId) ?? throw new Exception("Acount Id is not found");
+        await _unitOfWork.AccountRepository.checkPhoneAndMail(exitAccount.Id, putModel.Email, putModel.Phone);
         exitAccount.Name = putModel.Name;
         exitAccount.Phone = putModel.Phone;
         exitAccount.Email = putModel.Email;

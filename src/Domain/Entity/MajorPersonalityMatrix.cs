@@ -14,5 +14,6 @@ namespace Domain.Entity
         public virtual PersonalGroup PersonalGroup { get; set; } = null!;
         public Guid MajorCategoryId { get; set; }
         public virtual MajorCategory MajorCategory { get; set; } = null!;
+        public int AppropriateLevel { get; set; }
     }
 }

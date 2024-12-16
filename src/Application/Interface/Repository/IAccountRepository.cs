@@ -12,5 +12,6 @@ namespace Application.Interface.Repository
     public interface IAccountRepository : IGenericRepository<Account>
     {
         Task<Guid> CreateAccountAndWallet(RegisterAccountModel registerAccount, RoleEnum _role);
+        Task<bool> checkPhoneAndMail(Guid id,string Mail, string Phone);
     }
 }
