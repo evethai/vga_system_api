@@ -186,7 +186,7 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
         }
 
          var majors = _context.MajorPersonalMatrix
-        .Where(p => p.PersonalGroupId == h_type.Id)
+        .Where(p => p.PersonalGroupId == h_type.Id).OrderByDescending(p => p.AppropriateLevel)
         .Select(p => new MajorCategoryModel
         {
             Id = p.MajorCategory.Id,
