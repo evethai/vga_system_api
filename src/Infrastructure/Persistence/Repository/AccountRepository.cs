@@ -49,7 +49,8 @@ namespace Infrastructure.Persistence.Repository
                         Password = PasswordUtil.HashPassword(registerAccount.Password),
                         Role = _role,
                         Status = AccountStatus.Active,
-                        CreateAt = DateTime.UtcNow.AddHours(7)
+                        CreateAt = DateTime.UtcNow.AddHours(7),
+                        Image_Url = registerAccount.Image_Url
                     };
                     account.Wallet = new Wallet
                     {
@@ -69,7 +70,8 @@ namespace Infrastructure.Persistence.Repository
                         Password = PasswordUtil.HashPassword(registerAccount.Password),
                         Role = _role,
                         Status = AccountStatus.Active,
-                        CreateAt = DateTime.UtcNow.AddHours(7)
+                        CreateAt = DateTime.UtcNow.AddHours(7),
+                        Image_Url = registerAccount.Image_Url
                     };
                     account.Wallet = new Wallet
                     {
@@ -88,7 +90,8 @@ namespace Infrastructure.Persistence.Repository
                         Password = PasswordUtil.HashPassword(registerAccount.Password),
                         Role = _role,
                         Status = AccountStatus.Active,
-                        CreateAt = DateTime.UtcNow.AddHours(7)
+                        CreateAt = DateTime.UtcNow.AddHours(7),
+                        Image_Url = registerAccount.Image_Url
                     };
                     account.Wallet = new Wallet
                     {
@@ -107,7 +110,8 @@ namespace Infrastructure.Persistence.Repository
                         Password = PasswordUtil.HashPassword(registerAccount.Password),
                         Role = _role,
                         Status = AccountStatus.Active,
-                        CreateAt = DateTime.UtcNow.AddHours(7)
+                        CreateAt = DateTime.UtcNow.AddHours(7),
+                        Image_Url = registerAccount.Image_Url
                     };
                     account.Wallet = new Wallet
                     {
@@ -120,7 +124,7 @@ namespace Infrastructure.Persistence.Repository
                     break;
             }
             var result = await _context.Account.AddAsync(account);
-            _context.SaveChanges();
+             await _context.SaveChangesAsync();
             return account.Id;
         }
         public async Task<bool> checkPhoneAndMail(Guid Id,string Mail, string Phone)

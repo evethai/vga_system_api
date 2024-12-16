@@ -16,7 +16,16 @@ namespace Domain.Model.Account
         public string Email { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty!;
         public string Phone { get; set; } = string.Empty;
-        public RegisterAccountModel(string name,string email, string password, string phone)
+        public string? Image_Url { get; set; } = string.Empty;
+        public RegisterAccountModel(string name,string email, string password, string phone, string? image_Url)
+        {
+            Name = name;
+            Email = email;
+            Password = password;
+            Phone = phone;
+            Image_Url = image_Url;
+        }
+        public RegisterAccountModel(string name, string email, string password, string phone)
         {
             Name = name;
             Email = email;

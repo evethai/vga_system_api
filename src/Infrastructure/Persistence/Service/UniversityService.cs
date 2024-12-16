@@ -33,7 +33,7 @@ namespace Infrastructure.Persistence.Service
             RegisterAccountModel accountModel = new RegisterAccountModel(postModel.Name
                 , postModel.Email
                 , postModel.Password
-                , postModel.Phone);
+                , postModel.Phone, postModel.Image_Url);
             var AccountId = await _unitOfWork.AccountRepository.CreateAccountAndWallet(accountModel, RoleEnum.University);
             university.AccountId = AccountId;
             var result = await _unitOfWork.UniversityRepository.AddAsync(university);
@@ -111,6 +111,7 @@ namespace Infrastructure.Persistence.Service
             exitAccount.Name = putModel.Name;
             exitAccount.Phone = putModel.Phone;
             exitAccount.Email = putModel.Email;
+            exitAccount.Image_Url = putModel.Image_Url;
             await _unitOfWork.AccountRepository.UpdateAsync(exitAccount);
             await _unitOfWork.UniversityRepository.UpdateAsync(exitUniversity);
             var result = _mapper.Map<UniversityModel>(exitUniversity);

@@ -72,6 +72,7 @@ public class StudentService : IStudentService
         exitAccount.Name = putModel.Name;
         exitAccount.Phone = putModel.Phone;
         exitAccount.Email = putModel.Email;
+        exitAccount.Image_Url= putModel.Image_Url;
         await _unitOfWork.AccountRepository.UpdateAsync(exitAccount);
         var result = await _unitOfWork.StudentRepository.UpdateAsync(exitStudent);
         await _unitOfWork.SaveChangesAsync();
@@ -90,7 +91,8 @@ public class StudentService : IStudentService
             postModel.Name
             , postModel.Email
             , postModel.Password
-            , postModel.Phone);
+            , postModel.Phone,
+            postModel.Image_Url);
         var AccountId = await _unitOfWork.AccountRepository.CreateAccountAndWallet(accountModel, RoleEnum.Student);
         var student = _mapper.Map<Student>(postModel);
         student.AccountId = AccountId;

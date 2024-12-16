@@ -84,7 +84,8 @@ namespace Infrastructure.Persistence.Service
                     postModel.Name,
                     postModel.Email,
                     postModel.Password,
-                    postModel.Phone);
+                    postModel.Phone
+                    ,postModel.Image_Url);
                 var accountId = await _unitOfWork.AccountRepository.CreateAccountAndWallet(accountModel, RoleEnum.Consultant);
 
                 //consultant.Id = Guid.NewGuid();
@@ -135,7 +136,7 @@ namespace Infrastructure.Persistence.Service
                                    .Include(c => c.Certifications)
                                    .Include(c => c.ConsultantRelations).ThenInclude(cr => cr.University.Account)
                 ) ?? throw new NotExistsException();
-
+                await _unitOfWork.AccountRepository.checkPhoneAndMail(consultant.AccountId, putModel.Email, putModel.Phone);
                 _mapper.Map(putModel, consultant);
 
                 var listNewRelation = new List<ConsultantRelation>();

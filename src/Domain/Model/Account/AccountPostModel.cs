@@ -23,6 +23,7 @@ namespace Domain.Model.Account
         [RegularExpression(@"^\+?[0-9]\d{9,10}$", ErrorMessage = "Phone is not valid")]
         [Required(ErrorMessage = "Phone is required.")]
         public string Phone { get; set; } = string.Empty;
+        public string? Image_Url { get; set; }
     }
     public class AccountPutModel
     {
@@ -36,5 +37,6 @@ namespace Domain.Model.Account
         [RegularExpression(@"^\+?[0-9]\d{9,10}$", ErrorMessage = "Phone is not valid")]
         [Required(ErrorMessage = "Phone is required.")]
         public string Phone { get; set; } = string.Empty;
+        public string? Image_Url { get; set; }
     }
 }
