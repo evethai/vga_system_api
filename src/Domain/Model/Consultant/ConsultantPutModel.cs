@@ -22,7 +22,6 @@ namespace Domain.Model.Consultant
         public DateTime DoB { get; set; }
         [Required(ErrorMessage = "Gender is required.")]
         public bool Gender { get; set; }
-        public string? Image_Url { get; set; }
         public List<CertificationPutModel>? Certifications { get; set; }
         public List<ConsultantRelationPostPutModel>? ConsultantRelations { get; set; }
     }

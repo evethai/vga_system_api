@@ -150,11 +150,12 @@ namespace Infrastructure.Persistence.Repository
                                 {
                                     throw new Exception($"Major Id '{tagKey}' is not found.");
                                 }
-                                StudentCare = _context.StudentChoice
+                                var care = _context.StudentChoice
                                    .Where(s => s.isMajor == true
                                                && s.MajorOrOccupationId.Equals(NameMajor.Id)
                                                && s.Type == StudentChoiceType.Care)
                                    .ToList();
+                                StudentCare.AddRange(care);
                             }
                         }
                         else { postModel.Hashtag = null; }
