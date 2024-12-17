@@ -329,7 +329,8 @@ namespace Infrastructure.Persistence.Service
                         DateTimeKind.Utc
                     );
 
-                if (dateTimeStart < DateTime.UtcNow.AddHours(7))
+                var dateTimeNow = DateTime.UtcNow.AddHours(7);
+                if (dateTimeStart > dateTimeNow)
                     throw new Exception("You can only report after your consultation date time.");
 
                 var admin = await _unitOfWork.AccountRepository.SingleOrDefaultAsync(
