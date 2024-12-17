@@ -132,18 +132,10 @@ namespace Application.Common.Mapper
                 .ForMember(dest => dest.WalletBalance, opt => opt.MapFrom(src => src.Account.Wallet.GoldBalance))
                 .ReverseMap();
             CreateMap<Consultant, ConsultantPostModel>()
-                //.ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Account.Name))
-                //.ForMember(dest => dest.ConsultantLevelId, opt => opt.MapFrom(src => src.ConsultantLevelId))
-                //.ForMember(dest => dest.UniversityId, opt => opt.MapFrom(src => src.UniversityId))
-                //.ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
-                //.ForMember(dest => dest.DoB, opt => opt.MapFrom(src => src.DoB))
-                //.ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender))
+
                 .ReverseMap();
             CreateMap<Consultant, ConsultantPutModel>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Account.Name))
-                //.ForMember(dest => dest.ConsultantLevelId, opt => opt.MapFrom(src => src.ConsultantLevelId))
-                //.ForMember(dest => dest.UniversityId, opt => opt.MapFrom(src => src.UniversityId))
-                //.ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Account.Email))
                 .ForMember(dest => dest.Phone, opt => opt.MapFrom(src => src.Account.Phone))
                 .ForMember(dest => dest.Image_Url, opt => opt.MapFrom(src => src.Account.Image_Url))

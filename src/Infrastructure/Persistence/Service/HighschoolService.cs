@@ -58,7 +58,8 @@ public class HighschoolService : IHighschoolService
             postModel.Name
             ,postModel.Email
             , postModel.Password
-            , postModel.Phone);
+            , postModel.Phone
+            ,postModel.Image_Url);
         var AccountId = await _unitOfWork.AccountRepository.CreateAccountAndWallet(accountModel, RoleEnum.HighSchool);
         highschool.AccountId = AccountId;
         await _unitOfWork.HighschoolRepository.AddAsync(highschool);
@@ -85,6 +86,7 @@ public class HighschoolService : IHighschoolService
         exitAccount.Name = putModel.Name;
         exitAccount.Phone = putModel.Phone;
         exitAccount.Email = putModel.Email;
+        exitAccount.Image_Url = putModel.Image_Url;
         await _unitOfWork.AccountRepository.UpdateAsync(exitAccount);      
         await _unitOfWork.HighschoolRepository.UpdateAsync(exitHighschool);
         await _unitOfWork.SaveChangesAsync();
