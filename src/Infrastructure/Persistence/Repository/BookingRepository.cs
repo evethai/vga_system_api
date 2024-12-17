@@ -119,6 +119,7 @@ namespace Infrastructure.Persistence.Repository
                 .Where(t => t.Id.Equals(bookingId))
                 .Include(b => b.ConsultationTime.Day.Consultant.Account.Wallet)
                 .Include(b => b.Student.Account.Wallet)
+                .Include(b => b.ConsultationTime.SlotTime)
                 .FirstOrDefault() ?? throw new NotExistsException();
 
             Wallet wallet = null;
@@ -134,6 +135,20 @@ namespace Infrastructure.Persistence.Repository
             switch (model.Type)
             {
                 case BookingStatus.Consulted:
+                    var dateTimeStart = new DateTime(
+                        existedBooking.ConsultationTime.Day.Day.Year,
+                        existedBooking.ConsultationTime.Day.Day.Month,
+                        existedBooking.ConsultationTime.Day.Day.Day,
+                        existedBooking.ConsultationTime.SlotTime.StartTime.Hour,
+                        existedBooking.ConsultationTime.SlotTime.StartTime.Minute,
+                        existedBooking.ConsultationTime.SlotTime.StartTime.Second,
+                        DateTimeKind.Utc
+                    );
+
+                    var dateTimeNow = DateTime.UtcNow.AddHours(7);
+                    if (dateTimeStart > dateTimeNow)
+                        throw new Exception("You can only change to 'Consulted' status after the consultation period starts.");
+
                     wallet = _context.Wallet
                         .Where(w => w.Id.Equals(existedBooking.ConsultationTime.Day.Consultant.Account.Wallet.Id))
                         .FirstOrDefault() ?? throw new NotExistsException();

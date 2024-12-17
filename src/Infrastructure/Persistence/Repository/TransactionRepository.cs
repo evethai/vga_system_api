@@ -308,7 +308,7 @@ namespace Infrastructure.Persistence.Repository
         public async Task<List<Wallet>> GetInforStudentHasWalletReceiving(Guid id, int years)
         {
             var idHighschool = _context.HighSchool
-                .Where(a => a.AccountId.Equals(id))
+                .Where(a => a.AccountId.Equals(id) && a.Account.Status == AccountStatus.Active)
                 .FirstOrDefault() ?? throw new Exception("Account Id is not found");
             var listStudent = await _context.Student
                 .Where(a => a.HighSchoolId.Equals(idHighschool.Id) && a.SchoolYears.Equals(years)).AsNoTracking()
