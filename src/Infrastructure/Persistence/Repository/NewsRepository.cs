@@ -42,7 +42,7 @@ namespace Infrastructure.Persistence.Repository
 
         public Task<Boolean> CreateImageNews(Guid NewsId, List<ImageNewsPostModel> imageNews)
         {
-            var _newsId =  _context.News.Where(s=> s.Id.Equals(NewsId)).FirstOrDefault() ?? throw new Exception("Id is not found");           
+            var _newsId =  _context.News.Where(s=> s.Id.Equals(NewsId)).FirstOrDefault() ?? throw new Exception("Không tìm thấy ID");           
             foreach (var image in imageNews)
             {
                 ImageNews img = new ImageNews
@@ -70,7 +70,7 @@ namespace Infrastructure.Persistence.Repository
 
         public Task<bool> DeleteOneImageNews(int id)
         {
-            var exitNewsImageId = _context.ImageNews.Where(s => s.Id.Equals(id)).FirstOrDefault() ?? throw new Exception("Id is not found");           
+            var exitNewsImageId = _context.ImageNews.Where(s => s.Id.Equals(id)).FirstOrDefault() ?? throw new Exception("Không tìm thấy ID");           
             _context.ImageNews.Remove(exitNewsImageId);
             _context.SaveChanges();
             return Task.FromResult(true);
@@ -79,14 +79,14 @@ namespace Infrastructure.Persistence.Repository
        public NewsModel HashTagNews(Guid NewsId)
         {
             var ExitNews = _context.News.Where(a => a.Id.Equals(NewsId)).Include(a => a.ImageNews)
-                .Include(a => a.University).ThenInclude(a => a.Account).FirstOrDefault() ?? throw new Exception("Id is not found");
+                .Include(a => a.University).ThenInclude(a => a.Account).FirstOrDefault() ?? throw new Exception("Không tìm thấy ID");
             List<HashTag> tagsValue = new List<HashTag>();
             if (ExitNews.Hashtag != null)
             {
                 List<string> tagsKey = new List<string>(ExitNews.Hashtag.Split(','));
                 foreach (var tag in tagsKey)
                 {
-                    var NameMajor = _context.Major.Where(s => s.Id.Equals(Guid.Parse(tag))).FirstOrDefault() ?? throw new Exception("Major Id is not found");
+                    var NameMajor = _context.Major.Where(s => s.Id.Equals(Guid.Parse(tag))).FirstOrDefault() ?? throw new Exception("Không tìm thấy ID ngành");
                     HashTag hashTag = new HashTag
                     {
                         Keys = tag,
@@ -135,7 +135,7 @@ namespace Infrastructure.Persistence.Repository
                     {
                         var checkUniversity = _context.University.Where(s => s.Id.Equals(postModel.UniversityId)).FirstOrDefault();
                         if (postModel == null || checkUniversity == null)
-                        { throw new Exception("Model is null or University is not found"); }
+                        { throw new Exception("Model là rỗng hoặc không tìm thấy trường đại học"); }
 
                         var StudentCare = new List<StudentChoice>();
                         if (!string.IsNullOrWhiteSpace(postModel.Hashtag))
@@ -148,7 +148,7 @@ namespace Infrastructure.Persistence.Repository
 
                                 if (NameMajor == null)
                                 {
-                                    throw new Exception($"Major Id '{tagKey}' is not found.");
+                                    throw new Exception($"Id ngành '{tagKey}' không tìm thấy");
                                 }
                                 var care = _context.StudentChoice
                                    .Where(s => s.isMajor == true
@@ -170,7 +170,7 @@ namespace Infrastructure.Persistence.Repository
                         await _context.News.AddAsync(news);
                         await _context.SaveChangesAsync();
                         //----------
-                        var _newsId = _context.News.Where(s => s.Id.Equals(news.Id)).FirstOrDefault() ?? throw new Exception("Id is not found");
+                        var _newsId = _context.News.Where(s => s.Id.Equals(news.Id)).FirstOrDefault() ?? throw new Exception("Không tìm thấy ID");
                         if (postModel.ImageNews != null)
                         {
                             foreach (var image in postModel.ImageNews)
@@ -193,7 +193,7 @@ namespace Infrastructure.Persistence.Repository
                             {
                                 var checkAccountId = _context.Student.
                                 Where(s => s.Id.Equals(studentChoice.StudentId)).
-                                FirstOrDefault() ?? throw new Exception("Account id is not found");
+                                FirstOrDefault() ?? throw new Exception("Không tìm thấy ID Tài khoản");
                                 notifications.Add(new Notification
                                 {
                                     AccountId = checkAccountId.AccountId,
@@ -210,7 +210,7 @@ namespace Infrastructure.Persistence.Repository
                         return new ResponseModel
                         {
                             IsSuccess = true,
-                            Message = "News created successfully.",
+                            Message = "Tin tức đã được tạo thành công.",
                             Data = news
                         };
                     }

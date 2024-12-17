@@ -49,7 +49,7 @@ namespace Infrastructure.Persistence.Service
             return new ResponseModel
             {
                 IsSuccess = true,
-                Message = "Notification created successfully",
+                Message = "Thông báo đã được tạo thành công",
                 Data = noti 
             };
         }

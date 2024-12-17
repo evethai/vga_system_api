@@ -67,7 +67,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while get occupational group by id: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -94,7 +94,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while create occupational group: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -124,7 +124,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while update occupational group: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -154,7 +154,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while delete occupational group: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }

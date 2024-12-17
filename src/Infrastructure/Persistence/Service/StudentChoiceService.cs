@@ -34,7 +34,7 @@ namespace Infrastructure.Persistence.Service
                     return new ResponseModel
                     {
                         IsSuccess = false,
-                        Message = "Major or Occupation Id is not Existed!"
+                        Message = "Mã ngành học hoặc nghề nghiệp không tồn tại!"
                     };
             }
             else
@@ -44,7 +44,7 @@ namespace Infrastructure.Persistence.Service
                     return new ResponseModel
                     {
                         IsSuccess = false,
-                        Message = "Major or Occupation Id is not Existed!"
+                        Message = "Mã ngành học hoặc nghề nghiệp không tồn tại!"
                     };
             }
 
@@ -69,7 +69,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = true,
-                    Message = "Create new student care is success .",
+                    Message = "Tạo ra sự quan tâm học sinh mới là thành công.",
                     Data = result
                 };
             }
@@ -81,7 +81,7 @@ namespace Infrastructure.Persistence.Service
             return new ResponseModel
             {
                 IsSuccess = true,
-                Message = "Update level care of major or occupation.",
+                Message = "Cập nhật mức độ quan tâm của chuyên ngành hoặc nghề nghiệp.",
                 Data = exited
             };
 
@@ -97,7 +97,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = "List care of student is null!"
+                    Message = "Danh sách quan tâm của sinh viên là rỗng"
                 };
             }
             List<StudentCareModel>? listMajor = new List<StudentCareModel>();
@@ -138,7 +138,7 @@ namespace Infrastructure.Persistence.Service
             return new ResponseModel
             {
                 IsSuccess = true,
-                Message = "List Student care ",
+                Message = "Danh sách quan tâm học sinh",
                 Data = model
             };
 

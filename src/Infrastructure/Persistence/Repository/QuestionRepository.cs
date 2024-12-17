@@ -43,7 +43,7 @@ namespace Infrastructure.Persistence.Repository
 
                         if (typeId == null)
                         {
-                            throw new Exception("TestTypeId not found for the given PersonalTestId.");
+                            throw new Exception("Không tìm thấy TestTypeId cho PersonalTestId đã cho.");
                         }
 
                         Question question = new Question
@@ -86,7 +86,7 @@ namespace Infrastructure.Persistence.Repository
                         return new ResponseModel
                         {
                             IsSuccess = true,
-                            Message = "Question created successfully.",
+                            Message = "Câu hỏi đã được tạo thành công.",
                             Data = question.Id
                         };
                     }
@@ -246,7 +246,7 @@ namespace Infrastructure.Persistence.Repository
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = "Questions cannot be null or empty."
+                    Message = "Câu hỏi không được để trống hoặc rỗng."
                 };
             }
 
@@ -261,7 +261,7 @@ namespace Infrastructure.Persistence.Repository
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"Duplicate questions found: {string.Join(", ", duplicateQuestions)}"
+                    Message = $"Đã tìm thấy câu hỏi trùng lặp: {string.Join(", ", duplicateQuestions)}"
                 };
             }
 
@@ -315,7 +315,7 @@ namespace Infrastructure.Persistence.Repository
                 return new ResponseModel
                 {
                     IsSuccess = true,
-                    Message = "Added MBTI questions successfully."
+                    Message = "Đã thêm câu hỏi MBTI thành công."
                 };
             }
             catch (Exception ex)
@@ -323,7 +323,7 @@ namespace Infrastructure.Persistence.Repository
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred: {ex.Message}"
+                    Message = $"Đã xảy ra lỗi: {ex.Message}"
                 };
             }
         }
@@ -337,7 +337,7 @@ namespace Infrastructure.Persistence.Repository
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = "Questions cannot be null or empty."
+                    Message = "Câu hỏi không được để trống hoặc rỗng."
                 };
             }
 
@@ -371,7 +371,7 @@ namespace Infrastructure.Persistence.Repository
                 return new ResponseModel
                 {
                     IsSuccess = true,
-                    Message = "Added Holland questions successfully."
+                    Message = "Đã thêm câu hỏi của Holland thành công."
                 };
             }
             catch (Exception ex)
@@ -379,7 +379,7 @@ namespace Infrastructure.Persistence.Repository
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred: {ex.Message}"
+                    Message = $"Đã xảy ra lỗi: {ex.Message}"
                 };
             }
         }

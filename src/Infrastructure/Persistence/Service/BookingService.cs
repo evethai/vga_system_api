@@ -167,7 +167,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while booking consultation time: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -202,7 +202,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while get booking by id: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -238,7 +238,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while get all bookings: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -295,7 +295,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while process booking: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -369,7 +369,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while report booking: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -397,7 +397,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while process report: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }

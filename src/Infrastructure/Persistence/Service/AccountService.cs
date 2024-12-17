@@ -101,14 +101,14 @@ namespace Infrastructure.Persistence.Service
                     return new ResponseModel
                     {
                         IsSuccess = true,
-                        Message = "Logout successful, Token has been revoked"
+                        Message = "Đăng xuất thành công, Mã thông báo đã bị thu hồi"
                     };
                 }
 
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = "No active refresh token found for this account."
+                    Message = "Không tìm thấy mã thông báo làm mới nào đang hoạt động cho tài khoản này."
                 };
             }
             catch (Exception ex)
@@ -116,7 +116,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = "An error occurred while revoking the token."
+                    Message = "Đã xảy ra lỗi khi thu hồi mã thông báo."
                 };
             }
         }
@@ -133,7 +133,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = "This refresh token does not exist"
+                    Message = "Mã thông báo làm mới này không tồn tại"
                 };
             }
 
@@ -142,7 +142,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = "Refresh token has been used"
+                    Message = "Mã thông báo làm mới đã được sử dụng"
                 };
             }
 
@@ -151,7 +151,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = "Refresh token has been revoked"
+                    Message = "Mã thông báo làm mới đã bị thu hồi"
                 };
             }
 
@@ -160,7 +160,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = "This token hasn't expired yet"
+                    Message = "Mã thông báo này vẫn chưa hết hạn"
                 };
             }
 
@@ -178,7 +178,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = "Account not found"
+                    Message = "Không tìm thấy tài khoản"
                 };
             }
 
@@ -188,7 +188,7 @@ namespace Infrastructure.Persistence.Service
             return new ResponseModel
             {
                 IsSuccess = true,
-                Message = "Create new token success",
+                Message = "Tạo mã thông báo mới thành công",
                 Data = responseModel
             };
         }
@@ -331,7 +331,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = "Account is not found!"
+                    Message = "Không tìm thấy tài khoản"
                 };
             }
             account.Password = PasswordUtil.HashPassword(password);
@@ -340,7 +340,7 @@ namespace Infrastructure.Persistence.Service
             return new ResponseModel
             {
                 IsSuccess = true,
-                Message = "Update password is successful.",
+                Message = "Cập nhật mật khẩu thành công.",
             };
         }
 

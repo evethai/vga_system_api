@@ -57,7 +57,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while get consultant by id: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -116,7 +116,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while create consultant: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -194,7 +194,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while updating consultant: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -228,7 +228,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while delete consultant: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }

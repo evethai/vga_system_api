@@ -30,12 +30,12 @@ namespace Infrastructure.Persistence.Service
         public async Task<ResponseModel> CreateAdmissionInformationAsync(Guid UniversityId, List<AdmissionInformationPostModel> postModel)
         {
             var exitUniversity = await _unitOfWork.UniversityRepository.GetByIdGuidAsync(UniversityId) 
-                ?? throw new Exception("University Id is not found");            
+                ?? throw new Exception("Không tìm thấy ID trường đại học");            
             await _unitOfWork.AdmissionInformationRepository.CreateListAdmissionInformation(UniversityId, postModel);
             await _unitOfWork.SaveChangesAsync();
             return new ResponseModel
             {
-                Message = "Create Admission Information is successfully",
+                Message = "Tạo thông tin nhập học thành công",
                 IsSuccess = true,
                 Data = postModel
             };
@@ -46,11 +46,11 @@ namespace Infrastructure.Persistence.Service
             var info = await _unitOfWork.AdmissionInformationRepository.
                 SingleOrDefaultAsync(predicate: c => c.Id == Id,
                 include: a => a.Include(a => a.University).ThenInclude(s=>s.Account).Include(a=>a.Major).Include(a=>a.AdmissionMethod)) 
-                ?? throw new Exception("Id is not found");
+                ?? throw new Exception("Không tìm thấy ID");
             var result = _mapper.Map<AdmissionInformationModel>(info);
             return new ResponseModel
             {
-                Message = "Get By Id is Successfully",
+                Message = "Nhận Theo Id Thành Công",
                 IsSuccess = true,
                 Data = result
             };
@@ -78,12 +78,12 @@ namespace Infrastructure.Persistence.Service
         public async Task<ResponseModel> DeleteAdmissionInformationAsync(int Id)
         {
             var exitAdmissionInfo = await _unitOfWork.AdmissionInformationRepository.GetByIdAsync(Id) 
-                ?? throw new Exception("Admission Information Id is not found") ;
+                ?? throw new Exception("Không tìm thấy ID thông tin tuyển sinh") ;
             await _unitOfWork.AdmissionInformationRepository.DeleteAsync(exitAdmissionInfo);
             await _unitOfWork.SaveChangesAsync();
             return new ResponseModel
             {
-                Message = "Delete Admission Information is Successfully",
+                Message = "Xóa thông tin nhập học thành công",
                 IsSuccess = true
             };
         }
@@ -93,11 +93,11 @@ namespace Infrastructure.Persistence.Service
             var result = await _unitOfWork.AdmissionInformationRepository.CheckAdmissionInformation(putModel);
             if(result  == false)
             {
-                throw new Exception("Error");
+                throw new Exception("Lỗi");
             }
             return new ResponseModel
             {
-                Message = "Update Admission Information is successfully",
+                Message = "Cập nhật thông tin tuyển sinh thành công",
                 IsSuccess = true,
                 Data = putModel
             };

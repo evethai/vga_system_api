@@ -81,7 +81,7 @@ namespace Application.Interface.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while create withdraw: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -98,7 +98,7 @@ namespace Application.Interface.Service
                     ) ?? throw new NotExistsException();
 
                 if (transaction.TransactionType != TransactionType.Request)
-                    throw new Exception("Transaction is not Request");
+                    throw new Exception("Giao dịch không phải là Yêu cầu");
 
                 var responseModel = await _unitOfWork.TransactionRepository.ProcessWithdrawRequest(transactionId, model);
 
@@ -109,7 +109,7 @@ namespace Application.Interface.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while process withdraw: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }

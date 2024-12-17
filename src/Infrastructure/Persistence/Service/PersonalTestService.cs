@@ -31,7 +31,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = "Model cannot be null"
+                    Message = "Model không thể là rỗng"
                 };
             }
 
@@ -54,7 +54,7 @@ namespace Infrastructure.Persistence.Service
                     return new ResponseModel
                     {
                         IsSuccess = false,
-                        Message = "Invalid TestTypeId"
+                        Message = "TestTypeId không hợp lệ"
                     };
                 }
 
@@ -66,7 +66,7 @@ namespace Infrastructure.Persistence.Service
                         return new ResponseModel
                         {
                             IsSuccess = false,
-                            Message = "Json data for MBTI questions is empty"
+                            Message = "Dữ liệu Json cho các câu hỏi MBTI đang trống"
                         };
                     }
 
@@ -88,7 +88,7 @@ namespace Infrastructure.Persistence.Service
                         return new ResponseModel
                         {
                             IsSuccess = false,
-                            Message = "Json data for Holland questions is empty"
+                            Message = "Dữ liệu Json cho các câu hỏi của Holland đang trống"
                         };
                     }
 
@@ -98,7 +98,7 @@ namespace Infrastructure.Persistence.Service
                         return new ResponseModel
                         {
                             IsSuccess = false,
-                            Message = "Failed to add Holland questions"
+                            Message = "Không thêm được câu hỏi của Holland"
                         };
                     }
                 }
@@ -108,7 +108,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = true,
-                    Message = "Personal test created successfully",
+                    Message = "Bài kiểm tra cá nhân đã được tạo thành công",
                     Data = personalTest
                 };
             }
@@ -117,7 +117,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = "Invalid JSON data",
+                    Message = "Dữ liệu JSON không hợp lệ",
                     Data = ex.Message
                 };
             }
@@ -126,7 +126,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = "An error occurred while creating personal test",
+                    Message = "Đã xảy ra lỗi khi tạo bài kiểm tra cá nhân",
                     Data = ex.Message
                 };
             }
@@ -139,7 +139,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = "Personal test not found"
+                    Message = "Không tìm thấy bài kiểm tra cá nhân"
                 };
             }
             personalTest.Name = model.Name;
@@ -150,7 +150,7 @@ namespace Infrastructure.Persistence.Service
             return new ResponseModel
             {
                 IsSuccess = true,
-                Message = "Update personal test success",
+                Message = "Cập nhật thành công bài kiểm tra cá nhân",
                 Data = personalTest
             };
         }
@@ -162,7 +162,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = "Personal test not found"
+                    Message = "Không tìm thấy bài kiểm tra cá nhân"
                 };
             }
             personalTest.Status = false;
@@ -172,7 +172,7 @@ namespace Infrastructure.Persistence.Service
             return new ResponseModel
             {
                 IsSuccess = true,
-                Message = "Delete personal test success",
+                Message = "Xóa thành công kiểm tra cá nhân",
                 Data = personalTest
             };
         }

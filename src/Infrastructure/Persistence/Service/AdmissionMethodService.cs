@@ -33,7 +33,7 @@ namespace Infrastructure.Persistence.Service
             await _unitOfWork.SaveChangesAsync();
             return new ResponseModel
             {
-                Message = "Create Admission Method is successfully",
+                Message = "Tạo phương thức nhập học thành công",
                 IsSuccess = true,
                 Data = postModel
             };
@@ -41,24 +41,24 @@ namespace Infrastructure.Persistence.Service
 
         public async Task<ResponseModel> DeleteAdmissionMethodAsync(Guid Id)
         {
-            var exit = await _unitOfWork.AdmissionMethodRepository.GetByIdGuidAsync(Id) ?? throw new Exception("Admission Method Id is not found");            
+            var exit = await _unitOfWork.AdmissionMethodRepository.GetByIdGuidAsync(Id) ?? throw new Exception("Không tìm thấy ID phương thức nhập học");            
             exit.Status = false;
             await _unitOfWork.AdmissionMethodRepository.UpdateAsync(exit);
             await _unitOfWork.SaveChangesAsync();
             return new ResponseModel
             {
-                Message = "Delete Admission Method is Successfully",
+                Message = "Xóa phương thức nhập học thành công",
                 IsSuccess = true
             };
         }
 
         public async Task<ResponseModel> GetAdmissionMethodById(Guid Id)
         {
-            var exitMethod = await _unitOfWork.AdmissionMethodRepository.GetByIdGuidAsync(Id) ??  throw new Exception("Id is not found");           
+            var exitMethod = await _unitOfWork.AdmissionMethodRepository.GetByIdGuidAsync(Id) ??  throw new Exception("Không tìm thấy ID phương thức nhập học");           
             var result = _mapper.Map<AdmissionMethodModel>(exitMethod);
             return new ResponseModel
             {
-                Message = "Get AdmissionMethod Successfully",
+                Message = "Lấy Phương pháp Nhập học Thành công",
                 IsSuccess = true,
                 Data = result
             };
@@ -83,14 +83,14 @@ namespace Infrastructure.Persistence.Service
 
         public async Task<ResponseModel> UpdateAdmissionMethodAsync(Guid Id, AdmissionMethodPutModel putModel)
         {
-            var exitMethod = await _unitOfWork.AdmissionMethodRepository.GetByIdGuidAsync(Id) ?? throw new Exception("Admisson Method Id is not found");           
+            var exitMethod = await _unitOfWork.AdmissionMethodRepository.GetByIdGuidAsync(Id) ?? throw new Exception("Không tìm thấy ID phương thức nhập học");           
             exitMethod.Description = putModel.Description;
             exitMethod.Name = putModel.Name;
             await _unitOfWork.AdmissionMethodRepository.UpdateAsync(exitMethod);
             await _unitOfWork.SaveChangesAsync();
             return new ResponseModel
             {
-                Message = "Admission Method Id is successfully",
+                Message = "Phương thức nhập học ID đã thành công",
                 IsSuccess = true,
                 Data = putModel
             };

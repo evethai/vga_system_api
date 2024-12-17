@@ -66,7 +66,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while create consultation time: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -104,7 +104,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while delete consultation time: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -134,7 +134,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while get consultation time by id: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }

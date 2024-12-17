@@ -95,9 +95,9 @@ namespace Infrastructure.Persistence.Repository
         if (putModel == null) { throw new ArgumentNullException(nameof(putModel)); }
             foreach (var item in putModel)
             {
-                var checkId = _context.AdmissionInformation.Where(a => a.Id.Equals(item.Id)).FirstOrDefault() ?? throw new Exception("Id is not found");
-                var checkMajor = _context.Major.Where(a => a.Id.Equals(item.MajorId)).FirstOrDefault() ?? throw new Exception("Major Id is not found");
-                var checkMethod = _context.AdmissionMethod.Where(a => a.Id.Equals(item.AdmissionMethodId)).FirstOrDefault() ?? throw new Exception("Method Id is not found");
+                var checkId = _context.AdmissionInformation.Where(a => a.Id.Equals(item.Id)).FirstOrDefault() ?? throw new Exception("Không tìm thấy ID");
+                var checkMajor = _context.Major.Where(a => a.Id.Equals(item.MajorId)).FirstOrDefault() ?? throw new Exception("Không tìm thấy ID ngành");
+                var checkMethod = _context.AdmissionMethod.Where(a => a.Id.Equals(item.AdmissionMethodId)).FirstOrDefault() ?? throw new Exception("Không tìm thấy ID phương thức");
                 checkId.MajorId = checkMajor.Id;
                 checkId.AdmissionMethodId = checkMethod.Id;
                 checkId.TuitionFee =item.TuitionFee;
@@ -114,7 +114,7 @@ namespace Infrastructure.Persistence.Repository
             var exitUniversity =  _context.University.Where(a=>a.Id.Equals(UniversityId)).FirstOrDefault();
             if (exitUniversity == null)
             {
-                throw new Exception("University Id is not found");
+                throw new Exception("Không tìm thấy ID trường đại học");
             }
             foreach (var postModel in postModels)
             {
@@ -122,7 +122,7 @@ namespace Infrastructure.Persistence.Repository
                 var exitMajor = _context.Major.Where(a=>a.Id.Equals(postModel.MajorId)).FirstOrDefault();
                 if (exitAdmissionMethod == null || exitMajor == null)
                 {
-                    throw new Exception("Method Id or Major Id is not found");
+                    throw new Exception("Không tìm thấy Id phương thức hoặc Id ngành");
                 }
                 AdmissionInformation info = new AdmissionInformation
                 {
