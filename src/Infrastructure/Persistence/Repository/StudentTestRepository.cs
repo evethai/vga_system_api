@@ -249,7 +249,7 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
             .Where(s => s.StudentId == studentId)
             .Include(s => s.PersonalTest)               
             .ThenInclude(pt => pt.TestType)              
-            .GroupBy(s => s.PersonalTestId)
+            .GroupBy(s => s.PersonalTest.TestType)
             .Select(g => g.OrderByDescending(s => s.Date)
                           .Select(s => new StudentTest
                           {
@@ -276,7 +276,7 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
 
         //Major selected by student
         var majorSelected = await _context.StudentChoice
-            .Where(s => s.StudentId == stTestId.StudentId)
+            .Where(s => s.StudentId == stTestId.StudentId && s.Type == StudentChoiceType.Test)
             .GroupBy(s => new { s.MajorOrOccupationId, s.MajorOrOccupationName }) 
             .Select(g => new HistoryMajorModel
             {
