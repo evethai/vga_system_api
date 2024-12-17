@@ -60,6 +60,7 @@
         {
             public const string TestTypesEndpoint = ApiEndpoint + "/test-types";
             public const string TestTypeEndpoint = ApiEndpoint + "/test-type/{id}";
+            public const string UpdateTestTypeEndpoint = ApiEndpoint + "/test-type-point/{id}";
         }
 
         //high-school

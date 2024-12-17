@@ -7,13 +7,16 @@ using Application.Interface;
 using Application.Interface.Service;
 using Domain.Enum;
 using Domain.Model.Admin;
+using Domain.Model.Response;
+using Microsoft.Extensions.Configuration;
 
 namespace Infrastructure.Persistence.Service
 {
     public class AdminService : IAdminService
     {
         private readonly IUnitOfWork _unitOfWork;
-        public AdminService(IUnitOfWork unitOfWork)
+
+        public AdminService(IUnitOfWork unitOfWork , IConfiguration configuration)
         {
             _unitOfWork = unitOfWork;
         }
