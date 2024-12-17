@@ -45,7 +45,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while get time slot by id: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -76,7 +76,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while create time slot: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -106,7 +106,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while update time slot: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -135,7 +135,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while delete time slot: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -161,7 +161,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while get all time slots: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }

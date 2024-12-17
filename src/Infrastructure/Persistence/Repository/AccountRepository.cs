@@ -29,7 +29,7 @@ namespace Infrastructure.Persistence.Repository
         {
             if (registerAccount == null)
             {
-                throw new KeyNotFoundException("Null data");
+                throw new KeyNotFoundException("Dữ liệu rỗng");
             }
 
             var email = await _context.Account.Where(x => x.Email.Equals(registerAccount.Email)|| x.Phone.Equals(registerAccount.Phone)).FirstOrDefaultAsync();
@@ -131,7 +131,7 @@ namespace Infrastructure.Persistence.Repository
         {
             var currentUser = _context.Account
             .Where(u => u.Id == Id).AsNoTracking()
-            .FirstOrDefault() ?? throw new Exception("Id is not found");
+            .FirstOrDefault() ?? throw new Exception("Không tìm thấy ID");
             if (currentUser.Phone == Phone && currentUser.Email == Mail)
             {
                 return true; 

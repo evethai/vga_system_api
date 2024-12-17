@@ -147,7 +147,7 @@ namespace Infrastructure.Persistence.Repository
 
                     var dateTimeNow = DateTime.UtcNow.AddHours(7);
                     if (dateTimeStart > dateTimeNow)
-                        throw new Exception("You can only change to 'Consulted' status after the consultation period starts.");
+                        throw new Exception("Bạn chỉ có thể thay đổi trạng thái sang 'Đã tham vấn' sau khi thời gian tham vấn bắt đầu.");
 
                     wallet = _context.Wallet
                         .Where(w => w.Id.Equals(existedBooking.ConsultationTime.Day.Consultant.Account.Wallet.Id))
@@ -186,7 +186,7 @@ namespace Infrastructure.Persistence.Repository
                     //update booking
                     existedBooking.Status = model.Type;
                     if (model.Comment != null || model.Comment != "")
-                       throw new Exception("Comment is not null or empty");
+                       throw new Exception("Bình luận không được rỗng hoặc trống");
                     existedBooking.Comment = model.Comment;
                     //update wallet
                     wallet.GoldBalance += (int)existedBooking.Price;
@@ -208,7 +208,7 @@ namespace Infrastructure.Persistence.Repository
                         $".Bạn sẽ nhận lại {existedBooking.Price} điểm đã sử dụng cho buổi tư vấn này.";
                     break;
                 default:
-                    throw new Exception("Appcepted type is Consulted(2) or Canceled(3) only");
+                    throw new Exception("Loại được chấp nhận chỉ được 'Tham khảo (2)' hoặc 'Hủy (3)' ");
             }
 
             _context.Wallet.Update(wallet);
@@ -219,7 +219,7 @@ namespace Infrastructure.Persistence.Repository
 
             return new ResponseModel
             {
-                Message = "Process booking is successfully",
+                Message = "Quá trình đặt chỗ thành công",
                 IsSuccess = true
             };
         }
@@ -320,7 +320,7 @@ namespace Infrastructure.Persistence.Repository
                     await _context.Transaction.AddAsync(consultantTransaction);
                     break;
                 default:
-                    throw new Exception("Appcepted type is Consulted(2) or Canceled(3) only");
+                    throw new Exception("Loại được chấp nhận chỉ được 'Tham khảo (2)' hoặc 'Hủy (3)' ");
             }
 
             _context.Booking.Update(existedBooking);
@@ -330,7 +330,7 @@ namespace Infrastructure.Persistence.Repository
 
             return new ResponseModel
             {
-                Message = "Process report is successfully",
+                Message = "Quy trình báo cáo xử lý thành công",
                 IsSuccess = true
             };
         }

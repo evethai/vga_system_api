@@ -190,7 +190,7 @@ public class StudentService : IStudentService
             return new ResponseModel
             {
                 IsSuccess = false,
-                Message = $"An error occurred while importing students: {ex.Message}"
+                Message = ex.Message
             };
         }
     }

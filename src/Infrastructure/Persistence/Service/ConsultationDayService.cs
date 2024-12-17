@@ -49,7 +49,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while get consultation day by id: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -68,7 +68,7 @@ namespace Infrastructure.Persistence.Service
                         Message = "Ngày tư vấn phải sau ngày hiện tại"
                     };
                 }
-                if (!postModel.ConsultationTimes.Any())
+                if (postModel.ConsultationTimes.Count == 0)
                 {
                     return new ResponseModel
                     {
@@ -76,6 +76,26 @@ namespace Infrastructure.Persistence.Service
                         Message = "Vui lòng chọn thời gian tư vấn"
                     };
                 }
+
+                var timeNow = TimeOnly.FromDateTime(DateTime.UtcNow.AddHours(7));
+
+                var timeSlotIds = postModel.ConsultationTimes.Select(ct => ct.TimeSlotId).ToList();
+
+                var  timeSlots = await _unitOfWork.TimeSlotRepository. GetListAsync(
+                    predicate: x => timeSlotIds.Contains(x.Id));
+
+                foreach (var timeSlot in timeSlots)
+                {
+                    if (timeSlot.StartTime < timeNow)
+                    {
+                        return new ResponseModel
+                        {
+                            IsSuccess = false,
+                            Message = $"Thời gian bắt đầu {timeSlot.StartTime} không hợp lệ vì đã qua thời gian tư vấn"
+                        };
+                    }
+                }
+
                 Expression<Func<ConsultationDay, bool>> exsitingDayFilter = x =>
                 x.ConsultantId.Equals(postModel.ConsultantId) &&
                 x.Day.Equals(postModel.Day) &&
@@ -153,7 +173,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while create consultation day with times: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -195,7 +215,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while delete consultation day: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }

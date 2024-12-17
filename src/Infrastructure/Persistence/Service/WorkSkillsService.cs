@@ -68,7 +68,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while get work skill by id: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -95,7 +95,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while create work skill: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -125,7 +125,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while update work skill: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -155,7 +155,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while delete work skill: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }

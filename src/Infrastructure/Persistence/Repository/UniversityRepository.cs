@@ -55,11 +55,11 @@ namespace Infrastructure.Persistence.Repository
 
         public Task<int> CreateUniversityLocation(Guid IdUniversity, List<UniversityLocationModel> universityLocations)
         {
-            var exitUnversity = _context.University.Where(a=>a.Id.Equals(IdUniversity)).FirstOrDefault() ?? throw new Exception("University Id is not found");          
+            var exitUnversity = _context.University.Where(a=>a.Id.Equals(IdUniversity)).FirstOrDefault() ?? throw new Exception("Không tìm thấy ID trường đại học");          
             foreach (var location in universityLocations)
             {
                 var exitRegion = _context.Region.Where(a => a.Id.Equals(location.RegionId)).FirstOrDefault() 
-                    ?? throw new Exception("Region Id is not found");                
+                    ?? throw new Exception("Không tìm thấy ID vùng");                
                 UniversityLocation locations = new UniversityLocation
                 {
                     UniversityId = IdUniversity,
@@ -75,7 +75,7 @@ namespace Infrastructure.Persistence.Repository
 
         public Task<bool> DeleteUniversityLocation(int Id)
         {
-            var exitlocation = _context.UniversityLocation.Where(a => a.Id.Equals(Id)).FirstOrDefault() ?? throw new Exception("Id is not found");           
+            var exitlocation = _context.UniversityLocation.Where(a => a.Id.Equals(Id)).FirstOrDefault() ?? throw new Exception("Không tìm thấy ID");           
             _context.UniversityLocation.Remove(exitlocation);
             _context.SaveChanges();
             return Task.FromResult(true);
@@ -85,11 +85,11 @@ namespace Infrastructure.Persistence.Repository
         {
             var exitlocation  = _context.UniversityLocation
                 .Where(a=>a.Id.Equals(UniversityLocationId)).FirstOrDefault() 
-                ?? throw new Exception("Id is not found");
+                ?? throw new Exception("Không tìm thấy ID");
 
             var exitRegion = _context.Region
                 .Where(a => a.Id.Equals(universityLocationPutModel.RegionId)).FirstOrDefault()
-                ?? throw new Exception("Region Id is not found");
+                ?? throw new Exception("Không tìm thấy ID vùng");
             exitlocation.RegionId = universityLocationPutModel.RegionId;
             exitlocation.Address = universityLocationPutModel.Address;
             _context.UniversityLocation.Update(exitlocation);

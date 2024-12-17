@@ -63,7 +63,7 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
 
         if (m_Type == null)
         {
-            throw new KeyNotFoundException("Personality type not found");
+            throw new KeyNotFoundException("Không tìm thấy loại tính cách");
         }
         var result = new PersonalGroupModel
         {
@@ -112,7 +112,7 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
 
         if (test == null)
         {
-            throw new KeyNotFoundException("Test not found");
+            throw new KeyNotFoundException("Không tìm thấy bài kiểm tra");
         }
 
         var model = new PersonalTestModel
@@ -165,7 +165,7 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
 
         if (totalAnswers == 0)
         {
-            throw new InvalidOperationException("No questions found for the given IDs.");
+            throw new InvalidOperationException("Không tìm thấy câu hỏi nào cho các ID đã cho.");
         }
 
         var top3Groups = questionGroupCounts
@@ -182,7 +182,7 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
 
         if (h_type == null)
         {
-            throw new KeyNotFoundException("Personality type not found");
+            throw new KeyNotFoundException("Không tìm thấy loại tính cách");
         }
 
          var majors = _context.MajorPersonalMatrix

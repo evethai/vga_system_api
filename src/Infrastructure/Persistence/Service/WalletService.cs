@@ -53,7 +53,7 @@ namespace Infrastructure.Persistence.Service
         public async Task<WalletModel> GetWalletByIdAsync(Guid AccountId)
         {
             var wallet = await _unitOfWork.WalletRepository.SingleOrDefaultAsync
-                (predicate: c => c.AccountId.Equals(AccountId)) ?? throw new Exception("Account Id is not found");
+                (predicate: c => c.AccountId.Equals(AccountId)) ?? throw new Exception("Không tìm thấy ID tài khoản");
             return _mapper.Map<WalletModel>(wallet);
         }
         public async Task<ResponseModel> UpdateWalletUsingGoldDistributionAsync(TransactionPutWalletModel model)
@@ -73,7 +73,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = true,
-                    Message = "This free.",
+                    Message = "Miễn phí này.",
                 };
             }
 
@@ -87,7 +87,7 @@ namespace Infrastructure.Persistence.Service
             }
             return new ResponseModel
             {
-                Message = "Wallet using by test Successfully",
+                Message = "Ví sử dụng bài test Thành công",
                 IsSuccess = true,
                 Data = TransactionInfor
             };
@@ -107,7 +107,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = true,
-                    Message = "Data point of config file is not correct !"
+                    Message = "Điểm dữ liệu của tệp cấu hình không chính xác!"
                 };
             }
             var exitWallet = await _unitOfWork.WalletRepository.
@@ -136,7 +136,7 @@ namespace Infrastructure.Persistence.Service
                 await _unitOfWork.SaveChangesAsync();
                 return new ResponseModel
                 {
-                    Message = "Create PayOs Is Successfully",
+                    Message = "Tạo PayOs thành công",
                     IsSuccess = true,
                     Data = paymentUrl.checkoutUrl
                 };
@@ -144,7 +144,7 @@ namespace Infrastructure.Persistence.Service
             return new ResponseModel
             {
                 IsSuccess = false,
-                Message = "Create URL failed"
+                Message = "Tạo URL không thành công"
             };
         }
         public async Task<string> ConfirmWebhook(string webhookUrl)
@@ -158,7 +158,7 @@ namespace Infrastructure.Persistence.Service
             return new ResponseModel
             {
                 IsSuccess = true,
-                Message = "Deposit To Wallet Success",
+                Message = "Gửi tiền vào ví thành công",
                 Data = webhookData +"--------------" + rs
             };
         }
