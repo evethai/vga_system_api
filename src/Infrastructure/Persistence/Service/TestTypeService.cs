@@ -43,7 +43,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = "Test Type not found !"
+                    Message = "Không tìm thấy loại kiểm tra"
                 };
             }
             testType.Point = Point;
@@ -53,7 +53,7 @@ namespace Infrastructure.Persistence.Service
             return new ResponseModel
             {
                 IsSuccess = true,
-                Message = "Update successful .",
+                Message = "Cập nhật thành công.",
                 Data = testType
             };
         }

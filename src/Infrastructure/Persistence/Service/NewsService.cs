@@ -35,13 +35,13 @@ namespace Infrastructure.Persistence.Service
 
         public async Task<ResponseModel> DeleteNewsAsync(Guid Id)
         {
-           var exitNews = await _unitOfWork.NewsRepository.GetByIdGuidAsync(Id) ?? throw new Exception("Id is not found");
+           var exitNews = await _unitOfWork.NewsRepository.GetByIdGuidAsync(Id) ?? throw new Exception("Không tìm thấy ID");
             await _unitOfWork.NewsRepository.DeleteAllImageNews(exitNews.Id);
             await _unitOfWork.NewsRepository.DeleteAsync(exitNews);
             await _unitOfWork.SaveChangesAsync();
             return new ResponseModel
             {
-                Message = "Delete News is Successfully",
+                Message = "Xóa tin tức thành công",
                 IsSuccess = true
             };
         }
@@ -79,7 +79,7 @@ namespace Infrastructure.Persistence.Service
         public async Task<ResponseModel> UpdateNewsAsync(NewsPutModel putModel, Guid Id)
         {
             var exit = await _unitOfWork.NewsRepository.SingleOrDefaultAsync(predicate: c => c.Id.Equals(Id))
-                ?? throw new Exception("Id is not found");
+                ?? throw new Exception("Không tìm thấy ID");
             exit.Title = putModel.Title;
             exit.Content = putModel.Content;
             exit.Hashtag = putModel.Hashtag;
@@ -87,7 +87,7 @@ namespace Infrastructure.Persistence.Service
             await _unitOfWork.SaveChangesAsync();
             return new ResponseModel
             {
-                Message = "Update news is Successfully",
+                Message = "Cập nhật tin tức thành công",
                 IsSuccess = true,
                 Data = putModel
             }; 
@@ -97,11 +97,11 @@ namespace Infrastructure.Persistence.Service
             var result = await _unitOfWork.NewsRepository.CreateImageNews(NewsId, imageNews) ;
             if (result == false)
             {
-                throw new Exception("Id is not found");
+                throw new Exception("Không tìm thấy ID");
             }
             return new ResponseModel
             {
-                Message = "Create Image news is Successfully",
+                Message = "Tạo tin tức hình ảnh thành công",
                 IsSuccess = true,
                 Data = imageNews
             };
@@ -112,11 +112,11 @@ namespace Infrastructure.Persistence.Service
             var result = await _unitOfWork.NewsRepository.DeleteOneImageNews(Id);
             if (result == false)
             {
-                throw new Exception("Id is not found");
+                throw new Exception("Không tìm thấy ID");
             }
             return new ResponseModel
             {
-                Message = "Delete Image news is Successfully",
+                Message = "Xóa tin tức hình ảnh thành công",
                 IsSuccess = true,
             };
         }
@@ -126,11 +126,11 @@ namespace Infrastructure.Persistence.Service
             var result = await _unitOfWork.NewsRepository.UpdateImageNews(imageNewsModel, id);
             if (result == false)
             {
-                throw new Exception("Id is not found");
+                throw new Exception("Không tìm thấy ID");
             }
             return new ResponseModel
             {
-                Message = "Update Image news is Successfully",
+                Message = "Cập nhật tin tức hình ảnh thành công",
                 IsSuccess = true,
                 Data = imageNewsModel
             };

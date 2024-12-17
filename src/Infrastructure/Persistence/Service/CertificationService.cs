@@ -46,7 +46,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while get certification time by id: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -78,7 +78,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while create certification time: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -107,7 +107,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while delete certification time: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }

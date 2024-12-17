@@ -75,7 +75,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while get major by id: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -102,7 +102,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while create major: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -135,7 +135,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while update major: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -165,7 +165,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while delete major: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -220,7 +220,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while get major by id: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }

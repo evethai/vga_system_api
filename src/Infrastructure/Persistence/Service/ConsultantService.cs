@@ -57,7 +57,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while get consultant by id: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -116,7 +116,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while create consultant: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -184,7 +184,7 @@ namespace Infrastructure.Persistence.Service
                 var result = _mapper.Map<ConsultantViewModel>(consultant);
                 return new ResponseModel
                 {
-                    Message = $"Consultant with id '{consultantId}' has been updated successfully",
+                    Message = $"Tư vấn viên có id '{consultantId}' đã được cập nhật thành công",
                     IsSuccess = true,
                     Data = result
                 };
@@ -194,7 +194,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while updating consultant: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -228,7 +228,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while delete consultant: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }

@@ -70,7 +70,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while get entry level by id: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -98,7 +98,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while create entry level: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -128,7 +128,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while update entry level: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -157,7 +157,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while delete entry level: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }

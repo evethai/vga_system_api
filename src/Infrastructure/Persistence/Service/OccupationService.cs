@@ -95,7 +95,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while get occupation by id: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -164,7 +164,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while creating the occupation: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -235,7 +235,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while update occupation by id: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -272,7 +272,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while delete occupation: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }

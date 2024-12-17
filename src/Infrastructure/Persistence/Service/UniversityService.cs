@@ -40,7 +40,7 @@ namespace Infrastructure.Persistence.Service
             await _unitOfWork.SaveChangesAsync();
             return new ResponseModel
             {
-                Message = "University Created Successfully",
+                Message = "Đại học được thành lập thành công",
                 IsSuccess = true,
                 Data = postModel,
             };
@@ -56,7 +56,7 @@ namespace Infrastructure.Persistence.Service
             var result = _mapper.Map<UniversityModel>(exUniversity);
             return new ResponseModel
             {
-                Message = "Delete University is Successfully",
+                Message = "Xóa trường đại học thành công",
                 IsSuccess = true,
                 Data = Id
             };
@@ -95,18 +95,18 @@ namespace Infrastructure.Persistence.Service
 
             if (university == null)
             {
-                throw new Exception("Id is not found");
+                throw new Exception("Không tìm thấy ID");
             }
             return _mapper.Map<UniversityModelGetBy>(university);
         }
 
         public async Task<ResponseModel> UpdateUniversityAsync(UniversityPutModel putModel, Guid Id)
         {
-            var exitUniversity = await _unitOfWork.UniversityRepository.GetByIdGuidAsync(Id) ?? throw new Exception("Id is not found");
+            var exitUniversity = await _unitOfWork.UniversityRepository.GetByIdGuidAsync(Id) ?? throw new Exception("Không tìm thấy ID");
             exitUniversity.Description = putModel.Description;
             exitUniversity.Code = putModel.Code;
             exitUniversity.EstablishedYear = putModel.EstablishedYear;           
-            var exitAccount = await _unitOfWork.AccountRepository.GetByIdGuidAsync(exitUniversity.AccountId) ?? throw new Exception("Account Id is not found");
+            var exitAccount = await _unitOfWork.AccountRepository.GetByIdGuidAsync(exitUniversity.AccountId) ?? throw new Exception("Không tìm thấy ID Tài khoản");
             await _unitOfWork.AccountRepository.checkPhoneAndMail(exitAccount.Id,putModel.Email, putModel.Phone);
             exitAccount.Name = putModel.Name;
             exitAccount.Phone = putModel.Phone;
@@ -118,7 +118,7 @@ namespace Infrastructure.Persistence.Service
             await _unitOfWork.SaveChangesAsync();
             return new ResponseModel
             {
-                Message = "University Updated Successfully",
+                Message = "Đại học đã cập nhật thành công",
                 IsSuccess = true,
                 Data = putModel,
             };
@@ -129,9 +129,9 @@ namespace Infrastructure.Persistence.Service
             var exitUniversity = await _unitOfWork.UniversityRepository.CreateUniversityLocation(Id, universityLocationModels);
             return new ResponseModel
             {
-                Message = "Create University Location Successfully",
+                Message = "Đại học đã cập nhật thành công",
                 IsSuccess = true,
-                Data = "Number location create is " + exitUniversity
+                Data = "Số vị trí tạo là " + exitUniversity
             };
         }
 
@@ -140,9 +140,9 @@ namespace Infrastructure.Persistence.Service
             var updateLocation = await _unitOfWork.UniversityRepository.UpdateUniversityLocation(Id, universityLocationModels);
             return new ResponseModel
             {
-                Message = "Update University Location Successfully",
+                Message = "Cập nhật vị trí trường đại học thành công",
                 IsSuccess = true,
-                Data = "University location update is " + Id
+                Data = "Cập nhật vị trí trường đại học là " + Id
             };
         }
 
@@ -151,9 +151,9 @@ namespace Infrastructure.Persistence.Service
             var deleteLocation = await _unitOfWork.UniversityRepository.DeleteUniversityLocation(Id);
             return new ResponseModel
             {
-                Message = "Delete University Location Successfully",
+                Message = "Xóa vị trí trường đại học thành công",
                 IsSuccess = true,
-                Data = "University location Delete is " + Id
+                Data = "Vị trí trường đại học Xóa là " + Id
             };
         }
     }

@@ -47,7 +47,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while get consultant level by id: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -75,7 +75,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while create consultant level: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -109,7 +109,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while update consultant level: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -139,7 +139,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while dalete consultant level: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -180,7 +180,7 @@ namespace Infrastructure.Persistence.Service
                 {
                     IsSuccess = true,
                     Data = result,
-                    Message = "Consultant levels retrieved successfully."
+                    Message = "Đã truy xuất thành công các cấp độ tư vấn."
                 };
             }
             catch (Exception ex)
@@ -188,7 +188,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while get all consultant levels: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }

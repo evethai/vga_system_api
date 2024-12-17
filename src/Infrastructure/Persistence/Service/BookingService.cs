@@ -167,7 +167,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while booking consultation time: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -202,7 +202,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while get booking by id: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -220,7 +220,7 @@ namespace Infrastructure.Persistence.Service
                     return new ResponseModel
                     {
                         IsSuccess = false,
-                        Message = "No bookings found."
+                        Message = "Không tìm thấy đặt chỗ nào."
                     };
                 }
 
@@ -229,7 +229,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = true,
-                    Message = "Bookings retrieved successfully.",
+                    Message = "Đã lấy danh sách đặt chỗ thành công.",
                     Data = result
                 };
             }
@@ -238,7 +238,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while get all bookings: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -284,7 +284,7 @@ namespace Infrastructure.Persistence.Service
                     ?? throw new NotExistsException();
 
                 if (booking.Status != BookingStatus.NotYet_Consulted)
-                    throw new Exception("Booking is not 'NotYet_Consulted' status");
+                    throw new Exception("Đặt chỗ không có trạng thái 'Chưa tham vấn'");
 
                 var responseModel = await _unitOfWork.BookingRepository.ProcessBooking(bookingId, model);
 
@@ -295,7 +295,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while process booking: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -317,7 +317,7 @@ namespace Infrastructure.Persistence.Service
                 var consultantName = booking.ConsultationTime.Day.Consultant.Account.Name;
 
                 if (booking.Status != BookingStatus.Consulted && booking.Status != BookingStatus.NotYet_Consulted)
-                    throw new Exception("Booking is not 'Consulted' and 'NotYet_Consulted' status");
+                    throw new Exception("Đặt chỗ không có trạng thái 'Đã tham vấn' hoặc 'Chưa tham vấn'");
 
                 var dateTimeStart = new DateTime(
                         booking.ConsultationTime.Day.Day.Year,
@@ -331,7 +331,7 @@ namespace Infrastructure.Persistence.Service
 
                 var dateTimeNow = DateTime.UtcNow.AddHours(7);
                 if (dateTimeStart > dateTimeNow)
-                    throw new Exception("You can only report after your consultation date time.");
+                    throw new Exception("Bạn chỉ có thể báo cáo sau giờ bắt đầu tư vấn.");
 
                 var admin = await _unitOfWork.AccountRepository.SingleOrDefaultAsync(
                     predicate: o => o.Role.Equals(RoleEnum.Admin)) ?? throw new NotExistsException();
@@ -369,7 +369,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while report booking: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
@@ -386,7 +386,7 @@ namespace Infrastructure.Persistence.Service
                     )?? throw new NotExistsException();
 
                 if (booking.Status != BookingStatus.Reported)
-                    throw new Exception("Booking is not 'Reported' status");
+                    throw new Exception("Đặt phòng không có trạng thái 'Đã báo cáo'");
 
                 var responseModel = await _unitOfWork.BookingRepository.ProcessReport(bookingId, model);
 
@@ -397,7 +397,7 @@ namespace Infrastructure.Persistence.Service
                 return new ResponseModel
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred while process report: {ex.Message}"
+                    Message = ex.Message
                 };
             }
         }
