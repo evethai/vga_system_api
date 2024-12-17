@@ -180,7 +180,7 @@ namespace Infrastructure.Persistence.Service
                 {
                     IsSuccess = true,
                     Data = result,
-                    Message = "Consultant levels retrieved successfully."
+                    Message = "Đã truy xuất thành công các cấp độ tư vấn."
                 };
             }
             catch (Exception ex)

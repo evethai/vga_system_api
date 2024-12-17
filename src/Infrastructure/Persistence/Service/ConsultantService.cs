@@ -184,7 +184,7 @@ namespace Infrastructure.Persistence.Service
                 var result = _mapper.Map<ConsultantViewModel>(consultant);
                 return new ResponseModel
                 {
-                    Message = $"Consultant with id '{consultantId}' has been updated successfully",
+                    Message = $"Tư vấn viên có id '{consultantId}' đã được cập nhật thành công",
                     IsSuccess = true,
                     Data = result
                 };
