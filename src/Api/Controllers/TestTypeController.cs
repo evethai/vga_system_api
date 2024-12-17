@@ -29,5 +29,12 @@ namespace Api.Controllers
             var testType = await _testTypeService.GetTestTypeById(id);
             return Ok(testType);
         }
+
+        [HttpPut(ApiEndPointConstant.TestType.UpdateTestTypeEndpoint)]
+        public async Task<IActionResult> UpdatePointTestType (Guid id, int point)
+        {
+            var result = await _testTypeService.UpdateTestTypeById(id, point);
+            return Ok(result);
+        }
     }
 }

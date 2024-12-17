@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Application.Interface;
 using Application.Interface.Service;
 using AutoMapper;
+using Domain.Model.Response;
 using Domain.Model.TestType;
 
 namespace Infrastructure.Persistence.Service
@@ -32,6 +33,29 @@ namespace Infrastructure.Persistence.Service
             var testType = await _unitOfWork.TestTypeRepository.GetByIdGuidAsync(id);
             var result = _mapper.Map<TestTypeModel>(testType);
             return result;
+        }
+
+        public async Task<ResponseModel> UpdateTestTypeById(Guid id, int Point)
+        {
+            var testType = await _unitOfWork.TestTypeRepository.GetByIdGuidAsync(id);
+            if(testType == null)
+            {
+                return new ResponseModel
+                {
+                    IsSuccess = false,
+                    Message = "Test Type not found !"
+                };
+            }
+            testType.Point = Point;
+            await _unitOfWork.TestTypeRepository.UpdateAsync(testType);
+            await _unitOfWork.SaveChangesAsync();
+
+            return new ResponseModel
+            {
+                IsSuccess = true,
+                Message = "Update successful .",
+                Data = testType
+            };
         }
     }
 }
