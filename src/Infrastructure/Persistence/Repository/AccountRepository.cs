@@ -130,7 +130,7 @@ namespace Infrastructure.Persistence.Repository
         public async Task<bool> checkPhoneAndMail(Guid Id,string Mail, string Phone)
         {
             var currentUser = _context.Account
-            .Where(u => u.Id == Id)
+            .Where(u => u.Id == Id).AsNoTracking()
             .FirstOrDefault() ?? throw new Exception("Id is not found");
             if (currentUser.Phone == Phone && currentUser.Email == Mail)
             {
