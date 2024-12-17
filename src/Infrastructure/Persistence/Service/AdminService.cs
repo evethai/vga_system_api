@@ -7,19 +7,38 @@ using Application.Interface;
 using Application.Interface.Service;
 using Domain.Enum;
 using Domain.Model.Admin;
+using Domain.Model.Response;
+using Microsoft.Extensions.Configuration;
 
 namespace Infrastructure.Persistence.Service
 {
     public class AdminService : IAdminService
     {
         private readonly IUnitOfWork _unitOfWork;
-        public AdminService(IUnitOfWork unitOfWork)
+        private readonly IConfiguration _configuration;
+
+        public AdminService(IUnitOfWork unitOfWork , IConfiguration configuration)
         {
             _unitOfWork = unitOfWork;
+            _configuration = configuration;
         }
 
         public async Task<DashboardModel> GetDashboard()
         {
+            var pointValue = _configuration["Conversion_factor:Point"];
+            int point = 0;
+
+            if (int.TryParse(pointValue, out int pointExited))
+            {
+                point = pointExited;
+                Console.WriteLine(point);
+            }
+            else
+            {
+                Console.WriteLine("1231313");
+            }
+
+
             var students = await _unitOfWork.StudentRepository.CountAsync();
             var highSchools = await _unitOfWork.HighschoolRepository.CountAsync();
             var universities = await _unitOfWork.UniversityRepository.CountAsync();

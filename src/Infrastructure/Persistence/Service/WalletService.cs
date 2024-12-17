@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,6 +21,8 @@ using Domain.Model.Wallet;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Net.payOS;
 using Net.payOS.Types;
 
@@ -30,11 +33,13 @@ namespace Infrastructure.Persistence.Service
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly PayOSService _payOSService;
-        public WalletService(IUnitOfWork unitOfWork, IMapper mapper, PayOSService payOSService)
+        private readonly IConfiguration _configuration;
+        public WalletService(IUnitOfWork unitOfWork, IMapper mapper, PayOSService payOSService, IConfiguration configuration)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _payOSService = payOSService;
+            _configuration = configuration;
         }
         public async Task<ResponseWalletModel> GetAllWallet()
         {
@@ -89,9 +94,26 @@ namespace Infrastructure.Persistence.Service
         }
         public async Task<ResponseModel> RequestTopUpWalletWithPayOsAsync(Guid accountId,float amount, PayOSUrl url)
         {
+
+            var pointValue = _configuration["Conversion_factor:Point"];
+            int point = 0;
+
+            if (int.TryParse(pointValue, out int pointExited))
+            {
+                point = pointExited;
+            }
+            else
+            {
+                return new ResponseModel
+                {
+                    IsSuccess = true,
+                    Message = "Data point of config file is not correct !"
+                };
+            }
             var exitWallet = await _unitOfWork.WalletRepository.
                 SingleOrDefaultAsync(predicate: s => s.AccountId.Equals(accountId)); if (exitWallet == null) { throw new Exception("Wallet is not found"); }
-                var points= amount/1000;
+                //var points= amount/1000;
+                var points= amount/ point;
             TransactionPostModel transaction = new TransactionPostModel(exitWallet.Id, (int)points);
             var trans = await _unitOfWork.TransactionRepository.CreateTransactionPayOS(TransactionType.Reject, transaction);
             var items = new List<ItemData>
