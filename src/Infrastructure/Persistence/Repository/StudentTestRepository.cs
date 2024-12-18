@@ -387,24 +387,25 @@ public class StudentTestRepository : GenericRepository<StudentTest>, IStudentTes
 
         //var groupedOccupations = occupations.GroupBy(o => o.OccupationalGroupId);
 
-        //List<Occupation> randomOccupations = new List<Occupation>();
-        //Random random = new Random();
+        List<Occupation> randomOccupations = new List<Occupation>();
+        Random random = new Random();
 
-
-        //foreach (var group in groupedOccupations)
-        //{
-
-        //    var topOccupations = group.OrderBy(x => random.Next()).Take(5);
-        //    randomOccupations.AddRange(topOccupations);
-        //}
-
-        //return randomOccupations;
         var occupations = await _context.Major
                 .Where(m => m.Id == majorId)
                 .SelectMany(m => m.MajorCategory.MajorOccupationMatrix)
                 .SelectMany(mo => mo.OccupationalGroup.Occupations)
                 .ToListAsync();
-        return occupations;
+
+        foreach (var group in occupations)
+        {
+
+            //var topOccupations = group.OrderBy(x => random.Next()).Take(5);
+            var topOccupations = group.OccupationalGroup.Occupations.OrderBy(x => random.Next()).Take(5);
+            randomOccupations.AddRange(topOccupations);
+        }
+
+        return randomOccupations;
+        //return occupations;
     }
     #endregion
 
