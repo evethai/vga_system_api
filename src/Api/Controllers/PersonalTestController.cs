@@ -102,6 +102,7 @@ namespace Api.Controllers
             }
         }
 
+        [CustomAuthorize(RoleEnum.Student,RoleEnum.Admin,RoleEnum.Consultant)]
         [HttpGet(ApiEndPointConstant.PersonalTest.GetHistoryUserTestEndpoint)]
         public async Task<IActionResult> GetHistoryTestByStudentId(Guid id)
         {
