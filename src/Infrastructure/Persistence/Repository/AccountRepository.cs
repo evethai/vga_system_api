@@ -35,7 +35,8 @@ namespace Infrastructure.Persistence.Repository
             var email = await _context.Account.Where(x => x.Email.Equals(registerAccount.Email)|| x.Phone.Equals(registerAccount.Phone)).FirstOrDefaultAsync();
             if (email != null)
                 throw new Exception($"Email hoặc số điện thoại của '{registerAccount.Name}' đã tồn tại trong hệ thống");
-            registerAccount.Phone = string.Concat("84", registerAccount.Phone.AsSpan(1));
+            if (registerAccount.Phone.StartsWith("0"))
+                registerAccount.Phone = string.Concat("84", registerAccount.Phone.AsSpan(1));
             Account account = null;
             switch (_role)
             {
