@@ -16,6 +16,7 @@ using Domain.Model.Certification;
 using Domain.Model.Consultant;
 using Domain.Model.Response;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 
 namespace Infrastructure.Persistence.Service
 {
@@ -85,7 +86,7 @@ namespace Infrastructure.Persistence.Service
                     postModel.Email,
                     postModel.Password,
                     postModel.Phone
-                    ,postModel.Image_Url);
+                    , postModel.Image_Url);
                 var accountId = await _unitOfWork.AccountRepository.CreateAccountAndWallet(accountModel, RoleEnum.Consultant);
 
                 //consultant.Id = Guid.NewGuid();
@@ -136,6 +137,10 @@ namespace Infrastructure.Persistence.Service
                                    .Include(c => c.Certifications)
                                    .Include(c => c.ConsultantRelations).ThenInclude(cr => cr.University.Account)
                 ) ?? throw new NotExistsException();
+                if (putModel.Phone.StartsWith("0"))
+                {
+                    putModel.Phone = string.Concat("84", putModel.Phone.AsSpan(1));
+                }
                 await _unitOfWork.AccountRepository.checkPhoneAndMail(consultant.AccountId, putModel.Email, putModel.Phone);
                 _mapper.Map(putModel, consultant);
 
@@ -150,7 +155,7 @@ namespace Infrastructure.Persistence.Service
                             var existingRelation = consultant.ConsultantRelations
                                 .FirstOrDefault(s => s.Id == relationModel.Id.Value) ?? throw new NotExistsException();
 
-                             _mapper.Map(relationModel, existingRelation);
+                            _mapper.Map(relationModel, existingRelation);
                         }
                         else
                         {
