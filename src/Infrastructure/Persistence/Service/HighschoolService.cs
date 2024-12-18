@@ -28,7 +28,8 @@ public class HighschoolService : IHighschoolService
     public async Task<HighschoolModel> GetHighschoolByIdAsync(Guid HighschoolId)
     {
         var highschool = await _unitOfWork.HighschoolRepository.
-            SingleOrDefaultAsync(predicate: c => c.Id.Equals(HighschoolId), include: a => a.Include(a => a.Account).ThenInclude(a=>a.Wallet)) ?? throw new Exception("Id is not found");
+            SingleOrDefaultAsync(predicate: c => c.Id.Equals(HighschoolId),
+            include: a => a.Include(a => a.Account).ThenInclude(a=>a.Wallet)) ?? throw new Exception("Không tìm thấy ID");
         return _mapper.Map<HighschoolModel>(highschool);
     }
 
@@ -66,7 +67,7 @@ public class HighschoolService : IHighschoolService
         await _unitOfWork.SaveChangesAsync();
         return new ResponseModel
         {
-            Message = " Highschool Created Successfully",
+            Message = "Trường trung học được tạo thành công",
             IsSuccess = true,
             Data = postModel,
         };
@@ -75,13 +76,17 @@ public class HighschoolService : IHighschoolService
     public async Task<ResponseModel> UpdateHighschoolAsync(HighschoolPutModel putModel, Guid Id)
     {
         var exitHighschool = await _unitOfWork.HighschoolRepository
-            .GetByIdGuidAsync(Id) ?? throw new Exception("Id is not found");
+            .GetByIdGuidAsync(Id) ?? throw new Exception("Không tìm thấy ID");
         exitHighschool.Address = putModel.Address;
         var exitRegion = await _unitOfWork.RegionRepository
-            .GetByIdGuidAsync(putModel.RegionId) ?? throw new Exception("Region id is not found");
+            .GetByIdGuidAsync(putModel.RegionId) ?? throw new Exception("Không tìm thấy ID khu vực");
         exitHighschool.RegionId = exitRegion.Id;
         var exitAccount = await _unitOfWork.AccountRepository
-            .GetByIdGuidAsync(exitHighschool.AccountId) ?? throw new Exception("Highschool Account Id is not found");
+            .GetByIdGuidAsync(exitHighschool.AccountId) ?? throw new Exception("Không tìm thấy ID tài khoản trường trung học");
+        if (putModel.Phone.StartsWith("0"))
+        {
+            putModel.Phone = string.Concat("84", putModel.Phone.AsSpan(1));
+        }
         await _unitOfWork.AccountRepository.checkPhoneAndMail(exitAccount.Id,putModel.Email, putModel.Phone);
         exitAccount.Name = putModel.Name;
         exitAccount.Phone = putModel.Phone;
@@ -92,7 +97,7 @@ public class HighschoolService : IHighschoolService
         await _unitOfWork.SaveChangesAsync();
         return new ResponseModel
         {
-            Message = " Highschool Updated Successfully",
+            Message = "Cập nhật trường trung học thành công",
             IsSuccess = true,
             Data = putModel,
         };
@@ -100,14 +105,14 @@ public class HighschoolService : IHighschoolService
 
     public async Task<ResponseModel> DeleteHighschoolAsync(Guid Id)
     {
-        var exHighschool = await _unitOfWork.HighschoolRepository.GetByIdGuidAsync(Id) ?? throw new Exception("Id is not found");
-        var exAccount = await _unitOfWork.AccountRepository.GetByIdGuidAsync(exHighschool.AccountId) ?? throw new Exception("Highschool Acccount Id is not found");
+        var exHighschool = await _unitOfWork.HighschoolRepository.GetByIdGuidAsync(Id) ?? throw new Exception("Không tìm thấy ID");
+        var exAccount = await _unitOfWork.AccountRepository.GetByIdGuidAsync(exHighschool.AccountId) ?? throw new Exception("Không tìm thấy Id tài khoản trường trung học");
         exAccount.Status = AccountStatus.Blocked;
         await _unitOfWork.AccountRepository.UpdateAsync(exAccount);
         await _unitOfWork.SaveChangesAsync();
         return new ResponseModel
         {
-            Message = " Highschool Delete Successfully",
+            Message = "Xóa trường trung học thành công",
             IsSuccess = true
         };
     }

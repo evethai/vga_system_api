@@ -40,7 +40,7 @@ namespace Infrastructure.Persistence.Repository
             return (filter, orderBy);
         }
 
-        public Task<Boolean> CreateImageNews(Guid NewsId, List<ImageNewsPostModel> imageNews)
+        public async Task<Boolean> CreateImageNews(Guid NewsId, List<ImageNewsPostModel> imageNews)
         {
             var _newsId =  _context.News.Where(s=> s.Id.Equals(NewsId)).FirstOrDefault() ?? throw new Exception("Không tìm thấy ID");           
             foreach (var image in imageNews)
@@ -51,9 +51,10 @@ namespace Infrastructure.Persistence.Repository
                     DescriptionTitle = image.DescriptionTitle,
                     ImageUrl = image.ImageUrl,                   
                 };
-                _context.ImageNews.Add(img);                
+                await _context.ImageNews.AddAsync(img);                
             }
-            return Task.FromResult(true);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
         public Task<bool> DeleteAllImageNews(Guid NewId)

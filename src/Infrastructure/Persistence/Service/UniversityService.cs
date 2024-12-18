@@ -107,6 +107,10 @@ namespace Infrastructure.Persistence.Service
             exitUniversity.Code = putModel.Code;
             exitUniversity.EstablishedYear = putModel.EstablishedYear;           
             var exitAccount = await _unitOfWork.AccountRepository.GetByIdGuidAsync(exitUniversity.AccountId) ?? throw new Exception("Không tìm thấy ID Tài khoản");
+            if (putModel.Phone.StartsWith("0"))
+            {
+                putModel.Phone = string.Concat("84", putModel.Phone.AsSpan(1));
+            }
             await _unitOfWork.AccountRepository.checkPhoneAndMail(exitAccount.Id,putModel.Email, putModel.Phone);
             exitAccount.Name = putModel.Name;
             exitAccount.Phone = putModel.Phone;
