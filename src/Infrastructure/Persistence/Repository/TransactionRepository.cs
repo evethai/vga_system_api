@@ -311,7 +311,7 @@ namespace Infrastructure.Persistence.Repository
                 .Where(a => a.AccountId.Equals(id) && a.Account.Status == AccountStatus.Active)
                 .FirstOrDefault() ?? throw new Exception("Không tìm thấy ID tài khoản");
             var listStudent = await _context.Student
-                .Where(a => a.HighSchoolId.Equals(idHighschool.Id) && a.SchoolYears.Equals(years)).AsNoTracking()
+                .Where(a => a.HighSchoolId.Equals(idHighschool.Id) && a.SchoolYears.Equals(years) && a.Account.Status == AccountStatus.Active).AsNoTracking()
                 .ToListAsync();
             if (listStudent.Count == 0)
             {
