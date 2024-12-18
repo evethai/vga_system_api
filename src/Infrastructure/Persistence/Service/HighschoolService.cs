@@ -53,7 +53,7 @@ public class HighschoolService : IHighschoolService
     }
     public async Task<ResponseModel> CreateHighschoolAsync(HighschoolPostModel postModel)
     {
-        var checkIdRegion = _unitOfWork.RegionRepository.GetByIdGuidAsync(postModel.RegionId) ?? throw new Exception("Không tìm thấy id vùng");
+        var checkIdRegion = await _unitOfWork.RegionRepository.GetByIdGuidAsync(postModel.RegionId) ?? throw new Exception("Không tìm thấy id vùng");
         var highschool = _mapper.Map<HighSchool>(postModel);
         RegisterAccountModel accountModel = new RegisterAccountModel(
             postModel.Name

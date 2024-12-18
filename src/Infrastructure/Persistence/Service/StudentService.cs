@@ -90,7 +90,8 @@ public class StudentService : IStudentService
     }
     public async Task<ResponseModel> CreateStudentAsync(StudentPostModel postModel)
     {
-
+        var checkExitHighschool = await _unitOfWork.HighschoolRepository.GetByIdGuidAsync(postModel.HighSchoolId)
+            ?? throw new Exception("Không tìm thấy ID trường cấp 3");
         RegisterAccountModel accountModel = new RegisterAccountModel(
             postModel.Name
             , postModel.Email
