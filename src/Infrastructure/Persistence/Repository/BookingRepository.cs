@@ -185,7 +185,7 @@ namespace Infrastructure.Persistence.Repository
 
                     //update booking
                     existedBooking.Status = model.Type;
-                    if (model.Comment != null || model.Comment != "")
+                    if (model.Comment == null || model.Comment == "")
                        throw new Exception("Bình luận không được rỗng hoặc trống");
                     existedBooking.Comment = model.Comment;
                     //update wallet
@@ -219,7 +219,7 @@ namespace Infrastructure.Persistence.Repository
 
             return new ResponseModel
             {
-                Message = "Quá trình đặt chỗ thành công",
+                Message = "Cập nhật trạng thái buổi tư vấn thành công",
                 IsSuccess = true
             };
         }

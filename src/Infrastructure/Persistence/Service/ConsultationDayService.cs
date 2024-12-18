@@ -77,7 +77,9 @@ namespace Infrastructure.Persistence.Service
                     };
                 }
 
-                var timeNow = TimeOnly.FromDateTime(DateTime.UtcNow.AddHours(7));
+                var dayTimeNow = DateTime.UtcNow.AddHours(7);
+
+                var dayToCreate = postModel.Day.ToDateTime(TimeOnly.MinValue);
 
                 var timeSlotIds = postModel.ConsultationTimes.Select(ct => ct.TimeSlotId).ToList();
 
@@ -86,7 +88,9 @@ namespace Infrastructure.Persistence.Service
 
                 foreach (var timeSlot in timeSlots)
                 {
-                    if (timeSlot.StartTime < timeNow)
+                    var dateTimeStart = dayToCreate.Add(timeSlot.StartTime.ToTimeSpan());
+
+                    if (dateTimeStart < dayTimeNow)
                     {
                         return new ResponseModel
                         {
