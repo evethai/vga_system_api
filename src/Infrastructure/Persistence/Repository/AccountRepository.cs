@@ -32,8 +32,8 @@ namespace Infrastructure.Persistence.Repository
                 throw new KeyNotFoundException("Dữ liệu rỗng");
             }
 
-            var email = _context.Account.
-                Where(x => x.Email.Equals(registerAccount.Email)|| x.Phone.Equals(registerAccount.Phone)).FirstOrDefault();
+            var email = await _context.Account.
+                Where(x => x.Email.Equals(registerAccount.Email)|| x.Phone.Equals(registerAccount.Phone)).FirstOrDefaultAsync();
             if(email!=null)
                 throw new Exception($"Email hoặc số điện thoại đã tồn tại trong hệ thống");
             if (registerAccount.Phone.StartsWith("0"))
