@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  api:
+    container_name: vga.api
+    build:
+      context: .
+      dockerfile: Api/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8080
+    depends_on:
+      - sqlserver
+      - cache
+
+  sqlserver:
+    container_name: sqlserver
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      MSSQL_SA_PASSWORD: "eduvga12345"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1434:1433"
+    volumes:
+      - sql_data:/var/opt/mssql
+    restart: always
+
+  cache:
+    image: redis:latest
+    restart: always
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_data:/data
+
+volumes:
+  sql_data:
+  redis_data:

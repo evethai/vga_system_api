@@ -14,26 +14,26 @@ namespace Api.Controllers
 {
     [Route("/personal-test")]
     [ApiController]
-    [CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
     public class PersonalTestController : ControllerBase
     {
         private readonly IStudentTestService _studentTestService;
         private readonly IWalletService _walletService;
         private readonly IPersonalTestService _personalTestService;
+        private readonly ICacheService _cacheService;
         private readonly IStudentChoiceService _studentChoiceService;
-        //private readonly ICacheService _cacheService;
 
-        public PersonalTestController(IStudentTestService studentTestService, IWalletService walletService, IPersonalTestService personalTestService, IStudentChoiceService studentChoiceService)
+
+        public PersonalTestController(IStudentTestService studentTestService, IWalletService walletService, IPersonalTestService personalTestService, ICacheService cacheService, IStudentChoiceService studentChoiceService)
         {
             _studentTestService = studentTestService;
             _walletService = walletService;
             _personalTestService = personalTestService;
+            _cacheService = cacheService;
             _studentChoiceService = studentChoiceService;
-            //_cacheService = cacheService;
+
         }
-
+        [CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
         [HttpPost(ApiEndPointConstant.PersonalTest.GetResultPersonalTestEndpoint)]
-
         public async Task<IActionResult> CreateResultTest(StudentTestResultModel result)
         {
 
@@ -49,33 +49,38 @@ namespace Api.Controllers
 
         }
 
-
+        [CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
         [HttpGet(ApiEndPointConstant.PersonalTest.PersonalTestEndpoint)]
         public async Task<IActionResult> GetPersonalTestById(Guid id, Guid accountId)
         {
             try
             {
+                var cacheKey = RedisConstants.PersonalTestId + id;
+                var cacheResponse = await _cacheService.GetCacheResponseAsync<string>(cacheKey);
+                PersonalTestModel response;
 
-                //var cacheKey = RedisConstants.PersonalTestId + id;
-                //var cacheResponse = await _cacheService.GetCacheResponseAsync<string>(cacheKey);
-                var response = new PersonalTestModel();
-                //if (cacheResponse != null)
-                //{
-                //    response = JsonConvert.DeserializeObject<PersonalTestModel>(cacheResponse);
-                //    return Ok(response);
-                //}
-                //else
-                //{
-                response = await _studentTestService.GetTestById(id);
+                if (cacheResponse != null)
+                {
+                    response = JsonConvert.DeserializeObject<PersonalTestModel>(cacheResponse);
+                }
+                else
+                {
+                    response = await _studentTestService.GetTestById(id);
+
+                    if (response == null)
+                    {
+                        return Ok("Test does not exist!");
+                    }
+                    await _cacheService.SetCacheResponseAsync(cacheKey, response, TimeSpan.FromMinutes(16));
+                }
                 var transaction = await _walletService.UpdateWalletUsingByTestAsync(accountId, response.Point);
-                //    await _cacheService.SetCacheResponseAsync(cacheKey, response, TimeSpan.FromMinutes(16));
-                if (transaction.IsSuccess == false)
+
+                if (!transaction.IsSuccess)
                 {
                     return Ok("Error transaction with point!");
                 }
-                return Ok(response);
-                //}
 
+                return Ok(response);
             }
             catch (Exception e)
             {
@@ -83,8 +88,7 @@ namespace Api.Controllers
             }
         }
 
-
-
+        [CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
         [HttpGet(ApiEndPointConstant.PersonalTest.PersonalTestsEndpoint)]
         public async Task<IActionResult> GetAllTest([FromForm] PersonalTestSearchModel model)
         {
@@ -118,6 +122,8 @@ namespace Api.Controllers
             }
         }
 
+
+        [CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
         [HttpGet(ApiEndPointConstant.PersonalTest.GetMajorsByPersonalGroupIdEndpoint)]
         public async Task<IActionResult> GetMajorAndOccupationByPersonalGroupId(Guid id)
         {
@@ -132,6 +138,8 @@ namespace Api.Controllers
             }
         }
 
+
+        [CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
         [HttpPost(ApiEndPointConstant.PersonalTest.FilterMajorAndUniversityEndpoint)]
         public async Task<IActionResult> FilterMajorAndUniversity(FilterMajorAndUniversityModel model)
         {
@@ -154,6 +162,7 @@ namespace Api.Controllers
             }
         }
 
+        [CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
         [HttpPost(ApiEndPointConstant.PersonalTest.PersonalTestsEndpoint)]
         public async Task<IActionResult> CreatePersonalTest([FromForm] PersonalTestPostModel model)
         {
@@ -176,6 +185,8 @@ namespace Api.Controllers
             }
         }
 
+
+        [CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
         [HttpPut(ApiEndPointConstant.PersonalTest.PersonalTestEndpoint)]
         public async Task<IActionResult> UpdatePersonalTest(Guid id, PersonalTestPutModel model)
         {
@@ -197,6 +208,8 @@ namespace Api.Controllers
                 return BadRequest(e.Message);
             }
         }
+
+        [CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
         [HttpDelete(ApiEndPointConstant.PersonalTest.PersonalTestEndpoint)]
         public async Task<IActionResult> DeletePersonalTest(Guid id)
         {
@@ -216,12 +229,16 @@ namespace Api.Controllers
 
         }
 
+
+        [CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
         [HttpGet(ApiEndPointConstant.PersonalTest.GetStudentCareEndpoint)]
         public async Task<IActionResult> GetStudentCareById (Guid id)
         {
             var result = await _studentChoiceService.GetAllStudentCareById(id);
             return Ok(result);
         }
+
+        [CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
         [HttpPost(ApiEndPointConstant.PersonalTest.StudentCareEndpoint)]
         public async Task<IActionResult> CreateStudentCare (StudentChoicePostModel model)
         {
