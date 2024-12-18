@@ -14,7 +14,6 @@ namespace Api.Controllers
 {
     [Route("/personal-test")]
     [ApiController]
-    [CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
     public class PersonalTestController : ControllerBase
     {
         private readonly IStudentTestService _studentTestService;
@@ -31,9 +30,8 @@ namespace Api.Controllers
             _studentChoiceService = studentChoiceService;
             //_cacheService = cacheService;
         }
-
+        [CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
         [HttpPost(ApiEndPointConstant.PersonalTest.GetResultPersonalTestEndpoint)]
-
         public async Task<IActionResult> CreateResultTest(StudentTestResultModel result)
         {
 
@@ -49,7 +47,7 @@ namespace Api.Controllers
 
         }
 
-
+        [CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
         [HttpGet(ApiEndPointConstant.PersonalTest.PersonalTestEndpoint)]
         public async Task<IActionResult> GetPersonalTestById(Guid id, Guid accountId)
         {
@@ -84,7 +82,7 @@ namespace Api.Controllers
         }
 
 
-
+        [CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
         [HttpGet(ApiEndPointConstant.PersonalTest.PersonalTestsEndpoint)]
         public async Task<IActionResult> GetAllTest([FromForm] PersonalTestSearchModel model)
         {
@@ -118,6 +116,8 @@ namespace Api.Controllers
             }
         }
 
+
+        [CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
         [HttpGet(ApiEndPointConstant.PersonalTest.GetMajorsByPersonalGroupIdEndpoint)]
         public async Task<IActionResult> GetMajorAndOccupationByPersonalGroupId(Guid id)
         {
@@ -132,6 +132,8 @@ namespace Api.Controllers
             }
         }
 
+
+        [CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
         [HttpPost(ApiEndPointConstant.PersonalTest.FilterMajorAndUniversityEndpoint)]
         public async Task<IActionResult> FilterMajorAndUniversity(FilterMajorAndUniversityModel model)
         {
@@ -154,6 +156,7 @@ namespace Api.Controllers
             }
         }
 
+        [CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
         [HttpPost(ApiEndPointConstant.PersonalTest.PersonalTestsEndpoint)]
         public async Task<IActionResult> CreatePersonalTest([FromForm] PersonalTestPostModel model)
         {
@@ -176,6 +179,8 @@ namespace Api.Controllers
             }
         }
 
+
+        [CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
         [HttpPut(ApiEndPointConstant.PersonalTest.PersonalTestEndpoint)]
         public async Task<IActionResult> UpdatePersonalTest(Guid id, PersonalTestPutModel model)
         {
@@ -197,6 +202,8 @@ namespace Api.Controllers
                 return BadRequest(e.Message);
             }
         }
+
+        [CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
         [HttpDelete(ApiEndPointConstant.PersonalTest.PersonalTestEndpoint)]
         public async Task<IActionResult> DeletePersonalTest(Guid id)
         {
@@ -216,12 +223,16 @@ namespace Api.Controllers
 
         }
 
+
+        [CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
         [HttpGet(ApiEndPointConstant.PersonalTest.GetStudentCareEndpoint)]
         public async Task<IActionResult> GetStudentCareById (Guid id)
         {
             var result = await _studentChoiceService.GetAllStudentCareById(id);
             return Ok(result);
         }
+
+        [CustomAuthorize(RoleEnum.Admin, RoleEnum.Student)]
         [HttpPost(ApiEndPointConstant.PersonalTest.StudentCareEndpoint)]
         public async Task<IActionResult> CreateStudentCare (StudentChoicePostModel model)
         {
