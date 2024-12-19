@@ -57,6 +57,9 @@ namespace Infrastructure.Persistence.Service
                     || role == RoleEnum.HighSchool
                     || role == RoleEnum.University
                     || account.Status == AccountStatus.Blocked) return null;
+                account.Image_Url = model.Image_Url;
+                await _unitOfWork.AccountRepository.UpdateAsync(account);
+                await _unitOfWork.SaveChangesAsync();
                 return await BuildLoginResponse(account, role);
             }
             if (!string.IsNullOrEmpty(model.Phone))
