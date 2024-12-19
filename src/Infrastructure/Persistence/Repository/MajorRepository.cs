@@ -24,7 +24,7 @@ namespace Infrastructure.Persistence.Repository
             BuildFilterAndOrderBy(MajorSearchModel searchModel)
         {
             Expression<Func<Major, bool>> filter = p => true;
-            Func<IQueryable<Major>, IOrderedQueryable<Major>> orderBy = null;
+            Func<IQueryable<Major>, IOrderedQueryable<Major>> orderBy = x => x.OrderBy(x => x.Name);
             if (!string.IsNullOrEmpty(searchModel.name))
             {
                 filter = filter.And(m => m.Name.Contains(searchModel.name));
