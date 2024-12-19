@@ -187,7 +187,7 @@ namespace Infrastructure.Persistence.Service
             return new ResponseModel
             {
                 IsSuccess = true,
-                Message = MessagesConstants.MajorOrOccupationChoice.FilterUniversity,
+                Message = MessagesConstants.MajorOrOccupationChoice.FilterOccupation,
                 Data = result
             };
         }
