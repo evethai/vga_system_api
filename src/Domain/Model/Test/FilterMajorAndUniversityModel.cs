@@ -12,7 +12,7 @@ namespace Domain.Model.Test
     {
         [Required(ErrorMessage = "Student choice is require!")]
         public StudentChoiceModel studentChoiceModel { get; set; }
-        public AdmissionInformationRattingModel? filterInfor { get; set; }
+        //public AdmissionInformationRattingModel? filterInfor { get; set; }
 
     }
 
