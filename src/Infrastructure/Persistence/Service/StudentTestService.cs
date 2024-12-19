@@ -172,15 +172,15 @@ namespace Infrastructure.Persistence.Service
             foreach (var choices in stChoices)
             {
                 var occupations = await _unitOfWork.StudentTestRepository.GetOccupationByMajorId(choices.MajorOrOccupationId);
-                var condition = _unitOfWork.AdmissionInformationRepository.BuildFilterAndOrderBy(model.filterInfor, choices);
-                var universities = await _unitOfWork.AdmissionInformationRepository.GetByConditionAsync(condition.filter, condition.orderBy);
+                //var condition = _unitOfWork.AdmissionInformationRepository.BuildFilterAndOrderBy(model.filterInfor, choices);
+                //var universities = await _unitOfWork.AdmissionInformationRepository.GetByConditionAsync(condition.filter, condition.orderBy);
                 result.Add(new ResultAfterRatingModel
                 {
                     MajorId = choices.MajorOrOccupationId,
                     MajorName = choices.MajorOrOccupationName,
                     Image = choices.Image,
                     _occupations = _mapper.Map<List<OccupationByMajorIdModel>>(occupations),
-                    _universities = _mapper.Map<List<UniversityByMajorIdModel>>(universities)
+                    //_universities = _mapper.Map<List<UniversityByMajorIdModel>>(universities)
                 });
             }
             
